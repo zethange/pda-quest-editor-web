@@ -1,28 +1,42 @@
 @import './colors.css';
+@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css';
+
+hr {
+  color: var(--light-gray);
+  border: none;
+  background-color: var(--light-gray);
+  height: 1px;
+}
 
 .main {
   height: 100vh;
+  background: var(--off-white);
 }
 
 .navbar {
   display: flex;
-  background: var(--off-white)
+  background: var(--white);
 }
 
 .navbar__header {
-  font-size: 18px;
-  padding: 5px;
+  font-size: 15px;
+  padding: 10px 5px;
   transition: background 0.4s;
 }
 
 .navbar__header:hover {
-  background: var(--gray);
+  background: var(--light-gray);
 }
 
 .navbar__header--active {
-  border-block-end: solid; 
+  border-block-end: 1px solid; 
   border-block-end-color: var(--blue); 
   writing-mode: horizontal-tb;
+}
+
+.card {
+  padding: 20px;
+  background: var(--light-gray);
 }
 
 // классы общего назначения
