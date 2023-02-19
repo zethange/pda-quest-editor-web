@@ -1,5 +1,6 @@
 import Head from "next/head";
 import NavBars from "@/components/NavBars";
+import Cards from "@/components/Cards";
 
 export default function Home() {
   return (
@@ -12,6 +13,9 @@ export default function Home() {
       </Head>
       <main className="main">
         <NavBars />
+        <div className="work-space">
+          <Cards />
+        </div>
       </main>
     </>
   );

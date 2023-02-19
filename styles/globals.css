@@ -34,9 +34,31 @@ hr {
   writing-mode: horizontal-tb;
 }
 
+.work-space {
+  padding: 20px;
+}
+
+.card-parent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  width: 100%
+}
+
 .card {
   padding: 20px;
-  background: var(--light-gray);
+  border-radius: 5px;
+  width: 33%;
+  flex: 1 1 auto;
+  background: var(--white);
+}
+
+.card__header {
+  font-size: 20px;
+}
+
+.card__body {
+  font-size: 13px;
 }
 
 // классы общего назначения
