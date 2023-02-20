@@ -1,5 +1,4 @@
 @import './colors.css';
-@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css';
 
 hr {
   color: var(--light-gray);
@@ -51,6 +50,7 @@ hr {
   width: 33%;
   flex: 1 1 auto;
   background: var(--white);
+  position: relative;
 }
 
 .card__header {
@@ -61,7 +61,7 @@ hr {
   font-size: 13px;
 }
 
-// классы общего назначения
+/* Классы общего назначения */
 
 .flex {
   display: flex;
@@ -72,10 +72,36 @@ hr {
   margin-right: auto;
 }
 
+/* Сбросы */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-family: 'Ubuntu';
+  font-family: 'Ubuntu', 'Verdana';
+}
+
+button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  /* отображаем курсор в виде руки при наведении; некоторые
+  считают, что необходимо оставлять стрелочный вид для кнопок */
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: var(--black);
+}
+
+a:hover {
+  color: var(--black);
+}
+
+a:visited {
+  color: var(--black);
 }
