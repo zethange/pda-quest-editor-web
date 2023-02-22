@@ -2,9 +2,13 @@ import Head from "next/head";
 import Card from "@/components/UI/Card";
 import NavBar from "@/components/UI/NavBar";
 import { useEffect, useRef, useState } from "react";
+import { exampleChapter } from "@/store/types";
 
 export default function Home() {
-  const [listChapters, setListChapters] = useState<any>([]);
+  const [listChapters, setListChapters] = useState<any>([]); // это полностью все главы в массиве
+  const [keyChapters, setKeyChapters] = useState<any>([]); // это key для localstorage для кажой главы
+  const [loaded, setLoaded] = useState<boolean>(false);
+  const [theme, setTheme] = useState<string>("light");
 
   const onChangeChapter = async (e: any) => {
     const file = await e.target.files[0];
@@ -17,12 +21,22 @@ export default function Home() {
           String("chapter_" + JSON.parse(reader.result).id),
           reader.result
         );
+        setLoaded(false);
       }
     };
 
     reader.onerror = await function () {
       console.log(reader.error);
+      setLoaded(false);
     };
+  };
+
+  const createChapter = () => {
+    localStorage.setItem(
+      `chapter_${keyChapters.length}`,
+      JSON.stringify(exampleChapter(keyChapters.length))
+    );
+    setLoaded(false);
   };
 
   useEffect(() => {
@@ -40,8 +54,24 @@ export default function Home() {
       stages.push(JSON.parse(localStorage.getItem(stage)));
     });
 
+    setKeyChapters(keyStages);
     setListChapters(stages);
-  });
+    setLoaded(true);
+  }, [loaded]);
+
+  const changeTheme = () => {
+    const att = document.createAttribute("data-app-theme");
+    if (theme === "light") {
+      att.value = "dark";
+      setTheme("dark");
+    } else {
+      att.value = "light";
+      setTheme("light");
+    }
+
+    // @ts-ignore
+    document.querySelector("main").setAttributeNode(att);
+  };
 
   return (
     <>
@@ -53,11 +83,18 @@ export default function Home() {
       </Head>
       <main className="main">
         <NavBar>
-          <p className="navbar__header navbar__header--active">История</p>
-          <p className="navbar__header">Карта</p>
-          <p className="navbar__header">Всего историй: {listChapters.length}</p>
-          <p className="mx-auto"></p>
-          <p className="navbar__header">Помощь</p>
+          <button className="navbar__header navbar__header--active">
+            История
+          </button>
+          <button className="navbar__header">Карта</button>
+          <button className="navbar__header">
+            Всего глав: {listChapters.length}
+          </button>
+          <div className="mx-auto"></div>
+          <button className="navbar__header" onClick={changeTheme}>
+            Тёмная тема :)
+          </button>
+          <button className="navbar__header">Помощь</button>
         </NavBar>
         <hr />
         <NavBar>
@@ -67,9 +104,10 @@ export default function Home() {
             onChange={onChangeChapter}
             accept="application/json"
           />
-          <p className="navbar__header">
-            <i className="fa-solid fa-pen-to-square"></i> Редактирование
-          </p>
+          <button className="navbar__header" onClick={() => createChapter()}>
+            Создать главу
+          </button>
+          <button className="navbar__header">Редактирование</button>
         </NavBar>
         <div className="work-space">
           <div className="card-parent">

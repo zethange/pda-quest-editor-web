@@ -1,22 +1,41 @@
 import Head from "next/head";
 import NavBar from "@/components/UI/NavBar";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 
 export default function () {
-  const { query, isReady } = useRouter();
-  const id = query.id as string;
-
   const [theme, setTheme] = useState<any>();
-  const [chapter, setChapter] = useState<any>();
-
   useEffect(() => {
-    const chapterFromLocalStorage = JSON.parse(
-      // @ts-ignore
-      localStorage.getItem(`chapter_${id}`)
-    );
-    setChapter(chapterFromLocalStorage);
-  }, [isReady]);
+    const ball: any = document.getElementById("stage");
+    const stageMain: any = document.getElementById("stage-main");
+
+    ball.onmousedown = function (e: any) {
+      ball.style.position = "absolute";
+      moveAt(e);
+      stageMain.appendChild(ball);
+
+      ball.style.zIndex = 1000;
+
+      function moveAt(e: any) {
+        ball.style.left = e.pageX - ball.offsetWidth / 2 + "px";
+        ball.style.top = e.pageY - ball.offsetHeight / 2 + "px";
+      }
+
+      // 3, перемещать по экрану
+      document.onmousemove = function (e) {
+        moveAt(e);
+      };
+
+      // 4. отследить окончание переноса
+      ball.onmouseup = function () {
+        document.onmousemove = null;
+        ball.onmouseup = null;
+      };
+
+      ball.ondragstart = function () {
+        return false;
+      };
+    };
+  });
 
   const changeTheme = () => {
     const att = document.createAttribute("data-app-theme");
@@ -35,7 +54,7 @@ export default function () {
   return (
     <>
       <Head>
-        <title>Редактирование главы {chapter?.id}</title>
+        <title>Редактирование главы да</title>
         <meta name="description" content="Редактор главы" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -58,13 +77,10 @@ export default function () {
         </NavBar>
         <div className="stage-body">
           <div className="stage-parent" id="stage-main">
-            {chapter &&
-              chapter.stages.map((stage: any) => (
-                <div className="stage-card" id="stage" key={stage?.id}>
-                  <h2>Стадия {stage?.id}</h2>
-                  {stage?.message}
-                </div>
-              ))}
+            <div className="stage-card" id="stage">
+              <h2>Стадия 1</h2>
+              Переход на стадию: 2 <b>или</b> 3
+            </div>
           </div>
         </div>
       </main>

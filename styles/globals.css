@@ -10,6 +10,7 @@ hr {
 .main {
   height: 100vh;
   background: var(--off-white);
+  transition: all 0.3s;
 }
 
 .navbar {
@@ -61,6 +62,41 @@ hr {
   font-size: 13px;
 }
 
+
+/* Стили для редактора */
+.stage-body {
+  max-height: calc(100vh - 78px);
+  max-width: 100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.stage-parent {
+  height: 100vh;
+  position: relative;
+  background: url("/background2.svg");
+}
+
+.stage-card {
+  width: 200px;
+  height: 200px;
+  padding: 10px;
+  background: var(--white);
+  border: 1px solid var(--black);
+  border-radius: 5px;
+  font-size: 10px;
+  user-select: none;
+  text-align: center;
+}
+
+.stage-route-button {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+}
+
+
 /* Классы общего назначения */
 
 .flex {
@@ -80,6 +116,7 @@ hr {
   box-sizing: border-box;
   margin: 0;
   font-family: 'Ubuntu', 'Verdana';
+  color: var(--black);
 }
 
 button {
