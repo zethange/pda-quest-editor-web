@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Card from "@/components/UI/Card";
 import NavBar from "@/components/UI/NavBar";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { exampleChapter } from "@/store/types";
 
 export default function Home() {

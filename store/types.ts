@@ -1,5 +1,24 @@
 export type stageType = {
   id: number;
+  type_stage: number;
+  background_url: string;
+  title: string;
+  message: string;
+  type_message: number;
+  texts: [
+    {
+      text: string;
+      condition: any;
+    }
+  ];
+  transfers: [
+    {
+      text: string;
+      stage_id: string;
+      condition: any;
+    }
+  ];
+  actions: any;
 };
 
 export function exampleChapter(id: string) {

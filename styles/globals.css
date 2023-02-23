@@ -7,6 +7,7 @@ hr {
   height: 1px;
 }
 
+
 .main {
   height: 100vh;
   background: var(--off-white);
@@ -65,14 +66,14 @@ hr {
 
 /* Стили для редактора */
 .stage-body {
-  max-height: calc(100vh - 78px);
-  max-width: 100%;
+  height: calc(100vh - 78px);
   overflow-x: scroll;
   overflow-y: scroll;
 }
 
 .stage-parent {
   height: 100vh;
+  width: 1000vh;
   position: relative;
   background: url("/background2.svg");
 }

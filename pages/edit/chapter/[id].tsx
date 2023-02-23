@@ -1,36 +1,54 @@
 import Head from "next/head";
 import NavBar from "@/components/UI/NavBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import "reactflow/dist/style.css";
+import ReactFlow, {
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
+  Background,
+  Controls,
+  MiniMap,
+} from "reactflow";
+import { stageType } from "@/store/types";
+import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 
-export default function () {
+export default function ChapterEditById() {
   const { query, isReady } = useRouter();
   const id = query.id as string;
-
-  const [theme, setTheme] = useState<any>();
   const [chapter, setChapter] = useState<any>();
+
+  const [nodes, setNodes] = useState<any[]>();
 
   useEffect(() => {
     const chapterFromLocalStorage = JSON.parse(
-      // @ts-ignore
-      localStorage.getItem(`chapter_${id}`)
+      localStorage.getItem(`chapter_${id}`) as any
     );
     setChapter(chapterFromLocalStorage);
+
+    const initialNodes: any[] = [];
+
+    chapterFromLocalStorage?.stages.map((stage: stageType) => {
+      initialNodes.push({
+        id: String(stage.id),
+        data: { label: `Стадия ${stage.id}` },
+        position: { x: 0, y: 0 },
+      });
+    });
+
+    console.log(initialNodes);
+    if (initialNodes.length !== 0) {
+      setNodes(initialNodes);
+    }
   }, [isReady]);
 
-  const changeTheme = () => {
-    const att = document.createAttribute("data-app-theme");
-    if (theme === "light") {
-      att.value = "dark";
-      setTheme("dark");
-    } else {
-      att.value = "light";
-      setTheme("light");
-    }
-
+  const onNodesChange = useCallback(
     // @ts-ignore
-    document.querySelector("main").setAttributeNode(att);
-  };
+    (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  );
 
   return (
     <>
@@ -42,14 +60,15 @@ export default function () {
       </Head>
       <main className="main">
         <NavBar>
+          <Link className="navbar__header" href="/">
+            Назад
+          </Link>
           <button className="navbar__header navbar__header--active">
             Глава
           </button>
           <button className="navbar__header">Карта</button>
           <button className="mx-auto"></button>
-          <button className="navbar__header" onClick={changeTheme}>
-            Сменить тему :)
-          </button>
+          <ChangeThemeButton />
           <button className="navbar__header">Помощь</button>
         </NavBar>
         <hr />
@@ -57,15 +76,11 @@ export default function () {
           <button className="navbar__header">Создать стадию</button>
         </NavBar>
         <div className="stage-body">
-          <div className="stage-parent" id="stage-main">
-            {chapter &&
-              chapter.stages.map((stage: any) => (
-                <div className="stage-card" id="stage" key={stage?.id}>
-                  <h2>Стадия {stage?.id}</h2>
-                  {stage?.message}
-                </div>
-              ))}
-          </div>
+          <ReactFlow nodes={nodes} onNodesChange={onNodesChange} fitView>
+            <MiniMap />
+            <Controls />
+            <Background />
+          </ReactFlow>
         </div>
       </main>
     </>
