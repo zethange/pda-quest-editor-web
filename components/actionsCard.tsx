@@ -9,5 +9,7 @@ export default function ActionsCard({ actions }: { actions: any }) {
         {actions?.money && <p>Добавить денег: {actions?.money[0]} руб.</p>}
       </div>
     );
+  } else {
+    return <div></div>;
   }
 }
