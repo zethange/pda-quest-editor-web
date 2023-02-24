@@ -11,6 +11,7 @@ import ReactFlow, {
   Background,
   Controls,
   MiniMap,
+  SelectionMode,
 } from "reactflow";
 import { stageType } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
@@ -21,6 +22,7 @@ export default function ChapterEditById() {
   const [chapter, setChapter] = useState<any>();
 
   const [nodes, setNodes] = useState<any[]>();
+  const [edges, setEdges] = useState<any[]>();
 
   useEffect(() => {
     const chapterFromLocalStorage = JSON.parse(
@@ -29,18 +31,44 @@ export default function ChapterEditById() {
     setChapter(chapterFromLocalStorage);
 
     const initialNodes: any[] = [];
+    const initialEdges: any[] = [{ id: "0-1", source: "0", target: "1" }];
 
     chapterFromLocalStorage?.stages.map((stage: stageType) => {
+      if (stage.texts) {
+        var stageTransfersText = stage?.texts[0]?.text;
+      }
+
       initialNodes.push({
         id: String(stage.id),
-        data: { label: `Стадия ${stage.id}` },
-        position: { x: 0, y: 0 },
+        data: {
+          label: `${stage.title}`,
+        },
+        position: { x: Math.random() * 1000, y: Math.random() * 1000 },
       });
     });
 
-    console.log(initialNodes);
+    chapterFromLocalStorage?.stages.map((stage: stageType) => {
+      if (stage.transfers) {
+        var stageTransfersId = stage?.transfers[0]?.stage_id;
+        var stageTransfersText = stage?.transfers[0]?.text;
+      }
+
+      initialEdges.push({
+        id: `${stage.id}-${stageTransfersId}`,
+        label: String(stageTransfersText),
+        source: String(stage.id),
+        target: String(stageTransfersId),
+      });
+      console.log(stage.transfers);
+    });
+
     if (initialNodes.length !== 0) {
       setNodes(initialNodes);
+    }
+
+    if (initialEdges.length !== 0) {
+      setEdges(initialEdges);
+      console.log(initialEdges);
     }
   }, [isReady]);
 
@@ -49,6 +77,8 @@ export default function ChapterEditById() {
     (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
     []
   );
+
+  const panOnDrag = [1, 2];
 
   return (
     <>
@@ -76,7 +106,12 @@ export default function ChapterEditById() {
           <button className="navbar__header">Создать стадию</button>
         </NavBar>
         <div className="stage-body">
-          <ReactFlow nodes={nodes} onNodesChange={onNodesChange} fitView>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            fitView
+          >
             <MiniMap />
             <Controls />
             <Background />
