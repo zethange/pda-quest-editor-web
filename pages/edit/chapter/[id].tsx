@@ -48,10 +48,10 @@ export default function ChapterEditById() {
     });
 
     chapterFromLocalStorage?.stages.map((stage: stageType) => {
-      if (stage.transfers) {
-        var stageTransfersId = stage?.transfers[0]?.stage_id;
-        var stageTransfersText = stage?.transfers[0]?.text;
-      }
+      let stageTransfersId = stage.transfers
+        ? stage.transfers[0].stage_id
+        : false;
+      let stageTransfersText = stage.texts ? stage.texts[0].text : false;
 
       initialEdges.push({
         id: `${stage.id}-${stageTransfersId}`,
