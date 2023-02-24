@@ -1,46 +1,23 @@
-export type stageType = {
-  id: number;
-  type_stage: number;
-  background_url: string;
-  title: string;
-  message: string;
-  type_message: number;
-  texts: [
-    {
-      text: string;
-      condition: any;
-    }
-  ];
-  transfers: [
-    {
-      text: string;
-      stage_id: string;
-      condition: any;
-    }
-  ];
-  actions: any;
-};
-
-export function exampleChapter(id: string) {
+export function newChapter(id: string) {
   return {
     id: Number(id),
     stages: [
       {
         id: 0,
         type_stage: 0,
-        background_url: "//",
-        title: "Привет-с",
+        background_url: "",
+        title: "Это начало великой истории",
         message: "",
         type_message: 0,
         texts: [
           {
-            text: "У тебя крутые яйца",
+            text: "Go to the gym",
             condition: {},
           },
         ],
         transfers: [
           {
-            text: "У тебя тоже",
+            text: "Пошли",
             stage_id: "1",
             condition: {},
           },
@@ -51,27 +28,31 @@ export function exampleChapter(id: string) {
   };
 }
 
-export function newStage(id: number) {
-  return {
-    id,
-    type_stage: 0,
-    background_url: "//",
-    title: "Новая стадия",
-    message: "",
-    type_message: 0,
-    texts: [
-      {
-        text: "Привет.",
-        condition: {},
-      },
-    ],
-    transfers: [
-      {
-        text: "Привет. Как дела?",
-        stage_id: String(id + 1),
-        condition: {},
-      },
-    ],
-    actions: {},
-  };
+export function newStage(type: string, id: number) {
+  if (type === "default") {
+    return {
+      id,
+      type_stage: 0,
+      background_url: "",
+      title: "Новая стадия",
+      message: "",
+      type_message: 0,
+      texts: [
+        {
+          text: "Привет.",
+          condition: {},
+        },
+      ],
+      transfers: [
+        {
+          text: "Привет. Как дела?",
+          stage_id: String(id + 1),
+          condition: {},
+        },
+      ],
+      actions: {},
+    };
+  } else if (type === "exit") {
+    return { id, type_stage: 4, data: { map: 0, pos: "4:2" } };
+  }
 }

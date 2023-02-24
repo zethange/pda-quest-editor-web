@@ -2,7 +2,7 @@ import Head from "next/head";
 import Card from "@/components/UI/Card";
 import NavBar from "@/components/UI/NavBar";
 import { useEffect, useState } from "react";
-import { exampleChapter } from "@/store/types";
+import { newChapter } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
   const createChapter = () => {
     localStorage.setItem(
       `chapter_${keyChapters.length}`,
-      JSON.stringify(exampleChapter(keyChapters.length))
+      JSON.stringify(newChapter(keyChapters.length))
     );
     setLoaded(false);
   };

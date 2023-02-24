@@ -1,5 +1,6 @@
 import ActionsCard from "@/components/actionsCard";
 import Image from "next/image";
+import MapStage from "@/components/popover/MapStage";
 
 export default function EditPopover({ stage }: { stage: any }) {
   let typeStage;
@@ -27,17 +28,19 @@ export default function EditPopover({ stage }: { stage: any }) {
       {typeStage === "диалог" && (
         <>
           <div className="stage-card">
-            <Image
-              src={"https://files.artux.net/static/" + stage?.background_url}
-              width={340}
-              height={191}
-              style={{ borderRadius: "5px" }}
+            <p style={{ paddingBottom: "5px" }}>{stage?.title}</p>
+            <img
+              src={
+                stage?.background_url
+                  ? "https://files.artux.net/static/" + stage?.background_url
+                  : "/no_background.jpg"
+              }
+              style={{ borderRadius: "5px", width: "340px" }}
               alt={stage?.title}
             />
           </div>
           {stage.message && (
             <div className="stage-card" style={{ fontSize: "12px" }}>
-              <div>Тип сообщения: {stage?.type_message}</div>
               <div>{stage?.message}</div>
             </div>
           )}
@@ -57,9 +60,7 @@ export default function EditPopover({ stage }: { stage: any }) {
           </div>
         </>
       )}
-      {typeStage === "переход" && (
-        <div className="stage-card">{JSON.stringify(stage?.data)}</div>
-      )}
+      {typeStage === "переход" && <MapStage data={stage.data} />}
       <ActionsCard actions={stage?.actions} />
     </div>
   );

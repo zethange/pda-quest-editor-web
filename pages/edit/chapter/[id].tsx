@@ -5,15 +5,13 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import "reactflow/dist/style.css";
 import ReactFlow, {
-  addEdge,
-  applyEdgeChanges,
   applyNodeChanges,
   Background,
   Controls,
+  MarkerType,
   MiniMap,
-  SelectionMode,
 } from "reactflow";
-import { newStage, stageType } from "@/store/types";
+import { newStage } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import EditPopover from "@/components/editPopover";
 
@@ -27,6 +25,7 @@ export default function ChapterEditById() {
   const [edges, setEdges] = useState<any[]>();
 
   const [openStage, setOpenStage] = useState<any>();
+  const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false);
 
   const updateChapter = (chapter: any) => {
     setChapter(chapter);
@@ -45,16 +44,12 @@ export default function ChapterEditById() {
     const initialNodes: any[] = [];
     const initialEdges: any[] = [];
 
-    chapter?.stages.map((stage: stageType) => {
+    chapter?.stages.map((stage: any) => {
       initialNodes.push({
         id: String(stage.id),
         data: {
           label: (
-            <button
-              onClick={() => {
-                openStage ? setOpenStage(null) : setOpenStage(stage);
-              }}
-            >
+            <button onClick={() => setOpenStage(stage)}>
               {stage.title ? stage.title : "Переход на карту"}
             </button>
           ),
@@ -63,7 +58,7 @@ export default function ChapterEditById() {
       });
     });
 
-    chapter?.stages.map((stage: stageType) => {
+    chapter?.stages.map((stage: any) => {
       let stageTransfersId = stage.transfers
         ? stage.transfers[0].stage_id
         : false;
@@ -72,6 +67,9 @@ export default function ChapterEditById() {
         id: `${stage.id}-${stageTransfersId}`,
         source: String(stage.id),
         target: String(stageTransfersId),
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+        },
       });
     });
 
@@ -90,10 +88,10 @@ export default function ChapterEditById() {
     []
   );
 
-  const createStage = () => {
+  const createStage = (type: string) => {
     const updatedChapter = {
       id: chapter.id,
-      stages: [...chapter.stages, newStage(chapter.stages.length)],
+      stages: [...chapter.stages, newStage(type, chapter.stages.length)],
     };
     updateChapter(updatedChapter);
   };
@@ -121,9 +119,38 @@ export default function ChapterEditById() {
         </NavBar>
         <hr />
         <NavBar>
-          <button className="navbar__header" onClick={() => createStage()}>
+          <div
+            className="navbar__header"
+            onClick={() => setShowPopoverStage(!showPopoverStage)}
+          >
             Создать стадию
-          </button>
+            {showPopoverStage && (
+              <div
+                style={{
+                  position: "absolute",
+                  background: "var(--light-gray)",
+                  padding: "5px",
+                  display: "grid",
+                  gap: "5px",
+                  zIndex: "1000",
+                  borderRadius: "5px",
+                }}
+              >
+                <button
+                  className="button-popover"
+                  onClick={() => createStage("default")}
+                >
+                  Диалог
+                </button>
+                <button
+                  className="button-popover"
+                  onClick={() => createStage("exit")}
+                >
+                  Выход на карту
+                </button>
+              </div>
+            )}
+          </div>
         </NavBar>
         <div className="stage-body">
           {openStage && <EditPopover stage={openStage} />}

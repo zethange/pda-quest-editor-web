@@ -103,6 +103,17 @@ hr {
   margin-right: auto;
 }
 
+.button-popover {
+  padding: 10px;
+  background: var(--white);
+  border-radius: 5px;
+  transition: all 0.4s;
+}
+
+.button-popover:hover {
+  background: var(--gray);
+}
+
 /* Сбросы */
 
 *,
