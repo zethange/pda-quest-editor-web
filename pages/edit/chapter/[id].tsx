@@ -13,53 +13,66 @@ import ReactFlow, {
   MiniMap,
   SelectionMode,
 } from "reactflow";
-import { stageType } from "@/store/types";
+import { newStage, stageType } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
+import EditPopover from "@/components/editPopover";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
   const id = query.id as string;
+
   const [chapter, setChapter] = useState<any>();
 
   const [nodes, setNodes] = useState<any[]>();
   const [edges, setEdges] = useState<any[]>();
+
+  const [openStage, setOpenStage] = useState<any>();
+
+  const updateChapter = (chapter: any) => {
+    setChapter(chapter);
+    localStorage.setItem(`chapter_${id}`, JSON.stringify(chapter));
+    console.log("Обновление главы: ", chapter);
+  };
 
   useEffect(() => {
     const chapterFromLocalStorage = JSON.parse(
       localStorage.getItem(`chapter_${id}`) as any
     );
     setChapter(chapterFromLocalStorage);
+  }, [isReady]);
 
+  useEffect(() => {
     const initialNodes: any[] = [];
-    const initialEdges: any[] = [{ id: "0-1", source: "0", target: "1" }];
+    const initialEdges: any[] = [];
 
-    chapterFromLocalStorage?.stages.map((stage: stageType) => {
-      if (stage.texts) {
-        var stageTransfersText = stage?.texts[0]?.text;
-      }
-
+    chapter?.stages.map((stage: stageType) => {
       initialNodes.push({
         id: String(stage.id),
         data: {
-          label: `${stage.title}`,
+          label: (
+            <button
+              onClick={() => {
+                openStage ? setOpenStage(null) : setOpenStage(stage);
+              }}
+            >
+              {stage.title ? stage.title : "Переход на карту"}
+            </button>
+          ),
         },
         position: { x: Math.random() * 1000, y: Math.random() * 1000 },
       });
     });
 
-    chapterFromLocalStorage?.stages.map((stage: stageType) => {
+    chapter?.stages.map((stage: stageType) => {
       let stageTransfersId = stage.transfers
         ? stage.transfers[0].stage_id
         : false;
-      let stageTransfersText = stage.texts ? stage.texts[0].text : false;
 
       initialEdges.push({
         id: `${stage.id}-${stageTransfersId}`,
-        label: String(stageTransfersText),
         source: String(stage.id),
         target: String(stageTransfersId),
       });
-      console.log(stage.transfers);
     });
 
     if (initialNodes.length !== 0) {
@@ -68,9 +81,8 @@ export default function ChapterEditById() {
 
     if (initialEdges.length !== 0) {
       setEdges(initialEdges);
-      console.log(initialEdges);
     }
-  }, [isReady]);
+  }, [chapter]);
 
   const onNodesChange = useCallback(
     // @ts-ignore
@@ -78,15 +90,21 @@ export default function ChapterEditById() {
     []
   );
 
-  const panOnDrag = [1, 2];
+  const createStage = () => {
+    const updatedChapter = {
+      id: chapter.id,
+      stages: [...chapter.stages, newStage(chapter.stages.length)],
+    };
+    updateChapter(updatedChapter);
+  };
 
   return (
     <>
       <Head>
-        <title>Редактирование главы {chapter?.id}</title>
+        <title>Редактирование главы {chapter?.id} :: PDA Quest Editor</title>
         <meta name="description" content="Редактор главы" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="https://artux.net/favicon-32x32.png" />
       </Head>
       <main className="main">
         <NavBar>
@@ -103,16 +121,19 @@ export default function ChapterEditById() {
         </NavBar>
         <hr />
         <NavBar>
-          <button className="navbar__header">Создать стадию</button>
+          <button className="navbar__header" onClick={() => createStage()}>
+            Создать стадию
+          </button>
         </NavBar>
         <div className="stage-body">
+          {openStage && <EditPopover stage={openStage} />}
           <ReactFlow
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             fitView
           >
-            <MiniMap />
+            <MiniMap zoomable pannable />
             <Controls />
             <Background />
           </ReactFlow>

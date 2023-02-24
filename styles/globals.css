@@ -79,15 +79,10 @@ hr {
 }
 
 .stage-card {
-  width: 200px;
-  height: 200px;
   padding: 10px;
-  background: var(--white);
-  border: 1px solid var(--black);
   border-radius: 5px;
-  font-size: 10px;
-  user-select: none;
-  text-align: center;
+  background: var(--off-white);
+  margin-bottom: 5px;
 }
 
 .stage-route-button {
@@ -96,7 +91,6 @@ hr {
   left: 0;
   padding: 10px;
 }
-
 
 /* Классы общего назначения */
 
@@ -126,8 +120,6 @@ button {
   font: inherit;
   color: inherit;
   background-color: transparent;
-  /* отображаем курсор в виде руки при наведении; некоторые
-  считают, что необходимо оставлять стрелочный вид для кнопок */
   cursor: pointer;
 }
 
