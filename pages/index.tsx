@@ -51,8 +51,7 @@ export default function Home() {
     }
 
     keyStages.map((stage) => {
-      // @ts-ignore
-      stages.push(JSON.parse(localStorage.getItem(stage)));
+      stages.push(JSON.parse(localStorage.getItem(stage) as any));
     });
 
     setKeyChapters(keyStages);

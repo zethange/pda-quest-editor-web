@@ -90,6 +90,7 @@ export default function ChapterEditById() {
     (changes: any) => {
       // @ts-ignore
       setNodes((nds) => applyNodeChanges(changes, nds));
+
       if (changes[0].position) {
         const updatedStageWithPosition = {
           ...chapter?.stages[changes[0].id],
@@ -99,8 +100,6 @@ export default function ChapterEditById() {
           },
         };
 
-        console.log(changes[0].position, updatedStageWithPosition);
-
         const idInitialStage = chapter?.stages.indexOf(
           chapter.stages[changes[0].id]
         );
@@ -108,17 +107,11 @@ export default function ChapterEditById() {
         const initialStages = JSON.parse(
           localStorage.getItem(`chapter_${id}`) as any
         ).stages;
-
         initialStages?.splice(idInitialStage, 1, updatedStageWithPosition);
-
-        console.log({
-          id: chapter.id,
-          stages: initialStages,
-        });
-
         updateChapter(
           {
             id: chapter.id,
+            music: chapter.music,
             stages: initialStages,
           },
           false
@@ -129,9 +122,17 @@ export default function ChapterEditById() {
   );
 
   const createStage = (type: string) => {
+    const chapterFromLocalStorage = JSON.parse(
+      localStorage.getItem(`chapter_${id}`) as any
+    );
+
     const updatedChapter = {
-      id: chapter.id,
-      stages: [...chapter.stages, newStage(type, chapter.stages.length)],
+      id: chapterFromLocalStorage?.id,
+      music: chapterFromLocalStorage?.music,
+      stages: [
+        ...chapterFromLocalStorage?.stages,
+        newStage(type, chapterFromLocalStorage?.stages.length),
+      ],
     };
     updateChapter(updatedChapter, true);
   };
