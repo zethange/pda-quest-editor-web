@@ -2,7 +2,7 @@ import ActionsCard from "@/components/actionsCard";
 import Image from "next/image";
 import MapStage from "@/components/popover/MapStage";
 
-export default function EditPopover({ stage }: { stage: any }) {
+export default function ShowPopover({ stage }: { stage: any }) {
   let typeStage;
   if (stage?.type_stage === 0 || stage?.type_stage === 1) {
     typeStage = "диалог";
@@ -46,19 +46,21 @@ export default function EditPopover({ stage }: { stage: any }) {
           )}
           <div className="stage-card" style={{ fontSize: "12px" }}>
             <b>Тексты:</b>
-            {stage?.texts?.map((text: any) => (
-              <ul key={text.text}>
-                <li>{text.text}</li>
-              </ul>
-            ))}
+            <ul>
+              {stage?.texts?.map((text: any) => (
+                <>{text.text !== "" && <li key={text.text}>{text.text}</li>}</>
+              ))}
+            </ul>
           </div>
           <div className="stage-card" style={{ fontSize: "12px" }}>
             <b>Переходы:</b>
-            {stage?.transfers?.map((transfer: any) => (
-              <div key={transfer?.text}>
-                {`- "${transfer?.text}", переход на стадию ${transfer?.stage_id}`}
-              </div>
-            ))}
+            <ul>
+              {stage?.transfers?.map((transfer: any) => (
+                <li key={transfer?.text}>
+                  {`"${transfer?.text}", переход на стадию ${transfer?.stage_id}`}
+                </li>
+              ))}
+            </ul>
           </div>
         </>
       )}

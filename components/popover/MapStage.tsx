@@ -1,5 +1,3 @@
-import { map } from "d3-array";
-
 export default function MapStage({ data }: { data: any }) {
   let mapString: string = "загрузка...";
   let mapImg: string = "https://files.artux.net";

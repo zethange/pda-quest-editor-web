@@ -115,7 +115,8 @@ code {
 
 .stage-popover {
   position: absolute;
-  background: var(--light-gray);
+  background: var(--white);
+  border: 1px solid var(--light-gray);
   padding: 3px;
   display: grid;
   gap: 5px;
@@ -125,13 +126,13 @@ code {
 
 .button-popover {
   padding: 10px;
-  background: var(--white);
+  background: var(--off-white);
   border-radius: 2px;
   transition: all 0.4s;
 }
 
 .button-popover:hover {
-  background: var(--gray);
+  background: var(--light-gray);
 }
 
 /* Сбросы */

@@ -1,6 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
 import Head from "next/head";
+// @ts-ignore
 import remarkGfm from "remark-gfm";
 import NavBar from "@/components/UI/NavBar";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";

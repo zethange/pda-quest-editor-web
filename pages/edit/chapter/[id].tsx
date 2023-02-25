@@ -13,7 +13,7 @@ import ReactFlow, {
 } from "reactflow";
 import { newStage } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
-import EditPopover from "@/components/editPopover";
+import ShowPopover from "@/components/ShowPopover";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -145,7 +145,7 @@ export default function ChapterEditById() {
           </div>
         </NavBar>
         <div className="stage-body">
-          {openStage && <EditPopover stage={openStage} />}
+          {openStage && <ShowPopover stage={openStage} />}
           <ReactFlow
             nodes={nodes}
             edges={edges}
