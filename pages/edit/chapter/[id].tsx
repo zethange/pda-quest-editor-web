@@ -27,10 +27,11 @@ export default function ChapterEditById() {
   const [openStage, setOpenStage] = useState<any>();
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false);
 
-  const updateChapter = (chapter: any) => {
-    setChapter(chapter);
+  const updateChapter = (chapter: any, all: boolean) => {
+    if (all) {
+      setChapter(chapter);
+    }
     localStorage.setItem(`chapter_${id}`, JSON.stringify(chapter));
-    console.log("Обновление главы: ", chapter);
   };
 
   useEffect(() => {
@@ -93,22 +94,35 @@ export default function ChapterEditById() {
         const updatedStageWithPosition = {
           ...chapter?.stages[changes[0].id],
           editor: {
-            x: Math.round(changes[0].position.x),
-            y: Math.round(changes[0].position.y),
+            x: changes[0].position.x,
+            y: changes[0].position.y,
           },
         };
+
+        console.log(changes[0].position, updatedStageWithPosition);
 
         const idInitialStage = chapter?.stages.indexOf(
           chapter.stages[changes[0].id]
         );
 
-        const initialStages = JSON.parse(JSON.stringify(chapter.stages));
-        initialStages.splice(idInitialStage, 1, updatedStageWithPosition);
+        const initialStages = JSON.parse(
+          localStorage.getItem(`chapter_${id}`) as any
+        ).stages;
 
-        updateChapter({
+        initialStages?.splice(idInitialStage, 1, updatedStageWithPosition);
+
+        console.log({
           id: chapter.id,
           stages: initialStages,
         });
+
+        updateChapter(
+          {
+            id: chapter.id,
+            stages: initialStages,
+          },
+          false
+        );
       }
     },
     [chapter]
@@ -119,7 +133,7 @@ export default function ChapterEditById() {
       id: chapter.id,
       stages: [...chapter.stages, newStage(type, chapter.stages.length)],
     };
-    updateChapter(updatedChapter);
+    updateChapter(updatedChapter, true);
   };
 
   return (

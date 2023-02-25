@@ -105,7 +105,7 @@ export default function Home() {
                 key={chapter?.id}
                 id={chapter?.id}
               >
-                <div>Количество стадий: {chapter?.stages.length}</div>
+                <div>Количество стадий: {chapter?.stages?.length}</div>
               </Card>
             ))}
           </div>

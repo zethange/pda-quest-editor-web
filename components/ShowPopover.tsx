@@ -4,11 +4,16 @@ import MapStage from "@/components/popover/MapStage";
 
 export default function ShowPopover({ stage }: { stage: any }) {
   let typeStage;
-  if (stage?.type_stage === 0 || stage?.type_stage === 1) {
+  if (
+    stage?.type_stage === 0 ||
+    stage?.type_stage === 1 ||
+    stage?.type_stage === 7
+  ) {
     typeStage = "диалог";
-  } else if (stage?.type_stage === 4) {
+  } else if (stage?.type_stage === 4 || stage?.type_stage === 5) {
     typeStage = "переход";
   }
+
   return (
     <div
       style={{
