@@ -1,5 +1,12 @@
 @import './colors.css';
 
+@font-face {
+  font-family: 'GolosText';
+  src: url('/fonts/GolosText-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 hr {
   color: var(--light-gray);
   border: none;
@@ -7,6 +14,9 @@ hr {
   height: 1px;
 }
 
+code {
+  background: var(--light-gray);
+}
 
 .main {
   height: 100vh;
@@ -103,10 +113,20 @@ hr {
   margin-right: auto;
 }
 
+.stage-popover {
+  position: absolute;
+  background: var(--light-gray);
+  padding: 3px;
+  display: grid;
+  gap: 5px;
+  z-index: 1000;
+  border-radius: 5px;
+}
+
 .button-popover {
   padding: 10px;
   background: var(--white);
-  border-radius: 5px;
+  border-radius: 2px;
   transition: all 0.4s;
 }
 
@@ -121,8 +141,14 @@ hr {
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-family: 'Ubuntu', 'Verdana';
+  font-family: 'GolosText';
   color: var(--black);
+}
+
+ul {
+  list-style: inside;;
+  padding: 0;
+  margin: 0;
 }
 
 button {
@@ -132,6 +158,15 @@ button {
   color: inherit;
   background-color: transparent;
   cursor: pointer;
+}
+
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none;
+  user-select: none;
 }
 
 a {

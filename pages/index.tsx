@@ -4,6 +4,7 @@ import NavBar from "@/components/UI/NavBar";
 import { useEffect, useState } from "react";
 import { newChapter } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
+import Link from "next/link";
 
 export default function Home() {
   const [listChapters, setListChapters] = useState<any>([]); // это полностью все главы в массиве
@@ -78,7 +79,9 @@ export default function Home() {
           </button>
           <div className="mx-auto"></div>
           <ChangeThemeButton />
-          <button className="navbar__header">Помощь</button>
+          <Link className="navbar__header" href="/edit/chapter/help">
+            Помощь
+          </Link>
         </NavBar>
         <hr />
         <NavBar>

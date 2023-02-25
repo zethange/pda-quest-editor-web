@@ -115,27 +115,19 @@ export default function ChapterEditById() {
           <button className="navbar__header">Карта</button>
           <button className="mx-auto"></button>
           <ChangeThemeButton />
-          <button className="navbar__header">Помощь</button>
+          <Link className="navbar__header" href="/edit/chapter/help">
+            Помощь
+          </Link>
         </NavBar>
         <hr />
         <NavBar>
           <div
-            className="navbar__header"
+            className="navbar__header no-select"
             onClick={() => setShowPopoverStage(!showPopoverStage)}
           >
             Создать стадию
             {showPopoverStage && (
-              <div
-                style={{
-                  position: "absolute",
-                  background: "var(--light-gray)",
-                  padding: "5px",
-                  display: "grid",
-                  gap: "5px",
-                  zIndex: "1000",
-                  borderRadius: "5px",
-                }}
-              >
+              <div className="stage-popover">
                 <button
                   className="button-popover"
                   onClick={() => createStage("default")}

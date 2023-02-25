@@ -47,7 +47,9 @@ export default function EditPopover({ stage }: { stage: any }) {
           <div className="stage-card" style={{ fontSize: "12px" }}>
             <b>Тексты:</b>
             {stage?.texts?.map((text: any) => (
-              <div key={text.text}>{text.text}</div>
+              <ul key={text.text}>
+                <li>{text.text}</li>
+              </ul>
             ))}
           </div>
           <div className="stage-card" style={{ fontSize: "12px" }}>
