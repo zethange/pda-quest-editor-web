@@ -1,7 +1,5 @@
-import { stageType } from "@/store/types";
-
 type Props = {
-  stage: stageType;
+  stage: any;
 };
 
 export default function StagePopover({ stage }: Props) {
