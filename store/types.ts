@@ -23,6 +23,10 @@ export function newChapter(id: string) {
           },
         ],
         actions: {},
+        editor: {
+          x: 0,
+          y: 0,
+        },
       },
     ],
   };
@@ -51,8 +55,14 @@ export function newStage(type: string, id: number) {
         },
       ],
       actions: {},
+      editor: { x: Math.random() * 500, y: Math.random() * 500 },
     };
   } else if (type === "exit") {
-    return { id, type_stage: 4, data: { map: 0, pos: "4:2" } };
+    return {
+      id,
+      type_stage: 4,
+      data: { map: 0, pos: "4:2" },
+      editor: { x: Math.random() * 500, y: Math.random() * 500 },
+    };
   }
 }

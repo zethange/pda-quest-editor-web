@@ -37,6 +37,7 @@ export default function ChapterEditById() {
     const chapterFromLocalStorage = JSON.parse(
       localStorage.getItem(`chapter_${id}`) as any
     );
+
     setChapter(chapterFromLocalStorage);
   }, [isReady]);
 
@@ -49,12 +50,14 @@ export default function ChapterEditById() {
         id: String(stage.id),
         data: {
           label: (
-            <button onClick={() => setOpenStage(stage)}>
-              {stage.title ? stage.title : "Переход на карту"}
-            </button>
+            <>
+              <button onClick={() => setOpenStage(stage)}>
+                {stage.title ? stage.title : "Переход на карту"}
+              </button>
+            </>
           ),
         },
-        position: { x: Math.random() * 1000, y: Math.random() * 1000 },
+        position: { x: stage.editor.x, y: stage.editor.y },
       });
     });
 
@@ -83,9 +86,32 @@ export default function ChapterEditById() {
   }, [chapter]);
 
   const onNodesChange = useCallback(
-    // @ts-ignore
-    (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
+    (changes: any) => {
+      // @ts-ignore
+      setNodes((nds) => applyNodeChanges(changes, nds));
+      if (changes[0].position) {
+        const updatedStageWithPosition = {
+          ...chapter?.stages[changes[0].id],
+          editor: {
+            x: Math.round(changes[0].position.x),
+            y: Math.round(changes[0].position.y),
+          },
+        };
+
+        const idInitialStage = chapter?.stages.indexOf(
+          chapter.stages[changes[0].id]
+        );
+
+        const initialStages = JSON.parse(JSON.stringify(chapter.stages));
+        initialStages.splice(idInitialStage, 1, updatedStageWithPosition);
+
+        updateChapter({
+          id: chapter.id,
+          stages: initialStages,
+        });
+      }
+    },
+    [chapter]
   );
 
   const createStage = (type: string) => {
