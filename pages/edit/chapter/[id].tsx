@@ -1,9 +1,5 @@
-import Head from "next/head";
-import NavBar from "@/components/UI/NavBar";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import "reactflow/dist/style.css";
 import ReactFlow, {
   applyNodeChanges,
   Background,
@@ -11,6 +7,11 @@ import ReactFlow, {
   MarkerType,
   MiniMap,
 } from "reactflow";
+import Link from "next/link";
+import Head from "next/head";
+import NavBar from "@/components/UI/NavBar";
+import "reactflow/dist/style.css";
+
 import { newStage } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import ShowPopover from "@/components/ShowPopover";
@@ -67,13 +68,15 @@ export default function ChapterEditById() {
         ? stage.transfers[0].stage_id
         : false;
 
-      initialEdges.push({
-        id: `${stage.id}-${stageTransfersId}`,
-        source: String(stage.id),
-        target: String(stageTransfersId),
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-        },
+      stage?.transfers?.map((transfer: any) => {
+        initialEdges.push({
+          id: `${stage.id}-${stageTransfersId}`,
+          source: String(stage.id),
+          target: String(transfer.stage_id),
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
+        });
       });
     });
 
