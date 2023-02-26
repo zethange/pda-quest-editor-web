@@ -124,6 +124,22 @@ code {
   border-radius: 5px;
 }
 
+.editor-popover {
+  position: absolute;
+  width: 400px;
+  height: calc(100vh - 78px);
+  right: 0;
+  padding: 20px;
+  background: var(--white);
+  z-index: 10000;
+}
+
+.stage-popover__header {
+  font-size: 20px;
+  display: flex;
+  padding-bottom: 5px;
+}
+
 .button-popover {
   padding: 10px;
   background: var(--off-white);

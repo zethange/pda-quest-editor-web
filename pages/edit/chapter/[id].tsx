@@ -26,8 +26,13 @@ export default function ChapterEditById() {
   const [edges, setEdges] = useState<any[]>();
 
   const [openStage, setOpenStage] = useState<any>();
+  const [editableStage, setEditableStage] = useState<boolean>(false);
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false);
 
+  const [texts, setTexts] = useState<any>();
+  const [transfers, setTransfers] = useState<any>();
+
+  // Функция обновления главы
   const updateChapter = (chapter: any, all: boolean) => {
     if (all) {
       setChapter(chapter);
@@ -35,6 +40,7 @@ export default function ChapterEditById() {
     localStorage.setItem(`chapter_${id}`, JSON.stringify(chapter));
   };
 
+  // Вытаскивание главы из localStorage
   useEffect(() => {
     const chapterFromLocalStorage = JSON.parse(
       localStorage.getItem(`chapter_${id}`) as any
@@ -43,6 +49,7 @@ export default function ChapterEditById() {
     setChapter(chapterFromLocalStorage);
   }, [isReady]);
 
+  // Первоначальная отрисовка нод
   useEffect(() => {
     const initialNodes: any[] = [];
     const initialEdges: any[] = [];
@@ -53,7 +60,12 @@ export default function ChapterEditById() {
         data: {
           label: (
             <>
-              <button onClick={() => setOpenStage(stage)}>
+              <button
+                onClick={() => {
+                  setOpenStage(stage);
+                  setEditableStage(false);
+                }}
+              >
                 {stage.title ? stage.title : "Переход на карту"}
               </button>
             </>
@@ -89,6 +101,7 @@ export default function ChapterEditById() {
     }
   }, [chapter]);
 
+  // При изменении нод
   const onNodesChange = useCallback(
     (changes: any) => {
       // @ts-ignore
@@ -124,6 +137,7 @@ export default function ChapterEditById() {
     [chapter]
   );
 
+  // Создание стадии
   const createStage = (type: string) => {
     const chapterFromLocalStorage = JSON.parse(
       localStorage.getItem(`chapter_${id}`) as any
@@ -138,6 +152,27 @@ export default function ChapterEditById() {
       ],
     };
     updateChapter(updatedChapter, true);
+  };
+
+  // Обновление стадии
+  const updateStage = (stageId: number) => {
+    const chapterFromLocalStorage = JSON.parse(
+      localStorage.getItem(`chapter_${id}`) as any
+    );
+
+    const stage = {
+      ...chapterFromLocalStorage.stages[stageId],
+      texts,
+      transfers,
+    };
+
+    chapterFromLocalStorage.stages.splice(stageId, 1, stage);
+
+    if (texts || transfers) updateChapter(chapterFromLocalStorage, true);
+
+    setTexts(null);
+    setTransfers(null);
+    setOpenStage(null);
   };
 
   return (
@@ -189,7 +224,78 @@ export default function ChapterEditById() {
           </div>
         </NavBar>
         <div className="stage-body">
-          {openStage && <ShowPopover stage={openStage} />}
+          {openStage && (
+            <div className="editor-popover">
+              <div className="stage-popover__header">
+                Стадия {openStage?.id}
+                <div className="mx-auto"></div>
+                <button
+                  style={{ fontSize: "12px", paddingRight: "5px" }}
+                  onClick={() => setEditableStage(!editableStage)}
+                >
+                  {editableStage ? "Просмотр" : "Редактировать"}
+                </button>
+                <button
+                  style={{ fontSize: "12px" }}
+                  onClick={() => {
+                    setOpenStage(null);
+                    setEditableStage(false);
+                  }}
+                >
+                  Закрыть
+                </button>
+              </div>
+              {editableStage ? (
+                <div>
+                  <div className="stage-card">
+                    <b>Тексты:</b>
+                    <textarea
+                      name="text"
+                      id="text"
+                      style={{ width: "340px", resize: "vertical" }}
+                      defaultValue={openStage.texts[0].text}
+                      onChange={(event) =>
+                        setTexts([
+                          {
+                            text: event.target.value,
+                            conditions: openStage.texts[0].condition,
+                          },
+                        ])
+                      }
+                    ></textarea>
+                  </div>
+                  <div className="stage-card">
+                    <b>Ответы:</b>
+                    <textarea
+                      name="text"
+                      id="text"
+                      style={{ width: "340px", resize: "vertical" }}
+                      defaultValue={openStage.transfers[0].text}
+                      onChange={(event) =>
+                        setTransfers([
+                          {
+                            text: event.target.value,
+                            stage_id: openStage.transfers[0].stage_id,
+                            conditions: openStage.transfers[0].condition,
+                          },
+                        ])
+                      }
+                    ></textarea>
+                  </div>
+                  <button
+                    onClick={() => {
+                      updateStage(openStage.id);
+                      setEditableStage(false);
+                    }}
+                  >
+                    Сохранить
+                  </button>
+                </div>
+              ) : (
+                <ShowPopover stage={openStage} />
+              )}
+            </div>
+          )}
           <ReactFlow
             nodes={nodes}
             edges={edges}

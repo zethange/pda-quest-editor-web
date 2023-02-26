@@ -15,20 +15,7 @@ export default function ShowPopover({ stage }: { stage: any }) {
   }
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        width: "400px",
-        height: "calc(100vh - 78px)",
-        right: "0",
-        padding: "20px",
-        background: "var(--white)",
-        zIndex: "100",
-      }}
-    >
-      <div style={{ fontSize: "20px", paddingBottom: "5px" }}>
-        Стадия {stage?.id}
-      </div>
+    <>
       <div className="stage-card">Тип: {typeStage}</div>
       {typeStage === "диалог" && (
         <>
@@ -71,6 +58,6 @@ export default function ShowPopover({ stage }: { stage: any }) {
       )}
       {typeStage === "переход" && <MapStage data={stage.data} />}
       <ActionsCard actions={stage?.actions} />
-    </div>
+    </>
   );
 }
