@@ -1,10 +1,11 @@
+import { useEffect, useState } from "react";
+import { newChapter } from "@/store/types";
+import Link from "next/link";
+
 import Head from "next/head";
 import Card from "@/components/UI/Card";
 import NavBar from "@/components/UI/NavBar";
-import { useEffect, useState } from "react";
-import { newChapter } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
-import Link from "next/link";
 
 export default function Home() {
   const [listChapters, setListChapters] = useState<any>([]); // это полностью все главы в массиве
@@ -73,9 +74,6 @@ export default function Home() {
             История
           </button>
           <button className="navbar__header">Карта</button>
-          <button className="navbar__header">
-            Всего глав: {listChapters.length}
-          </button>
           <div className="mx-auto"></div>
           <ChangeThemeButton />
           <Link className="navbar__header" href="/edit/chapter/help">

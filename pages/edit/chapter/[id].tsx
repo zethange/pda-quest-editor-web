@@ -76,13 +76,9 @@ export default function ChapterEditById() {
     });
 
     chapter?.stages.map((stage: any) => {
-      let stageTransfersId = stage.transfers
-        ? stage.transfers[0].stage_id
-        : false;
-
       stage?.transfers?.map((transfer: any) => {
         initialEdges.push({
-          id: `${stage.id}-${stageTransfersId}`,
+          id: `${stage.id}-${transfer.stage_id}`,
           source: String(stage.id),
           target: String(transfer.stage_id),
           markerEnd: {
@@ -124,6 +120,7 @@ export default function ChapterEditById() {
           localStorage.getItem(`chapter_${id}`) as any
         ).stages;
         initialStages?.splice(idInitialStage, 1, updatedStageWithPosition);
+
         updateChapter(
           {
             id: chapter.id,
@@ -168,11 +165,13 @@ export default function ChapterEditById() {
 
     chapterFromLocalStorage.stages.splice(stageId, 1, stage);
 
-    if (texts || transfers) updateChapter(chapterFromLocalStorage, true);
+    if (texts || transfers) {
+      updateChapter(chapterFromLocalStorage, true);
+      setOpenStage(stage);
+    }
 
     setTexts(null);
     setTransfers(null);
-    setOpenStage(null);
   };
 
   return (

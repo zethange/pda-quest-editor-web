@@ -1,5 +1,4 @@
 import ActionsCard from "@/components/actionsCard";
-import Image from "next/image";
 import MapStage from "@/components/popover/MapStage";
 
 export default function ShowPopover({ stage }: { stage: any }) {
@@ -9,15 +8,15 @@ export default function ShowPopover({ stage }: { stage: any }) {
     stage?.type_stage === 1 ||
     stage?.type_stage === 7
   ) {
-    typeStage = "диалог";
+    typeStage = "Диалог";
   } else if (stage?.type_stage === 4 || stage?.type_stage === 5) {
-    typeStage = "переход";
+    typeStage = "Переход на карту";
   }
 
   return (
     <>
-      <div className="stage-card">Тип: {typeStage}</div>
-      {typeStage === "диалог" && (
+      <div className="stage-card">{typeStage}</div>
+      {typeStage === "Диалог" && (
         <>
           <div className="stage-card">
             <p style={{ paddingBottom: "5px" }}>{stage?.title}</p>
@@ -56,7 +55,7 @@ export default function ShowPopover({ stage }: { stage: any }) {
           </div>
         </>
       )}
-      {typeStage === "переход" && <MapStage data={stage.data} />}
+      {typeStage === "Переход на карту" && <MapStage data={stage.data} />}
       <ActionsCard actions={stage?.actions} />
     </>
   );
