@@ -38,16 +38,16 @@ export default function ShowPopover({ stage }: { stage: any }) {
           <div className="stage-card" style={{ fontSize: "12px" }}>
             <b>Тексты:</b>
             <ul>
-              {stage?.texts?.map((text: any) => (
-                <>{text.text !== "" && <li key={text.text}>{text.text}</li>}</>
+              {stage?.texts?.map((text: any, index: number) => (
+                <>{text.text !== "" && <li key={index}>{text.text}</li>}</>
               ))}
             </ul>
           </div>
           <div className="stage-card" style={{ fontSize: "12px" }}>
             <b>Переходы:</b>
             <ul>
-              {stage?.transfers?.map((transfer: any) => (
-                <li key={transfer?.text}>
+              {stage?.transfers?.map((transfer: any, index: number) => (
+                <li key={index}>
                   {`"${transfer?.text}", переход на стадию ${transfer?.stage_id}`}
                 </li>
               ))}

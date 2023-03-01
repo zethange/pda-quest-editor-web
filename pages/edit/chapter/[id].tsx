@@ -15,6 +15,13 @@ import "reactflow/dist/style.css";
 import { newStage } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import ShowPopover from "@/components/ShowPopover";
+import {
+  editTextInStore,
+  editTransferInStore,
+  setStageToStore,
+  storeStage,
+} from "@/store/store";
+import { store } from "next/dist/build/output/store";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -28,16 +35,13 @@ export default function ChapterEditById() {
   const [openStage, setOpenStage] = useState<any>();
   const [editableStage, setEditableStage] = useState<boolean>(false);
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false);
-
-  const [texts, setTexts] = useState<any>();
-  const [transfers, setTransfers] = useState<any>();
-
   // Функция обновления главы
-  const updateChapter = (chapter: any, all: boolean) => {
+  const updateChapter = async (chapter: any, all: boolean) => {
     if (all) {
-      setChapter(chapter);
+      await setChapter(chapter);
     }
-    localStorage.setItem(`chapter_${id}`, JSON.stringify(chapter));
+    await localStorage.setItem(`chapter_${id}`, JSON.stringify(chapter));
+    return true;
   };
 
   // Вытаскивание главы из localStorage
@@ -64,6 +68,7 @@ export default function ChapterEditById() {
                 onClick={() => {
                   setOpenStage(stage);
                   setEditableStage(false);
+                  setStageToStore(stage);
                 }}
               >
                 {stage.title ? stage.title : "Переход на карту"}
@@ -157,21 +162,10 @@ export default function ChapterEditById() {
       localStorage.getItem(`chapter_${id}`) as any
     );
 
-    const stage = {
-      ...chapterFromLocalStorage.stages[stageId],
-      texts,
-      transfers,
-    };
+    chapterFromLocalStorage.stages.splice(stageId, 1, storeStage);
 
-    chapterFromLocalStorage.stages.splice(stageId, 1, stage);
-
-    if (texts || transfers) {
-      updateChapter(chapterFromLocalStorage, true);
-      setOpenStage(stage);
-    }
-
-    setTexts(null);
-    setTransfers(null);
+    updateChapter(chapterFromLocalStorage, true);
+    setOpenStage(storeStage);
   };
 
   return (
@@ -248,42 +242,46 @@ export default function ChapterEditById() {
                 <div>
                   <div className="stage-card">
                     <b>Тексты:</b>
-                    <textarea
-                      name="text"
-                      id="text"
-                      style={{ width: "340px", resize: "vertical" }}
-                      defaultValue={openStage.texts[0].text}
-                      onChange={(event) =>
-                        setTexts([
-                          {
-                            text: event.target.value,
-                            conditions: openStage.texts[0].condition,
-                          },
-                        ])
-                      }
-                    ></textarea>
+                    {storeStage.texts.map(
+                      (text: any, index: number) =>
+                        text.text && (
+                          <textarea
+                            name="text"
+                            id="text"
+                            defaultValue={text.text}
+                            onChange={(event) =>
+                              editTextInStore(index, {
+                                text: event.target.value,
+                                condition: text.condition,
+                              })
+                            }
+                          ></textarea>
+                        )
+                    )}
                   </div>
                   <div className="stage-card">
                     <b>Ответы:</b>
-                    <textarea
-                      name="text"
-                      id="text"
-                      style={{ width: "340px", resize: "vertical" }}
-                      defaultValue={openStage.transfers[0].text}
-                      onChange={(event) =>
-                        setTransfers([
-                          {
-                            text: event.target.value,
-                            stage_id: openStage.transfers[0].stage_id,
-                            conditions: openStage.transfers[0].condition,
-                          },
-                        ])
-                      }
-                    ></textarea>
+                    {storeStage.transfers.map(
+                      (transfer: any, index: number) =>
+                        transfer.text && (
+                          <textarea
+                            name="text"
+                            id="text"
+                            defaultValue={transfer.text}
+                            onChange={(event) =>
+                              editTransferInStore(index, {
+                                text: event.target.value,
+                                stage_id: transfer.stage_id,
+                                condition: transfer.condition,
+                              })
+                            }
+                          ></textarea>
+                        )
+                    )}
                   </div>
                   <button
                     onClick={() => {
-                      updateStage(openStage.id);
+                      updateStage(storeStage.id);
                       setEditableStage(false);
                     }}
                   >

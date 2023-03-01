@@ -33,12 +33,12 @@ export default function Home() {
     };
   };
 
-  const createChapter = () => {
-    localStorage.setItem(
+  const createChapter = async () => {
+    await localStorage.setItem(
       `chapter_${keyChapters.length}`,
       JSON.stringify(newChapter(keyChapters.length))
     );
-    setLoaded(false);
+    await setLoaded(false);
   };
 
   useEffect(() => {
@@ -95,12 +95,12 @@ export default function Home() {
         </NavBar>
         <div className="work-space">
           <div className="card-parent">
-            {listChapters.map((chapter: any) => (
+            {listChapters.map((chapter: any, index: number) => (
               <Card
                 title={"Глава " + chapter?.id}
                 link={"/edit/chapter/" + chapter?.id}
                 key={chapter?.id}
-                id={chapter?.id}
+                id={index}
               >
                 <div>Количество стадий: {chapter?.stages?.length}</div>
               </Card>

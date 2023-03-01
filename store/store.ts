@@ -1,15 +1,30 @@
-import create from "zustand";
+export let storeStage: any = {};
 
-const useChapterStore = create((set) => ({
-  chapters: [],
-  addChapter: (chapter: any) =>
-    set((state: any) => ({
-      chapters: [...chapter, ...state.chapters],
-    })),
-  setChapter: (chapters: any[]) =>
-    set((state: any) => ({
-      chapters: [...chapters],
-    })),
-}));
+// Создание стадии
+export function setStageToStore(stage: any) {
+  storeStage = stage;
+}
 
-export default useChapterStore;
+// Новый текст в стадию
+export function newTextToStore() {
+  storeStage?.texts?.push({ text: "Это новый текст", condition: {} });
+}
+
+// Новый переход в стадию
+export function newTransferToStore() {
+  storeStage?.transfers?.push({
+    text: "Это новый переход",
+    stage_id: 0,
+    condition: {},
+  });
+}
+
+export function editTextInStore(id: number, text: any) {
+  storeStage.texts.splice(id, 1, text);
+  console.log(storeStage.texts);
+}
+
+export function editTransferInStore(id: number, transfer: any) {
+  storeStage.transfers.splice(id, 1, transfer);
+  console.log(storeStage.transfers);
+}

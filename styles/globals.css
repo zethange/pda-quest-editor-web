@@ -178,12 +178,27 @@ button {
 }
 
 .no-select {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+textarea {
+  width: 340px;
+  height: auto;
+  padding: 5px;
+  margin-bottom: 4px;
+  resize: vertical;
+  border-radius: 5px;
+  border: none;
+  transition: 180ms box-shadow ease-in-out;
+}
+
+textarea:focus {
+  outline: 3px solid transparent;
 }
 
 a {
