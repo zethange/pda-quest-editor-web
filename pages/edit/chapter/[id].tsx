@@ -9,19 +9,19 @@ import ReactFlow, {
 } from "reactflow";
 import Link from "next/link";
 import Head from "next/head";
-import NavBar from "@/components/UI/NavBar";
-import "reactflow/dist/style.css";
-
-import { newStage } from "@/store/types";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
-import ShowPopover from "@/components/ShowPopover";
+import { Button, Form, Modal } from "react-bootstrap";
 import {
   editTextInStore,
   editTransferInStore,
   setStageToStore,
   storeStage,
 } from "@/store/store";
-import { store } from "next/dist/build/output/store";
+
+import { newStage } from "@/store/types";
+import "reactflow/dist/style.css";
+import NavBar from "@/components/UI/NavBar";
+import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
+import ShowPopover from "@/components/ShowPopover";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -34,7 +34,12 @@ export default function ChapterEditById() {
 
   const [openStage, setOpenStage] = useState<any>();
   const [editableStage, setEditableStage] = useState<boolean>(false);
+  const [editableTransfer, setEditableTransfer] = useState<boolean>(false);
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false);
+
+  const [sourceStage, setSourceStage] = useState<any>();
+  const [showSourceStage, setShowSourceStage] = useState<boolean>(false);
+
   // Функция обновления главы
   const updateChapter = async (chapter: any, all: boolean) => {
     if (all) {
@@ -157,7 +162,7 @@ export default function ChapterEditById() {
   };
 
   // Обновление стадии
-  const updateStage = (stageId: number) => {
+  const updateStage = (stageId: number, setOpenStageEnabled: boolean) => {
     const chapterFromLocalStorage = JSON.parse(
       localStorage.getItem(`chapter_${id}`) as any
     );
@@ -165,8 +170,43 @@ export default function ChapterEditById() {
     chapterFromLocalStorage.stages.splice(stageId, 1, storeStage);
 
     updateChapter(chapterFromLocalStorage, true);
-    setOpenStage(storeStage);
+    setOpenStageEnabled && setOpenStage(storeStage);
   };
+
+  const onEdgesChange = useCallback(
+    (changes: any) => {
+      changes.map((change: any) => {
+        if (change.selected) {
+          const idSelectedStage = change.id.split("-")[0];
+          const idThereStage = change.id.split("-")[1];
+          const sourceStage = chapter.stages[idSelectedStage];
+
+          let thereTransfer = sourceStage.transfers.find(
+            (transfer: any) => transfer.stage_id === idThereStage
+          );
+
+          const transferIndex = sourceStage.transfers.indexOf(thereTransfer);
+
+          setSourceStage({
+            ...sourceStage,
+            idThereStage,
+            thereTransfer,
+            transferIndex,
+          });
+          setShowSourceStage(true);
+          setStageToStore(sourceStage);
+        }
+      });
+    },
+    [setEdges, chapter]
+  );
+
+  const onConnect = useCallback(
+    (connection: any) => {
+      console.log(connection);
+    },
+    [setEdges]
+  );
 
   return (
     <>
@@ -191,7 +231,6 @@ export default function ChapterEditById() {
             Помощь
           </Link>
         </NavBar>
-        <hr />
         <NavBar>
           <div
             className="navbar__header no-select"
@@ -245,9 +284,8 @@ export default function ChapterEditById() {
                     {storeStage.texts.map(
                       (text: any, index: number) =>
                         text.text && (
-                          <textarea
-                            name="text"
-                            id="text"
+                          <Form.Control
+                            as="textarea"
                             defaultValue={text.text}
                             onChange={(event) =>
                               editTextInStore(index, {
@@ -255,33 +293,13 @@ export default function ChapterEditById() {
                                 condition: text.condition,
                               })
                             }
-                          ></textarea>
-                        )
-                    )}
-                  </div>
-                  <div className="stage-card">
-                    <b>Ответы:</b>
-                    {storeStage.transfers.map(
-                      (transfer: any, index: number) =>
-                        transfer.text && (
-                          <textarea
-                            name="text"
-                            id="text"
-                            defaultValue={transfer.text}
-                            onChange={(event) =>
-                              editTransferInStore(index, {
-                                text: event.target.value,
-                                stage_id: transfer.stage_id,
-                                condition: transfer.condition,
-                              })
-                            }
-                          ></textarea>
+                          />
                         )
                     )}
                   </div>
                   <button
                     onClick={() => {
-                      updateStage(storeStage.id);
+                      updateStage(storeStage.id, true);
                       setEditableStage(false);
                     }}
                   >
@@ -297,6 +315,8 @@ export default function ChapterEditById() {
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
             fitView
           >
             <MiniMap zoomable pannable />
@@ -304,6 +324,72 @@ export default function ChapterEditById() {
             <Background />
           </ReactFlow>
         </div>
+        <Modal
+          show={showSourceStage}
+          onHide={() => {
+            setShowSourceStage(false);
+            setEditableTransfer(false);
+          }}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Переход со стадии {sourceStage?.id} на {sourceStage?.idThereStage}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {(!editableTransfer && (
+              <>
+                <p>Текст: {sourceStage?.thereTransfer?.text}</p>
+                Условия: {JSON.stringify(sourceStage?.thereTransfer?.condition)}
+              </>
+            )) || (
+              <div>
+                <textarea
+                  style={{
+                    border: "2px solid #000",
+                    width: "765px",
+                  }}
+                  defaultValue={sourceStage?.thereTransfer?.text}
+                  onChange={(event) => {
+                    editTransferInStore(sourceStage?.transferIndex, {
+                      text: event.target.value,
+                      stage_id: sourceStage?.thereTransfer?.stage_id,
+                      condition: sourceStage?.thereTransfer?.condition,
+                    });
+                  }}
+                />
+              </div>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            {(!editableTransfer && (
+              <Button onClick={() => setEditableTransfer(true)}>
+                Редактировать
+              </Button>
+            )) || (
+              <Button
+                onClick={() => {
+                  setShowSourceStage(false);
+                  setEditableTransfer(false);
+                  updateStage(sourceStage?.id, false);
+                }}
+              >
+                Сохранить
+              </Button>
+            )}
+            <Button
+              onClick={() => {
+                setShowSourceStage(false);
+                setEditableTransfer(false);
+              }}
+            >
+              Закрыть
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </main>
     </>
   );
