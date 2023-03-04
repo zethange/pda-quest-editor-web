@@ -12,7 +12,7 @@ import Head from "next/head";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
   editTextInStore,
-  editTransferInStore,
+  newTransferToStore,
   setStageToStore,
   storeStage,
 } from "@/store/store";
@@ -34,11 +34,9 @@ export default function ChapterEditById() {
 
   const [openStage, setOpenStage] = useState<any>();
   const [editableStage, setEditableStage] = useState<boolean>(false);
-  const [editableTransfer, setEditableTransfer] = useState<boolean>(false);
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false);
 
-  const [sourceStage, setSourceStage] = useState<any>();
-  const [showSourceStage, setShowSourceStage] = useState<boolean>(false);
+  const [connectionInfo, setConnectionInfo] = useState<any>();
 
   // Функция обновления главы
   const updateChapter = async (chapter: any, all: boolean) => {
@@ -176,7 +174,7 @@ export default function ChapterEditById() {
   const onEdgesChange = useCallback(
     (changes: any) => {
       changes.map((change: any) => {
-        if (change.selected) {
+        /*  if (change.selected) {
           const idSelectedStage = change.id.split("-")[0];
           const idThereStage = change.id.split("-")[1];
           const sourceStage = chapter.stages[idSelectedStage];
@@ -195,7 +193,7 @@ export default function ChapterEditById() {
           });
           setShowSourceStage(true);
           setStageToStore(sourceStage);
-        }
+        } */
       });
     },
     [setEdges, chapter]
@@ -204,8 +202,20 @@ export default function ChapterEditById() {
   const onConnect = useCallback(
     (connection: any) => {
       console.log(connection);
+      setConnectionInfo({
+        source: connection.source,
+        target: connection.target,
+      });
+
+      const targetTransfer = chapter.stages[connection.source].transfers.find(
+        (transfer: any) => transfer.stage_id === connection.target
+      );
+
+      console.log(targetTransfer);
+
+      setStageToStore({ ...chapter.stages[connection.source], targetTransfer });
     },
-    [setEdges]
+    [setEdges, chapter]
   );
 
   return (
@@ -325,67 +335,45 @@ export default function ChapterEditById() {
           </ReactFlow>
         </div>
         <Modal
-          show={showSourceStage}
-          onHide={() => {
-            setShowSourceStage(false);
-            setEditableTransfer(false);
-          }}
-          size="lg"
-          aria-labelledby="contained-modal-title-vcenter"
+          show={connectionInfo}
+          onHide={() => setConnectionInfo(null)}
+          backdrop="static"
+          keyboard={false}
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
-              Переход со стадии {sourceStage?.id} на {sourceStage?.idThereStage}
+            <Modal.Title>
+              Создание перехода со стадии {connectionInfo?.source} на{" "}
+              {connectionInfo?.target}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {(!editableTransfer && (
-              <>
-                <p>Текст: {sourceStage?.thereTransfer?.text}</p>
-                Условия: {JSON.stringify(sourceStage?.thereTransfer?.condition)}
-              </>
-            )) || (
-              <div>
-                <textarea
-                  style={{
-                    border: "2px solid #000",
-                    width: "765px",
-                  }}
-                  defaultValue={sourceStage?.thereTransfer?.text}
-                  onChange={(event) => {
-                    editTransferInStore(sourceStage?.transferIndex, {
-                      text: event.target.value,
-                      stage_id: sourceStage?.thereTransfer?.stage_id,
-                      condition: sourceStage?.thereTransfer?.condition,
-                    });
-                  }}
-                />
-              </div>
-            )}
+            <div>
+              <textarea
+                style={{ border: "2px solid #242424", width: "470px" }}
+                placeholder="Введите текст..."
+                defaultValue={connectionInfo?.targetTransfer?.text}
+                onChange={(event) => {
+                  newTransferToStore({
+                    text: event.target.value,
+                    stage_id: connectionInfo?.target,
+                    condition: {},
+                  });
+                }}
+              />
+            </div>
           </Modal.Body>
           <Modal.Footer>
-            {(!editableTransfer && (
-              <Button onClick={() => setEditableTransfer(true)}>
-                Редактировать
-              </Button>
-            )) || (
-              <Button
-                onClick={() => {
-                  setShowSourceStage(false);
-                  setEditableTransfer(false);
-                  updateStage(sourceStage?.id, false);
-                }}
-              >
-                Сохранить
-              </Button>
-            )}
             <Button
+              variant="secondary"
               onClick={() => {
-                setShowSourceStage(false);
-                setEditableTransfer(false);
+                updateStage(storeStage.id, false);
+                setConnectionInfo(null);
               }}
             >
+              Сохранить
+            </Button>
+            <Button variant="secondary" onClick={() => setConnectionInfo(null)}>
               Закрыть
             </Button>
           </Modal.Footer>

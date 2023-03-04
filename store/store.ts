@@ -7,16 +7,25 @@ export function setStageToStore(stage: any) {
 
 // Новый текст в стадию
 export function newTextToStore() {
-  storeStage?.texts?.push({ text: "Это новый текст", condition: {} });
+  storeStage.texts.push({ text: "Это новый текст", condition: {} });
 }
 
 // Новый переход в стадию
-export function newTransferToStore() {
-  storeStage?.transfers?.push({
-    text: "Это новый переход",
-    stage_id: 0,
-    condition: {},
-  });
+export function newTransferToStore(transfer: any) {
+  if (
+    !storeStage.transfers.find(
+      (findTransfer: any) => findTransfer.stage_id === transfer.stage_id
+    )
+  ) {
+    storeStage.transfers.push(transfer);
+  } else {
+    const index = storeStage.transfers.indexOf(
+      storeStage.transfers.find(
+        (findTransfer: any) => findTransfer.stage_id === transfer.stage_id
+      )
+    );
+    storeStage.transfers.splice(index, 1, transfer);
+  }
 }
 
 export function editTextInStore(id: number, text: any) {
