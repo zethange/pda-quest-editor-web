@@ -12,35 +12,6 @@ export default function Home() {
   const [keyChapters, setKeyChapters] = useState<any>([]); // это key для localstorage для кажой главы
   const [loaded, setLoaded] = useState<boolean>(false);
 
-  const onChangeChapter = async (e: any) => {
-    const file = await e.target.files[0];
-    let reader = await new FileReader();
-    await reader.readAsText(file);
-
-    reader.onload = await function () {
-      if (typeof reader.result === "string") {
-        localStorage.setItem(
-          String("chapter_" + JSON.parse(reader.result).id),
-          reader.result
-        );
-        setLoaded(false);
-      }
-    };
-
-    reader.onerror = await function () {
-      console.log(reader.error);
-      setLoaded(false);
-    };
-  };
-
-  const createChapter = async () => {
-    await localStorage.setItem(
-      `chapter_${keyChapters.length}`,
-      JSON.stringify(newChapter(keyChapters.length))
-    );
-    await setLoaded(false);
-  };
-
   useEffect(() => {
     const keyStages = [];
     const stages: any[] = [];
@@ -59,6 +30,32 @@ export default function Home() {
     setListChapters(stages);
     setLoaded(true);
   }, [loaded]);
+
+  const onChangeChapter = async (e: any) => {
+    const file = await e.target.files[0];
+    let reader = await new FileReader();
+    await reader.readAsText(file);
+
+    reader.onload = await function () {
+      if (typeof reader.result === "string") {
+        localStorage.setItem(
+          String("chapter_" + JSON.parse(reader.result).id),
+          reader.result
+        );
+        setLoaded(false);
+      }
+    };
+  };
+
+  const createChapter = async () => {
+    const idLastChapter = await listChapters[listChapters.length - 1].id;
+
+    await localStorage.setItem(
+      `chapter_${keyChapters.length}`,
+      JSON.stringify(newChapter(idLastChapter + 1))
+    );
+    await setLoaded(false);
+  };
 
   return (
     <>

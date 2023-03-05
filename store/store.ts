@@ -30,10 +30,10 @@ export function newTransferToStore(transfer: any) {
 
 export function editTextInStore(id: number, text: any) {
   storeStage.texts.splice(id, 1, text);
-  console.log(storeStage.texts);
+  console.log("Изменение текста в сторе", storeStage.texts);
 }
 
 export function editTransferInStore(id: number, transfer: any) {
   storeStage.transfers.splice(id, 1, transfer);
-  console.log(storeStage.transfers);
+  console.log("Изменение перехода в сторе", storeStage.transfers);
 }

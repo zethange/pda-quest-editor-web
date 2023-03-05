@@ -12,6 +12,7 @@ import Head from "next/head";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
   editTextInStore,
+  editTransferInStore,
   newTransferToStore,
   setStageToStore,
   storeStage,
@@ -34,18 +35,9 @@ export default function ChapterEditById() {
 
   const [openStage, setOpenStage] = useState<any>();
   const [editableStage, setEditableStage] = useState<boolean>(false);
-  const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false);
+  const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false); // для создания стадии
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
-
-  // Функция обновления главы
-  const updateChapter = async (chapter: any, all: boolean) => {
-    if (all) {
-      await setChapter(chapter);
-    }
-    await localStorage.setItem(`chapter_${id}`, JSON.stringify(chapter));
-    return true;
-  };
 
   // Вытаскивание главы из localStorage
   useEffect(() => {
@@ -56,7 +48,14 @@ export default function ChapterEditById() {
     setChapter(chapterFromLocalStorage);
   }, [isReady]);
 
-  // Первоначальная отрисовка нод
+  // Функция обновления главы
+  const updateChapter = async (chapter: any, all: boolean) => {
+    if (all) await setChapter(chapter);
+    await localStorage.setItem(`chapter_${id}`, JSON.stringify(chapter));
+    return true;
+  };
+
+  // Первоначальная отрисовка нод и переходов
   useEffect(() => {
     const initialNodes: any[] = [];
     const initialEdges: any[] = [];
@@ -70,8 +69,8 @@ export default function ChapterEditById() {
               <button
                 onClick={() => {
                   setOpenStage(stage);
-                  setEditableStage(false);
                   setStageToStore(stage);
+                  setEditableStage(false);
                 }}
               >
                 {stage.title ? stage.title : "Переход на карту"}
@@ -148,12 +147,17 @@ export default function ChapterEditById() {
       localStorage.getItem(`chapter_${id}`) as any
     );
 
+    const idLastStage =
+      chapterFromLocalStorage?.stages[
+        chapterFromLocalStorage?.stages?.length - 1
+      ].id;
+
     const updatedChapter = {
       id: chapterFromLocalStorage?.id,
       music: chapterFromLocalStorage?.music,
       stages: [
         ...chapterFromLocalStorage?.stages,
-        newStage(type, chapterFromLocalStorage?.stages.length),
+        newStage(type, idLastStage + 1),
       ],
     };
     updateChapter(updatedChapter, true);
@@ -171,52 +175,49 @@ export default function ChapterEditById() {
     setOpenStageEnabled && setOpenStage(storeStage);
   };
 
-  const onEdgesChange = useCallback(
-    (changes: any) => {
-      changes.map((change: any) => {
-        /*  if (change.selected) {
-          const idSelectedStage = change.id.split("-")[0];
-          const idThereStage = change.id.split("-")[1];
-          const sourceStage = chapter.stages[idSelectedStage];
-
-          let thereTransfer = sourceStage.transfers.find(
-            (transfer: any) => transfer.stage_id === idThereStage
-          );
-
-          const transferIndex = sourceStage.transfers.indexOf(thereTransfer);
-
-          setSourceStage({
-            ...sourceStage,
-            idThereStage,
-            thereTransfer,
-            transferIndex,
-          });
-          setShowSourceStage(true);
-          setStageToStore(sourceStage);
-        } */
-      });
-    },
-    [setEdges, chapter]
-  );
+  const onEdgesChange = useCallback((changes: any) => {}, [setEdges, chapter]);
 
   const onConnect = useCallback(
     (connection: any) => {
-      console.log(connection);
+      const chapterFromLocalStorage = JSON.parse(
+        localStorage.getItem(`chapter_${id}`) as any
+      );
+
       setConnectionInfo({
         source: connection.source,
         target: connection.target,
       });
 
-      const targetTransfer = chapter.stages[connection.source].transfers.find(
+      const targetTransfer = chapterFromLocalStorage.stages[
+        connection.source
+      ].transfers.find(
         (transfer: any) => transfer.stage_id === connection.target
       );
 
-      console.log(targetTransfer);
-
-      setStageToStore({ ...chapter.stages[connection.source], targetTransfer });
+      setStageToStore({
+        ...chapterFromLocalStorage.stages[connection.source],
+        targetTransfer,
+      });
     },
-    [setEdges, chapter]
+    [setEdges]
   );
+
+  function deleteStage(id: number) {
+    const chapterFromLocalStorage = JSON.parse(
+      localStorage.getItem(`chapter_${id}`) as any
+    );
+
+    const indexStage = chapterFromLocalStorage?.stages?.indexOf(
+      chapterFromLocalStorage?.stages?.find((stage: any) => stage.id === id)
+    );
+
+    chapterFromLocalStorage?.stages?.splice(indexStage, 1);
+
+    chapterFromLocalStorage && updateChapter(chapterFromLocalStorage, true);
+    setOpenStage(null);
+    setStageToStore(null);
+    setEditableStage(false);
+  }
 
   return (
     <>
@@ -273,6 +274,12 @@ export default function ChapterEditById() {
                 <div className="mx-auto"></div>
                 <button
                   style={{ fontSize: "12px", paddingRight: "5px" }}
+                  onClick={() => deleteStage(openStage?.id)}
+                >
+                  Удалить
+                </button>
+                <button
+                  style={{ fontSize: "12px", paddingRight: "5px" }}
                   onClick={() => setEditableStage(!editableStage)}
                 >
                   {editableStage ? "Просмотр" : "Редактировать"}
@@ -282,6 +289,7 @@ export default function ChapterEditById() {
                   onClick={() => {
                     setOpenStage(null);
                     setEditableStage(false);
+                    setStageToStore(null);
                   }}
                 >
                   Закрыть
@@ -307,10 +315,30 @@ export default function ChapterEditById() {
                         )
                     )}
                   </div>
+                  <div className="stage-card">
+                    <b>Тексты:</b>
+                    {storeStage.transfers.map(
+                      (transfer: any, index: number) =>
+                        transfer.text && (
+                          <Form.Control
+                            as="textarea"
+                            defaultValue={transfer.text}
+                            onChange={(event) =>
+                              editTransferInStore(index, {
+                                text: event.target.value,
+                                stage_id: transfer.stage_id,
+                                condition: transfer.condition,
+                              })
+                            }
+                          />
+                        )
+                    )}
+                  </div>
                   <button
                     onClick={() => {
                       updateStage(storeStage.id, true);
                       setEditableStage(false);
+                      setOpenStage(null);
                     }}
                   >
                     Сохранить
