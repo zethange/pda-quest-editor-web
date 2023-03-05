@@ -1,4 +1,4 @@
-import ActionsCard from "@/components/actionsCard";
+import ActionsCard from "@/components/ActionsCard";
 import MapStage from "@/components/popover/MapStage";
 
 export default function ShowPopover({ stage }: { stage: any }) {

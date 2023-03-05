@@ -29,6 +29,10 @@ export function newTransferToStore(transfer: any) {
   }
 }
 
+export function editTitleInStore(title: string) {
+  storeStage.title = title;
+}
+
 export function editTextInStore(id: number, text: any) {
   storeStage.texts.splice(id, 1, text);
   console.log("Изменение текста в сторе", storeStage.texts);

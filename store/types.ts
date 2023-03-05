@@ -58,6 +58,10 @@ export function newChapter(id: string) {
             text: "Go to the gym",
             condition: {},
           },
+          {
+            text: "",
+            condition: {},
+          },
         ],
         transfers: [
           {
@@ -90,14 +94,12 @@ export function newStage(type: string, id: number) {
           text: "Привет.",
           condition: {},
         },
-      ],
-      transfers: [
         {
-          text: "Привет. Как дела?",
-          stage_id: String(id + 1),
+          text: "",
           condition: {},
         },
       ],
+      transfers: [],
       actions: {},
       editor: { x: Math.random() * 500, y: Math.random() * 500 },
     };

@@ -12,6 +12,7 @@ import Head from "next/head";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
   editTextInStore,
+  editTitleInStore,
   editTransferInStore,
   newTransferToStore,
   setStageToStore,
@@ -50,6 +51,7 @@ export default function ChapterEditById() {
 
   // Функция обновления главы
   const updateChapter = async (chapter: any, all: boolean) => {
+    console.log("ладно");
     if (all) await setChapter(chapter);
     await localStorage.setItem(`chapter_${chapterId}`, JSON.stringify(chapter));
     return true;
@@ -298,6 +300,14 @@ export default function ChapterEditById() {
               {editableStage ? (
                 <div>
                   <div className="stage-card">
+                    <b>Title:</b>
+                    <Form.Control
+                      as="textarea"
+                      defaultValue={storeStage?.title}
+                      onChange={(event) => editTitleInStore(event.target.value)}
+                    />
+                  </div>
+                  <div className="stage-card">
                     <b>Тексты:</b>
                     {storeStage.texts.map(
                       (text: any, index: number) =>
@@ -316,7 +326,7 @@ export default function ChapterEditById() {
                     )}
                   </div>
                   <div className="stage-card">
-                    <b>Тексты:</b>
+                    <b>Ответы:</b>
                     {storeStage.transfers.map(
                       (transfer: any, index: number) =>
                         transfer.text && (

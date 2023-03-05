@@ -1,10 +1,18 @@
 import ReactMarkdown from "react-markdown";
-import { useState } from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 // @ts-ignore
 import remarkGfm from "remark-gfm";
+
 import NavBar from "@/components/UI/NavBar";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
+import FormFeedBack from "@/components/FormFeedBack";
+import {
+  DiscordMention,
+  DiscordMessage,
+  DiscordMessages,
+  DiscordReply,
+} from "@skyra/discord-components-react";
 
 export default function Help() {
   const [markdown, setMarkdown] = useState<any>();
@@ -44,9 +52,24 @@ export default function Help() {
               padding: "25px",
             }}
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {markdown}
-            </ReactMarkdown>
+            <h1>Редактор квестов ПДА</h1>
+            <DiscordMessages lightTheme>
+              <DiscordMessage author="Писяпопа" profile="pisya">
+                Ну вот, держи редактор квестов, тут всё интуитивно понятно
+              </DiscordMessage>
+              <DiscordMessage
+                author="Тот самый конечный пользователь"
+                profile="user"
+                highlight
+              >
+                <DiscordReply slot="reply" profile="pisya">
+                  Ну вот, держи редактор квестов, тут всё интуитивно понятно
+                </DiscordReply>
+                <DiscordMention>Писяпопа</DiscordMention>, а как переход
+                создавать? аАаАа, так эти штуки соединять можна!
+              </DiscordMessage>
+            </DiscordMessages>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} children={markdown} />
           </div>
         </main>
       </>
