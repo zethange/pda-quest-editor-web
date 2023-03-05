@@ -48,11 +48,9 @@ export default function Home() {
   };
 
   const createChapter = async () => {
-    const idLastChapter = await listChapters[listChapters.length - 1].id;
-
     await localStorage.setItem(
       `chapter_${keyChapters.length}`,
-      JSON.stringify(newChapter(idLastChapter + 1))
+      JSON.stringify(newChapter(listChapters.length))
     );
     await setLoaded(false);
   };

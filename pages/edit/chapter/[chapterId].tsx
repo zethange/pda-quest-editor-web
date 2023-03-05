@@ -26,7 +26,7 @@ import ShowPopover from "@/components/ShowPopover";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
-  const id = query.id as string;
+  const chapterId = query.chapterId as string;
 
   const [chapter, setChapter] = useState<any>();
 
@@ -42,7 +42,7 @@ export default function ChapterEditById() {
   // Вытаскивание главы из localStorage
   useEffect(() => {
     const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${id}`) as any
+      localStorage.getItem(`chapter_${chapterId}`) as any
     );
 
     setChapter(chapterFromLocalStorage);
@@ -51,7 +51,7 @@ export default function ChapterEditById() {
   // Функция обновления главы
   const updateChapter = async (chapter: any, all: boolean) => {
     if (all) await setChapter(chapter);
-    await localStorage.setItem(`chapter_${id}`, JSON.stringify(chapter));
+    await localStorage.setItem(`chapter_${chapterId}`, JSON.stringify(chapter));
     return true;
   };
 
@@ -124,7 +124,7 @@ export default function ChapterEditById() {
         );
 
         const initialStages = JSON.parse(
-          localStorage.getItem(`chapter_${id}`) as any
+          localStorage.getItem(`chapter_${chapterId}`) as any
         ).stages;
         initialStages?.splice(idInitialStage, 1, updatedStageWithPosition);
 
@@ -144,7 +144,7 @@ export default function ChapterEditById() {
   // Создание стадии
   const createStage = (type: string) => {
     const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${id}`) as any
+      localStorage.getItem(`chapter_${chapterId}`) as any
     );
 
     const idLastStage =
@@ -166,7 +166,7 @@ export default function ChapterEditById() {
   // Обновление стадии
   const updateStage = (stageId: number, setOpenStageEnabled: boolean) => {
     const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${id}`) as any
+      localStorage.getItem(`chapter_${chapterId}`) as any
     );
 
     chapterFromLocalStorage.stages.splice(stageId, 1, storeStage);
@@ -180,7 +180,7 @@ export default function ChapterEditById() {
   const onConnect = useCallback(
     (connection: any) => {
       const chapterFromLocalStorage = JSON.parse(
-        localStorage.getItem(`chapter_${id}`) as any
+        localStorage.getItem(`chapter_${chapterId}`) as any
       );
 
       setConnectionInfo({
@@ -188,23 +188,23 @@ export default function ChapterEditById() {
         target: connection.target,
       });
 
-      const targetTransfer = chapterFromLocalStorage.stages[
+      const targetTransfer = chapterFromLocalStorage?.stages[
         connection.source
       ].transfers.find(
         (transfer: any) => transfer.stage_id === connection.target
       );
 
       setStageToStore({
-        ...chapterFromLocalStorage.stages[connection.source],
+        ...chapterFromLocalStorage?.stages[connection.source],
         targetTransfer,
       });
     },
-    [setEdges]
+    [setEdges, chapter]
   );
 
   function deleteStage(id: number) {
     const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${id}`) as any
+      localStorage.getItem(`chapter_${chapterId}`) as any
     );
 
     const indexStage = chapterFromLocalStorage?.stages?.indexOf(
