@@ -11,6 +11,8 @@ import Link from "next/link";
 import Head from "next/head";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
+  editMethodInAction,
+  editParamInAction,
   editTextInStore,
   editTitleInStore,
   editTransferInStore,
@@ -51,7 +53,6 @@ export default function ChapterEditById() {
 
   // Функция обновления главы
   const updateChapter = async (chapter: any, all: boolean) => {
-    console.log("ладно");
     if (all) await setChapter(chapter);
     await localStorage.setItem(`chapter_${chapterId}`, JSON.stringify(chapter));
     return true;
@@ -344,6 +345,40 @@ export default function ChapterEditById() {
                         )
                     )}
                   </div>
+                  {storeStage.actions && (
+                    <div className="stage-card">
+                      {Object.entries(storeStage.actions).map(
+                        (action: any, indexAction: number) => (
+                          <div>
+                            Операция:{" "}
+                            <input
+                              type="text"
+                              onChange={(e) => {
+                                editMethodInAction(e.target.value, indexAction);
+                              }}
+                              defaultValue={action[0]}
+                            />
+                            <div>
+                              <div> Значения:</div>
+                              {action[1].map((key: any, index: number) => (
+                                <input
+                                  type="text"
+                                  defaultValue={key}
+                                  onChange={(e) =>
+                                    editParamInAction(
+                                      e.target.value,
+                                      indexAction,
+                                      index
+                                    )
+                                  }
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
                   <button
                     onClick={() => {
                       updateStage(storeStage.id, true);

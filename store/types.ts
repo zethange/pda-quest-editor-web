@@ -63,13 +63,7 @@ export function newChapter(id: string) {
             condition: {},
           },
         ],
-        transfers: [
-          {
-            text: "Пошли",
-            stage_id: "1",
-            condition: {},
-          },
-        ],
+        transfers: [],
         actions: {},
         editor: {
           x: 0,
