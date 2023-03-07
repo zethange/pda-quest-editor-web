@@ -10,6 +10,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/pdanetwork/:path*",
+        destination: "https://dev.artux.net/pdanetwork/:path*",
+      },
+    ];
+  },
   reactStrictMode: true,
 };
 

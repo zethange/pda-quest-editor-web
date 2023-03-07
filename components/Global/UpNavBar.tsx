@@ -1,9 +1,10 @@
-import NavBar from "@/components/UI/NavBar";
-import Link from "next/link";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import React from "react";
+import Link from "next/link";
 
-export default function UpNavBar() {
+import NavBar from "@/components/UI/NavBar";
+import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
+
+export default function UpNavBar({ children }: { children?: React.ReactNode }) {
   return (
     <NavBar>
       <button className="navbar__header" onClick={() => window.history.go(-1)}>
@@ -18,6 +19,7 @@ export default function UpNavBar() {
       <Link className="navbar__header" href="/edit/chapter/help">
         Помощь
       </Link>
+      {children}
     </NavBar>
   );
 }

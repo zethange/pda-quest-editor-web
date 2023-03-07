@@ -5,10 +5,10 @@ export default function ActionsCard({ actions }: { actions: any }) {
     return (
       <div className="stage-card" style={{ fontSize: "12px" }}>
         <b>Действия:</b>
-        {actions?.add && <p>Добавить: {actions?.add[0]}</p>}
-        {actions?.remove && <p>Удалить: {actions?.remove[0]}</p>}
-        {actions?.xp && <p>Опыт: {actions?.xp[0]}</p>}
-        {actions?.money && <p>Деньги: {actions?.money[0]} руб.</p>}
+        {actions?.add && <p>Добавить: {actions?.add.join(", ")}</p>}
+        {actions?.remove && <p>Удалить: {actions?.remove.join(", ")}</p>}
+        {actions?.xp && <p>Опыт: {actions?.xp.join(", ")}</p>}
+        {actions?.money && <p>Деньги: {actions?.money.join(", ")} руб.</p>}
         {actions["-"] && (
           <p>
             Уменьшить{" "}

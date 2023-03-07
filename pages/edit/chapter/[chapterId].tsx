@@ -24,9 +24,10 @@ import { newStage } from "@/store/types";
 import "reactflow/dist/style.css";
 import NavBar from "@/components/UI/NavBar";
 import ShowPopover from "@/components/ShowPopover";
-import UpNavBar from "@/components/UpNavBar";
+import UpNavBar from "@/components/Global/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
-import EditStage from "@/components/EditStage";
+import EditStage from "@/components/EditStage/EditActions";
+import EditActions from "@/components/EditStage/EditActions";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -178,8 +179,6 @@ export default function ChapterEditById() {
     setOpenStageEnabled && setOpenStage(storeStage);
   };
 
-  const onEdgesChange = useCallback((changes: any) => {}, [setEdges, chapter]);
-
   const onConnect = useCallback(
     (connection: any) => {
       const chapterFromLocalStorage = JSON.parse(
@@ -327,7 +326,7 @@ export default function ChapterEditById() {
                         )
                     )}
                   </div>
-                  {storeStage.actions && <EditStage />}
+                  {storeStage.actions && <EditActions />}
                   <button
                     onClick={() => {
                       updateStage(storeStage.id, true);
@@ -347,7 +346,6 @@ export default function ChapterEditById() {
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             fitView
           >

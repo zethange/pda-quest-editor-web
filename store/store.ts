@@ -61,10 +61,16 @@ export function editParamInAction(
   console.log("Изменение параметра в action", storeStage.actions);
 }
 
-export function newParamInAction(indexAction: number) {
+export function newParamInAction(indexAction: number, param: string) {
   const arrayActions: any = Object.entries(storeStage.actions);
-  arrayActions[indexAction][1][arrayActions[indexAction][1].length] =
-    "Новый параметр";
+  arrayActions[indexAction][1].push(param);
   storeStage.actions = Object.fromEntries(arrayActions);
-  console.log("Изменение параметра в action", storeStage);
+  console.log("Новый параметр в action", storeStage);
+}
+
+export function newMethodInAction(typeMethod: string = "add") {
+  const arrayActions: any = Object.entries(storeStage.actions);
+  arrayActions.push([typeMethod, []]);
+  storeStage.actions = Object.fromEntries(arrayActions);
+  console.log("Новый метод в action", storeStage);
 }

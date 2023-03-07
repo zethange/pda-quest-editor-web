@@ -13,7 +13,7 @@ import {
   DiscordMessages,
   DiscordReply,
 } from "@skyra/discord-components-react";
-import UpNavBar from "@/components/UpNavBar";
+import UpNavBar from "@/components/Global/UpNavBar";
 
 export default function Help() {
   const [markdown, setMarkdown] = useState<any>();

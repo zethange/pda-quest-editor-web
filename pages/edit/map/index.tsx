@@ -1,5 +1,5 @@
 import NavBar from "@/components/UI/NavBar";
-import UpNavBar from "@/components/UpNavBar";
+import UpNavBar from "@/components/Global/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
 
 export default function mapEditor() {

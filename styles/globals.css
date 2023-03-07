@@ -113,6 +113,13 @@ code {
   margin-right: auto;
 }
 
+.btn {
+  padding: 4px;
+  margin: 4px 0;
+  border-radius: 4px;
+  background: var(--orange);
+}
+
 .stage-popover {
   position: absolute;
   background: var(--white);

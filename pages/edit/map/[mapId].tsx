@@ -1,10 +1,8 @@
-import Head from "next/head";
-import NavBar from "@/components/UI/NavBar";
-import Link from "next/link";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import { useRouter } from "next/router";
-import UpNavBar from "@/components/UpNavBar";
+
 import CustomHead from "@/components/Global/CustomHead";
+import NavBar from "@/components/UI/NavBar";
+import UpNavBar from "@/components/Global/UpNavBar";
 
 export default function MapId() {
   const { query, isReady } = useRouter();
@@ -12,7 +10,7 @@ export default function MapId() {
 
   return (
     <>
-      <CustomHead title={"Редактирование карты" + mapId} />
+      <CustomHead title={"Редактирование карты " + mapId} />
       <main className="main">
         <UpNavBar />
         <NavBar>
