@@ -16,6 +16,7 @@ import {
   editTextInStore,
   editTitleInStore,
   editTransferInStore,
+  newParamInAction,
   newTransferToStore,
   setStageToStore,
   storeStage,
@@ -26,6 +27,8 @@ import "reactflow/dist/style.css";
 import NavBar from "@/components/UI/NavBar";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import ShowPopover from "@/components/ShowPopover";
+import UpNavBar from "@/components/UpNavBar";
+import CustomHead from "@/components/Global/CustomHead";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -55,7 +58,6 @@ export default function ChapterEditById() {
   const updateChapter = async (chapter: any, all: boolean) => {
     if (all) await setChapter(chapter);
     await localStorage.setItem(`chapter_${chapterId}`, JSON.stringify(chapter));
-    return true;
   };
 
   // Первоначальная отрисовка нод и переходов
@@ -224,27 +226,9 @@ export default function ChapterEditById() {
 
   return (
     <>
-      <Head>
-        <title>Редактирование главы {chapter?.id} :: PDA Quest Editor</title>
-        <meta name="description" content="Редактор главы" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="https://artux.net/favicon-32x32.png" />
-      </Head>
+      <CustomHead title={"Редактирование главы " + chapter?.id} />
       <main className="main">
-        <NavBar>
-          <Link className="navbar__header" href="/">
-            Назад
-          </Link>
-          <button className="navbar__header navbar__header--active">
-            Глава
-          </button>
-          <button className="navbar__header">Карта</button>
-          <button className="mx-auto"></button>
-          <ChangeThemeButton />
-          <Link className="navbar__header" href="/edit/chapter/help">
-            Помощь
-          </Link>
-        </NavBar>
+        <UpNavBar />
         <NavBar>
           <div
             className="navbar__header no-select"
@@ -359,7 +343,16 @@ export default function ChapterEditById() {
                               defaultValue={action[0]}
                             />
                             <div>
-                              <div> Значения:</div>
+                              <div style={{ display: "flex" }}>
+                                Значения: <div className="mx-auto"></div>
+                                <button
+                                  onClick={() => {
+                                    newParamInAction(indexAction);
+                                  }}
+                                >
+                                  +
+                                </button>
+                              </div>
                               {action[1].map((key: any, index: number) => (
                                 <input
                                   type="text"

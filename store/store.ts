@@ -60,3 +60,11 @@ export function editParamInAction(
   storeStage.actions = Object.fromEntries(arrayActions);
   console.log("Изменение параметра в action", storeStage.actions);
 }
+
+export function newParamInAction(indexAction: number) {
+  const arrayActions: any = Object.entries(storeStage.actions);
+  arrayActions[indexAction][1][arrayActions[indexAction][1].length] =
+    "Новый параметр";
+  storeStage.actions = Object.fromEntries(arrayActions);
+  console.log("Изменение параметра в action", storeStage);
+}

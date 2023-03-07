@@ -158,7 +158,7 @@ code {
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-family: 'GolosText';
+  font-family: 'GolosText', sans-serif;
   color: var(--black);
 }
 
@@ -168,7 +168,7 @@ h1, h2, h3, h4 {
 }
 
 ul {
-  list-style: inside;;
+  list-style: inside;
   padding: 0;
   margin: 0;
 }

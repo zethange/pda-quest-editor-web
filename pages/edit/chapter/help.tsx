@@ -13,6 +13,7 @@ import {
   DiscordMessages,
   DiscordReply,
 } from "@skyra/discord-components-react";
+import UpNavBar from "@/components/UpNavBar";
 
 export default function Help() {
   const [markdown, setMarkdown] = useState<any>();
@@ -30,21 +31,7 @@ export default function Help() {
           <link rel="icon" href="https://artux.net/favicon-32x32.png" />
         </Head>
         <main className="main">
-          <NavBar>
-            <button
-              className="navbar__header"
-              onClick={() => window.history.go(-1)}
-            >
-              Назад
-            </button>
-            <button className="navbar__header navbar__header--active">
-              Глава
-            </button>
-            <button className="navbar__header">Карта</button>
-            <button className="mx-auto"></button>
-            <ChangeThemeButton />
-            <button className="navbar__header">Помощь</button>
-          </NavBar>
+          <UpNavBar />
           <div
             style={{
               height: "calc(100vh - 39px)",
@@ -54,17 +41,14 @@ export default function Help() {
           >
             <h1>Редактор квестов ПДА</h1>
             <DiscordMessages lightTheme>
-              <DiscordMessage author="Писяпопа" profile="pisya">
+              <DiscordMessage author="Писяпопа">
                 Ну вот, держи редактор квестов, тут всё интуитивно понятно
               </DiscordMessage>
               <DiscordMessage
-                author="Тот самый конечный пользователь"
-                profile="user"
+                author="Конечный пользователь"
+                avatar="https://hstock.s3.eu-central-1.amazonaws.com/images/products/9628/a534f6a6-d312-413e-b530-756cc055ad1c-800.png"
                 highlight
               >
-                <DiscordReply slot="reply" profile="pisya">
-                  Ну вот, держи редактор квестов, тут всё интуитивно понятно
-                </DiscordReply>
                 <DiscordMention>Писяпопа</DiscordMention>, а как переход
                 создавать? аАаАа, так эти штуки соединять можна!
               </DiscordMessage>

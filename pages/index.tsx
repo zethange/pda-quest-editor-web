@@ -6,6 +6,11 @@ import Head from "next/head";
 import Card from "@/components/UI/Card";
 import NavBar from "@/components/UI/NavBar";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
+import CustomHead from "@/components/Global/CustomHead";
+
+function UpNavBar() {
+  return null;
+}
 
 export default function Home() {
   const [listChapters, setListChapters] = useState<any>([]); // это полностью все главы в массиве
@@ -57,25 +62,9 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>PDA Quest Editor</title>
-        <meta name="description" content="Редактор квестов для PDA" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="https://artux.net/favicon-32x32.png" />
-      </Head>
+      <CustomHead title="Главная" />
       <main className="main">
-        <NavBar>
-          <button className="navbar__header navbar__header--active">
-            История
-          </button>
-          <button className="navbar__header">Карта</button>
-          <div className="mx-auto"></div>
-          <ChangeThemeButton />
-          <Link className="navbar__header" href="/edit/chapter/help">
-            Помощь
-          </Link>
-        </NavBar>
-        <hr />
+        <UpNavBar />
         <NavBar>
           <input
             type="file"
