@@ -17,14 +17,15 @@ export default function EditActions() {
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
 
   const [method, setMethod] = useState<string>("add");
-  const [param, setParam] = useState<string>("");
 
-  const arrParam: any[] = ["68"];
+  const arrParam: any[] = ["68", "1"];
   const onChangeNewParam = (message: string, type: string) => {
     if (type === "item") arrParam[0] = message;
     if (type === "count") arrParam[1] = message;
     console.log(arrParam.join(":"));
   };
+
+  console.log("ререндер");
 
   return (
     <div className="stage-card">
@@ -42,7 +43,13 @@ export default function EditActions() {
             <option value="add">Добавить</option>
             <option value="remove">Удалить</option>
           </select>
-          <button className="btn" onClick={() => newMethodInAction(method)}>
+          <button
+            className="btn"
+            onClick={() => {
+              newMethodInAction(method);
+              setShowCreateMethod(false);
+            }}
+          >
             Сохранить
           </button>
         </div>
@@ -85,6 +92,7 @@ export default function EditActions() {
                       onChangeNewParam(event.target.value, "item")
                     }
                     required={true}
+                    defaultValue={arrParam[0]}
                   >
                     {!isLoading &&
                       Object.entries(data).map((category: any) => (
@@ -99,6 +107,7 @@ export default function EditActions() {
                     style={{ width: "100px" }}
                     placeholder="Количество"
                     required={true}
+                    defaultValue={arrParam[1]}
                     onChange={(event) =>
                       onChangeNewParam(event.target.value, "count")
                     }
