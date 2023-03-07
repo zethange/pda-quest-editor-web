@@ -1,22 +1,27 @@
 # PDA Quest Editor
-Редактор квестов для Сталкерского ПДА, написаный на Next.js и TypeScript
+The quest editor for [Stalker PDA](https://pda.artux.net), written in Next.js and TypeScript
 
-Для запуска проекта требуется установить зависимости:
+To run the project, you need to install dependencies:
 ```shell
-yarn install
-# или
 npm install
+# or using yarn
+yarn
 ```
-Старт проекта:
+Launching a server for development:
 ```shell
-yarn run build && yarn run start # production
-yarn run dev # development
-# или 
-npm run build && npm run start # production
-npm run dev # development
+npm run dev
+# or using yarn 
+yarn run dev
+```
+Production build:
+```shell
+npm run build && npm run start
+# for yarn
+yarn run build && yarn run start 
 ```
 
-- [x] Главная страница
-- [x] Страница редактирования
-- [ ] Логика приложения
-- [x] Импорт глав
+TODO:
+- [x] Main page
+- [x] Importing/exporting chapters
+- [x] Visualization of stages
+- [x] Basic stage editing

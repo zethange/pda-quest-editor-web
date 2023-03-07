@@ -1,6 +1,4 @@
-import Head from "next/head";
 import NavBar from "@/components/UI/NavBar";
-import { useRouter } from "next/router";
 import UpNavBar from "@/components/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
 

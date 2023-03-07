@@ -7,8 +7,6 @@ import ReactFlow, {
   MarkerType,
   MiniMap,
 } from "reactflow";
-import Link from "next/link";
-import Head from "next/head";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
   editMethodInAction,
@@ -25,10 +23,10 @@ import {
 import { newStage } from "@/store/types";
 import "reactflow/dist/style.css";
 import NavBar from "@/components/UI/NavBar";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import ShowPopover from "@/components/ShowPopover";
 import UpNavBar from "@/components/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
+import EditStage from "@/components/EditStage";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -329,49 +327,7 @@ export default function ChapterEditById() {
                         )
                     )}
                   </div>
-                  {storeStage.actions && (
-                    <div className="stage-card">
-                      {Object.entries(storeStage.actions).map(
-                        (action: any, indexAction: number) => (
-                          <div>
-                            Операция:{" "}
-                            <input
-                              type="text"
-                              onChange={(e) => {
-                                editMethodInAction(e.target.value, indexAction);
-                              }}
-                              defaultValue={action[0]}
-                            />
-                            <div>
-                              <div style={{ display: "flex" }}>
-                                Значения: <div className="mx-auto"></div>
-                                <button
-                                  onClick={() => {
-                                    newParamInAction(indexAction);
-                                  }}
-                                >
-                                  +
-                                </button>
-                              </div>
-                              {action[1].map((key: any, index: number) => (
-                                <input
-                                  type="text"
-                                  defaultValue={key}
-                                  onChange={(e) =>
-                                    editParamInAction(
-                                      e.target.value,
-                                      indexAction,
-                                      index
-                                    )
-                                  }
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  )}
+                  {storeStage.actions && <EditStage />}
                   <button
                     onClick={() => {
                       updateStage(storeStage.id, true);

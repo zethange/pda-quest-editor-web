@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { newChapter } from "@/store/types";
-import Link from "next/link";
 
-import Head from "next/head";
 import Card from "@/components/UI/Card";
 import NavBar from "@/components/UI/NavBar";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import CustomHead from "@/components/Global/CustomHead";
 
 function UpNavBar() {
