@@ -50,12 +50,12 @@ export function newChapter(id: string) {
         id: 0,
         type_stage: 0,
         background_url: "",
-        title: "Это начало великой истории",
+        title: "Это начало истории",
         message: "",
         type_message: 0,
         texts: [
           {
-            text: "Go to the gym",
+            text: "Это текст, до свидания.",
             condition: {},
           },
           {

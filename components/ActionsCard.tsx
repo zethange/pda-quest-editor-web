@@ -3,7 +3,7 @@ import { findRelation } from "@/store/utils/relation";
 export default function ActionsCard({ actions }: { actions: any }) {
   if (actions && Object.keys(actions).length) {
     if (actions?.remove?.join(", ").indexOf(":") > -1) {
-      console.log("есть предмет(ы)");
+      // console.log("есть предмет(ы)");
     }
 
     return (

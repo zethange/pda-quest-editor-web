@@ -24,7 +24,7 @@ export default function ShowPopover({ stage }: { stage: any }) {
               src={
                 stage?.background_url
                   ? "https://files.artux.net/static/" + stage?.background_url
-                  : "/no_background.jpg"
+                  : "/no_background.png"
               }
               style={{ borderRadius: "5px", width: "340px" }}
               alt={stage?.title}
