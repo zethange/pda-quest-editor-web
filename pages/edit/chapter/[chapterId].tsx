@@ -168,14 +168,14 @@ export default function ChapterEditById() {
   };
 
   // Обновление стадии
-  const updateStage = (stageId: number, setOpenStageEnabled: boolean) => {
-    const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${chapterId}`) as any
+  const updateStage = async (stageId: number, setOpenStageEnabled: boolean) => {
+    const chapterFromLocalStorage = await JSON.parse(
+      (await localStorage.getItem(`chapter_${chapterId}`)) as any
     );
 
-    chapterFromLocalStorage.stages.splice(stageId, 1, storeStage);
+    await chapterFromLocalStorage.stages.splice(stageId, 1, storeStage);
 
-    updateChapter(chapterFromLocalStorage, true);
+    await updateChapter(chapterFromLocalStorage, true);
     setOpenStageEnabled && setOpenStage(storeStage);
   };
 
@@ -220,6 +220,14 @@ export default function ChapterEditById() {
     setStageToStore(null);
     setEditableStage(false);
   }
+
+  setInterval(() => {
+    const chapterFromLocalStorage = JSON.parse(
+      localStorage.getItem(`chapter_${chapterId}`) as any
+    );
+
+    setChapter(chapterFromLocalStorage);
+  }, 8000);
 
   return (
     <>

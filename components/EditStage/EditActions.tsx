@@ -25,8 +25,6 @@ export default function EditActions() {
     console.log(arrParam.join(":"));
   };
 
-  console.log("ререндер");
-
   return (
     <div className="stage-card">
       <div style={{ display: "flex" }}>
