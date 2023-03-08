@@ -14,6 +14,7 @@ import {
   DiscordReply,
 } from "@skyra/discord-components-react";
 import UpNavBar from "@/components/Global/UpNavBar";
+import Link from "next/link";
 
 export default function Help() {
   const [markdown, setMarkdown] = useState<any>();
@@ -31,7 +32,11 @@ export default function Help() {
           <link rel="icon" href="https://artux.net/favicon-32x32.png" />
         </Head>
         <main className="main">
-          <UpNavBar />
+          <UpNavBar>
+            <Link className="navbar__header" href="/updates">
+              Обновления
+            </Link>
+          </UpNavBar>
           <div
             style={{
               height: "calc(100vh - 39px)",

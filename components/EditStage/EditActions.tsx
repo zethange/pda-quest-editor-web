@@ -1,12 +1,11 @@
+import { useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/store/tools";
-import { useState } from "react";
 
 import {
   editMethodInAction,
   editParamInAction,
   newMethodInAction,
-  newParamInAction,
   storeStage,
 } from "@/store/store";
 import CreateParam from "@/components/EditStage/EditActions/CreateParam";
@@ -14,17 +13,9 @@ import CreateParam from "@/components/EditStage/EditActions/CreateParam";
 export default function EditActions() {
   const { data, error, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
 
-  const [showCreateParam, setShowCreateParam] = useState<boolean>(false);
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
 
   const [method, setMethod] = useState<string>("add");
-
-  const arrParam: string[] = ["68", "1"];
-  const onChangeNewParam = (message: string, type: string) => {
-    if (type === "item") arrParam[0] = message;
-    if (type === "count") arrParam[1] = message;
-    console.log(arrParam.join(":"));
-  };
 
   return (
     <div className="stage-card">
@@ -72,6 +63,8 @@ export default function EditActions() {
             >
               <option value="add">Добавить</option>
               <option value="remove">Удалить</option>
+              <option value="xp">Добавить/удалить опыт</option>
+              <option value="money">Добавить/удалить деньги</option>
             </select>
             <div>
               <CreateParam

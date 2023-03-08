@@ -225,6 +225,7 @@ export default function ChapterEditById() {
       <CustomHead title={"Редактирование главы " + chapter?.id} />
       <main className="main">
         <UpNavBar />
+        <hr />
         <NavBar>
           <div
             className="navbar__header no-select"

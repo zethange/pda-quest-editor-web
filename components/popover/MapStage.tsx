@@ -30,15 +30,18 @@ export default function MapStage({ data }: { data: any }) {
     mapImg = "https://files.artux.net/static/maps/map_agroprom.png";
   }
 
+  console.log(data.pos.split(":"));
+
   return (
     <div className="stage-card">
       Переход на локацию: {mapString}
-      <div>
+      <div style={{ position: "relative" }}>
         <img
           src={mapImg}
           alt={mapString}
           style={{ width: "340px", borderRadius: "5px", marginTop: "5px" }}
         />
+        <img src="" style={{ position: "absolute" }} alt="" />
       </div>
       <div>Позиция: {data.pos}</div>
     </div>

@@ -17,8 +17,6 @@ export default function CreateParam({ data, isLoading, indexAction }: Props) {
     console.log(arrParam.join(":"));
   };
 
-  console.log(arrParam[0]);
-
   return (
     <>
       <div style={{ display: "flex" }}>
