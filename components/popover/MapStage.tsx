@@ -1,3 +1,5 @@
+import { createRef, useRef, useState } from "react";
+
 export default function MapStage({ data }: { data: any }) {
   let mapString: string = "загрузка...";
   let mapImg: string = "https://files.artux.net";
@@ -32,16 +34,40 @@ export default function MapStage({ data }: { data: any }) {
 
   console.log(data.pos.split(":"));
 
+  const [diffHeight, setDiffHeight] = useState<number>(0);
+  const [diffWidth, setDiffWidth] = useState<number>(0);
+
+  const onLoadImage = (target: any) => {
+    setDiffHeight(target.target.naturalHeight / target.target.clientHeight);
+    setDiffWidth(target.target.naturalWidth / target.target.clientWidth);
+  };
+
   return (
     <div className="stage-card">
       Переход на локацию: {mapString}
-      <div style={{ position: "relative" }}>
-        <img
-          src={mapImg}
-          alt={mapString}
-          style={{ width: "340px", borderRadius: "5px", marginTop: "5px" }}
-        />
-        <img src="" style={{ position: "absolute" }} alt="" />
+      <div
+        style={{
+          position: "relative",
+        }}
+      >
+        <div>
+          <img
+            src={mapImg}
+            onLoad={(target: any) => onLoadImage(target)}
+            alt={mapString}
+            style={{ borderRadius: "5px", marginTop: "5px", width: "340px" }}
+          />
+          <span
+            style={{
+              position: "absolute",
+              left: `${data.pos.split(":")[0] / diffWidth}px`,
+              bottom: `${data.pos.split(":")[1] / diffHeight}px`,
+              color: "#fff",
+            }}
+          >
+            @
+          </span>
+        </div>
       </div>
       <div>Позиция: {data.pos}</div>
     </div>
