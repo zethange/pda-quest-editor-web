@@ -33,6 +33,14 @@ export function editTitleInStore(title: string) {
   storeStage.title = title;
 }
 
+export function editMessageInStore(message: string) {
+  storeStage.message = message;
+}
+
+export function resetMessageInStore() {
+  storeStage.message = "";
+}
+
 export function editTextInStore(id: number, text: any) {
   storeStage.texts.splice(id, 1, text);
   console.log("Изменение текста в сторе", storeStage.texts);

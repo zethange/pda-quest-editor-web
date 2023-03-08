@@ -9,7 +9,7 @@ import {
   newParamInAction,
   storeStage,
 } from "@/store/store";
-import CreateParam from "@/components/EditStage/CreateParam";
+import CreateParam from "@/components/EditStage/EditActions/CreateParam";
 
 export default function EditActions() {
   const { data, error, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
@@ -41,6 +41,8 @@ export default function EditActions() {
           <select onChange={(event) => setMethod(event.target.value)}>
             <option value="add">Добавить</option>
             <option value="remove">Удалить</option>
+            <option value="xp">Добавить/удалить опыт</option>
+            <option value="money">Добавить/удалить деньги</option>
           </select>
           <button
             className="btn"
@@ -72,13 +74,11 @@ export default function EditActions() {
               <option value="remove">Удалить</option>
             </select>
             <div>
-              {/* от сюда */}
               <CreateParam
                 data={data}
                 indexAction={indexAction}
                 isLoading={isLoading}
               />
-
               {action[1].map((key: any, index: number) => (
                 <input
                   type="text"

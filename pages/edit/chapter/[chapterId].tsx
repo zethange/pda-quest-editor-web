@@ -9,12 +9,10 @@ import ReactFlow, {
 } from "reactflow";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
-  editMethodInAction,
-  editParamInAction,
+  editMessageInStore,
   editTextInStore,
   editTitleInStore,
   editTransferInStore,
-  newParamInAction,
   newTransferToStore,
   setStageToStore,
   storeStage,
@@ -26,7 +24,6 @@ import NavBar from "@/components/UI/NavBar";
 import ShowPopover from "@/components/ShowPopover";
 import UpNavBar from "@/components/Global/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
-import EditStage from "@/components/EditStage/EditActions";
 import EditActions from "@/components/EditStage/EditActions";
 
 export default function ChapterEditById() {
@@ -43,6 +40,8 @@ export default function ChapterEditById() {
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false); // для создания стадии
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
+
+  const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
 
   // Вытаскивание главы из localStorage
   useEffect(() => {
@@ -221,14 +220,6 @@ export default function ChapterEditById() {
     setEditableStage(false);
   }
 
-  setInterval(() => {
-    const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${chapterId}`) as any
-    );
-
-    setChapter(chapterFromLocalStorage);
-  }, 8000);
-
   return (
     <>
       <CustomHead title={"Редактирование главы " + chapter?.id} />
@@ -290,12 +281,37 @@ export default function ChapterEditById() {
               {editableStage ? (
                 <div>
                   <div className="stage-card">
-                    <b>Title:</b>
+                    <b>Заголовок:</b>
                     <Form.Control
                       as="textarea"
                       defaultValue={storeStage?.title}
                       onChange={(event) => editTitleInStore(event.target.value)}
                     />
+                  </div>
+                  <div className="stage-card">
+                    <b>Сообщение:</b>
+                    <div>
+                      Показывать сообщение:{" "}
+                      <input
+                        type="checkbox"
+                        onChange={() => {
+                          setCheckBoxMessage(!checkBoxMessage);
+                          if (!checkBoxMessage)
+                            editMessageInStore("Новое уведомление");
+                          if (checkBoxMessage) editMessageInStore("");
+                        }}
+                        checked={storeStage.message}
+                      />
+                      {storeStage.message && (
+                        <Form.Control
+                          as="textarea"
+                          defaultValue={storeStage?.message}
+                          onChange={(event) =>
+                            editMessageInStore(event.target.value)
+                          }
+                        />
+                      )}
+                    </div>
                   </div>
                   <div className="stage-card">
                     <b>Тексты:</b>

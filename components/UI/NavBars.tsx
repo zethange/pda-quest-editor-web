@@ -1,4 +1,4 @@
-import NavBar from "./UI/NavBar";
+import NavBar from "./NavBar";
 
 export default function NavBars() {
   return (
