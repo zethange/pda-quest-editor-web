@@ -25,6 +25,8 @@ import ShowPopover from "@/components/ShowPopover";
 import UpNavBar from "@/components/Global/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
 import EditActions from "@/components/EditStage/EditActions";
+import { MdCreate } from "react-icons/md";
+import { SiDialogflow, SiGooglemaps } from "react-icons/si";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -35,9 +37,9 @@ export default function ChapterEditById() {
   const [nodes, setNodes] = useState<any[]>();
   const [edges, setEdges] = useState<any[]>();
 
-  const [openStage, setOpenStage] = useState<any>();
-  const [editableStage, setEditableStage] = useState<boolean>(false);
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false); // для создания стадии
+
+  const [showEditStage, setShowEditStage] = useState<boolean>(false); // для создания стадии
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
 
@@ -71,9 +73,8 @@ export default function ChapterEditById() {
             <>
               <button
                 onClick={() => {
-                  setOpenStage(stage);
                   setStageToStore(stage);
-                  setEditableStage(false);
+                  setShowEditStage(true);
                 }}
               >
                 {stage.title ? stage.title : "Переход на карту"}
@@ -167,7 +168,7 @@ export default function ChapterEditById() {
   };
 
   // Обновление стадии
-  const updateStage = async (stageId: number, setOpenStageEnabled: boolean) => {
+  const updateStage = async (stageId: number) => {
     const chapterFromLocalStorage = await JSON.parse(
       (await localStorage.getItem(`chapter_${chapterId}`)) as any
     );
@@ -175,7 +176,6 @@ export default function ChapterEditById() {
     await chapterFromLocalStorage.stages.splice(stageId, 1, storeStage);
 
     await updateChapter(chapterFromLocalStorage, true);
-    setOpenStageEnabled && setOpenStage(storeStage);
   };
 
   const onConnect = useCallback(
@@ -215,9 +215,8 @@ export default function ChapterEditById() {
     chapterFromLocalStorage?.stages?.splice(indexStage, 1);
 
     chapterFromLocalStorage && updateChapter(chapterFromLocalStorage, true);
-    setOpenStage(null);
     setStageToStore(null);
-    setEditableStage(false);
+    setShowEditStage(false);
   }
 
   return (
@@ -231,6 +230,7 @@ export default function ChapterEditById() {
             className="navbar__header no-select"
             onClick={() => setShowPopoverStage(!showPopoverStage)}
           >
+            <MdCreate style={{ paddingTop: "4px" }} />
             Создать стадию
             {showPopoverStage && (
               <div className="stage-popover">
@@ -238,12 +238,14 @@ export default function ChapterEditById() {
                   className="button-popover"
                   onClick={() => createStage("default")}
                 >
+                  <SiDialogflow style={{ paddingTop: "5px" }} />
                   Диалог
                 </button>
                 <button
                   className="button-popover"
                   onClick={() => createStage("exit")}
                 >
+                  <SiGooglemaps style={{ paddingTop: "5px" }} />
                   Выход на карту
                 </button>
               </div>
@@ -251,122 +253,113 @@ export default function ChapterEditById() {
           </div>
         </NavBar>
         <div className="stage-body">
-          {openStage && (
+          {showEditStage && (
             <div className="editor-popover">
               <div className="stage-popover__header">
-                Стадия {openStage?.id}
+                Стадия {storeStage?.id}
                 <div className="mx-auto"></div>
                 <button
                   style={{ fontSize: "12px", paddingRight: "5px" }}
-                  onClick={() => deleteStage(openStage?.id)}
+                  onClick={() => deleteStage(storeStage?.id)}
                 >
                   Удалить
                 </button>
                 <button
-                  style={{ fontSize: "12px", paddingRight: "5px" }}
-                  onClick={() => setEditableStage(!editableStage)}
-                >
-                  {editableStage ? "Просмотр" : "Редактировать"}
-                </button>
-                <button
                   style={{ fontSize: "12px" }}
                   onClick={() => {
-                    setOpenStage(null);
-                    setEditableStage(false);
+                    setShowEditStage(false);
                     setStageToStore(null);
                   }}
                 >
                   Закрыть
                 </button>
               </div>
-              {editableStage ? (
-                <div>
-                  <div className="stage-card">
-                    <b>Заголовок:</b>
-                    <Form.Control
-                      as="textarea"
-                      defaultValue={storeStage?.title}
-                      onChange={(event) => editTitleInStore(event.target.value)}
+              <div>
+                <div className="stage-card">
+                  <b>Заголовок:</b>
+                  <Form.Control
+                    as="textarea"
+                    defaultValue={storeStage?.title}
+                    onChange={(event) => editTitleInStore(event.target.value)}
+                  />
+                </div>
+                <div className="stage-card">
+                  <b>Сообщение:</b>
+                  <div>
+                    Показывать сообщение:{" "}
+                    <input
+                      type="checkbox"
+                      onChange={() => {
+                        setCheckBoxMessage(!checkBoxMessage);
+                        if (!checkBoxMessage)
+                          editMessageInStore("Новое уведомление");
+                        if (checkBoxMessage) editMessageInStore("");
+                      }}
+                      checked={storeStage?.message}
                     />
-                  </div>
-                  <div className="stage-card">
-                    <b>Сообщение:</b>
-                    <div>
-                      Показывать сообщение:{" "}
-                      <input
-                        type="checkbox"
-                        onChange={() => {
-                          setCheckBoxMessage(!checkBoxMessage);
-                          if (!checkBoxMessage)
-                            editMessageInStore("Новое уведомление");
-                          if (checkBoxMessage) editMessageInStore("");
-                        }}
-                        checked={storeStage.message}
+                    {storeStage?.message && (
+                      <Form.Control
+                        as="textarea"
+                        defaultValue={storeStage?.message}
+                        onChange={(event) =>
+                          editMessageInStore(event.target.value)
+                        }
                       />
-                      {storeStage.message && (
+                    )}
+                  </div>
+                </div>
+                <div className="stage-card">
+                  <b>Тексты:</b>
+                  {storeStage?.texts?.map(
+                    (text: any, index: number) =>
+                      text.text && (
                         <Form.Control
+                          key={index}
                           as="textarea"
-                          defaultValue={storeStage?.message}
+                          defaultValue={text.text}
                           onChange={(event) =>
-                            editMessageInStore(event.target.value)
+                            editTextInStore(index, {
+                              text: event.target.value,
+                              condition: text.condition,
+                            })
                           }
                         />
-                      )}
-                    </div>
-                  </div>
-                  <div className="stage-card">
-                    <b>Тексты:</b>
-                    {storeStage.texts.map(
-                      (text: any, index: number) =>
-                        text.text && (
-                          <Form.Control
-                            as="textarea"
-                            defaultValue={text.text}
-                            onChange={(event) =>
-                              editTextInStore(index, {
-                                text: event.target.value,
-                                condition: text.condition,
-                              })
-                            }
-                          />
-                        )
-                    )}
-                  </div>
-                  <div className="stage-card">
-                    <b>Ответы:</b>
-                    {storeStage.transfers.map(
-                      (transfer: any, index: number) =>
-                        transfer.text && (
-                          <Form.Control
-                            as="textarea"
-                            defaultValue={transfer.text}
-                            onChange={(event) =>
-                              editTransferInStore(index, {
-                                text: event.target.value,
-                                stage_id: transfer.stage_id,
-                                condition: transfer.condition,
-                              })
-                            }
-                          />
-                        )
-                    )}
-                  </div>
-                  {storeStage.actions && <EditActions />}
-                  <button
-                    onClick={() => {
-                      updateStage(storeStage.id, true);
-                      setEditableStage(false);
-                      setOpenStage(null);
-                    }}
-                  >
-                    Сохранить
-                  </button>
+                      )
+                  )}
                 </div>
-              ) : (
-                <ShowPopover stage={openStage} />
-              )}
+                <div className="stage-card">
+                  <b>Ответы:</b>
+                  {storeStage?.transfers?.map(
+                    (transfer: any, index: number) =>
+                      transfer.text && (
+                        <Form.Control
+                          key={index}
+                          as="textarea"
+                          defaultValue={transfer.text}
+                          onChange={(event) =>
+                            editTransferInStore(index, {
+                              text: event.target.value,
+                              stage_id: transfer.stage_id,
+                              condition: transfer.condition,
+                            })
+                          }
+                        />
+                      )
+                  )}
+                </div>
+                {storeStage?.actions && <EditActions />}
+                <button
+                  onClick={() => {
+                    updateStage(storeStage?.id);
+                    setShowEditStage(false);
+                  }}
+                >
+                  Сохранить
+                </button>
+              </div>
             </div>
           )}
+
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -412,7 +405,7 @@ export default function ChapterEditById() {
             <Button
               variant="secondary"
               onClick={() => {
-                updateStage(storeStage.id, false);
+                updateStage(storeStage.id);
                 setConnectionInfo(null);
               }}
             >

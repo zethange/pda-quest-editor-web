@@ -4,6 +4,8 @@ import { newChapter } from "@/store/types";
 import Card from "@/components/UI/Card";
 import NavBar from "@/components/UI/NavBar";
 import CustomHead from "@/components/Global/CustomHead";
+import { MdImportExport } from "react-icons/md";
+import { IoMdCreate } from "react-icons/io";
 
 function UpNavBar() {
   return null;
@@ -63,16 +65,20 @@ export default function Home() {
       <main className="main">
         <UpNavBar />
         <NavBar>
+          <MdImportExport
+            style={{ marginTop: "10px", width: "24px", height: "24px" }}
+          />
           <input
             type="file"
             className="navbar__header"
             onChange={onChangeChapter}
             accept="application/json"
+            style={{ width: "210px" }}
           />
           <button className="navbar__header" onClick={() => createChapter()}>
+            <IoMdCreate style={{ paddingTop: "3px" }} />
             Создать главу
           </button>
-          <button className="navbar__header">Редактирование</button>
         </NavBar>
         <div className="work-space">
           <div className="card-parent">

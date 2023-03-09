@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { AiOutlineCloudDownload } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
 
 export default function Card({
   title,
@@ -52,9 +54,10 @@ export default function Card({
           style={{ fontSize: "15px", paddingRight: "5px" }}
           onClick={() => downloadAsFile(chapter)}
         >
-          Скачать
+          <AiOutlineCloudDownload style={{ paddingTop: "4px" }} /> Скачать
         </button>
         <button style={{ fontSize: "15px" }} onClick={() => deleteChapter()}>
+          <MdDelete style={{ paddingTop: "4px" }} />
           Удалить
         </button>
       </div>
