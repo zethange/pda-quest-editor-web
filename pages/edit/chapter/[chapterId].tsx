@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import ReactFlow, {
   applyNodeChanges,
@@ -18,15 +18,16 @@ import {
   storeStage,
 } from "@/store/store";
 
-import { newStage } from "@/store/types";
 import "reactflow/dist/style.css";
+
+import { newStage } from "@/store/types";
 import NavBar from "@/components/UI/NavBar";
-import ShowPopover from "@/components/ShowPopover";
 import UpNavBar from "@/components/Global/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
 import EditActions from "@/components/EditStage/EditActions";
 import { MdCreate } from "react-icons/md";
 import { SiDialogflow, SiGooglemaps } from "react-icons/si";
+import { NodeStage } from "@/components/Nodes/StageNode";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -68,6 +69,7 @@ export default function ChapterEditById() {
     chapter?.stages.map((stage: any) => {
       initialNodes.push({
         id: String(stage.id),
+        type: "nodeStage",
         data: {
           label: (
             <>
@@ -81,6 +83,7 @@ export default function ChapterEditById() {
               </button>
             </>
           ),
+          text: stage.texts && stage.texts[0].text,
         },
         position: { x: stage.editor.x, y: stage.editor.y },
       });
@@ -218,6 +221,8 @@ export default function ChapterEditById() {
     setStageToStore(null);
     setShowEditStage(false);
   }
+
+  const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
 
   return (
     <>
@@ -365,6 +370,7 @@ export default function ChapterEditById() {
             edges={edges}
             onNodesChange={onNodesChange}
             onConnect={onConnect}
+            nodeTypes={nodeTypes}
             fitView
           >
             <MiniMap zoomable pannable />

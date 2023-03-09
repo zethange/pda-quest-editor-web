@@ -1,0 +1,10 @@
+.stage-node {
+    padding: 10px;
+    border-radius: 5px;
+    background: var(--white);
+    border: 1px solid var(--dark-gray)
+}
+
+.stage-node__label {
+    text-align: center;
+}
