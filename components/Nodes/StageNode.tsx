@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Handle, Position } from "reactflow";
 
 type data = {
@@ -9,9 +9,11 @@ type data = {
 export function NodeStage({
   data,
   isConnectable,
+  selected,
 }: {
   data: data;
   isConnectable: any;
+  selected: boolean;
 }) {
   const words = data?.text?.split(" ");
 
@@ -20,7 +22,13 @@ export function NodeStage({
   words?.splice(5, requireDeleteWords);
 
   return (
-    <div className="stage-node">
+    <div
+      className="stage-node"
+      style={{
+        background: selected ? "var(--light-blue)" : "",
+        border: selected ? "1px solid var(--dark-blue)" : "",
+      }}
+    >
       <Handle
         type="target"
         position={Position.Top}

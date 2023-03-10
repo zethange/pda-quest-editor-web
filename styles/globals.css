@@ -7,6 +7,17 @@
   font-style: normal;
 }
 
+select {
+  background: var(--white);
+  border: none;
+  border-radius: 5px;
+}
+
+input {
+  background: var(--white);
+  border: none;
+}
+
 hr {
   color: var(--light-gray);
   border: none;

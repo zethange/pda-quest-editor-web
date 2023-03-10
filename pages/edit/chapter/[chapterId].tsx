@@ -28,7 +28,6 @@ import EditActions from "@/components/EditStage/EditActions";
 import { MdCreate } from "react-icons/md";
 import { SiDialogflow, SiGooglemaps } from "react-icons/si";
 import { NodeStage } from "@/components/Nodes/StageNode";
-import ActionsCard from "@/components/ActionsCard";
 import MapStage from "@/components/popover/MapStage";
 
 export default function ChapterEditById() {
@@ -71,6 +70,7 @@ export default function ChapterEditById() {
       initialNodes.push({
         id: String(stage.id),
         type: "nodeStage",
+        selected: false,
         data: {
           label: (
             <>
