@@ -36,16 +36,18 @@ export default function Updates() {
                     alt={commit.author.login}
                   />
                 </a>
+                <span
+                  style={{
+                    background: "var(--light-gray)",
+                    padding: "4px",
+                    borderRadius: "4px",
+                    margin: "5px",
+                    width: "171px",
+                  }}
+                >
+                  {new Date(commit.commit.committer.date).toLocaleString()}
+                </span>
                 <a style={{ margin: "5px" }} href={commit.html_url}>
-                  <span
-                    style={{
-                      background: "var(--light-gray)",
-                      padding: "4px",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    {new Date(commit.commit.committer.date).toLocaleString()}
-                  </span>
                   <small> {commit.commit.message}</small>
                 </a>
               </div>

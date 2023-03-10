@@ -13,17 +13,11 @@ export function NodeStage({
   data: data;
   isConnectable: any;
 }) {
-  const onChange = useCallback((evt: any) => {
-    console.log(evt.target.value);
-  }, []);
-
   const words = data?.text?.split(" ");
 
   const requireDeleteWords = data?.text?.split(" ").length - 6;
 
   words?.splice(5, requireDeleteWords);
-
-  console.log(words);
 
   return (
     <div className="stage-node">

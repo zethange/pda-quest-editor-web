@@ -176,7 +176,31 @@ export default function ChapterEditById() {
       (await localStorage.getItem(`chapter_${chapterId}`)) as any
     );
 
-    await chapterFromLocalStorage.stages.splice(stageId, 1, storeStage);
+    const storeStageTrueId = chapterFromLocalStorage.stages.findIndex(
+      (stage: any) =>
+        stage ===
+        chapterFromLocalStorage.stages.find(
+          (stage: any) => stage.id === stageId
+        )
+    );
+
+    const updatedStageWithUpdatedPosition = {
+      ...storeStage,
+      editor: {
+        x: chapterFromLocalStorage.stages.find(
+          (stage: any) => stage.id === stageId
+        ).editor.x,
+        y: chapterFromLocalStorage.stages.find(
+          (stage: any) => stage.id === stageId
+        ).editor.y,
+      },
+    };
+
+    await chapterFromLocalStorage.stages.splice(
+      storeStageTrueId,
+      1,
+      updatedStageWithUpdatedPosition
+    );
 
     await updateChapter(chapterFromLocalStorage, true);
   };
