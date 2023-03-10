@@ -57,16 +57,15 @@ export default function MapStage({ data }: { data: any }) {
             alt={mapString}
             style={{ borderRadius: "5px", marginTop: "5px", width: "340px" }}
           />
-          <span
+          <img
             style={{
               position: "absolute",
               left: `${data.pos.split(":")[0] / diffWidth}px`,
               bottom: `${data.pos.split(":")[1] / diffHeight}px`,
               color: "#fff",
             }}
-          >
-            @
-          </span>
+            src="/quest.png"
+          />
         </div>
       </div>
       <div>Позиция: {data.pos}</div>

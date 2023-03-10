@@ -101,7 +101,7 @@ export function newStage(type: string, id: number) {
     return {
       id,
       type_stage: 4,
-      data: { map: 0, pos: "4:2" },
+      data: { map: 1, pos: "235:235" },
       editor: { x: Math.random() * 500, y: Math.random() * 500 },
     };
   }

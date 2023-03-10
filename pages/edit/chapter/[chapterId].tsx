@@ -28,6 +28,8 @@ import EditActions from "@/components/EditStage/EditActions";
 import { MdCreate } from "react-icons/md";
 import { SiDialogflow, SiGooglemaps } from "react-icons/si";
 import { NodeStage } from "@/components/Nodes/StageNode";
+import ActionsCard from "@/components/ActionsCard";
+import MapStage from "@/components/popover/MapStage";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -108,7 +110,7 @@ export default function ChapterEditById() {
     if (initialEdges.length !== 0) {
       setEdges(initialEdges);
     }
-  }, [chapter, showEditStage]);
+  }, [chapter]);
 
   // При изменении нод
   const onNodesChange = useCallback(
@@ -303,6 +305,9 @@ export default function ChapterEditById() {
                 </button>
               </div>
               <div>
+                {storeStage?.type_stage === 4 && (
+                  <MapStage data={storeStage?.data} />
+                )}
                 <div className="stage-card">
                   <b>Заголовок:</b>
                   <Form.Control
