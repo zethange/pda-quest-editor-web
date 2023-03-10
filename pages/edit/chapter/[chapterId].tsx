@@ -39,8 +39,7 @@ export default function ChapterEditById() {
   const [edges, setEdges] = useState<any[]>();
 
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false); // для создания стадии
-
-  const [showEditStage, setShowEditStage] = useState<boolean>(false); // для создания стадии
+  const [showEditStage, setShowEditStage] = useState<any>();
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
 
@@ -76,7 +75,7 @@ export default function ChapterEditById() {
               <button
                 onClick={() => {
                   setStageToStore(stage);
-                  setShowEditStage(true);
+                  setShowEditStage(stage);
                 }}
               >
                 {stage.title ? stage.title : "Переход на карту"}
@@ -109,7 +108,7 @@ export default function ChapterEditById() {
     if (initialEdges.length !== 0) {
       setEdges(initialEdges);
     }
-  }, [chapter]);
+  }, [chapter, showEditStage]);
 
   // При изменении нод
   const onNodesChange = useCallback(
@@ -243,7 +242,7 @@ export default function ChapterEditById() {
 
     chapterFromLocalStorage && updateChapter(chapterFromLocalStorage, true);
     setStageToStore(null);
-    setShowEditStage(false);
+    setShowEditStage(null);
   }
 
   const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
@@ -296,8 +295,8 @@ export default function ChapterEditById() {
                 <button
                   style={{ fontSize: "12px" }}
                   onClick={() => {
-                    setShowEditStage(false);
                     setStageToStore(null);
+                    setShowEditStage(null);
                   }}
                 >
                   Закрыть
@@ -343,7 +342,7 @@ export default function ChapterEditById() {
                     (text: any, index: number) =>
                       text.text && (
                         <Form.Control
-                          key={index}
+                          key={text.text}
                           as="textarea"
                           defaultValue={text.text}
                           onChange={(event) =>
@@ -362,7 +361,7 @@ export default function ChapterEditById() {
                     (transfer: any, index: number) =>
                       transfer.text && (
                         <Form.Control
-                          key={index}
+                          key={transfer.text}
                           as="textarea"
                           defaultValue={transfer.text}
                           onChange={(event) =>
@@ -380,7 +379,6 @@ export default function ChapterEditById() {
                 <button
                   onClick={() => {
                     updateStage(storeStage?.id);
-                    setShowEditStage(false);
                   }}
                 >
                   Сохранить
@@ -388,7 +386,6 @@ export default function ChapterEditById() {
               </div>
             </div>
           )}
-
           <ReactFlow
             nodes={nodes}
             edges={edges}

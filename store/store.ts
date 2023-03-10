@@ -2,6 +2,7 @@ export let storeStage: any = {};
 
 // Создание стадии
 export function setStageToStore(stage: any) {
+  storeStage = {};
   storeStage = stage;
   console.log("Обновление стадии в сторе", storeStage);
 }
