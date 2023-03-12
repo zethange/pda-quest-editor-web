@@ -37,20 +37,25 @@ export function createConditionsInTransfer(
   typeCondition: number
 ) {
   if (typeCondition === 1)
-    storeStage.transfers[transferIndex] = {
-      ...storeStage.transfers[transferIndex],
-      condition: { has: ["параметр"] },
+    storeStage.transfers[transferIndex].condition = {
+      ...storeStage.transfers[transferIndex].condition,
+      has: ["параметр"],
     };
   if (typeCondition === 2)
-    storeStage.transfers[transferIndex] = {
-      ...storeStage.transfers[transferIndex],
-      condition: { "!has": ["параметр"] },
+    storeStage.transfers[transferIndex].condition = {
+      ...storeStage.transfers[transferIndex].condition,
+      "!has": ["параметр"],
     };
+}
 
-  return storeStage.transfers.indexOf({
-    ...storeStage.transfers[transferIndex],
-    condition: { has: ["параметр"] },
-  });
+export function createValueInCondition(
+  transferIndex: number,
+  conditionIndex: number
+) {
+  const conditions: any = Object.entries(
+    storeStage.transfers[transferIndex].condition
+  );
+  conditions[conditionIndex][1].push("новый_параметр");
 }
 
 export function editValueInConditions(

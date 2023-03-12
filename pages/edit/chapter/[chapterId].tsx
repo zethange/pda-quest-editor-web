@@ -9,7 +9,6 @@ import ReactFlow, {
 } from "reactflow";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
-  createConditionsInTransfer,
   editMessageInStore,
   editTextInStore,
   editTitleInStore,
@@ -384,9 +383,21 @@ export default function ChapterEditById() {
                                   })
                                 }
                               />
-                              <div>
-                                Условия: {JSON.stringify(transfer.condition)}
-                              </div>
+                              {Object.entries(
+                                storeStage.transfers[index].condition
+                              ).map((condition: any) => (
+                                <div>
+                                  Если
+                                  {condition[0] === "has"
+                                    ? " есть параметр:"
+                                    : " нет параметра:"}
+                                  <ul>
+                                    {condition[1].map((conditionValue: any) => (
+                                      <li>{conditionValue}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
                             </div>
                           )
                       )}
@@ -397,6 +408,7 @@ export default function ChapterEditById() {
                 <button
                   onClick={() => {
                     updateStage(storeStage?.id);
+                    setShowEditStage(null);
                   }}
                 >
                   Сохранить
@@ -419,7 +431,10 @@ export default function ChapterEditById() {
         </div>
         <Modal
           show={connectionInfo}
-          onHide={() => setConnectionInfo(null)}
+          onHide={() => {
+            setConnectionInfo(null);
+            setTransferIndex("");
+          }}
           backdrop="static"
           keyboard={false}
           centered
@@ -459,11 +474,18 @@ export default function ChapterEditById() {
               onClick={() => {
                 updateStage(storeStage.id);
                 setConnectionInfo(null);
+                setTransferIndex("");
               }}
             >
               Сохранить
             </Button>
-            <Button variant="secondary" onClick={() => setConnectionInfo(null)}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setConnectionInfo(null);
+                setTransferIndex("");
+              }}
+            >
               Закрыть
             </Button>
           </Modal.Footer>

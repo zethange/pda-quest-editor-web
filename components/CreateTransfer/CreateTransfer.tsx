@@ -1,9 +1,10 @@
 import {
   createConditionsInTransfer,
+  createValueInCondition,
   editValueInConditions,
   storeStage,
 } from "@/store/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function CreateTransfer({
   transferIndex,
@@ -13,6 +14,7 @@ export default function CreateTransfer({
   const [createConditionInTransfer, setCreateConditionInTransfer] =
     useState<boolean>(false);
   const [typeCondition, setTypeCondition] = useState<number>(1);
+  const [showNewValue, setShowNewValue] = useState<boolean>(false);
 
   return (
     <>
@@ -40,9 +42,7 @@ export default function CreateTransfer({
               className="btn"
               style={{ padding: "1px" }}
               onClick={() => {
-                console.log(
-                  createConditionsInTransfer(transferIndex, typeCondition)
-                );
+                createConditionsInTransfer(transferIndex, typeCondition);
                 setCreateConditionInTransfer(false);
               }}
             >
@@ -54,21 +54,45 @@ export default function CreateTransfer({
           Object.entries(storeStage.transfers[transferIndex].condition).map(
             (condition: any, conditionIndex: number) => (
               <div>
-                Если
-                {condition[0] === "has" ? " есть параметр" : " нет параметра"}
-                {condition[1].map((conditionValue: any, valueIndex: number) => (
-                  <input
-                    defaultValue={conditionValue}
-                    onChange={(event) =>
-                      editValueInConditions(
-                        transferIndex,
-                        conditionIndex,
-                        valueIndex,
-                        event.target.value
-                      )
-                    }
-                  />
-                ))}
+                <div style={{ display: "flex" }}>
+                  Если
+                  {condition[0] === "has"
+                    ? " есть параметр:"
+                    : " нет параметра:"}
+                  <div className="mx-auto"></div>
+                  <button
+                    onClick={() => {
+                      createValueInCondition(transferIndex, conditionIndex);
+                      setShowNewValue(!showNewValue);
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+                <div
+                  className="stage-card"
+                  style={{
+                    background: "var(--white)",
+                    display: "grid",
+                    gap: "4px",
+                  }}
+                >
+                  {condition[1].map(
+                    (conditionValue: any, valueIndex: number) => (
+                      <input
+                        defaultValue={conditionValue}
+                        onChange={(event) =>
+                          editValueInConditions(
+                            transferIndex,
+                            conditionIndex,
+                            valueIndex,
+                            event.target.value
+                          )
+                        }
+                      />
+                    )
+                  )}
+                </div>
               </div>
             )
           )}
