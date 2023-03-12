@@ -8,7 +8,8 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 import { Button, Form, Modal } from "react-bootstrap";
-import {
+import deleteConditionInTransfer, {
+  createConditionsInTransfer,
   createValueInCondition,
   deleteValueInCondition,
   editMessageInStore,
@@ -33,6 +34,8 @@ import { SiDialogflow, SiGooglemaps } from "react-icons/si";
 import { NodeStage } from "@/components/Nodes/StageNode";
 import MapStage from "@/components/popover/MapStage";
 import CreateTransfer from "@/components/CreateTransfer/CreateTransfer";
+import CreateConditionInTransfer from "@/components/EditStage/CreateConditionInTransfer";
+import CreateConditionInTransferJsx from "@/components/EditStage/CreateConditionInTransfer";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -48,6 +51,8 @@ export default function ChapterEditById() {
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
   const [transferIndex, setTransferIndex] = useState<string>("");
+  const [createConditionInTransfer, setCreateConditionInTransfer] =
+    useState<boolean>(false);
 
   const [rerender, setRerender] = useState<boolean>(false);
 
@@ -311,7 +316,12 @@ export default function ChapterEditById() {
                   Закрыть
                 </button>
               </div>
-              <div>
+              <div
+                style={{
+                  height: "calc(100vh - 132px)",
+                  overflow: "auto",
+                }}
+              >
                 {(storeStage?.type_stage === 4 && (
                   <MapStage data={storeStage?.data} />
                 )) || (
@@ -398,17 +408,33 @@ export default function ChapterEditById() {
                                   })
                                 }
                               />
+                              <CreateConditionInTransferJsx
+                                transferIndex={index}
+                                functionAdd={() => setRerender(!rerender)}
+                              />
                               {Object.entries(
                                 storeStage.transfers[index].condition
                               ).map(
                                 (condition: any, conditionIndex: number) => (
-                                  <div>
+                                  <div className="stage-card">
                                     <div style={{ display: "flex" }}>
                                       Если
                                       {condition[0] === "has"
                                         ? " есть параметр:"
                                         : " нет параметра:"}
                                       <div className="mx-auto"></div>
+                                      <button
+                                        style={{ marginRight: "4px" }}
+                                        onClick={() => {
+                                          deleteConditionInTransfer(
+                                            index,
+                                            conditionIndex
+                                          );
+                                          setRerender(!rerender);
+                                        }}
+                                      >
+                                        Удалить
+                                      </button>
                                       <button
                                         onClick={() => {
                                           createValueInCondition(

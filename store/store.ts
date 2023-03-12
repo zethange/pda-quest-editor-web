@@ -32,6 +32,19 @@ export function newTransferToStore(transfer: any) {
   }
 }
 
+export default function deleteConditionInTransfer(
+  transferIndex: number,
+  conditionIndex: number
+) {
+  const conditions: any = Object.entries(
+    storeStage.transfers[transferIndex].condition
+  );
+  conditions.splice(conditionIndex, 1);
+
+  storeStage.transfers[transferIndex].condition =
+    Object.fromEntries(conditions);
+}
+
 export function createConditionsInTransfer(
   transferIndex: number,
   typeCondition: number
