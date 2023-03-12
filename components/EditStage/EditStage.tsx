@@ -1,7 +1,1 @@
-export default function EditStage() {
-  return (
-    <div>
-      <div></div>
-    </div>
-  );
-}
+export default function EditStage() {}

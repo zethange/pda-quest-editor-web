@@ -70,6 +70,17 @@ export function editValueInConditions(
   conditions[conditionIndex][1][valueIndex] = value;
 }
 
+export function deleteValueInCondition(
+  transferIndex: number,
+  conditionIndex: number,
+  valueIndex: number
+) {
+  const conditions: any = Object.entries(
+    storeStage.transfers[transferIndex].condition
+  );
+  conditions[conditionIndex][1].splice(valueIndex, 1);
+}
+
 export function editTitleInStore(title: string) {
   storeStage.title = title;
 }

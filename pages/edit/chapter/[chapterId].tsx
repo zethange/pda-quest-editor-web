@@ -9,10 +9,13 @@ import ReactFlow, {
 } from "reactflow";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
+  createValueInCondition,
+  deleteValueInCondition,
   editMessageInStore,
   editTextInStore,
   editTitleInStore,
   editTransferInStore,
+  editValueInConditions,
   newTransferToStore,
   setStageToStore,
   storeStage,
@@ -45,6 +48,8 @@ export default function ChapterEditById() {
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
   const [transferIndex, setTransferIndex] = useState<string>("");
+
+  const [rerender, setRerender] = useState<boolean>(false);
 
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
 
@@ -351,17 +356,23 @@ export default function ChapterEditById() {
                       {storeStage?.texts?.map(
                         (text: any, index: number) =>
                           text.text && (
-                            <Form.Control
-                              key={text.text}
-                              as="textarea"
-                              defaultValue={text.text}
-                              onChange={(event) =>
-                                editTextInStore(index, {
-                                  text: event.target.value,
-                                  condition: text.condition,
-                                })
-                              }
-                            />
+                            <div
+                              className="stage-card"
+                              style={{ background: "var(--light-gray)" }}
+                            >
+                              <Form.Control
+                                key={text.text}
+                                as="textarea"
+                                defaultValue={text.text}
+                                style={{ width: "320px" }}
+                                onChange={(event) =>
+                                  editTextInStore(index, {
+                                    text: event.target.value,
+                                    condition: text.condition,
+                                  })
+                                }
+                              />
+                            </div>
                           )
                       )}
                     </div>
@@ -370,11 +381,15 @@ export default function ChapterEditById() {
                       {storeStage?.transfers?.map(
                         (transfer: any, index: number) =>
                           transfer.text && (
-                            <div>
+                            <div
+                              className="stage-card"
+                              style={{ background: "var(--light-gray)" }}
+                            >
                               <Form.Control
                                 key={transfer.text}
                                 as="textarea"
                                 defaultValue={transfer.text}
+                                style={{ width: "320px" }}
                                 onChange={(event) =>
                                   editTransferInStore(index, {
                                     text: event.target.value,
@@ -385,19 +400,65 @@ export default function ChapterEditById() {
                               />
                               {Object.entries(
                                 storeStage.transfers[index].condition
-                              ).map((condition: any) => (
-                                <div>
-                                  Если
-                                  {condition[0] === "has"
-                                    ? " есть параметр:"
-                                    : " нет параметра:"}
-                                  <ul>
-                                    {condition[1].map((conditionValue: any) => (
-                                      <li>{conditionValue}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              ))}
+                              ).map(
+                                (condition: any, conditionIndex: number) => (
+                                  <div>
+                                    <div style={{ display: "flex" }}>
+                                      Если
+                                      {condition[0] === "has"
+                                        ? " есть параметр:"
+                                        : " нет параметра:"}
+                                      <div className="mx-auto"></div>
+                                      <button
+                                        onClick={() => {
+                                          createValueInCondition(
+                                            index,
+                                            conditionIndex
+                                          );
+                                          setRerender(!rerender);
+                                        }}
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                    <ul>
+                                      {condition[1].map(
+                                        (
+                                          conditionValue: any,
+                                          valueIndex: number
+                                        ) => (
+                                          <li>
+                                            <input
+                                              type="text"
+                                              defaultValue={conditionValue}
+                                              onChange={(event) => {
+                                                editValueInConditions(
+                                                  index,
+                                                  conditionIndex,
+                                                  valueIndex,
+                                                  event.target.value
+                                                );
+                                              }}
+                                            />{" "}
+                                            <button
+                                              onClick={() => {
+                                                deleteValueInCondition(
+                                                  index,
+                                                  conditionIndex,
+                                                  valueIndex
+                                                );
+                                                setRerender(!rerender);
+                                              }}
+                                            >
+                                              -
+                                            </button>
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+                                )
+                              )}
                             </div>
                           )
                       )}
