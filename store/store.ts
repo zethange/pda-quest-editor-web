@@ -20,6 +20,7 @@ export function newTransferToStore(transfer: any) {
     )
   ) {
     storeStage.transfers.push(transfer);
+    return storeStage.transfers.indexOf(transfer);
   } else {
     const index = storeStage.transfers.indexOf(
       storeStage.transfers.find(
@@ -27,7 +28,41 @@ export function newTransferToStore(transfer: any) {
       )
     );
     storeStage.transfers.splice(index, 1, transfer);
+    return index;
   }
+}
+
+export function createConditionsInTransfer(
+  transferIndex: number,
+  typeCondition: number
+) {
+  if (typeCondition === 1)
+    storeStage.transfers[transferIndex] = {
+      ...storeStage.transfers[transferIndex],
+      condition: { has: ["параметр"] },
+    };
+  if (typeCondition === 2)
+    storeStage.transfers[transferIndex] = {
+      ...storeStage.transfers[transferIndex],
+      condition: { "!has": ["параметр"] },
+    };
+
+  return storeStage.transfers.indexOf({
+    ...storeStage.transfers[transferIndex],
+    condition: { has: ["параметр"] },
+  });
+}
+
+export function editValueInConditions(
+  transferIndex: number,
+  conditionIndex: number,
+  valueIndex: number,
+  value: string
+) {
+  const conditions: any = Object.entries(
+    storeStage.transfers[transferIndex].condition
+  );
+  conditions[conditionIndex][1][valueIndex] = value;
 }
 
 export function editTitleInStore(title: string) {

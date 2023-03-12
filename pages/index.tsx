@@ -79,6 +79,16 @@ export default function Home() {
             <IoMdCreate style={{ paddingTop: "3px" }} />
             Создать главу
           </button>
+          <div className="mx-auto"></div>
+          <button
+            className="navbar__header"
+            onClick={() => {
+              localStorage.clear();
+              window.location.reload();
+            }}
+          >
+            Удалить всё
+          </button>
         </NavBar>
         <div className="work-space">
           <div className="card-parent">

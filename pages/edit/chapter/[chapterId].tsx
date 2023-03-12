@@ -9,6 +9,7 @@ import ReactFlow, {
 } from "reactflow";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
+  createConditionsInTransfer,
   editMessageInStore,
   editTextInStore,
   editTitleInStore,
@@ -29,6 +30,7 @@ import { MdCreate } from "react-icons/md";
 import { SiDialogflow, SiGooglemaps } from "react-icons/si";
 import { NodeStage } from "@/components/Nodes/StageNode";
 import MapStage from "@/components/popover/MapStage";
+import CreateTransfer from "@/components/CreateTransfer/CreateTransfer";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
@@ -43,6 +45,7 @@ export default function ChapterEditById() {
   const [showEditStage, setShowEditStage] = useState<any>();
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
+  const [transferIndex, setTransferIndex] = useState<string>("");
 
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
 
@@ -305,81 +308,91 @@ export default function ChapterEditById() {
                 </button>
               </div>
               <div>
-                {storeStage?.type_stage === 4 && (
+                {(storeStage?.type_stage === 4 && (
                   <MapStage data={storeStage?.data} />
-                )}
-                <div className="stage-card">
-                  <b>Заголовок:</b>
-                  <Form.Control
-                    as="textarea"
-                    defaultValue={storeStage?.title}
-                    onChange={(event) => editTitleInStore(event.target.value)}
-                  />
-                </div>
-                <div className="stage-card">
-                  <b>Сообщение:</b>
-                  <div>
-                    Показывать сообщение:{" "}
-                    <input
-                      type="checkbox"
-                      onChange={() => {
-                        setCheckBoxMessage(!checkBoxMessage);
-                        if (!checkBoxMessage)
-                          editMessageInStore("Новое уведомление");
-                        if (checkBoxMessage) editMessageInStore("");
-                      }}
-                      checked={storeStage?.message}
-                    />
-                    {storeStage?.message && (
+                )) || (
+                  <>
+                    <div className="stage-card">
+                      <b>Заголовок:</b>
                       <Form.Control
                         as="textarea"
-                        defaultValue={storeStage?.message}
+                        defaultValue={storeStage?.title}
                         onChange={(event) =>
-                          editMessageInStore(event.target.value)
+                          editTitleInStore(event.target.value)
                         }
                       />
-                    )}
-                  </div>
-                </div>
-                <div className="stage-card">
-                  <b>Тексты:</b>
-                  {storeStage?.texts?.map(
-                    (text: any, index: number) =>
-                      text.text && (
-                        <Form.Control
-                          key={text.text}
-                          as="textarea"
-                          defaultValue={text.text}
-                          onChange={(event) =>
-                            editTextInStore(index, {
-                              text: event.target.value,
-                              condition: text.condition,
-                            })
-                          }
+                    </div>
+                    <div className="stage-card">
+                      <b>Сообщение:</b>
+                      <div>
+                        Показывать сообщение:{" "}
+                        <input
+                          type="checkbox"
+                          onChange={() => {
+                            setCheckBoxMessage(!checkBoxMessage);
+                            if (!checkBoxMessage)
+                              editMessageInStore("Новое уведомление");
+                            if (checkBoxMessage) editMessageInStore("");
+                          }}
+                          checked={storeStage?.message}
                         />
-                      )
-                  )}
-                </div>
-                <div className="stage-card">
-                  <b>Ответы:</b>
-                  {storeStage?.transfers?.map(
-                    (transfer: any, index: number) =>
-                      transfer.text && (
-                        <Form.Control
-                          key={transfer.text}
-                          as="textarea"
-                          defaultValue={transfer.text}
-                          onChange={(event) =>
-                            editTransferInStore(index, {
-                              text: event.target.value,
-                              stage_id: transfer.stage_id,
-                              condition: transfer.condition,
-                            })
-                          }
-                        />
-                      )
-                  )}
-                </div>
+                        {storeStage?.message && (
+                          <Form.Control
+                            as="textarea"
+                            defaultValue={storeStage?.message}
+                            onChange={(event) =>
+                              editMessageInStore(event.target.value)
+                            }
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div className="stage-card">
+                      <b>Тексты:</b>
+                      {storeStage?.texts?.map(
+                        (text: any, index: number) =>
+                          text.text && (
+                            <Form.Control
+                              key={text.text}
+                              as="textarea"
+                              defaultValue={text.text}
+                              onChange={(event) =>
+                                editTextInStore(index, {
+                                  text: event.target.value,
+                                  condition: text.condition,
+                                })
+                              }
+                            />
+                          )
+                      )}
+                    </div>
+                    <div className="stage-card">
+                      <b>Ответы:</b>
+                      {storeStage?.transfers?.map(
+                        (transfer: any, index: number) =>
+                          transfer.text && (
+                            <div>
+                              <Form.Control
+                                key={transfer.text}
+                                as="textarea"
+                                defaultValue={transfer.text}
+                                onChange={(event) =>
+                                  editTransferInStore(index, {
+                                    text: event.target.value,
+                                    stage_id: transfer.stage_id,
+                                    condition: transfer.condition,
+                                  })
+                                }
+                              />
+                              <div>
+                                Условия: {JSON.stringify(transfer.condition)}
+                              </div>
+                            </div>
+                          )
+                      )}
+                    </div>
+                  </>
+                )}
                 {storeStage?.actions && <EditActions />}
                 <button
                   onClick={() => {
@@ -418,20 +431,27 @@ export default function ChapterEditById() {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div>
-              <textarea
-                style={{ border: "2px solid #242424", width: "470px" }}
-                placeholder="Введите текст..."
-                defaultValue={connectionInfo?.targetTransfer?.text}
-                onChange={(event) => {
-                  newTransferToStore({
-                    text: event.target.value,
-                    stage_id: connectionInfo?.target,
-                    condition: {},
-                  });
-                }}
-              />
-            </div>
+            <textarea
+              style={{ border: "2px solid #242424", width: "470px" }}
+              placeholder="Введите текст..."
+              defaultValue={connectionInfo?.targetTransfer?.text}
+              onChange={(event) => {
+                setTransferIndex(
+                  String(
+                    newTransferToStore({
+                      text: event.target.value,
+                      stage_id: connectionInfo?.target,
+                      condition: {},
+                    })
+                  )
+                );
+              }}
+            />
+            {transferIndex ? (
+              <CreateTransfer transferIndex={Number(transferIndex)} />
+            ) : (
+              "Для добавления условий необходимо заполнить текст"
+            )}
           </Modal.Body>
           <Modal.Footer>
             <Button

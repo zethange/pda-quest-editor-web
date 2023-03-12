@@ -56,7 +56,13 @@ export default function Card({
         >
           <AiOutlineCloudDownload style={{ paddingTop: "4px" }} /> Скачать
         </button>
-        <button style={{ fontSize: "15px" }} onClick={() => deleteChapter()}>
+        <button
+          style={{ fontSize: "15px" }}
+          onClick={() => {
+            deleteChapter();
+            window.location.reload();
+          }}
+        >
           <MdDelete style={{ paddingTop: "4px" }} />
           Удалить
         </button>
