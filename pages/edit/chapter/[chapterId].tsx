@@ -1,17 +1,18 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import ReactFlow, {
   applyNodeChanges,
   Background,
   Controls,
+  Edge,
   MarkerType,
   MiniMap,
 } from "reactflow";
 import { Button, Form, Modal } from "react-bootstrap";
 import deleteConditionInTransfer, {
-  createConditionsInTransfer,
   createValueInCondition,
   deleteValueInCondition,
+  editBackgroundInStore,
   editMessageInStore,
   editTextInStore,
   editTitleInStore,
@@ -34,7 +35,6 @@ import { SiDialogflow, SiGooglemaps } from "react-icons/si";
 import { NodeStage } from "@/components/Nodes/StageNode";
 import MapStage from "@/components/popover/MapStage";
 import CreateTransfer from "@/components/CreateTransfer/CreateTransfer";
-import CreateConditionInTransfer from "@/components/EditStage/CreateConditionInTransfer";
 import CreateConditionInTransferJsx from "@/components/EditStage/CreateConditionInTransfer";
 
 export default function ChapterEditById() {
@@ -49,10 +49,11 @@ export default function ChapterEditById() {
   const [showPopoverStage, setShowPopoverStage] = useState<boolean>(false); // для создания стадии
   const [showEditStage, setShowEditStage] = useState<any>();
 
+  const [showModalEditTransfer, setShowModalEditTransfer] =
+    useState<boolean>(false);
+
   const [connectionInfo, setConnectionInfo] = useState<any>();
   const [transferIndex, setTransferIndex] = useState<string>("");
-  const [createConditionInTransfer, setCreateConditionInTransfer] =
-    useState<boolean>(false);
 
   const [rerender, setRerender] = useState<boolean>(false);
 
@@ -90,6 +91,7 @@ export default function ChapterEditById() {
                 onClick={() => {
                   setStageToStore(stage);
                   setShowEditStage(stage);
+                  setRerender(!rerender);
                 }}
               >
                 {stage.title ? stage.title : "Переход на карту"}
@@ -161,6 +163,28 @@ export default function ChapterEditById() {
     [chapter]
   );
 
+  const onEdgesClick = useCallback(
+    (event: React.MouseEvent, edge: Edge) => {
+      const chapterFromLocalStorage = JSON.parse(
+        localStorage.getItem(`chapter_${chapterId}`) as any
+      );
+
+      const stage = chapterFromLocalStorage.stages.find(
+        (stage: any) => stage.id === Number(edge.source)
+      );
+
+      const targetTransfer = stage?.transfers?.find(
+        (transfer: any) => transfer.stage_id === edge.target
+      );
+
+      const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
+      console.log(targetTransfer, indexTargetTransfer);
+      setStageToStore({ ...stage, targetTransfer, indexTargetTransfer });
+      setShowModalEditTransfer(true);
+    },
+    [chapter]
+  );
+
   // Создание стадии
   const createStage = (type: string) => {
     const chapterFromLocalStorage = JSON.parse(
@@ -197,8 +221,28 @@ export default function ChapterEditById() {
         )
     );
 
+    const {
+      id,
+      type_stage,
+      background_url,
+      title,
+      message,
+      type_message,
+      texts,
+      transfers,
+      actions,
+    } = storeStage;
+
     const updatedStageWithUpdatedPosition = {
-      ...storeStage,
+      id,
+      type_stage,
+      background_url,
+      title,
+      message,
+      type_message,
+      texts,
+      transfers,
+      actions,
       editor: {
         x: chapterFromLocalStorage.stages.find(
           (stage: any) => stage.id === stageId
@@ -334,6 +378,28 @@ export default function ChapterEditById() {
                         onChange={(event) =>
                           editTitleInStore(event.target.value)
                         }
+                      />
+                    </div>
+                    <div className="stage-card">
+                      <b>Фон стадии:</b>
+                      <img
+                        src={
+                          storeStage?.background_url
+                            ? `https://files.artux.net/static/${storeStage?.background_url}`
+                            : "/no_background.png"
+                        }
+                        alt=""
+                        width="340px"
+                        style={{ borderRadius: "5px" }}
+                      />
+                      <Form.Control
+                        as="input"
+                        defaultValue={storeStage?.background_url}
+                        style={{ width: "340px", borderRadius: "4px" }}
+                        onChange={(event) => {
+                          editBackgroundInStore(event.target.value);
+                          setRerender(!rerender);
+                        }}
                       />
                     </div>
                     <div className="stage-card">
@@ -507,8 +573,10 @@ export default function ChapterEditById() {
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
+            onEdgeClick={onEdgesClick}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
+            snapToGrid
             fitView
           >
             <MiniMap zoomable pannable />
@@ -571,6 +639,55 @@ export default function ChapterEditById() {
               onClick={() => {
                 setConnectionInfo(null);
                 setTransferIndex("");
+              }}
+            >
+              Закрыть
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={showModalEditTransfer}
+          onHide={() => {
+            setShowModalEditTransfer(true);
+          }}
+          backdrop="static"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Переход с {storeStage?.id} на{" "}
+              {storeStage?.targetTransfer?.stage_id}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <textarea
+              style={{ border: "2px solid #242424", width: "470px" }}
+              placeholder="Введите текст..."
+              defaultValue={storeStage?.targetTransfer?.text}
+              onChange={(event) => {
+                editTransferInStore(storeStage?.indexTargetTransfer, {
+                  ...storeStage?.targetTransfer,
+                  text: event.target.value,
+                });
+              }}
+            />
+            <CreateTransfer transferIndex={storeStage?.indexTargetTransfer} />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                updateStage(storeStage.id);
+                setShowModalEditTransfer(false);
+              }}
+            >
+              Сохранить
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowModalEditTransfer(false);
               }}
             >
               Закрыть

@@ -9,7 +9,7 @@ export function setStageToStore(stage: any) {
 
 // Новый текст в стадию
 export function newTextToStore() {
-  storeStage.texts.push({ text: "Это новый текст", condition: {} });
+  storeStage.texts.push({ text: "Новый текст", condition: {} });
 }
 
 // Новый переход в стадию
@@ -96,6 +96,10 @@ export function deleteValueInCondition(
 
 export function editTitleInStore(title: string) {
   storeStage.title = title;
+}
+
+export function editBackgroundInStore(background_url: string) {
+  storeStage.background_url = background_url;
 }
 
 export function editMessageInStore(message: string) {
