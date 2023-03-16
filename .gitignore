@@ -12,9 +12,12 @@
 /.next/
 /out/
 
+# ide
+/.idea
+
 # production
 /build
-*.env
+.env
 
 # misc
 .DS_Store

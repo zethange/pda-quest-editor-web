@@ -19,6 +19,16 @@ export default function ChangeThemeButton() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches)
+      setTheme("dark");
+  }, []);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches)
+      changeTheme();
+    if (
+      window.matchMedia("(prefers-color-scheme: light)").matches &&
+      theme === "dark"
+    )
       changeTheme();
   }, []);
 

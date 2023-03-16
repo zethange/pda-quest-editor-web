@@ -7,6 +7,7 @@ import CustomHead from "@/components/Global/CustomHead";
 import { MdImportExport } from "react-icons/md";
 import { IoMdCreate } from "react-icons/io";
 import Link from "next/link";
+import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 
 function UpNavBar() {
   return null;
@@ -81,7 +82,12 @@ export default function Home() {
             Создать главу
           </button>
           <div className="mx-auto"></div>
-          <Link href="/edit/map" className="navbar__header">
+          <ChangeThemeButton />
+          <Link
+            href="/edit/map"
+            style={{ paddingTop: "12px" }}
+            className="navbar__header"
+          >
             Карты
           </Link>
           <button
