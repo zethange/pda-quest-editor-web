@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ChangeThemeButton() {
   const [theme, setTheme] = useState("light");
@@ -16,6 +16,11 @@ export default function ChangeThemeButton() {
     // @ts-ignore
     document.querySelector("main").setAttributeNode(att);
   };
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches)
+      changeTheme();
+  }, []);
 
   return (
     <button className="navbar__header" onClick={changeTheme}>

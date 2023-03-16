@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import ReactFlow, {
   applyNodeChanges,
@@ -91,7 +91,6 @@ export default function ChapterEditById() {
                 onClick={() => {
                   setStageToStore(stage);
                   setShowEditStage(stage);
-                  setRerender(!rerender);
                 }}
               >
                 {stage.title ? stage.title : "Переход на карту"}
