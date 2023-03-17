@@ -1,4 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
+import store from "store2";
+
 import { useRouter } from "next/router";
 import ReactFlow, {
   applyNodeChanges,
@@ -8,16 +10,10 @@ import ReactFlow, {
   MarkerType,
   MiniMap,
 } from "reactflow";
-import { Button, Form, Modal } from "react-bootstrap";
-import deleteConditionInTransfer, {
-  createValueInCondition,
-  deleteValueInCondition,
-  editBackgroundInStore,
-  editMessageInStore,
-  editTextInStore,
-  editTitleInStore,
+
+import { Button, Modal } from "react-bootstrap";
+import {
   editTransferInStore,
-  editValueInConditions,
   newTransferToStore,
   setStageToStore,
   storeStage,
@@ -35,12 +31,11 @@ import { SiDialogflow, SiGooglemaps } from "react-icons/si";
 import { NodeStage } from "@/components/Nodes/StageNode";
 import MapStage from "@/components/popover/MapStage";
 import CreateTransfer from "@/components/CreateTransfer/CreateTransfer";
-import CreateConditionInTransferJsx from "@/components/EditStage/CreateConditionInTransfer";
-import EditStage from "./../../../components/EditStage/EditStage";
+import EditStage from "../../../components/EditStage/EditStage";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();
-  const chapterId = query.chapterId as string;
+  const chapterRoute = (query.chapter as string[]) || [];
 
   const [chapter, setChapter] = useState<any>();
 
@@ -56,31 +51,32 @@ export default function ChapterEditById() {
   const [connectionInfo, setConnectionInfo] = useState<any>();
   const [transferIndex, setTransferIndex] = useState<string>("");
 
-  const [rerender, setRerender] = useState<boolean>(false);
-
-  const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
-
   // Вытаскивание главы из localStorage
   useEffect(() => {
-    const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${chapterId}`) as any
-    );
+    const chapterFromLocalStorage =
+      chapterRoute[0] &&
+      store.get(`story_${chapterRoute[0]}_chapter_${chapterRoute[1]}`);
 
     setChapter(chapterFromLocalStorage);
   }, [isReady]);
 
-  // Функция обновления главы
-  const updateChapter = async (chapter: any, all: boolean) => {
-    if (all) await setChapter(chapter);
-    await localStorage.setItem(`chapter_${chapterId}`, JSON.stringify(chapter));
+  const updateChapter = (chapter: any, all: boolean) => {
+    if (all) setChapter(chapter);
+
+    if (chapterRoute[0]) {
+      store.set(
+        `story_${chapterRoute[0]}_chapter_${chapterRoute[1]}`,
+        chapter,
+        true
+      );
+    }
   };
 
-  // Первоначальная отрисовка нод и переходов
   useEffect(() => {
     const initialNodes: any[] = [];
     const initialEdges: any[] = [];
 
-    chapter?.stages.map((stage: any) => {
+    chapter?.stages?.map((stage: any) => {
       initialNodes.push({
         id: String(stage.id),
         type: "nodeStage",
@@ -104,7 +100,7 @@ export default function ChapterEditById() {
       });
     });
 
-    chapter?.stages.map((stage: any) => {
+    chapter?.stages?.map((stage: any) => {
       stage?.transfers?.map((transfer: any) => {
         initialEdges.push({
           id: `${stage.id}-${transfer.stage_id}`,
@@ -117,20 +113,13 @@ export default function ChapterEditById() {
       });
     });
 
-    if (initialNodes.length !== 0) {
-      setNodes(initialNodes);
-    }
-
-    if (initialEdges.length !== 0) {
-      setEdges(initialEdges);
-    }
+    if (initialNodes.length !== 0) setNodes(initialNodes);
+    if (initialEdges.length !== 0) setEdges(initialEdges);
   }, [chapter]);
 
-  // При изменении нод
   const onNodesChange = useCallback(
     (changes: any) => {
-      // @ts-ignore
-      setNodes((nds) => applyNodeChanges(changes, nds));
+      setNodes((nds: any) => applyNodeChanges(changes, nds));
 
       if (changes[0].position) {
         const updatedStageWithPosition = {
@@ -141,13 +130,15 @@ export default function ChapterEditById() {
           },
         };
 
-        const idInitialStage = chapter?.stages.indexOf(
+        const idInitialStage = chapter?.stages?.indexOf(
           chapter.stages[changes[0].id]
         );
 
-        const initialStages = JSON.parse(
-          localStorage.getItem(`chapter_${chapterId}`) as any
-        ).stages;
+        const initialStages =
+          chapterRoute[0] &&
+          store.get(`story_${chapterRoute[0]}_chapter_${chapterRoute[1]}`)
+            .stages;
+
         initialStages?.splice(idInitialStage, 1, updatedStageWithPosition);
 
         updateChapter(
@@ -165,9 +156,9 @@ export default function ChapterEditById() {
 
   const onEdgesClick = useCallback(
     (event: React.MouseEvent, edge: Edge) => {
-      const chapterFromLocalStorage = JSON.parse(
-        localStorage.getItem(`chapter_${chapterId}`) as any
-      );
+      const chapterFromLocalStorage =
+        chapterRoute[0] &&
+        store.get(`story_${chapterRoute[0]}_chapter_${chapterRoute[1]}`);
 
       const stage = chapterFromLocalStorage.stages.find(
         (stage: any) => stage.id === Number(edge.source)
@@ -187,9 +178,9 @@ export default function ChapterEditById() {
 
   // Создание стадии
   const createStage = (type: string) => {
-    const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${chapterId}`) as any
-    );
+    const chapterFromLocalStorage =
+      chapterRoute[0] &&
+      store.get(`story_${chapterRoute[0]}_chapter_${chapterRoute[1]}`);
 
     const idLastStage =
       chapterFromLocalStorage?.stages[
@@ -209,9 +200,9 @@ export default function ChapterEditById() {
 
   // Обновление стадии
   const updateStage = async (stageId: number) => {
-    const chapterFromLocalStorage = await JSON.parse(
-      (await localStorage.getItem(`chapter_${chapterId}`)) as any
-    );
+    const chapterFromLocalStorage =
+      chapterRoute[0] &&
+      store.get(`story_${chapterRoute[0]}_chapter_${chapterRoute[1]}`);
 
     const storeStageTrueId = chapterFromLocalStorage.stages.findIndex(
       (stage: any) =>
@@ -264,9 +255,9 @@ export default function ChapterEditById() {
 
   const onConnect = useCallback(
     (connection: any) => {
-      const chapterFromLocalStorage = JSON.parse(
-        localStorage.getItem(`chapter_${chapterId}`) as any
-      );
+      const chapterFromLocalStorage =
+        chapterRoute[0] &&
+        store.get(`story_${chapterRoute[0]}_chapter_${chapterRoute[1]}`);
 
       setConnectionInfo({
         source: connection.source,
@@ -288,9 +279,9 @@ export default function ChapterEditById() {
   );
 
   function deleteStage(id: number) {
-    const chapterFromLocalStorage = JSON.parse(
-      localStorage.getItem(`chapter_${chapterId}`) as any
-    );
+    const chapterFromLocalStorage =
+      chapterRoute[0] &&
+      store.get(`story_${chapterRoute[0]}_chapter_${chapterRoute[1]}`);
 
     const indexStage = chapterFromLocalStorage?.stages?.indexOf(
       chapterFromLocalStorage?.stages?.find((stage: any) => stage.id === id)

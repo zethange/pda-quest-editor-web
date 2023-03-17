@@ -4,8 +4,11 @@ import Link from "next/link";
 import NavBar from "@/components/UI/NavBar";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import { GrChapterAdd, GrMapLocation } from "react-icons/gr";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function UpNavBar({ children }: { children?: React.ReactNode }) {
+  const { data: session } = useSession();
+
   return (
     <NavBar>
       <button className="navbar__header" onClick={() => window.history.go(-1)}>
@@ -21,9 +24,33 @@ export default function UpNavBar({ children }: { children?: React.ReactNode }) {
       </Link>
       <button className="mx-auto"></button>
       <ChangeThemeButton />
-      <Link className="navbar__header" href="/edit/chapter/help">
+      <Link className="navbar__header" href="/help">
         Помощь
       </Link>
+      <div style={{ borderLeft: "1px solid #ccc" }} />
+      {!session ? (
+        <a
+          href={`/api/auth/signin`}
+          className="navbar__header"
+          onClick={(e) => {
+            e.preventDefault();
+            signIn();
+          }}
+        >
+          Войти
+        </a>
+      ) : (
+        <a
+          href={`/api/auth/signout`}
+          className="navbar__header"
+          onClick={(e) => {
+            e.preventDefault();
+            signOut();
+          }}
+        >
+          {session?.user?.name} | Выйти
+        </a>
+      )}
       {children}
     </NavBar>
   );

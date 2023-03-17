@@ -78,10 +78,10 @@ export default function EditStage() {
             text.text && (
               <div
                 className="stage-card"
+                key={index}
                 style={{ background: "var(--light-gray)" }}
               >
                 <Form.Control
-                  key={text.text}
                   as="textarea"
                   defaultValue={text.text}
                   style={{ width: "320px" }}
@@ -103,6 +103,7 @@ export default function EditStage() {
             transfer.text && (
               <div
                 className="stage-card"
+                key={index}
                 style={{ background: "var(--light-gray)" }}
               >
                 <Form.Control
@@ -124,7 +125,7 @@ export default function EditStage() {
                 />
                 {Object.entries(storeStage.transfers[index].condition).map(
                   (condition: any, conditionIndex: number) => (
-                    <div className="stage-card">
+                    <div className="stage-card" key={conditionIndex}>
                       <div style={{ display: "flex" }}>
                         Если
                         {condition[0] === "has"
@@ -152,7 +153,7 @@ export default function EditStage() {
                       <ul>
                         {condition[1].map(
                           (conditionValue: any, valueIndex: number) => (
-                            <li>
+                            <li key={valueIndex}>
                               <input
                                 type="text"
                                 defaultValue={conditionValue}

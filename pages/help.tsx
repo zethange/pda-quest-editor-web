@@ -1,17 +1,13 @@
 import ReactMarkdown from "react-markdown";
-import React, { useState } from "react";
+import { useState } from "react";
 import Head from "next/head";
 // @ts-ignore
 import remarkGfm from "remark-gfm";
 
-import NavBar from "@/components/UI/NavBar";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
-import FormFeedBack from "@/components/FormFeedBack";
 import {
   DiscordMention,
   DiscordMessage,
   DiscordMessages,
-  DiscordReply,
 } from "@skyra/discord-components-react";
 import UpNavBar from "@/components/Global/UpNavBar";
 import Link from "next/link";

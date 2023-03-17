@@ -11,7 +11,7 @@ import {
 import CreateParam from "@/components/EditStage/EditActions/CreateParam";
 
 export default function EditActions() {
-  const { data, error, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
+  const { data, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
 
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
 
@@ -50,6 +50,7 @@ export default function EditActions() {
         (action: any, indexAction: number) => (
           <div
             className="stage-card"
+            key={indexAction}
             style={{
               background: "var(--light-gray)",
             }}
