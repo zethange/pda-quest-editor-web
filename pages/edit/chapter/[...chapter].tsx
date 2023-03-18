@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo, useContext } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import store from "store2";
 
 import { useRouter } from "next/router";
