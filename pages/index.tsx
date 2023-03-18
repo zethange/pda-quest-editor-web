@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import store from "store2";
 import { downloadZip } from "client-zip";
-import { Modal } from "react-bootstrap";
 import { MdImportExport } from "react-icons/md";
 import { IoMdCreate } from "react-icons/io";
 
@@ -39,7 +38,7 @@ export default function Home() {
     const info = {
       name: "info.json",
       lastModified: new Date(),
-      input: JSON.stringify(store.get(`story_${story_id}_info`, null, 2)),
+      input: JSON.stringify(store.get(`story_${story_id}_info`), null, 2),
     };
 
     const arrChapters: any[] = [];
@@ -66,7 +65,7 @@ export default function Home() {
     const files: any[] = [...e.target.files];
 
     console.log(e.target.files);
-    let idStory: number
+    let idStory: number;
 
     const infoFile: any = files.filter(
       (file: any) => file.name === "info.json"
@@ -76,7 +75,10 @@ export default function Home() {
     fileBase.readAsText(infoFile);
     fileBase.onload = () => {
       idStory = Number(JSON.parse(fileBase.result as string).id);
-      setStories((stories: any) => [...stories, JSON.parse(fileBase.result as string)]);
+      setStories((stories: any) => [
+        ...stories,
+        JSON.parse(fileBase.result as string),
+      ]);
       store.set(`story_${idStory}_info`, JSON.parse(fileBase.result as string));
     };
 
@@ -154,7 +156,4 @@ export default function Home() {
       </main>
     </>
   );
-}
-function saveAs(content: any, arg1: string) {
-  throw new Error("Function not implemented.");
 }
