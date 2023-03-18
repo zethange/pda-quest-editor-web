@@ -39,7 +39,7 @@ export default function Home() {
     const info = {
       name: "info.json",
       lastModified: new Date(),
-      input: JSON.stringify(store.get(`story_${story_id}_info`)),
+      input: JSON.stringify(store.get(`story_${story_id}_info`, null, 2)),
     };
 
     const arrChapters: any[] = [];
@@ -48,7 +48,7 @@ export default function Home() {
         arrChapters.push({
           name: `chapter_${key.split("_")[3]}.json`,
           lastModified: new Date(),
-          input: JSON.stringify(value),
+          input: JSON.stringify(value, null, 2),
         });
       }
       if (key === "stopLoop") return false;

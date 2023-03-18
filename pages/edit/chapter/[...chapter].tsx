@@ -359,7 +359,7 @@ export default function ChapterEditById() {
               >
                 {(storeStage?.type_stage === 4 && (
                   <MapStage data={storeStage?.data} />
-                )) || <EditStage />}
+                )) || <EditStage data={showEditStage} />}
                 {storeStage?.actions && <EditActions />}
                 <button
                   onClick={() => {

@@ -13,9 +13,11 @@ import { useState } from "react";
 import { Form } from "react-bootstrap";
 import CreateConditionInTransferJsx from "./CreateConditionInTransfer";
 
-export default function EditStage() {
+export default function EditStage({ data }: { data: any }) {
   const [rerender, setRerender] = useState<boolean>(false);
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
+
+  setRerender(!rerender)
 
   return (
     <>
@@ -23,7 +25,7 @@ export default function EditStage() {
         <b>Заголовок:</b>
         <Form.Control
           as="textarea"
-          defaultValue={storeStage?.title}
+          defaultValue={data?.title}
           onChange={(event) => editTitleInStore(event.target.value)}
         />
       </div>
@@ -32,7 +34,7 @@ export default function EditStage() {
         <img
           src={
             storeStage?.background_url
-              ? `https://files.artux.net/static/${storeStage?.background_url}`
+              ? `https://files.artux.net/static/${data?.background_url}`
               : "/no_background.png"
           }
           alt=""
@@ -41,7 +43,7 @@ export default function EditStage() {
         />
         <Form.Control
           as="input"
-          defaultValue={storeStage?.background_url}
+          defaultValue={data?.background_url}
           style={{ width: "340px", borderRadius: "4px" }}
           onChange={(event) => {
             editBackgroundInStore(event.target.value);
@@ -65,7 +67,7 @@ export default function EditStage() {
           {storeStage?.message && (
             <Form.Control
               as="textarea"
-              defaultValue={storeStage?.message}
+              defaultValue={data?.message}
               onChange={(event) => editMessageInStore(event.target.value)}
             />
           )}
