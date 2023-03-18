@@ -1,8 +1,8 @@
-@import './colors.css';
+@import "./colors.css";
 
 @font-face {
-  font-family: 'GolosText';
-  src: url('/fonts/GolosText-Regular.ttf') format('truetype');
+  font-family: "GolosText";
+  src: url("/fonts/GolosText-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -51,8 +51,8 @@ code {
 }
 
 .navbar__header--active {
-  border-block-end: 1px solid; 
-  border-block-end-color: var(--blue); 
+  border-block-end: 1px solid;
+  border-block-end-color: var(--blue);
   writing-mode: horizontal-tb;
 }
 
@@ -64,7 +64,7 @@ code {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  width: 100%
+  width: 100%;
 }
 
 .card {
@@ -76,6 +76,12 @@ code {
   position: relative;
 }
 
+.card__popover {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
 .card__header {
   font-size: 20px;
 }
@@ -83,7 +89,6 @@ code {
 .card__body {
   font-size: 13px;
 }
-
 
 /* Стили для редактора */
 .stage-body {
@@ -181,11 +186,14 @@ code {
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-family: 'GolosText', sans-serif;
+  font-family: "GolosText", sans-serif;
   color: var(--black);
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -235,7 +243,6 @@ a:hover {
 a:visited {
   color: var(--black);
 }
-
 
 .modal {
   --bs-modal-zindex: 1055;
@@ -347,13 +354,17 @@ a:visited {
   align-items: center;
   justify-content: space-between;
   padding: var(--bs-modal-header-padding);
-  border-bottom: var(--bs-modal-header-border-width) solid var(--bs-modal-header-border-color);
+  border-bottom: var(--bs-modal-header-border-width) solid
+    var(--bs-modal-header-border-color);
   border-top-left-radius: var(--bs-modal-inner-border-radius);
   border-top-right-radius: var(--bs-modal-inner-border-radius);
 }
 .modal-header .btn-close {
-  padding: calc(var(--bs-modal-header-padding-y) * 0.5) calc(var(--bs-modal-header-padding-x) * 0.5);
-  margin: calc(-0.5 * var(--bs-modal-header-padding-y)) calc(-0.5 * var(--bs-modal-header-padding-x)) calc(-0.5 * var(--bs-modal-header-padding-y)) auto;
+  padding: calc(var(--bs-modal-header-padding-y) * 0.5)
+    calc(var(--bs-modal-header-padding-x) * 0.5);
+  margin: calc(-0.5 * var(--bs-modal-header-padding-y))
+    calc(-0.5 * var(--bs-modal-header-padding-x))
+    calc(-0.5 * var(--bs-modal-header-padding-y)) auto;
 }
 
 .modal-title {
@@ -375,7 +386,8 @@ a:visited {
   justify-content: flex-end;
   padding: calc(var(--bs-modal-padding) - var(--bs-modal-footer-gap) * 0.5);
   background-color: var(--bs-modal-footer-bg);
-  border-top: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);
+  border-top: var(--bs-modal-footer-border-width) solid
+    var(--bs-modal-footer-border-color);
   border-bottom-right-radius: var(--bs-modal-inner-border-radius);
   border-bottom-left-radius: var(--bs-modal-inner-border-radius);
 }

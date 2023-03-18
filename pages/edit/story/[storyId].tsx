@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import store from "store2";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 import CustomHead from "@/components/Global/CustomHead";
 import UpNavBar from "@/components/Global/UpNavBar";
 import NavBar from "@/components/UI/NavBar";
 import { newChapter } from "@/store/types";
-import Link from "next/link";
 import { MdDelete } from "react-icons/md";
 
 export default function storyId() {

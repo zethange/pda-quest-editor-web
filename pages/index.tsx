@@ -1,63 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
-
-import Card from "@/components/UI/Card";
-import NavBar from "@/components/UI/NavBar";
 import CustomHead from "@/components/Global/CustomHead";
+import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
+import NavBar from "@/components/UI/NavBar";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { Modal } from "react-bootstrap";
 import { MdImportExport } from "react-icons/md";
 import { IoMdCreate } from "react-icons/io";
-import Link from "next/link";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
-import { Modal } from "react-bootstrap";
 import store from "store2";
+import { downloadZip } from "client-zip";
+import { Last } from "react-bootstrap/esm/PageItem";
 
 export default function Home() {
-  // const [listChapters, setListChapters] = useState<any>([]); // это полностью все главы в массиве
-  // const [keyChapters, setKeyChapters] = useState<any>([]); // это key для localstorage для кажой главы
-  // const [loaded, setLoaded] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   const keyStages = [];
-  //   const stages: any[] = [];
-
-  //   for (let item in localStorage) {
-  //     if (item.split("_")[1] !== undefined) {
-  //       keyStages.push(item);
-  //     }
-  //   }
-
-  //   keyStages.map((stage) => {
-  //     stages.push(JSON.parse(localStorage.getItem(stage) as any));
-  //   });
-
-  //   setKeyChapters(keyStages);
-  //   setListChapters(stages);
-  //   setLoaded(true);
-  // }, [loaded]);
-
-  // const onChangeChapter = async (e: any) => {
-  //   const file = await e.target.files[0];
-  //   let reader = await new FileReader();
-  //   await reader.readAsText(file);
-
-  //   reader.onload = await function () {
-  //     if (typeof reader.result === "string") {
-  //       localStorage.setItem(
-  //         String("chapter_" + JSON.parse(reader.result).id),
-  //         reader.result
-  //       );
-  //       setLoaded(false);
-  //     }
-  //   };
-  // };
-
-  // const createChapter = async () => {
-  //   await localStorage.setItem(
-  //     `chapter_${keyChapters.length}`,
-  //     JSON.stringify(newChapter(listChapters.length))
-  //   );
-  //   await setLoaded(false);
-  // };
-
   const [stories, setStories] = useState<any>([]);
 
   function createStory(): void {
@@ -80,6 +33,35 @@ export default function Home() {
       if (key === "stopLoop") return false;
     });
   }, []);
+
+  async function downloadStory(story_id: number) {
+    const info = {
+      name: "info.json",
+      lastModified: new Date(),
+      input: JSON.stringify(store.get(`story_${story_id}_info.json`)),
+    };
+
+    const arrChapters: any[] = [];
+
+    store.each((key: string, value: string) => {
+      if (key.includes(`story_${story_id}_chapter`)) {
+        arrChapters.push({
+          name: `chapter_${key.split("_")[3]}.json`,
+          lastModified: new Date(),
+          input: JSON.stringify(value),
+        });
+      }
+      if (key === "stopLoop") return false;
+    });
+
+    const blob = await downloadZip([info, ...arrChapters]).blob();
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `story_${story_id}.zip`;
+    link.click();
+    link.remove();
+  }
 
   return (
     <>
@@ -111,7 +93,7 @@ export default function Home() {
         <div className="work-space">
           <div className="card-parent">
             {stories.map((story: any, index: number) => (
-              <div className="card">
+              <div className="card" key={index}>
                 <Link href={"/edit/story/" + story?.id}>
                   <div className="card__header">{story?.title}</div>
                   <div className="card__body">
@@ -119,6 +101,12 @@ export default function Home() {
                     <div>Уровень доступа: {story?.access}</div>
                   </div>
                 </Link>
+                <button
+                  className="card__popover"
+                  onClick={() => downloadStory(story?.id)}
+                >
+                  Скачать
+                </button>
               </div>
             ))}
           </div>
@@ -129,4 +117,7 @@ export default function Home() {
       </main>
     </>
   );
+}
+function saveAs(content: any, arg1: string) {
+  throw new Error("Function not implemented.");
 }
