@@ -4,7 +4,7 @@ const secret = process.env.SECRET;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   res.status(200).json({
-    error: "Любишь шастать по API?",
+    error: "Понимаешь что такое API?",
     body: "Пиши в Discord!",
   });
 };

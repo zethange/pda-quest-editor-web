@@ -72,7 +72,11 @@ export default function EditStage({ data }: { data: any }) {
         </div>
       </div>
       <div className="stage-card">
-        <b>Тексты:</b>
+        <div style={{ display: "flex" }}>
+          <b>Тексты:</b>
+          <div className="mx-auto"></div>
+          <button>+</button>
+        </div>
         {storeStage?.texts?.map(
           (text: any, index: number) =>
             text.text && (

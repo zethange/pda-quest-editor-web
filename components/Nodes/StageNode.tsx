@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
 
 type data = {
@@ -15,12 +15,7 @@ export function NodeStage({
   isConnectable: any;
   selected: boolean;
 }) {
-  const words = data?.text?.split(" ");
-
-  const requireDeleteWords = data?.text?.split(" ").length - 6;
-
-  words?.splice(5, requireDeleteWords);
-
+  const words = useMemo(() => data?.text?.split(" "), [data]);
   return (
     <div
       className="stage-node"
@@ -35,7 +30,7 @@ export function NodeStage({
         isConnectable={isConnectable}
       />
       <div className="stage-node__label">{data.label}</div>
-      <small>{words?.join(" ")}...</small>
+      <small>{words?.slice(0, 6).join(" ")}...</small>
       <Handle
         type="source"
         position={Position.Bottom}

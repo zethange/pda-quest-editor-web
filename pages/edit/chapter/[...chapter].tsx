@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import store from "store2";
 
 import { useRouter } from "next/router";
@@ -91,7 +91,7 @@ export default function ChapterEditById() {
                   setTimeout(() => {
                     setStageToStore(stage);
                     setShowEditStage(stage);
-                  }, 1);
+                  }, 0);
                 }}
               >
                 {stage.title ? stage.title : "Переход на карту"}
@@ -384,7 +384,7 @@ export default function ChapterEditById() {
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             snapToGrid
-            snapGrid={[20, 20]}
+            snapGrid={[10, 10]}
             fitView
           >
             <MiniMap zoomable pannable />

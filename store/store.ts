@@ -32,6 +32,7 @@ export function newTransferToStore(transfer: any) {
   }
 }
 
+// Удаление условия в переходе
 export default function deleteConditionInTransfer(
   transferIndex: number,
   conditionIndex: number
@@ -45,6 +46,7 @@ export default function deleteConditionInTransfer(
     Object.fromEntries(conditions);
 }
 
+// Создание условия в переходе
 export function createConditionsInTransfer(
   transferIndex: number,
   typeCondition: number
@@ -61,6 +63,7 @@ export function createConditionsInTransfer(
     };
 }
 
+// Создание параметра в условии
 export function createValueInCondition(
   transferIndex: number,
   conditionIndex: number
@@ -71,6 +74,7 @@ export function createValueInCondition(
   conditions[conditionIndex][1].push("новый_параметр");
 }
 
+// Редактирование параметра в условии
 export function editValueInConditions(
   transferIndex: number,
   conditionIndex: number,
@@ -83,6 +87,7 @@ export function editValueInConditions(
   conditions[conditionIndex][1][valueIndex] = value;
 }
 
+// Удаление параметра в условии
 export function deleteValueInCondition(
   transferIndex: number,
   conditionIndex: number,
@@ -104,10 +109,6 @@ export function editBackgroundInStore(background_url: string) {
 
 export function editMessageInStore(message: string) {
   storeStage.message = message;
-}
-
-export function resetMessageInStore() {
-  storeStage.message = "";
 }
 
 export function editTextInStore(id: number, text: any) {

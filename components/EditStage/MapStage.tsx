@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 
-export default function MapStage({ data }: { data: any }) {
+const MapStage = ({ data }: { data: any }) => {
   let mapString: string = "загрузка...";
   let mapImg: string = "https://files.artux.net";
 
@@ -72,4 +72,6 @@ export default function MapStage({ data }: { data: any }) {
       <div>Позиция: {data.pos}</div>
     </div>
   );
-}
+};
+
+export default memo(MapStage);

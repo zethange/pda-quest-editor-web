@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Link from "next/link";
 
 import NavBar from "@/components/UI/NavBar/NavBar";
@@ -7,7 +7,7 @@ import { MdCreate, MdTextSnippet } from "react-icons/md";
 
 import { signIn, signOut, useSession } from "next-auth/react";
 
-export default function UpNavBar({ children }: { children?: React.ReactNode }) {
+const UpNavBar = ({ children }: { children?: React.ReactNode }) => {
   const { data: session } = useSession();
 
   return (
@@ -55,4 +55,6 @@ export default function UpNavBar({ children }: { children?: React.ReactNode }) {
       {children}
     </NavBar>
   );
-}
+};
+
+export default memo(UpNavBar);
