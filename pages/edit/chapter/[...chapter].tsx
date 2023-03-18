@@ -50,7 +50,6 @@ export default function ChapterEditById() {
   const [connectionInfo, setConnectionInfo] = useState<any>();
   const [transferIndex, setTransferIndex] = useState<string>("");
 
-
   // Вытаскивание главы из localStorage
   useEffect(() => {
     const chapterFromLocalStorage =
@@ -86,8 +85,13 @@ export default function ChapterEditById() {
             <>
               <button
                 onClick={() => {
-                  setStageToStore(stage);
-                  setShowEditStage(stage);
+                  setStageToStore(null);
+                  setShowEditStage(null);
+
+                  setTimeout(() => {
+                    setStageToStore(stage);
+                    setShowEditStage(stage);
+                  }, 1);
                 }}
               >
                 {stage.title ? stage.title : "Переход на карту"}

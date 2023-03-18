@@ -17,8 +17,6 @@ export default function EditStage({ data }: { data: any }) {
   const [rerender, setRerender] = useState<boolean>(false);
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
 
-  setRerender(!rerender)
-
   return (
     <>
       <div className="stage-card">
