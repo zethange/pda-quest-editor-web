@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import CustomHead from "@/components/Global/CustomHead";
-import UpNavBar from "@/components/Global/UpNavBar";
-import NavBar from "@/components/UI/NavBar";
+import UpNavBar from "@/components/UI/NavBar/UpNavBar";
+import NavBar from "@/components/UI/NavBar/NavBar";
 import { newChapter } from "@/store/types";
 import { MdDelete } from "react-icons/md";
 

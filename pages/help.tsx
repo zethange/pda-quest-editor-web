@@ -9,7 +9,7 @@ import {
   DiscordMessage,
   DiscordMessages,
 } from "@skyra/discord-components-react";
-import UpNavBar from "@/components/Global/UpNavBar";
+import UpNavBar from "@/components/UI/NavBar/UpNavBar";
 import Link from "next/link";
 
 export default function Help() {

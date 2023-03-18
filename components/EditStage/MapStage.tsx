@@ -1,4 +1,4 @@
-import { createRef, useRef, useState } from "react";
+import { useState } from "react";
 
 export default function MapStage({ data }: { data: any }) {
   let mapString: string = "загрузка...";
@@ -64,6 +64,7 @@ export default function MapStage({ data }: { data: any }) {
               bottom: `${data.pos.split(":")[1] / diffHeight}px`,
               color: "#fff",
             }}
+            alt="Метка"
             src="/quest.png"
           />
         </div>

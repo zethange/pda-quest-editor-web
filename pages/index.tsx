@@ -7,7 +7,7 @@ import { IoMdCreate } from "react-icons/io";
 
 import CustomHead from "@/components/Global/CustomHead";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
-import NavBar from "@/components/UI/NavBar";
+import NavBar from "@/components/UI/NavBar/NavBar";
 
 export default function Home() {
   const [stories, setStories] = useState<any>([]);

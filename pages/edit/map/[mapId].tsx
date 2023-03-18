@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 
 import CustomHead from "@/components/Global/CustomHead";
-import NavBar from "@/components/UI/NavBar";
-import UpNavBar from "@/components/Global/UpNavBar";
+import NavBar from "@/components/UI/NavBar/NavBar";
+import UpNavBar from "@/components/UI/NavBar/UpNavBar";
 
 export default function MapId() {
   const { query, isReady } = useRouter();

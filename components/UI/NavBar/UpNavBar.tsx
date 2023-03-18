@@ -1,9 +1,9 @@
 import React from "react";
 import Link from "next/link";
 
-import NavBar from "@/components/UI/NavBar";
+import NavBar from "@/components/UI/NavBar/NavBar";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
-import { MdCreate, MdMap, MdTextSnippet } from "react-icons/md";
+import { MdCreate, MdTextSnippet } from "react-icons/md";
 
 import { signIn, signOut, useSession } from "next-auth/react";
 
@@ -25,7 +25,7 @@ export default function UpNavBar({ children }: { children?: React.ReactNode }) {
       </Link>
       <button className="mx-auto"></button>
       <ChangeThemeButton />
-      <Link className="navbar__header" href="/help">
+      <Link className="navbar__header" href="/pages/help">
         Помощь
       </Link>
       <div style={{ borderLeft: "1px solid #ccc" }} />

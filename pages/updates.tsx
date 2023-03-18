@@ -1,5 +1,5 @@
 import Head from "next/head";
-import UpNavBar from "@/components/Global/UpNavBar";
+import UpNavBar from "@/components/UI/NavBar/UpNavBar";
 import React from "react";
 import useSWR from "swr";
 import { fetcher } from "@/store/tools";
@@ -27,7 +27,7 @@ export default function Updates() {
           }}
         >
           {!isLoading &&
-            data.map((commit: any, indexCommit: number) => (
+            data.map((commit: any) => (
               <div key={commit.node_id} style={{ display: "flex" }}>
                 <a href={commit.author.html_url}>
                   <img

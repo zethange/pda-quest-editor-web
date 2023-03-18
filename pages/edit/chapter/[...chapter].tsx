@@ -22,14 +22,14 @@ import {
 import "reactflow/dist/style.css";
 
 import { newStage } from "@/store/types";
-import NavBar from "@/components/UI/NavBar";
-import UpNavBar from "@/components/Global/UpNavBar";
+import NavBar from "@/components/UI/NavBar/NavBar";
+import UpNavBar from "@/components/UI/NavBar/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
-import EditActions from "@/components/EditStage/EditActions";
+import EditActions from "@/components/EditStage/EditActions/EditActions";
 import { MdCreate, MdMap, MdTextSnippet } from "react-icons/md";
 import { NodeStage } from "@/components/Nodes/StageNode";
-import MapStage from "@/components/popover/MapStage";
-import CreateTransfer from "@/components/CreateTransfer/CreateTransfer";
+import MapStage from "@/components/EditStage/MapStage";
+import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer";
 import EditStage from "../../../components/EditStage/EditStage";
 
 export default function ChapterEditById() {
