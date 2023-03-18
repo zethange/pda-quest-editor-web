@@ -380,11 +380,12 @@ export default function ChapterEditById() {
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             snapToGrid
+            snapGrid={[20, 20]}
             fitView
           >
             <MiniMap zoomable pannable />
             <Controls />
-            <Background />
+            <Background gap={20} />
           </ReactFlow>
         </div>
         <Modal

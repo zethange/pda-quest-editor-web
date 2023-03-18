@@ -151,9 +151,6 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <Modal>
-          <Modal.Title>Але</Modal.Title>
-        </Modal>
       </main>
     </>
   );
