@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useContext } from "react";
 import store from "store2";
 
 import { useRouter } from "next/router";
@@ -26,8 +26,7 @@ import NavBar from "@/components/UI/NavBar";
 import UpNavBar from "@/components/Global/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
 import EditActions from "@/components/EditStage/EditActions";
-import { MdCreate } from "react-icons/md";
-import { SiDialogflow, SiGooglemaps } from "react-icons/si";
+import { MdCreate, MdMap, MdTextSnippet } from "react-icons/md";
 import { NodeStage } from "@/components/Nodes/StageNode";
 import MapStage from "@/components/popover/MapStage";
 import CreateTransfer from "@/components/CreateTransfer/CreateTransfer";
@@ -50,6 +49,7 @@ export default function ChapterEditById() {
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
   const [transferIndex, setTransferIndex] = useState<string>("");
+
 
   // Вытаскивание главы из localStorage
   useEffect(() => {
@@ -250,7 +250,7 @@ export default function ChapterEditById() {
       updatedStageWithUpdatedPosition
     );
 
-    await updateChapter(chapterFromLocalStorage, true);
+    updateChapter(chapterFromLocalStorage, true);
   };
 
   const onConnect = useCallback(
@@ -315,14 +315,14 @@ export default function ChapterEditById() {
                   className="button-popover"
                   onClick={() => createStage("default")}
                 >
-                  <SiDialogflow style={{ paddingTop: "5px" }} />
+                  <MdTextSnippet style={{ paddingTop: "5px" }} />
                   Диалог
                 </button>
                 <button
                   className="button-popover"
                   onClick={() => createStage("exit")}
                 >
-                  <SiGooglemaps style={{ paddingTop: "5px" }} />
+                  <MdMap style={{ paddingTop: "5px" }} />
                   Выход на карту
                 </button>
               </div>

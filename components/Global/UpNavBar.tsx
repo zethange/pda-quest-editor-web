@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import NavBar from "@/components/UI/NavBar";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
-import { GrChapterAdd, GrMapLocation } from "react-icons/gr";
+import { MdCreate, MdMap, MdTextSnippet } from "react-icons/md";
+
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function UpNavBar({ children }: { children?: React.ReactNode }) {
@@ -15,11 +16,11 @@ export default function UpNavBar({ children }: { children?: React.ReactNode }) {
         Назад
       </button>
       <button className="navbar__header navbar__header--active">
-        <GrChapterAdd style={{ paddingTop: "5px" }} />
+        <MdCreate style={{ paddingTop: "5px" }} />
         Глава
       </button>
       <Link href="/edit/map" className="navbar__header">
-        <GrMapLocation style={{ paddingTop: "5px" }} />
+        <MdTextSnippet style={{ paddingTop: "5px" }} />
         Карта
       </Link>
       <button className="mx-auto"></button>
