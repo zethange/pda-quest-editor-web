@@ -19,10 +19,6 @@ const UpNavBar = ({ children }: { children?: React.ReactNode }) => {
         <MdCreate style={{ paddingTop: "5px" }} />
         Глава
       </button>
-      <Link href="/edit/map" className="navbar__header">
-        <MdTextSnippet style={{ paddingTop: "5px" }} />
-        Карта
-      </Link>
       <button className="mx-auto"></button>
       <ChangeThemeButton />
       <Link className="navbar__header" href="/pages/help">

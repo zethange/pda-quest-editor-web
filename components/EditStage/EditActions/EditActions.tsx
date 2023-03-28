@@ -9,6 +9,7 @@ import {
   storeStage,
 } from "@/store/store";
 import CreateParam from "@/components/EditStage/EditActions/CreateParam";
+import { Box, Grid, Input, Select, VStack } from "@chakra-ui/react";
 
 export default function EditActions() {
   const { data, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
@@ -18,23 +19,25 @@ export default function EditActions() {
   const [method, setMethod] = useState<string>("add");
 
   return (
-    <div className="stage-card">
-      <div style={{ display: "flex" }}>
-        <b>Действия:</b>
-        <div className="mx-auto"></div>
-        <button onClick={() => setShowCreateMethod(!showCreateMethod)}>
-          {showCreateMethod ? "-" : "+"}
-        </button>
-      </div>
+    <>
+      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
+        <Box display="flex">
+          <b>Действия:</b>
+          <Box mx="auto" />
+          <button onClick={() => setShowCreateMethod(!showCreateMethod)}>
+            {showCreateMethod ? "-" : "+"}
+          </button>
+        </Box>
+      </Box>
       {showCreateMethod && (
-        <div className="stage-card" style={{ background: "var(--light-gray)" }}>
+        <Box className="stage-card">
           Создание новой команды:{" "}
-          <select onChange={(event) => setMethod(event.target.value)}>
+          <Select size="md" onChange={(event) => setMethod(event.target.value)}>
             <option value="add">Добавить</option>
             <option value="remove">Удалить</option>
             <option value="xp">Добавить/удалить опыт</option>
             <option value="money">Добавить/удалить деньги</option>
-          </select>
+          </Select>
           <button
             className="btn"
             onClick={() => {
@@ -44,19 +47,20 @@ export default function EditActions() {
           >
             Сохранить
           </button>
-        </div>
+        </Box>
       )}
       {Object.entries(storeStage.actions).map(
         (action: any, indexAction: number) => (
-          <div
-            className="stage-card"
+          <Box
+            p={2}
+            my={2}
+            backgroundColor="gray.100"
+            borderRadius="10px"
             key={indexAction}
-            style={{
-              background: "var(--light-gray)",
-            }}
           >
             Команда:{" "}
-            <select
+            <Select
+              size="md"
               onChange={(e) => {
                 editMethodInAction(e.target.value, indexAction);
               }}
@@ -66,15 +70,15 @@ export default function EditActions() {
               <option value="remove">Удалить</option>
               <option value="xp">Добавить/удалить опыт</option>
               <option value="money">Добавить/удалить деньги</option>
-            </select>
-            <div>
+            </Select>
+            <Box>
               <CreateParam
                 data={data}
                 indexAction={indexAction}
                 isLoading={isLoading}
               />
               {action[1].map((key: any, index: number) => (
-                <input
+                <Input
                   type="text"
                   defaultValue={key}
                   onChange={(e) => {
@@ -82,10 +86,10 @@ export default function EditActions() {
                   }}
                 />
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
         )
       )}
-    </div>
+    </>
   );
 }

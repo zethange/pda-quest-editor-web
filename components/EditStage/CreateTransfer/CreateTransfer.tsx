@@ -4,6 +4,7 @@ import {
   editValueInConditions,
   storeStage,
 } from "@/store/store";
+import { Box, Select } from "@chakra-ui/react";
 import { useState } from "react";
 
 export default function CreateTransfer({
@@ -18,8 +19,9 @@ export default function CreateTransfer({
 
   return (
     <>
-      <span style={{ display: "flex" }}>
-        Условия: <div className="mx-auto"></div>
+      <Box display="flex">
+        Условия:
+        <Box mx="auto"></Box>
         <button
           onClick={() =>
             setCreateConditionInTransfer(!createConditionInTransfer)
@@ -27,17 +29,17 @@ export default function CreateTransfer({
         >
           {createConditionInTransfer ? "-" : "+"}
         </button>
-      </span>
-      <div className="stage-card">
+      </Box>
+      <Box backgroundColor="gray.50" p={2} borderRadius={5}>
         {createConditionInTransfer && (
           <>
-            Условия:{" "}
-            <select
+            <Select
+              size="md"
               onChange={(event) => setTypeCondition(Number(event.target.value))}
             >
               <option value="1">Показывать если есть параметр</option>
               <option value="2">Показывать если нет параметра</option>
-            </select>
+            </Select>
             <button
               className="btn"
               style={{ padding: "1px" }}
@@ -96,7 +98,7 @@ export default function CreateTransfer({
               </div>
             )
           )}
-      </div>
+      </Box>
     </>
   );
 }

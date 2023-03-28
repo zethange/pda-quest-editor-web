@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import store from "store2";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 import CustomHead from "@/components/Global/CustomHead";
-import UpNavBar from "@/components/UI/NavBar/UpNavBar";
 import NavBar from "@/components/UI/NavBar/NavBar";
 import { newChapter } from "@/store/types";
 import { MdDelete } from "react-icons/md";
+import { Box, Button, Card, Heading, SimpleGrid } from "@chakra-ui/react";
 
 export default function storyId() {
   const { query, isReady } = useRouter();
@@ -46,46 +46,39 @@ export default function storyId() {
     <>
       <CustomHead title="Редактирование карт" />
       <main className="main">
-        <UpNavBar />
-        <hr />
         <NavBar>
-          <div
-            className="navbar__header no-select"
-            onClick={() => createChapter()}
-          >
-            Создать главу
-          </div>
+          <Button fontWeight="10px" onClick={() => history.go(-1)}>
+            Назад
+          </Button>
+          <Button onClick={() => createChapter()}>Создать главу</Button>
         </NavBar>
-        <div className="work-space">
-          <div className="card-parent">
+        <Box
+          h="calc(100vh - 57px)"
+          overflowY="auto"
+          backgroundColor="blackAlpha.50"
+        >
+          <SimpleGrid columns={5} spacing={2} p={2}>
             {chapters.map((chapter: any) => (
-              <div className="card" key={chapter?.id}>
+              <Card
+                key={chapter?.id}
+                border="1px"
+                borderColor="gray.200"
+                shadow="none"
+                p={2}
+              >
                 <Link href={"/edit/chapter/" + storyId + "/" + chapter?.id}>
-                  <div className="card__header">{`Глава ${chapter?.id}`}</div>
-                  <div className="card__body">
-                    Количество стадий: {chapter?.stages?.length}
-                  </div>
+                  <Heading as="h4" size="md">
+                    {`Глава ${chapter?.id}`}
+                  </Heading>
+                  <div>Количество стадий: {chapter?.stages?.length}</div>
                 </Link>
-                <div
-                  style={{
-                    padding: "10px",
-                    position: "absolute",
-                    top: "0px",
-                    right: "0px",
-                  }}
-                >
-                  <button
-                    style={{ fontSize: "15px" }}
-                    onClick={() => deleteChapter(chapter?.id)}
-                  >
-                    <MdDelete style={{ paddingTop: "4px" }} />
-                    Удалить
-                  </button>
-                </div>
-              </div>
+                <Button onClick={() => deleteChapter(chapter?.id)}>
+                  Удалить
+                </Button>
+              </Card>
             ))}
-          </div>
-        </div>
+          </SimpleGrid>
+        </Box>
       </main>
     </>
   );

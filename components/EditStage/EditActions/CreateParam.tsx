@@ -1,5 +1,6 @@
 import { newParamInAction } from "@/store/store";
 import { useState } from "react";
+import { Box, Grid, Select } from "@chakra-ui/react";
 
 type Props = {
   data: any;
@@ -19,8 +20,9 @@ export default function CreateParam({ data, isLoading, indexAction }: Props) {
 
   return (
     <>
-      <div style={{ display: "flex" }}>
-        Значения: <div className="mx-auto"></div>
+      <Box display="flex">
+        Значения:
+        <Box m="auto" />
         <button
           onClick={() => {
             setShowCreateParam(!showCreateParam);
@@ -28,10 +30,11 @@ export default function CreateParam({ data, isLoading, indexAction }: Props) {
         >
           {showCreateParam ? "-" : "+"}
         </button>
-      </div>
+      </Box>
       {showCreateParam && (
-        <div className="stage-card" style={{ background: "var(--white)" }}>
-          <select
+        <Box backgroundColor="white" p={2} borderRadius={5}>
+          <Select
+            size="md"
             name="select"
             onChange={(event) => onChangeNewParam(event.target.value, "item")}
             required={true}
@@ -45,7 +48,7 @@ export default function CreateParam({ data, isLoading, indexAction }: Props) {
                   ))}
                 </optgroup>
               ))}
-          </select>
+          </Select>
           <input
             style={{ width: "100px" }}
             placeholder="Количество"
@@ -62,7 +65,7 @@ export default function CreateParam({ data, isLoading, indexAction }: Props) {
           >
             Сохранить
           </button>
-        </div>
+        </Box>
       )}
     </>
   );

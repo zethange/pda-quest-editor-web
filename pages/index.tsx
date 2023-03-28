@@ -8,6 +8,15 @@ import { IoMdCreate } from "react-icons/io";
 import CustomHead from "@/components/Global/CustomHead";
 import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import NavBar from "@/components/UI/NavBar/NavBar";
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  Heading,
+  SimpleGrid,
+  Tab,
+} from "@chakra-ui/react";
 
 export default function Home() {
   const [stories, setStories] = useState<any>([]);
@@ -101,59 +110,62 @@ export default function Home() {
   return (
     <>
       <CustomHead title="Редактор историй" />
-      <main className="main">
+      <Box w="100vw">
         <NavBar>
-          <MdImportExport
-            style={{ marginTop: "10px", width: "24px", height: "24px" }}
-          />
           <input
             type="file"
             {...{ directory: "", webkitdirectory: "" }}
             id="input"
-            className="navbar__header"
             onChange={(e) => uploadStory(e)}
           />
-          <button className="navbar__header" onClick={() => createStory()}>
-            <IoMdCreate style={{ paddingTop: "3px" }} />
+          <Button fontWeight="10px" onClick={() => createStory()}>
             Создать историю
-          </button>
-          <div className="mx-auto"></div>
-          <ChangeThemeButton />
-          <Link href="/edit/map" className="navbar__header">
-            <p style={{ paddingTop: "3px" }}>Карты</p>
-          </Link>
-          <button
-            className="navbar__header"
+          </Button>
+          <Box m="auto" />
+          <Button
+            fontWeight="10px"
             onClick={() => {
               localStorage.clear();
               window.location.reload();
             }}
           >
             Удалить всё
-          </button>
+          </Button>
         </NavBar>
-        <div className="work-space">
-          <div className="card-parent">
-            {stories.map((story: any, index: number) => (
-              <div className="card" key={index}>
+        <Box
+          h="calc(100vh - 57px)"
+          overflowY="auto"
+          backgroundColor="blackAlpha.50"
+        >
+          <SimpleGrid columns={5} spacing={2} p={2}>
+            {stories.map((story: any) => (
+              <Card
+                key={story?.id}
+                border="1px"
+                borderColor="gray.200"
+                shadow="none"
+                p={2}
+              >
                 <Link href={"/edit/story/" + story?.id}>
-                  <div className="card__header">{story?.title}</div>
-                  <div className="card__body">
+                  <Heading as="h4" size="md">
+                    {story?.title}
+                  </Heading>
+                  <div>
                     <div>{story?.desc}</div>
                     <div>Уровень доступа: {story?.access}</div>
                   </div>
                 </Link>
-                <button
-                  className="card__popover"
+                <Button
+                  fontWeight="10px"
                   onClick={() => downloadStory(story?.id)}
                 >
                   Скачать
-                </button>
-              </div>
+                </Button>
+              </Card>
             ))}
-          </div>
-        </div>
-      </main>
+          </SimpleGrid>
+        </Box>
+      </Box>
     </>
   );
 }

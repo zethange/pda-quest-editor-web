@@ -1,5 +1,6 @@
 import { createConditionsInTransfer } from "@/store/store";
 import { useState } from "react";
+import { Box, Select } from "@chakra-ui/react";
 
 export default function CreateConditionInTransferJsx({
   transferIndex,
@@ -15,8 +16,8 @@ export default function CreateConditionInTransferJsx({
 
   return (
     <>
-      <div style={{ display: "flex" }}>
-        Условия <div className="mx-auto"></div>
+      <Box display="flex">
+        Условия: <Box mx="auto" />
         <button
           onClick={() => {
             setShowCreateConditionInTransfer(!showCreateConditionInTransfer);
@@ -25,15 +26,16 @@ export default function CreateConditionInTransferJsx({
         >
           {showCreateConditionInTransfer ? "-" : "+"}
         </button>
-      </div>
+      </Box>
       {showCreateConditionInTransfer && (
-        <div>
-          <select
+        <Box backgroundColor="white" p={2} borderRadius={5}>
+          <Select
+            size="md"
             onChange={(event) => setTypeCondition(Number(event.target.value))}
           >
             <option value="1">Показывать если есть параметр</option>
             <option value="2">Показывать если нет параметра</option>
-          </select>
+          </Select>
           <button
             className="btn"
             style={{ padding: "1px" }}
@@ -46,7 +48,7 @@ export default function CreateConditionInTransferJsx({
           >
             Сохранить
           </button>
-        </div>
+        </Box>
       )}
     </>
   );

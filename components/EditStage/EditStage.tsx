@@ -10,8 +10,16 @@ import deleteConditionInTransfer, {
   storeStage,
 } from "@/store/store";
 import { useState } from "react";
-import { Form } from "react-bootstrap";
 import CreateConditionInTransferJsx from "./CreateConditionInTransfer";
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  ListItem,
+  Textarea,
+  UnorderedList,
+} from "@chakra-ui/react";
 
 export default function EditStage({ data }: { data: any }) {
   const [rerender, setRerender] = useState<boolean>(false);
@@ -19,15 +27,18 @@ export default function EditStage({ data }: { data: any }) {
 
   return (
     <>
-      <div className="stage-card">
+      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Заголовок:</b>
-        <Form.Control
-          as="textarea"
-          defaultValue={data?.title}
-          onChange={(event) => editTitleInStore(event.target.value)}
-        />
-      </div>
-      <div className="stage-card">
+        <Box>
+          <Input
+            placeholder="Заголовок стадии..."
+            backgroundColor="white"
+            defaultValue={data?.title}
+            onChange={(event) => editTitleInStore(event.target.value)}
+          />
+        </Box>
+      </Box>
+      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Фон стадии:</b>
         <img
           src={
@@ -39,19 +50,20 @@ export default function EditStage({ data }: { data: any }) {
           width="340px"
           style={{ borderRadius: "5px" }}
         />
-        <Form.Control
-          as="input"
+        <Input
+          placeholder="Ссылка на фон..."
+          backgroundColor="white"
           defaultValue={data?.background_url}
-          style={{ width: "340px", borderRadius: "4px" }}
+          mt={2}
           onChange={(event) => {
             editBackgroundInStore(event.target.value);
             setRerender(!rerender);
           }}
         />
-      </div>
-      <div className="stage-card">
+      </Box>
+      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Сообщение:</b>
-        <div>
+        <Box>
           Показывать сообщение:{" "}
           <input
             type="checkbox"
@@ -63,32 +75,31 @@ export default function EditStage({ data }: { data: any }) {
             checked={storeStage?.message}
           />
           {storeStage?.message && (
-            <Form.Control
-              as="textarea"
+            <Textarea
+              placeholder="Уведомление..."
               defaultValue={data?.message}
+              backgroundColor="white"
               onChange={(event) => editMessageInStore(event.target.value)}
             />
           )}
-        </div>
-      </div>
-      <div className="stage-card">
-        <div style={{ display: "flex" }}>
+        </Box>
+      </Box>
+      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
+        <Flex mb={1} alignItems="center">
           <b>Тексты:</b>
-          <div className="mx-auto"></div>
-          <button>+</button>
-        </div>
+          <Box m="auto" />
+          <Button size="xs" colorScheme="teal">
+            +
+          </Button>
+        </Flex>
         {storeStage?.texts?.map(
           (text: any, index: number) =>
             text.text && (
-              <div
-                className="stage-card"
-                key={index}
-                style={{ background: "var(--light-gray)" }}
-              >
-                <Form.Control
-                  as="textarea"
+              <Box key={index}>
+                <Textarea
+                  placeholder="Текст..."
                   defaultValue={text.text}
-                  style={{ width: "320px" }}
+                  backgroundColor="white"
                   onChange={(event) =>
                     editTextInStore(index, {
                       text: event.target.value,
@@ -96,25 +107,20 @@ export default function EditStage({ data }: { data: any }) {
                     })
                   }
                 />
-              </div>
+              </Box>
             )
         )}
-      </div>
-      <div className="stage-card">
+      </Box>
+      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Ответы:</b>
         {storeStage?.transfers?.map(
           (transfer: any, index: number) =>
             transfer.text && (
-              <div
-                className="stage-card"
-                key={index}
-                style={{ background: "var(--light-gray)" }}
-              >
-                <Form.Control
-                  key={transfer.text}
-                  as="textarea"
+              <Box key={index}>
+                <Textarea
+                  placeholder="Ответ..."
                   defaultValue={transfer.text}
-                  style={{ width: "320px" }}
+                  backgroundColor="white"
                   onChange={(event) =>
                     editTransferInStore(index, {
                       text: event.target.value,
@@ -129,13 +135,19 @@ export default function EditStage({ data }: { data: any }) {
                 />
                 {Object.entries(storeStage.transfers[index].condition).map(
                   (condition: any, conditionIndex: number) => (
-                    <div className="stage-card" key={conditionIndex}>
-                      <div style={{ display: "flex" }}>
+                    <Box
+                      key={conditionIndex}
+                      backgroundColor="white"
+                      p={2}
+                      my={1}
+                      borderRadius={5}
+                    >
+                      <Box display="flex">
                         Если
                         {condition[0] === "has"
                           ? " есть параметр:"
                           : " нет параметра:"}
-                        <div className="mx-auto"></div>
+                        <Box mx="auto" />
                         <button
                           style={{ marginRight: "4px" }}
                           onClick={() => {
@@ -153,11 +165,11 @@ export default function EditStage({ data }: { data: any }) {
                         >
                           +
                         </button>
-                      </div>
-                      <ul>
+                      </Box>
+                      <UnorderedList>
                         {condition[1].map(
                           (conditionValue: any, valueIndex: number) => (
-                            <li key={valueIndex}>
+                            <ListItem key={valueIndex}>
                               <input
                                 type="text"
                                 defaultValue={conditionValue}
@@ -182,17 +194,17 @@ export default function EditStage({ data }: { data: any }) {
                               >
                                 -
                               </button>
-                            </li>
+                            </ListItem>
                           )
                         )}
-                      </ul>
-                    </div>
+                      </UnorderedList>
+                    </Box>
                   )
                 )}
-              </div>
+              </Box>
             )
         )}
-      </div>
+      </Box>
     </>
   );
 }
