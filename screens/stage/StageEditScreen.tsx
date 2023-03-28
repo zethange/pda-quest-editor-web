@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import store from "store2";
 
-import { useRouter } from "next/router";
 import ReactFlow, {
   applyNodeChanges,
   Background,
@@ -11,25 +10,17 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 
-import { Button, Modal } from "react-bootstrap";
-import {
-  editTransferInStore,
-  newTransferToStore,
-  setStageToStore,
-  storeStage,
-} from "@/store/store";
+import { setStageToStore, storeStage } from "@/store/store";
 
 import "reactflow/dist/style.css";
 
 import { newStage } from "@/store/types";
 import NavBar from "@/components/UI/NavBar/NavBar";
-import UpNavBar from "@/components/UI/NavBar/UpNavBar";
 import CustomHead from "@/components/Global/CustomHead";
 import EditActions from "@/components/EditStage/EditActions/EditActions";
-import { MdCreate, MdMap, MdTextSnippet } from "react-icons/md";
+import { MdCreate } from "react-icons/md";
 import { NodeStage } from "@/components/Nodes/StageNode";
 import MapStage from "@/components/EditStage/MapStage";
-import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer";
 import EditStage from "@/components/EditStage/EditStage";
 
 export default function StageEditScreen({
@@ -379,116 +370,116 @@ export default function StageEditScreen({
             <Background gap={20} />
           </ReactFlow>
         </div>
-        <Modal
-          show={connectionInfo}
-          onHide={() => {
-            setConnectionInfo(null);
-            setTransferIndex("");
-          }}
-          backdrop="static"
-          keyboard={false}
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>
-              Создание перехода со стадии {connectionInfo?.source} на{" "}
-              {connectionInfo?.target}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <textarea
-              style={{ border: "2px solid #242424", width: "470px" }}
-              placeholder="Введите текст..."
-              defaultValue={connectionInfo?.targetTransfer?.text}
-              onChange={(event) => {
-                setTransferIndex(
-                  String(
-                    newTransferToStore({
-                      text: event.target.value,
-                      stage_id: connectionInfo?.target,
-                      condition: {},
-                    })
-                  )
-                );
-              }}
-            />
-            {transferIndex ? (
-              <CreateTransfer transferIndex={Number(transferIndex)} />
-            ) : (
-              "Для добавления условий необходимо заполнить текст"
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                updateStage(storeStage.id);
-                setConnectionInfo(null);
-                setTransferIndex("");
-              }}
-            >
-              Сохранить
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setConnectionInfo(null);
-                setTransferIndex("");
-              }}
-            >
-              Закрыть
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        {/*<Modal*/}
+        {/*  show={connectionInfo}*/}
+        {/*  onHide={() => {*/}
+        {/*    setConnectionInfo(null);*/}
+        {/*    setTransferIndex("");*/}
+        {/*  }}*/}
+        {/*  backdrop="static"*/}
+        {/*  keyboard={false}*/}
+        {/*  centered*/}
+        {/*>*/}
+        {/*  <Modal.Header closeButton>*/}
+        {/*    <Modal.Title>*/}
+        {/*      Создание перехода со стадии {connectionInfo?.source} на{" "}*/}
+        {/*      {connectionInfo?.target}*/}
+        {/*    </Modal.Title>*/}
+        {/*  </Modal.Header>*/}
+        {/*  <Modal.Body>*/}
+        {/*    <textarea*/}
+        {/*      style={{ border: "2px solid #242424", width: "470px" }}*/}
+        {/*      placeholder="Введите текст..."*/}
+        {/*      defaultValue={connectionInfo?.targetTransfer?.text}*/}
+        {/*      onChange={(event) => {*/}
+        {/*        setTransferIndex(*/}
+        {/*          String(*/}
+        {/*            newTransferToStore({*/}
+        {/*              text: event.target.value,*/}
+        {/*              stage_id: connectionInfo?.target,*/}
+        {/*              condition: {},*/}
+        {/*            })*/}
+        {/*          )*/}
+        {/*        );*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*    {transferIndex ? (*/}
+        {/*      <CreateTransfer transferIndex={Number(transferIndex)} />*/}
+        {/*    ) : (*/}
+        {/*      "Для добавления условий необходимо заполнить текст"*/}
+        {/*    )}*/}
+        {/*  </Modal.Body>*/}
+        {/*  <Modal.Footer>*/}
+        {/*    <Button*/}
+        {/*      variant="secondary"*/}
+        {/*      onClick={() => {*/}
+        {/*        updateStage(storeStage.id);*/}
+        {/*        setConnectionInfo(null);*/}
+        {/*        setTransferIndex("");*/}
+        {/*      }}*/}
+        {/*    >*/}
+        {/*      Сохранить*/}
+        {/*    </Button>*/}
+        {/*    <Button*/}
+        {/*      variant="secondary"*/}
+        {/*      onClick={() => {*/}
+        {/*        setConnectionInfo(null);*/}
+        {/*        setTransferIndex("");*/}
+        {/*      }}*/}
+        {/*    >*/}
+        {/*      Закрыть*/}
+        {/*    </Button>*/}
+        {/*  </Modal.Footer>*/}
+        {/*</Modal>*/}
 
-        <Modal
-          show={showModalEditTransfer}
-          onHide={() => {
-            setShowModalEditTransfer(true);
-          }}
-          backdrop="static"
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>
-              Переход с {storeStage?.id} на{" "}
-              {storeStage?.targetTransfer?.stage_id}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <textarea
-              style={{ border: "2px solid #242424", width: "470px" }}
-              placeholder="Введите текст..."
-              defaultValue={storeStage?.targetTransfer?.text}
-              onChange={(event) => {
-                editTransferInStore(storeStage?.indexTargetTransfer, {
-                  ...storeStage?.targetTransfer,
-                  text: event.target.value,
-                });
-              }}
-            />
-            <CreateTransfer transferIndex={storeStage?.indexTargetTransfer} />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                updateStage(storeStage.id);
-                setShowModalEditTransfer(false);
-              }}
-            >
-              Сохранить
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setShowModalEditTransfer(false);
-              }}
-            >
-              Закрыть
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        {/*<Modal*/}
+        {/*  show={showModalEditTransfer}*/}
+        {/*  onHide={() => {*/}
+        {/*    setShowModalEditTransfer(true);*/}
+        {/*  }}*/}
+        {/*  backdrop="static"*/}
+        {/*  centered*/}
+        {/*>*/}
+        {/*  <Modal.Header closeButton>*/}
+        {/*    <Modal.Title>*/}
+        {/*      Переход с {storeStage?.id} на{" "}*/}
+        {/*      {storeStage?.targetTransfer?.stage_id}*/}
+        {/*    </Modal.Title>*/}
+        {/*  </Modal.Header>*/}
+        {/*  <Modal.Body>*/}
+        {/*    <textarea*/}
+        {/*      style={{ border: "2px solid #242424", width: "470px" }}*/}
+        {/*      placeholder="Введите текст..."*/}
+        {/*      defaultValue={storeStage?.targetTransfer?.text}*/}
+        {/*      onChange={(event) => {*/}
+        {/*        editTransferInStore(storeStage?.indexTargetTransfer, {*/}
+        {/*          ...storeStage?.targetTransfer,*/}
+        {/*          text: event.target.value,*/}
+        {/*        });*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*    <CreateTransfer transferIndex={storeStage?.indexTargetTransfer} />*/}
+        {/*  </Modal.Body>*/}
+        {/*  <Modal.Footer>*/}
+        {/*    <Button*/}
+        {/*      variant="secondary"*/}
+        {/*      onClick={() => {*/}
+        {/*        updateStage(storeStage.id);*/}
+        {/*        setShowModalEditTransfer(false);*/}
+        {/*      }}*/}
+        {/*    >*/}
+        {/*      Сохранить*/}
+        {/*    </Button>*/}
+        {/*    <Button*/}
+        {/*      variant="secondary"*/}
+        {/*      onClick={() => {*/}
+        {/*        setShowModalEditTransfer(false);*/}
+        {/*      }}*/}
+        {/*    >*/}
+        {/*      Закрыть*/}
+        {/*    </Button>*/}
+        {/*  </Modal.Footer>*/}
+        {/*</Modal>*/}
       </main>
     </>
   );
