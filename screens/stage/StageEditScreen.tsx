@@ -14,12 +14,12 @@ import { setStageToStore, storeStage } from "@/store/store";
 
 import "reactflow/dist/style.css";
 
-import { newStage } from "@/store/types";
+import { newStage } from "@/store/createTools";
 import NavBar from "@/components/UI/NavBar/NavBar";
 import CustomHead from "@/components/Global/CustomHead";
 import EditActions from "@/components/EditStage/EditActions/EditActions";
 import { MdCreate } from "react-icons/md";
-import { NodeStage } from "@/components/Nodes/StageNode";
+import { NodeStage } from "@/components/Global/Nodes/StageNode";
 import MapStage from "@/components/EditStage/MapStage";
 import EditStage from "@/components/EditStage/EditStage";
 
@@ -146,7 +146,7 @@ export default function StageEditScreen({
   );
 
   const onEdgesClick = useCallback(
-    (event: React.MouseEvent, edge: Edge) => {
+    (event: React.MouseEvent, edge: Edge): void => {
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
@@ -167,7 +167,7 @@ export default function StageEditScreen({
   );
 
   // Создание стадии
-  const createStage = (type: string) => {
+  const createStage = (type: string): void => {
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 

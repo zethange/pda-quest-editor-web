@@ -35,13 +35,14 @@ import { newTransferToStore, setStageToStore, storeStage } from "@/store/store";
 
 import "reactflow/dist/style.css";
 
-import { newStage } from "@/store/types";
+import { newStage } from "@/store/createTools";
 import CustomHead from "@/components/Global/CustomHead";
 import EditActions from "@/components/EditStage/EditActions/EditActions";
-import { NodeStage } from "@/components/Nodes/StageNode";
+import { NodeStage } from "@/components/Global/Nodes/StageNode";
 import MapStage from "@/components/EditStage/MapStage";
 import EditStage from "@/components/EditStage/EditStage";
 import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer";
+import { chapterType, stageType } from "@/store/types";
 
 export default function StageEditScreenChakra({
   path,
@@ -50,12 +51,12 @@ export default function StageEditScreenChakra({
   path: string[];
   isReady: boolean;
 }) {
-  const [chapter, setChapter] = useState<any>();
+  const [chapter, setChapter] = useState<chapterType | any>();
 
   const [nodes, setNodes] = useState<any[]>();
   const [edges, setEdges] = useState<any[]>();
 
-  const [showEditStage, setShowEditStage] = useState<any>();
+  const [editableStage, setEditableStage] = useState<stageType | any>();
 
   const [isOpenCreateTransfer, setIsOpenCreateTransfer] =
     useState<boolean>(false);
@@ -92,21 +93,19 @@ export default function StageEditScreenChakra({
         selected: false,
         data: {
           label: (
-            <>
-              <button
-                onClick={() => {
-                  setStageToStore(null);
-                  setShowEditStage(null);
+            <button
+              onClick={() => {
+                setStageToStore(null);
+                setEditableStage(null);
 
-                  setTimeout(() => {
-                    setStageToStore(stage);
-                    setShowEditStage(stage);
-                  }, 0);
-                }}
-              >
-                {stage.title ? stage.title : "Переход на карту"}
-              </button>
-            </>
+                setTimeout(() => {
+                  setStageToStore(stage);
+                  setEditableStage(stage);
+                }, 0);
+              }}
+            >
+              {stage.title ? stage.title : "Переход на карту"}
+            </button>
           ),
           text: stage.texts && stage.texts[0].text,
         },
@@ -114,8 +113,8 @@ export default function StageEditScreenChakra({
       });
     });
 
-    chapter?.stages?.map((stage: any) => {
-      stage?.transfers?.map((transfer: any) => {
+    chapter?.stages?.map((stage: any): void => {
+      stage?.transfers?.map((transfer: any): void => {
         initialEdges.push({
           id: `${stage.id}-${transfer.stage_id}`,
           source: String(stage.id),
@@ -132,7 +131,7 @@ export default function StageEditScreenChakra({
   }, [chapter]);
 
   const onNodesChange = useCallback(
-    (changes: any) => {
+    (changes: any): void => {
       setNodes((nds: any) => applyNodeChanges(changes, nds));
 
       if (changes[0].position) {
@@ -167,7 +166,7 @@ export default function StageEditScreenChakra({
   );
 
   const onEdgesClick = useCallback(
-    (event: React.MouseEvent, edge: Edge) => {
+    (event: React.MouseEvent, edge: Edge): void => {
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
@@ -187,7 +186,7 @@ export default function StageEditScreenChakra({
   );
 
   // Создание стадии
-  const createStage = (type: string) => {
+  const createStage = (type: string): void => {
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
@@ -208,7 +207,7 @@ export default function StageEditScreenChakra({
   };
 
   // Обновление стадии
-  const updateStage = async (stageId: number) => {
+  const updateStage = (stageId: number): void => {
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
@@ -220,28 +219,16 @@ export default function StageEditScreenChakra({
         )
     );
 
-    const {
-      id,
-      type_stage,
-      background_url,
-      title,
-      message,
-      type_message,
-      texts,
-      transfers,
-      actions,
-    } = storeStage;
-
     const updatedStageWithUpdatedPosition = {
-      id,
-      type_stage,
-      background_url,
-      title,
-      message,
-      type_message,
-      texts,
-      transfers,
-      actions,
+      id: storeStage.id,
+      type_stage: storeStage.type_stage,
+      background_url: storeStage.background_url,
+      title: storeStage.title,
+      message: storeStage.message,
+      type_message: storeStage.type_stage,
+      texts: storeStage.texts,
+      transfers: storeStage.transfers,
+      actions: storeStage.actions,
       editor: {
         x: chapterFromLocalStorage.stages.find(
           (stage: any) => stage.id === stageId
@@ -252,7 +239,7 @@ export default function StageEditScreenChakra({
       },
     };
 
-    await chapterFromLocalStorage.stages.splice(
+    chapterFromLocalStorage.stages.splice(
       storeStageTrueId,
       1,
       updatedStageWithUpdatedPosition
@@ -262,7 +249,7 @@ export default function StageEditScreenChakra({
   };
 
   const onConnect = useCallback(
-    (connection: any) => {
+    (connection: any): void => {
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
@@ -287,7 +274,7 @@ export default function StageEditScreenChakra({
     [setEdges, chapter]
   );
 
-  function deleteStage(id: number) {
+  function deleteStage(id: number): void {
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
@@ -299,7 +286,7 @@ export default function StageEditScreenChakra({
 
     chapterFromLocalStorage && updateChapter(chapterFromLocalStorage, true);
     setStageToStore(null);
-    setShowEditStage(null);
+    setEditableStage(null);
   }
 
   const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
@@ -341,7 +328,7 @@ export default function StageEditScreenChakra({
       </Box>
       <Box h="calc(100vh - 83px)">
         {/* Штука для редактирования стадий */}
-        {showEditStage && (
+        {editableStage && (
           <Box
             zIndex="popover"
             p={5}
@@ -365,16 +352,20 @@ export default function StageEditScreenChakra({
                 style={{ fontSize: "12px" }}
                 onClick={() => {
                   setStageToStore(null);
-                  setShowEditStage(null);
+                  setEditableStage(null);
                 }}
               >
                 Закрыть
               </button>
             </Box>
+            {/* Панель редактирования */}
             <Box h="calc(100vh - 219px)" overflowY="scroll">
-              {(storeStage?.type_stage === 4 && (
+              {storeStage?.type_stage === 4 && (
                 <MapStage data={storeStage?.data} />
-              )) || <EditStage data={showEditStage} />}
+              )}
+              {storeStage?.type_stage === 0 && (
+                <EditStage data={editableStage} />
+              )}
               {storeStage?.actions && <EditActions />}
             </Box>
             <Button
@@ -383,7 +374,7 @@ export default function StageEditScreenChakra({
               mt={2}
               onClick={() => {
                 updateStage(storeStage?.id);
-                setShowEditStage(null);
+                setEditableStage(null);
                 toast({
                   title: "Стадия обновлена",
                   description:

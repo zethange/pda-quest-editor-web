@@ -2,7 +2,6 @@ import React, { memo } from "react";
 import Link from "next/link";
 
 import NavBar from "@/components/UI/NavBar/NavBar";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import { MdCreate, MdTextSnippet } from "react-icons/md";
 
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -20,7 +19,6 @@ const UpNavBar = ({ children }: { children?: React.ReactNode }) => {
         Глава
       </button>
       <button className="mx-auto"></button>
-      <ChangeThemeButton />
       <Link className="navbar__header" href="/pages/help">
         Помощь
       </Link>

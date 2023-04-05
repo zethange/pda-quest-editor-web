@@ -2,21 +2,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import store from "store2";
 import { downloadZip } from "client-zip";
-import { MdImportExport } from "react-icons/md";
-import { IoMdCreate } from "react-icons/io";
 
 import CustomHead from "@/components/Global/CustomHead";
-import ChangeThemeButton from "@/components/UI/ChangeThemeButton";
 import NavBar from "@/components/UI/NavBar/NavBar";
-import {
-  Box,
-  Button,
-  Card,
-  Container,
-  Heading,
-  SimpleGrid,
-  Tab,
-} from "@chakra-ui/react";
+import { Box, Button, Card, Heading, SimpleGrid } from "@chakra-ui/react";
 
 export default function Home() {
   const [stories, setStories] = useState<any>([]);

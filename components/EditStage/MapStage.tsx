@@ -8,7 +8,7 @@ const MapStage = ({ data }: { data: any }) => {
     mapString = "Ч-4";
     mapImg = "https://files.artux.net/static/maps/map_ch_4.png";
   } else if (data?.map === "1") {
-    mapString = "Кордоне";
+    mapString = "Кордонеc";
     mapImg = "https://files.artux.net/static/maps/map_escape.png";
   } else if (data?.map === "2") {
     mapString = "Свалка";

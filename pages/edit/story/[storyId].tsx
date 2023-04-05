@@ -5,15 +5,15 @@ import Link from "next/link";
 
 import CustomHead from "@/components/Global/CustomHead";
 import NavBar from "@/components/UI/NavBar/NavBar";
-import { newChapter } from "@/store/types";
-import { MdDelete } from "react-icons/md";
+import { newChapter } from "@/store/createTools";
 import { Box, Button, Card, Heading, SimpleGrid } from "@chakra-ui/react";
+import { chapterType } from "@/store/types";
 
 export default function storyId() {
   const { query, isReady } = useRouter();
   const storyId = query.storyId as string;
 
-  const [chapters, setChapters] = useState<any>([]);
+  const [chapters, setChapters] = useState<chapterType[] | any>([]);
 
   useEffect(() => {
     store.each((key, value) => {
