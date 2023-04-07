@@ -31,7 +31,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { newTransferToStore, setStageToStore, storeStage } from "@/store/store";
+import {
+  editTransferInStore,
+  newTransferToStore,
+  setStageToStore,
+  storeStage,
+} from "@/store/store";
 
 import "reactflow/dist/style.css";
 
@@ -59,6 +64,9 @@ export default function StageEditScreenChakra({
   const [editableStage, setEditableStage] = useState<stageType | any>();
 
   const [isOpenCreateTransfer, setIsOpenCreateTransfer] =
+    useState<boolean>(false);
+
+  const [showModalEditTransfer, setShowModalEditTransfer] =
     useState<boolean>(false);
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
@@ -180,6 +188,7 @@ export default function StageEditScreenChakra({
 
       const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
       console.log(targetTransfer, indexTargetTransfer);
+      setShowModalEditTransfer(true);
       setStageToStore({ ...stage, targetTransfer, indexTargetTransfer });
     },
     [chapter]
@@ -412,6 +421,7 @@ export default function StageEditScreenChakra({
             gap={20}
           />
         </ReactFlow>
+
         <Modal
           onClose={() => {
             setIsOpenCreateTransfer(false);
@@ -468,6 +478,56 @@ export default function StageEditScreenChakra({
                   setTransferIndex("");
                   setConnectionInfo(null);
                   setIsOpenCreateTransfer(false);
+                }}
+              >
+                Закрыть
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        <Modal
+          onClose={() => {
+            setShowModalEditTransfer(true);
+          }}
+          isOpen={showModalEditTransfer}
+          isCentered
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader fontWeight={1}>
+              Переход с {storeStage?.id} на{" "}
+              {storeStage?.targetTransfer?.stage_id}
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Textarea
+                placeholder="Введите текст..."
+                defaultValue={storeStage?.targetTransfer?.text}
+                onChange={(event) => {
+                  editTransferInStore(storeStage?.indexTargetTransfer, {
+                    ...storeStage?.targetTransfer,
+                    text: event.target.value,
+                  });
+                }}
+              />
+              <CreateTransfer transferIndex={storeStage?.indexTargetTransfer} />
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="teal"
+                onClick={() => {
+                  updateStage(storeStage.id);
+                  setShowModalEditTransfer(false);
+                }}
+                mr={2}
+              >
+                Сохранить
+              </Button>
+              <Button
+                colorScheme="teal"
+                onClick={() => {
+                  setShowModalEditTransfer(false);
                 }}
               >
                 Закрыть
