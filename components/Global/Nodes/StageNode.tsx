@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
+import {Box, Text} from "@chakra-ui/react";
 
 type data = {
   label: React.ReactNode;
@@ -17,25 +18,26 @@ export function NodeStage({
 }) {
   const words = useMemo(() => data?.text?.split(" "), [data]);
   return (
-    <div
-      className="stage-node"
-      style={{
-        background: selected ? "var(--light-blue)" : "",
-        border: selected ? "1px solid var(--dark-blue)" : "",
-      }}
+    <Box
+      p="10px"
+      borderRadius={5}
+      backgroundColor={selected ? "hsl(212, 90%, 90%)" : "white"}
+      border={"1px solid"}
+      borderColor="gray.800"
+      color="black"
     >
       <Handle
         type="target"
         position={Position.Top}
         isConnectable={isConnectable}
       />
-      <div className="stage-node__label">{data.label}</div>
+      <Text align="center">{data.label}</Text>
       <small>{words?.slice(0, 6).join(" ")}...</small>
       <Handle
         type="source"
         position={Position.Bottom}
         isConnectable={isConnectable}
       />
-    </div>
+    </Box>
   );
 }
