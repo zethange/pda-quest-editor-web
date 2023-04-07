@@ -488,7 +488,7 @@ export default function StageEditScreenChakra({
 
         <Modal
           onClose={() => {
-            setShowModalEditTransfer(true);
+            setShowModalEditTransfer(false);
           }}
           isOpen={showModalEditTransfer}
           isCentered
