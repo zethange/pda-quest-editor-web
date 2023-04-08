@@ -32,7 +32,10 @@ export function NodeStage({
         isConnectable={isConnectable}
       />
       <Text align="center">{data.label}</Text>
-      <small>{words?.substr(0, 30)}...</small>
+      <small>
+        {words?.substr(0, 30)}
+        {words?.length > 30 && "..."}
+      </small>
       <Handle
         type="source"
         position={Position.Bottom}

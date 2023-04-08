@@ -55,7 +55,7 @@ export function newChapter(id: string) {
         type_message: 0,
         texts: [
           {
-            text: "Это текст, до свидания.",
+            text: "Это то что нам вооот тама высвечивается.",
             condition: {},
           },
           {
@@ -85,7 +85,7 @@ export function newStage(type: string, id: number) {
       type_message: 0,
       texts: [
         {
-          text: "Привет.",
+          text: "Съешь ещё этих мягких французских булок, да выпей чаю.",
           condition: {},
         },
         {
