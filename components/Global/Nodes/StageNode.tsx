@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
-import {Box, Text} from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 type data = {
   label: React.ReactNode;
@@ -16,7 +16,7 @@ export function NodeStage({
   isConnectable: any;
   selected: boolean;
 }) {
-  const words = useMemo(() => data?.text?.split(" "), [data]);
+  const words = useMemo(() => data?.text, [data]);
   return (
     <Box
       p="10px"
@@ -32,7 +32,7 @@ export function NodeStage({
         isConnectable={isConnectable}
       />
       <Text align="center">{data.label}</Text>
-      <small>{words?.slice(0, 6).join(" ")}...</small>
+      <small>{words?.substr(0, 30)}...</small>
       <Handle
         type="source"
         position={Position.Bottom}
