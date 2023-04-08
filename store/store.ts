@@ -104,7 +104,7 @@ export function editTitleInStore(title: string) {
 }
 
 export function editBackgroundInStore(background_url: string) {
-  storeStage.background_url = background_url;
+  storeStage.background = background_url;
 }
 
 export function editMessageInStore(message: string) {
