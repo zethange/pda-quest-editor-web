@@ -49,7 +49,7 @@ export function newChapter(id: string) {
       {
         id: 0,
         type_stage: 0,
-        background_url: "",
+        background: "",
         title: "Это начало истории",
         message: "",
         type_message: 0,
@@ -79,7 +79,7 @@ export function newStage(type: string, id: number) {
     return {
       id,
       type_stage: 0,
-      background_url: "",
+      background: "",
       title: "Новая стадия",
       message: "",
       type_message: 0,

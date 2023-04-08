@@ -7,7 +7,7 @@ export type chapterType = {
 export type stageType = {
   id: number;
   type_stage: number;
-  background_url?: string;
+  background?: string;
   title?: string;
   message?: string;
   type_message?: number;
@@ -31,7 +31,7 @@ export type stageText = {
 
 export type stageTransfers = {
   text: string;
-  stage_id: number;
+  stage: number;
   conditions: any;
 };
 

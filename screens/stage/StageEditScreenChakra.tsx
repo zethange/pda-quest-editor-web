@@ -351,7 +351,7 @@ export default function StageEditScreenChakra({
           >
             <Box>
               Стадия {storeStage?.id}
-              <div className="mx-auto"></div>
+              <Box m="auto" />
             </Box>
             {/* Панель редактирования */}
             <Box h="calc(100vh - 219px)" overflowY="scroll">
@@ -456,7 +456,7 @@ export default function StageEditScreenChakra({
                     String(
                       newTransferToStore({
                         text: event.target.value,
-                        stage_id: connectionInfo?.target,
+                        stage: connectionInfo?.target,
                         condition: {},
                       })
                     )
