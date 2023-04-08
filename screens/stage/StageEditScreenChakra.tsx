@@ -12,6 +12,7 @@ import ReactFlow, {
 import {
   Box,
   Button,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -351,21 +352,6 @@ export default function StageEditScreenChakra({
             <Box>
               Стадия {storeStage?.id}
               <div className="mx-auto"></div>
-              <button
-                style={{ fontSize: "12px", paddingRight: "5px" }}
-                onClick={() => deleteStage(storeStage?.id)}
-              >
-                Удалить
-              </button>
-              <button
-                style={{ fontSize: "12px" }}
-                onClick={() => {
-                  setStageToStore(null);
-                  setEditableStage(null);
-                }}
-              >
-                Закрыть
-              </button>
             </Box>
             {/* Панель редактирования */}
             <Box h="calc(100vh - 219px)" overflowY="scroll">
@@ -377,29 +363,52 @@ export default function StageEditScreenChakra({
               )}
               {storeStage?.actions && <EditActions />}
             </Box>
-            <Button
-              colorScheme="teal"
-              size="md"
-              mt={2}
-              onClick={() => {
-                updateStage(storeStage?.id);
-                setEditableStage(null);
-                toast({
-                  title: "Стадия обновлена",
-                  description:
-                    "Стадия " + storeStage?.id + " была успешно обновлена",
-                  status: "success",
-                  containerStyle: {
-                    textColor: "white",
-                  },
-                  duration: 1800,
-                  isClosable: true,
-                  position: "bottom-right",
-                });
-              }}
-            >
-              Сохранить
-            </Button>
+            <Flex>
+              <Button
+                colorScheme="teal"
+                size="md"
+                mt={2}
+                me={2}
+                onClick={() => {
+                  updateStage(storeStage?.id);
+                  setEditableStage(null);
+                  toast({
+                    title: "Стадия обновлена",
+                    description:
+                      "Стадия " + storeStage?.id + " была успешно обновлена",
+                    status: "success",
+                    containerStyle: {
+                      textColor: "white",
+                    },
+                    duration: 1800,
+                    isClosable: true,
+                    position: "bottom-right",
+                  });
+                }}
+              >
+                Сохранить
+              </Button>
+              <Button
+                size="md"
+                mt={2}
+                colorScheme="teal"
+                onClick={() => {
+                  setStageToStore(null);
+                  setEditableStage(null);
+                }}
+              >
+                Закрыть
+              </Button>
+              <Box m="auto" />
+              <Button
+                colorScheme="red"
+                size="md"
+                mt={2}
+                onClick={() => deleteStage(storeStage?.id)}
+              >
+                Удалить
+              </Button>
+            </Flex>
           </Box>
         )}
         <ReactFlow
