@@ -27,39 +27,36 @@ export default function EditStage({ data }: { data: any }) {
 
   return (
     <>
-      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
-        <b>Заголовок:</b>
+      <Box p={2} backgroundColor="gray.100" borderRadius="10px">
         <Box>
           <Input
             placeholder="Заголовок стадии..."
             backgroundColor="white"
+            mb={2}
             defaultValue={data?.title}
             onChange={(event) => editTitleInStore(event.target.value)}
           />
+          <img
+            src={
+              storeStage?.background_url
+                ? `https://files.artux.net/static/${data?.background_url}`
+                : "/no_background.png"
+            }
+            alt=""
+            width="340px"
+            style={{ borderRadius: "5px" }}
+          />
+          <Input
+            placeholder="Ссылка на фон..."
+            backgroundColor="white"
+            defaultValue={data?.background_url}
+            mt={2}
+            onChange={(event) => {
+              editBackgroundInStore(event.target.value);
+              setRerender(!rerender);
+            }}
+          />
         </Box>
-      </Box>
-      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
-        <b>Фон стадии:</b>
-        <img
-          src={
-            storeStage?.background_url
-              ? `https://files.artux.net/static/${data?.background_url}`
-              : "/no_background.png"
-          }
-          alt=""
-          width="340px"
-          style={{ borderRadius: "5px" }}
-        />
-        <Input
-          placeholder="Ссылка на фон..."
-          backgroundColor="white"
-          defaultValue={data?.background_url}
-          mt={2}
-          onChange={(event) => {
-            editBackgroundInStore(event.target.value);
-            setRerender(!rerender);
-          }}
-        />
       </Box>
       <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Сообщение:</b>
@@ -181,7 +178,7 @@ export default function EditStage({ data }: { data: any }) {
                                     event.target.value
                                   );
                                 }}
-                              />{" "}
+                              />
                               <button
                                 onClick={() => {
                                   deleteValueInCondition(

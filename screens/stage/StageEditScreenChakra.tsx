@@ -13,6 +13,7 @@ import {
   Box,
   Button,
   Flex,
+  Text,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -125,9 +126,9 @@ export default function StageEditScreenChakra({
     chapter?.stages?.map((stage: any): void => {
       stage?.transfers?.map((transfer: any): void => {
         initialEdges.push({
-          id: `${stage.id}-${transfer.stage_id}`,
+          id: `${stage.id}-${transfer.stage}`,
           source: String(stage.id),
-          target: String(transfer.stage_id),
+          target: String(transfer.stage),
           markerEnd: {
             type: MarkerType.ArrowClosed,
           },
@@ -184,7 +185,7 @@ export default function StageEditScreenChakra({
       );
 
       const targetTransfer = stage?.transfers?.find(
-        (transfer: any) => transfer.stage_id === edge.target
+        (transfer: any) => transfer.stage === edge.target
       );
 
       const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
@@ -270,9 +271,7 @@ export default function StageEditScreenChakra({
 
       const targetTransfer = chapterFromLocalStorage?.stages[
         connection.source
-      ].transfers.find(
-        (transfer: any) => transfer.stage_id === connection.target
-      );
+      ].transfers.find((transfer: any) => transfer.stage === connection.target);
 
       setIsOpenCreateTransfer(true);
 
@@ -350,12 +349,8 @@ export default function StageEditScreenChakra({
             right="0"
             bottom="0"
           >
-            <Box>
-              Стадия {storeStage?.id}
-              <Box mx="auto" />
-            </Box>
             {/* Панель редактирования */}
-            <Box h="calc(100vh - 195px)" overflowY="scroll">
+            <Box h="calc(100vh - 171px)" overflowY="scroll">
               {" "}
               {/* 219 */}
               {storeStage?.type_stage === 4 && (
@@ -508,8 +503,7 @@ export default function StageEditScreenChakra({
           <ModalOverlay />
           <ModalContent>
             <ModalHeader fontWeight={1}>
-              Переход с {storeStage?.id} на{" "}
-              {storeStage?.targetTransfer?.stage_id}
+              Переход с {storeStage?.id} на {storeStage?.targetTransfer?.stage}
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
