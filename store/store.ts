@@ -16,7 +16,7 @@ export function newTextToStore() {
 export function newTransferToStore(transfer: any) {
   if (
     !storeStage.transfers.find(
-      (findTransfer: any) => findTransfer.stage_id === transfer.stage_id
+      (findTransfer: any) => findTransfer.stage === transfer.stage
     )
   ) {
     storeStage.transfers.push(transfer);
@@ -24,7 +24,7 @@ export function newTransferToStore(transfer: any) {
   } else {
     const index = storeStage.transfers.indexOf(
       storeStage.transfers.find(
-        (findTransfer: any) => findTransfer.stage_id === transfer.stage_id
+        (findTransfer: any) => findTransfer.stage === transfer.stage
       )
     );
     storeStage.transfers.splice(index, 1, transfer);
