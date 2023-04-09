@@ -5,7 +5,15 @@ import { downloadZip } from "client-zip";
 
 import CustomHead from "@/components/Global/CustomHead";
 import NavBar from "@/components/UI/NavBar/NavBar";
-import { Box, Button, Card, Heading, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  Heading,
+  SimpleGrid,
+  Spacer,
+} from "@chakra-ui/react";
+import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 
 export default function Home() {
   const [stories, setStories] = useState<any>([]);
@@ -110,7 +118,8 @@ export default function Home() {
           <Button fontWeight="10px" onClick={() => createStory()}>
             Создать историю
           </Button>
-          <Box m="auto" />
+          <Spacer />
+          <ChangeThemeButton rounded={true} />
           <Button
             fontWeight="10px"
             onClick={() => {

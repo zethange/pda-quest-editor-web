@@ -6,8 +6,16 @@ import Link from "next/link";
 import CustomHead from "@/components/Global/CustomHead";
 import NavBar from "@/components/UI/NavBar/NavBar";
 import { newChapter } from "@/store/createTools";
-import { Box, Button, Card, Heading, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  Heading,
+  SimpleGrid,
+  Spacer,
+} from "@chakra-ui/react";
 import { chapterType } from "@/store/types";
+import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 
 export default function storyId() {
   const { query, isReady } = useRouter();
@@ -47,10 +55,14 @@ export default function storyId() {
       <CustomHead title="Редактирование карт" />
       <main className="main">
         <NavBar>
-          <Button fontWeight="10px" onClick={() => history.go(-1)}>
+          <Button fontWeight="normal" onClick={() => history.go(-1)}>
             Назад
           </Button>
-          <Button onClick={() => createChapter()}>Создать главу</Button>
+          <Button fontWeight="normal" onClick={() => createChapter()}>
+            Создать главу
+          </Button>
+          <Spacer />
+          <ChangeThemeButton rounded={true} />
         </NavBar>
         <Box
           h="calc(100vh - 57px)"

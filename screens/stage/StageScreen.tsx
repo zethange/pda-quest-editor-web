@@ -1,15 +1,16 @@
 import {
   Button,
+  Spacer,
   Tab,
   TabIndicator,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
 } from "@chakra-ui/react";
 import React from "react";
 import StageEditScreenChakra from "@/screens/stage/StageEditScreenChakra";
+import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 
 const StageScreen = ({
   path,
@@ -30,6 +31,8 @@ const StageScreen = ({
         </Button>
         <Tab>Глава</Tab>
         <Tab>Карта</Tab>
+        <Spacer />
+        <ChangeThemeButton rounded={false} />
       </TabList>
       <TabIndicator mt="-1.5px" height="1px" bg="blue.500" borderRadius="1px" />
       <TabPanels>
