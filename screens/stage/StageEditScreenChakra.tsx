@@ -13,7 +13,6 @@ import {
   Box,
   Button,
   Flex,
-  Text,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -233,7 +232,7 @@ export default function StageEditScreenChakra({
     const updatedStageWithUpdatedPosition = {
       id: storeStage.id,
       type_stage: storeStage.type_stage,
-      background_url: storeStage.background_url,
+      background: storeStage.background,
       title: storeStage.title,
       message: storeStage.message,
       type_message: storeStage.type_stage,

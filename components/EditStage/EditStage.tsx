@@ -38,8 +38,8 @@ export default function EditStage({ data }: { data: any }) {
           />
           <img
             src={
-              storeStage?.background_url
-                ? `https://files.artux.net/static/${data?.background_url}`
+              storeStage?.background
+                ? `https://files.artux.net/static/${data?.background}`
                 : "/no_background.png"
             }
             alt=""
@@ -49,7 +49,7 @@ export default function EditStage({ data }: { data: any }) {
           <Input
             placeholder="Ссылка на фон..."
             backgroundColor="white"
-            defaultValue={data?.background_url}
+            defaultValue={data?.background}
             mt={2}
             onChange={(event) => {
               editBackgroundInStore(event.target.value);
@@ -121,7 +121,7 @@ export default function EditStage({ data }: { data: any }) {
                   onChange={(event) =>
                     editTransferInStore(index, {
                       text: event.target.value,
-                      stage_id: transfer.stage_id,
+                      stage: transfer.stage,
                       condition: transfer.condition,
                     })
                   }
