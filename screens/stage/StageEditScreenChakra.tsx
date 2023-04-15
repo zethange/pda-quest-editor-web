@@ -29,6 +29,7 @@ import {
   Portal,
   SimpleGrid,
   Textarea,
+  useColorMode,
   useToast,
 } from "@chakra-ui/react";
 
@@ -58,6 +59,7 @@ export default function StageEditScreenChakra({
   isReady: boolean;
 }) {
   const [chapter, setChapter] = useState<chapterType | any>();
+  const { colorMode } = useColorMode();
 
   const [nodes, setNodes] = useState<any[]>();
   const [edges, setEdges] = useState<any[]>();
@@ -422,8 +424,10 @@ export default function StageEditScreenChakra({
           <MiniMap zoomable pannable />
           <Controls />
           <Background
-            color="#000000"
-            style={{ backgroundColor: "#f5f5f5" }}
+            color={colorMode === "light" ? "#000000" : "#ffffff"}
+            style={{
+              backgroundColor: colorMode === "light" ? "#f5f5f5" : "#1e293b",
+            }}
             gap={20}
           />
         </ReactFlow>

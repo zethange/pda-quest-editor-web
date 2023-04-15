@@ -12,6 +12,7 @@ import {
   Heading,
   SimpleGrid,
   Spacer,
+  Text,
 } from "@chakra-ui/react";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 
@@ -141,17 +142,23 @@ export default function Home() {
                 key={story?.id}
                 border="1px"
                 borderColor="gray.200"
+                _dark={{
+                  borderColor: "gray.600",
+                  color: "white",
+                }}
                 shadow="none"
                 p={2}
               >
                 <Link href={"/edit/story/" + story?.id}>
-                  <Heading as="h4" size="md">
+                  <Heading _dark={{ color: "white" }} as="h4" size="md">
                     {story?.title}
                   </Heading>
-                  <div>
-                    <div>{story?.desc}</div>
-                    <div>Уровень доступа: {story?.access}</div>
-                  </div>
+                  <Box>
+                    <Text _dark={{ color: "white" }}>{story?.desc}</Text>
+                    <Text _dark={{ color: "white" }}>
+                      Уровень доступа: {story?.access}
+                    </Text>
+                  </Box>
                 </Link>
                 <Button
                   fontWeight="10px"

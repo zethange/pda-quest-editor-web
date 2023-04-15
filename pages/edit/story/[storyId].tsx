@@ -13,6 +13,7 @@ import {
   Heading,
   SimpleGrid,
   Spacer,
+  Text,
 } from "@chakra-ui/react";
 import { chapterType } from "@/store/types";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
@@ -75,14 +76,20 @@ export default function storyId() {
                 key={chapter?.id}
                 border="1px"
                 borderColor="gray.200"
+                _dark={{
+                  borderColor: "gray.600",
+                  color: "white",
+                }}
                 shadow="none"
                 p={2}
               >
                 <Link href={"/edit/chapter/" + storyId + "/" + chapter?.id}>
-                  <Heading as="h4" size="md">
+                  <Heading _dark={{ color: "white" }} as="h4" size="md">
                     {`Глава ${chapter?.id}`}
                   </Heading>
-                  <div>Количество стадий: {chapter?.stages?.length}</div>
+                  <Text _dark={{ color: "white" }}>
+                    Количество стадий: {chapter?.stages?.length}
+                  </Text>
                 </Link>
                 <Button onClick={() => deleteChapter(chapter?.id)}>
                   Удалить

@@ -8,6 +8,9 @@ const NavBar = ({ children }: { children: React.ReactNode }) => {
       p={2}
       gap={2}
       borderBottom="1px"
+      _dark={{
+        borderColor: "gray.600",
+      }}
       alignItems="center"
       borderBottomColor="gray.200"
     >
