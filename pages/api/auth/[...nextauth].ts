@@ -30,6 +30,14 @@ export const authOptions = {
     },
     async session({ session, token, user }: any) {
       session.accessToken = token.accessToken;
+      console.log(
+        "Имя пользователя:",
+        session.user.name,
+        "\nАватар:",
+        session.user.image,
+        "\nТокен:",
+        session.accessToken
+      );
       return session;
     },
   },

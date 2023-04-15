@@ -15,6 +15,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
+import UserButton from "@/components/UI/NavBar/UserButton";
 
 export default function Home() {
   const [stories, setStories] = useState<any>([]);
@@ -130,6 +131,7 @@ export default function Home() {
           >
             Удалить всё
           </Button>
+          <UserButton />
         </NavBar>
         <Box
           h="calc(100vh - 57px)"
