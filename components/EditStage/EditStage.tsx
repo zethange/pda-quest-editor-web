@@ -34,9 +34,13 @@ export default function EditStage({ data }: { data: any }) {
         <Box>
           <Textarea
             placeholder="Заголовок стадии..."
+            backgroundColor="white"
             height="150px"
             opacity="0.95"
-            backgroundColor="white"
+            _dark={{
+              backgroundColor: "black",
+              opacity: "0.95",
+            }}
             defaultValue={data?.title}
             onChange={(event) => editTitleInStore(event.target.value)}
           />

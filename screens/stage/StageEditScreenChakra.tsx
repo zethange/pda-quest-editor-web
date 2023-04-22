@@ -346,6 +346,10 @@ export default function StageEditScreenChakra({
             borderLeft="2px"
             borderColor="gray.200"
             backgroundColor="white"
+            _dark={{
+              backgroundColor: "gray.900",
+              color: "white",
+            }}
             position="absolute"
             right="0"
             bottom="0"

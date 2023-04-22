@@ -86,15 +86,17 @@ export default function EditActions() {
                     indexAction={indexAction}
                     isLoading={isLoading}
                   />
-                  {action[1].map((key: any, index: number) => (
-                    <Input
-                      type="text"
-                      defaultValue={key}
-                      onChange={(e) => {
-                        editParamInAction(e.target.value, indexAction, index);
-                      }}
-                    />
-                  ))}
+                  <Box display="grid" gap={1}>
+                    {action[1].map((key: any, index: number) => (
+                      <Input
+                        type="text"
+                        defaultValue={key}
+                        onChange={(e) => {
+                          editParamInAction(e.target.value, indexAction, index);
+                        }}
+                      />
+                    ))}
+                  </Box>
                 </Box>
               </Box>
             )
