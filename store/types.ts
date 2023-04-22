@@ -12,7 +12,7 @@ export type stageType = {
   message?: string;
   type_message?: number;
   texts?: stageText[];
-  transfers?: stageTransfers[];
+  transfers?: stageTransfer[];
   actions?: {};
   data?: {
     map: string;
@@ -26,13 +26,13 @@ export type stageType = {
 
 export type stageText = {
   text: string;
-  conditions: any;
+  condition: any;
 };
 
-export type stageTransfers = {
+export type stageTransfer = {
   text: string;
   stage: number;
-  conditions: any;
+  condition: any;
 };
 
 // mission.json

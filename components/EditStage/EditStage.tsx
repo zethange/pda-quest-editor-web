@@ -1,25 +1,13 @@
-import deleteConditionInTransfer, {
-  createValueInCondition,
-  deleteValueInCondition,
+import {
   editBackgroundInStore,
   editMessageInStore,
   editTextInStore,
   editTitleInStore,
-  editTransferInStore,
-  editValueInConditions,
+  newTextToStore,
   storeStage,
 } from "@/store/store";
 import { useState } from "react";
-import CreateConditionInTransferJsx from "./CreateConditionInTransfer";
-import {
-  Box,
-  Button,
-  Flex,
-  Input,
-  ListItem,
-  Textarea,
-  UnorderedList,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
 
 export default function EditStage({ data }: { data: any }) {
   const [rerender, setRerender] = useState<boolean>(false);
@@ -27,28 +15,35 @@ export default function EditStage({ data }: { data: any }) {
 
   return (
     <>
-      <Box p={2} backgroundColor="gray.100" borderRadius="10px">
-        <Box>
-          <Input
-            placeholder="Заголовок стадии..."
-            backgroundColor="white"
-            mb={2}
-            defaultValue={data?.title}
-            onChange={(event) => editTitleInStore(event.target.value)}
-          />
-          <img
-            src={
+      <Box
+        p={2}
+        background={`
+            url(${
               storeStage?.background
                 ? `https://files.artux.net/static/${data?.background}`
                 : "/no_background.png"
-            }
-            alt=""
-            width="340px"
-            style={{ borderRadius: "5px" }}
+            })
+          `}
+        backgroundRepeat="no-repeat"
+        backgroundSize="358px"
+        backgroundPosition="center top"
+        border={!storeStage?.background ? "1px solid" : "0 solid"}
+        borderColor="gray.100"
+        borderRadius="10px"
+      >
+        <Box>
+          <Textarea
+            placeholder="Заголовок стадии..."
+            height="130px"
+            opacity="0.95"
+            backgroundColor="white"
+            defaultValue={data?.title}
+            onChange={(event) => editTitleInStore(event.target.value)}
           />
           <Input
             placeholder="Ссылка на фон..."
             backgroundColor="white"
+            opacity="0.95"
             defaultValue={data?.background}
             mt={2}
             onChange={(event) => {
@@ -85,15 +80,26 @@ export default function EditStage({ data }: { data: any }) {
         <Flex mb={1} alignItems="center">
           <b>Тексты:</b>
           <Box m="auto" />
-          <Button size="xs" colorScheme="teal">
+          <Button
+            size="xs"
+            colorScheme="teal"
+            onClick={() => {
+              newTextToStore({
+                text: "Новый текст",
+                condition: {},
+              });
+              setRerender(!rerender);
+            }}
+          >
             +
           </Button>
         </Flex>
-        {storeStage?.texts?.map(
-          (text: any, index: number) =>
-            text.text && (
-              <Box key={index}>
+        <Box display="grid" gap={1}>
+          {storeStage?.texts?.map(
+            (text: any, index: number) =>
+              text.text && (
                 <Textarea
+                  key={index}
                   placeholder="Текст..."
                   defaultValue={text.text}
                   backgroundColor="white"
@@ -104,103 +110,9 @@ export default function EditStage({ data }: { data: any }) {
                     })
                   }
                 />
-              </Box>
-            )
-        )}
-      </Box>
-      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
-        <b>Ответы:</b>
-        {storeStage?.transfers?.map(
-          (transfer: any, index: number) =>
-            transfer.text && (
-              <Box key={index}>
-                <Textarea
-                  placeholder="Ответ..."
-                  defaultValue={transfer.text}
-                  backgroundColor="white"
-                  onChange={(event) =>
-                    editTransferInStore(index, {
-                      text: event.target.value,
-                      stage: transfer.stage,
-                      condition: transfer.condition,
-                    })
-                  }
-                />
-                <CreateConditionInTransferJsx
-                  transferIndex={index}
-                  functionAdd={() => setRerender(!rerender)}
-                />
-                {Object.entries(storeStage.transfers[index].condition).map(
-                  (condition: any, conditionIndex: number) => (
-                    <Box
-                      key={conditionIndex}
-                      backgroundColor="white"
-                      p={2}
-                      my={1}
-                      borderRadius={5}
-                    >
-                      <Box display="flex">
-                        Если
-                        {condition[0] === "has"
-                          ? " есть параметр:"
-                          : " нет параметра:"}
-                        <Box mx="auto" />
-                        <button
-                          style={{ marginRight: "4px" }}
-                          onClick={() => {
-                            deleteConditionInTransfer(index, conditionIndex);
-                            setRerender(!rerender);
-                          }}
-                        >
-                          Удалить
-                        </button>
-                        <button
-                          onClick={() => {
-                            createValueInCondition(index, conditionIndex);
-                            setRerender(!rerender);
-                          }}
-                        >
-                          +
-                        </button>
-                      </Box>
-                      <UnorderedList>
-                        {condition[1].map(
-                          (conditionValue: any, valueIndex: number) => (
-                            <ListItem key={valueIndex}>
-                              <input
-                                type="text"
-                                defaultValue={conditionValue}
-                                onChange={(event) => {
-                                  editValueInConditions(
-                                    index,
-                                    conditionIndex,
-                                    valueIndex,
-                                    event.target.value
-                                  );
-                                }}
-                              />
-                              <button
-                                onClick={() => {
-                                  deleteValueInCondition(
-                                    index,
-                                    conditionIndex,
-                                    valueIndex
-                                  );
-                                  setRerender(!rerender);
-                                }}
-                              >
-                                -
-                              </button>
-                            </ListItem>
-                          )
-                        )}
-                      </UnorderedList>
-                    </Box>
-                  )
-                )}
-              </Box>
-            )
-        )}
+              )
+          )}
+        </Box>
       </Box>
     </>
   );

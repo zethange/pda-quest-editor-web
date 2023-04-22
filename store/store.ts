@@ -1,3 +1,5 @@
+import { stageText, stageTransfer } from "@/store/types";
+
 export let storeStage: any = {};
 
 // Создание стадии
@@ -8,12 +10,23 @@ export function setStageToStore(stage: any) {
 }
 
 // Новый текст в стадию
-export function newTextToStore() {
+export function newTextToStore(text: stageText) {
+  // if (
+  //   !storeStage.text.find((findText: stageText) => findText.text === text.text)
+  // ) {
   storeStage.texts.push({ text: "Новый текст", condition: {} });
+  // } else {
+  //   const indexText = storeStage.texts.indexOf(
+  //     storeStage.texts.find(
+  //       (findText: stageText) => findText.text === text.text
+  //     )
+  //   );
+  //   storeStage.texts.splice(indexText, 1, text);
+  // }
 }
 
 // Новый переход в стадию
-export function newTransferToStore(transfer: any) {
+export function newTransferToStore(transfer: stageTransfer) {
   if (
     !storeStage.transfers.find(
       (findTransfer: any) => findTransfer.stage === transfer.stage
@@ -28,7 +41,6 @@ export function newTransferToStore(transfer: any) {
       )
     );
     storeStage.transfers.splice(index, 1, transfer);
-    return index;
   }
 }
 
