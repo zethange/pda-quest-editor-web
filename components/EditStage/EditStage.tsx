@@ -25,7 +25,7 @@ export default function EditStage({ data }: { data: any }) {
             })
           `}
         backgroundRepeat="no-repeat"
-        backgroundSize="358px"
+        backgroundSize="408px"
         backgroundPosition="center top"
         border={!storeStage?.background ? "1px solid" : "0 solid"}
         borderColor="gray.100"
@@ -34,7 +34,7 @@ export default function EditStage({ data }: { data: any }) {
         <Box>
           <Textarea
             placeholder="Заголовок стадии..."
-            height="130px"
+            height="150px"
             opacity="0.95"
             backgroundColor="white"
             defaultValue={data?.title}

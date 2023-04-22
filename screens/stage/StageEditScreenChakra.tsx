@@ -342,7 +342,7 @@ export default function StageEditScreenChakra({
           <Box
             zIndex="popover"
             p={5}
-            w={400}
+            w={450}
             borderLeft="2px"
             borderColor="gray.200"
             backgroundColor="white"
