@@ -356,8 +356,6 @@ export default function StageEditScreenChakra({
           >
             {/* Панель редактирования */}
             <Box h="calc(100vh - 171px)" overflowY="scroll">
-              {" "}
-              {/* 219 */}
               {storeStage?.type_stage === 4 && (
                 <MapStage data={storeStage?.data} />
               )}

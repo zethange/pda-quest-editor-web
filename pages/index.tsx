@@ -57,6 +57,12 @@ export default function Home() {
           lastModified: new Date(),
           input: JSON.stringify(value, null, 2),
         });
+      } else if (key.includes(`story_${story_id}_map`)) {
+        arrChapters.push({
+          name: `maps/map_${key.split("_")[3]}.json`,
+          lastModified: new Date(),
+          input: JSON.stringify(value, null, 2),
+        });
       }
       if (key === "stopLoop") return false;
     });
@@ -94,9 +100,17 @@ export default function Home() {
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.onload = () => {
+        console.log(file.webkitRelativePath);
         if (file.name.includes("chapter")) {
           store.set(
             `story_${idStory}_chapter_${
+              JSON.parse(fileReader.result as string).id
+            }`,
+            JSON.parse(fileReader.result as string)
+          );
+        } else if (file.webkitRelativePath.includes("maps")) {
+          store.set(
+            `story_${idStory}_map_${
               JSON.parse(fileReader.result as string).id
             }`,
             JSON.parse(fileReader.result as string)

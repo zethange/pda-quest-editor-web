@@ -19,18 +19,25 @@ const UserButton = () => {
           <Button fontWeight="normal">Войти</Button>
         </a>
       ) : (
-        <a
-          href={`/api/auth/signout`}
-          className="navbar__header"
-          onClick={(e) => {
-            e.preventDefault();
-            signOut();
-          }}
-        >
-          <Button fontWeight="normal">
-            <Text>{session?.user?.name} | Выйти</Text>
-          </Button>
-        </a>
+        <>
+          <a
+            href={`/api/auth/signout`}
+            className="navbar__header"
+            onClick={(e) => {
+              e.preventDefault();
+              signOut();
+            }}
+          >
+            <Button
+              _dark={{
+                color: "white",
+              }}
+              fontWeight="normal"
+            >
+              {session?.user?.name} | Выйти
+            </Button>
+          </a>
+        </>
       )}
     </>
   );
