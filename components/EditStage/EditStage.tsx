@@ -54,29 +54,6 @@ export default function EditStage({ data }: { data: any }) {
         </Box>
       </Box>
       <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
-        <b>Сообщение:</b>
-        <Box>
-          Показывать сообщение:{" "}
-          <input
-            type="checkbox"
-            onChange={() => {
-              setCheckBoxMessage(!checkBoxMessage);
-              if (!checkBoxMessage) editMessageInStore("Новое уведомление");
-              if (checkBoxMessage) editMessageInStore("");
-            }}
-            checked={storeStage?.message}
-          />
-          {storeStage?.message && (
-            <Textarea
-              placeholder="Уведомление..."
-              defaultValue={data?.message}
-              backgroundColor="white"
-              onChange={(event) => editMessageInStore(event.target.value)}
-            />
-          )}
-        </Box>
-      </Box>
-      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <Flex mb={1} alignItems="center">
           <b>Тексты:</b>
           <Box m="auto" />
@@ -111,6 +88,29 @@ export default function EditStage({ data }: { data: any }) {
                   }
                 />
               )
+          )}
+        </Box>
+      </Box>
+      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
+        <b>Сообщение:</b>
+        <Box>
+          Показывать сообщение:{" "}
+          <input
+            type="checkbox"
+            onChange={() => {
+              setCheckBoxMessage(!checkBoxMessage);
+              if (!checkBoxMessage) editMessageInStore("Новое уведомление");
+              if (checkBoxMessage) editMessageInStore("");
+            }}
+            checked={storeStage?.message}
+          />
+          {storeStage?.message && (
+            <Textarea
+              placeholder="Уведомление..."
+              defaultValue={data?.message}
+              backgroundColor="white"
+              onChange={(event) => editMessageInStore(event.target.value)}
+            />
           )}
         </Box>
       </Box>
