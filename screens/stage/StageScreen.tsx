@@ -11,6 +11,7 @@ import {
 import React from "react";
 import StageEditScreenChakra from "@/screens/stage/StageEditScreenChakra";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
+import MapScreen from "../map/MapScreen";
 
 const StageScreen = ({
   path,
@@ -19,6 +20,7 @@ const StageScreen = ({
   path: string[];
   isReady: boolean;
 }) => {
+  console.log(path);
   return (
     <Tabs position="relative">
       <TabList>
@@ -30,7 +32,7 @@ const StageScreen = ({
           Назад
         </Button>
         <Tab>Глава</Tab>
-        <Tab>Карта</Tab>
+        <Tab>Карты</Tab>
         <Spacer />
         <ChangeThemeButton rounded={false} />
       </TabList>
@@ -40,7 +42,7 @@ const StageScreen = ({
           <StageEditScreenChakra path={path} isReady={isReady} />
         </TabPanel>
         <TabPanel>
-          <p>Здесь была карта, но её пока нет, тяжело</p>
+          <MapScreen path={path} isReady={isReady} />
         </TabPanel>
       </TabPanels>
     </Tabs>

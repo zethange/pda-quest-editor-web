@@ -6,8 +6,9 @@ import {
   newTextToStore,
   storeStage,
 } from "@/store/store";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
+import Confetti from "react-confetti";
 
 export default function EditStage({ data }: { data: any }) {
   const [rerender, setRerender] = useState<boolean>(false);
@@ -32,6 +33,9 @@ export default function EditStage({ data }: { data: any }) {
         borderRadius="10px"
       >
         <Box>
+          {JSON.stringify(storeStage).includes("Максим лох") && (
+            <Confetti width={1920} height={1080} />
+          )}
           <Textarea
             placeholder="Заголовок стадии..."
             backgroundColor="white"

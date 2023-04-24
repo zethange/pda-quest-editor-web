@@ -79,6 +79,9 @@ export default function EditActions() {
                   <option value="remove">Удалить</option>
                   <option value="xp">Добавить/удалить опыт</option>
                   <option value="money">Добавить/удалить деньги</option>
+                  <option value="+">Увеличить отношения</option>
+                  <option value="-">Уменьшить отношения</option>
+                  <option value="reset">Сбросить</option>
                 </Select>
                 <Box>
                   <CreateParam

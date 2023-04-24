@@ -50,7 +50,7 @@ export default function Home() {
     };
 
     const arrChapters: any[] = [];
-    store.each((key: string, value: string) => {
+    store.each((key: string, value: any) => {
       if (key.includes(`story_${story_id}_chapter`)) {
         arrChapters.push({
           name: `chapter_${key.split("_")[3]}.json`,
@@ -58,8 +58,11 @@ export default function Home() {
           input: JSON.stringify(value, null, 2),
         });
       } else if (key.includes(`story_${story_id}_map`)) {
+        console.log(value);
         arrChapters.push({
-          name: `maps/map_${key.split("_")[3]}.json`,
+          name: `maps/${value.id}_${
+            value?.tmx?.split(".")[0] || undefined
+          }.json`,
           lastModified: new Date(),
           input: JSON.stringify(value, null, 2),
         });

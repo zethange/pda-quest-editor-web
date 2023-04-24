@@ -1,4 +1,4 @@
-import { stageText, stageTransfer } from "@/store/types";
+import { stageTransfer } from "@/store/types/types";
 
 export let storeStage: any = {};
 
@@ -10,19 +10,8 @@ export function setStageToStore(stage: any) {
 }
 
 // Новый текст в стадию
-export function newTextToStore(text: stageText) {
-  // if (
-  //   !storeStage.text.find((findText: stageText) => findText.text === text.text)
-  // ) {
+export function newTextToStore() {
   storeStage.texts.push({ text: "Новый текст", condition: {} });
-  // } else {
-  //   const indexText = storeStage.texts.indexOf(
-  //     storeStage.texts.find(
-  //       (findText: stageText) => findText.text === text.text
-  //     )
-  //   );
-  //   storeStage.texts.splice(indexText, 1, text);
-  // }
 }
 
 // Новый переход в стадию

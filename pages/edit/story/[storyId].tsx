@@ -15,7 +15,7 @@ import {
   Spacer,
   Text,
 } from "@chakra-ui/react";
-import { chapterType } from "@/store/types";
+import { chapterType } from "@/store/types/types";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import UserButton from "@/components/UI/NavBar/UserButton";
 

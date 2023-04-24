@@ -12,6 +12,7 @@ import ReactFlow, {
 import {
   Box,
   Button,
+  Checkbox,
   Flex,
   Modal,
   ModalBody,
@@ -28,6 +29,7 @@ import {
   PopoverTrigger,
   Portal,
   SimpleGrid,
+  Text,
   Textarea,
   useColorMode,
   useToast,
@@ -39,7 +41,6 @@ import {
   setStageToStore,
   storeStage,
 } from "@/store/store";
-
 import "reactflow/dist/style.css";
 
 import { newStage } from "@/store/createTools";
@@ -49,7 +50,8 @@ import { NodeStage } from "@/components/Global/Nodes/StageNode";
 import MapStage from "@/components/EditStage/MapStage";
 import EditStage from "@/components/EditStage/EditStage";
 import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer";
-import { chapterType, stageType } from "@/store/types";
+import { chapterType, stageType } from "@/store/types/types";
+import Stats from "stats.js";
 
 export default function StageEditScreenChakra({
   path,
@@ -76,7 +78,6 @@ export default function StageEditScreenChakra({
   const [transferIndex, setTransferIndex] = useState<string>("");
 
   const toast = useToast();
-
   // Вытаскивание главы из localStorage
   useEffect(() => {
     const chapterFromLocalStorage =
@@ -119,6 +120,7 @@ export default function StageEditScreenChakra({
             </button>
           ),
           text: stage.texts && stage.texts[0].text,
+          id: stage.id,
         },
         position: { x: stage.editor.x, y: stage.editor.y },
       });
@@ -301,6 +303,27 @@ export default function StageEditScreenChakra({
 
   const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
 
+  const [showFps, setShowFps] = useState(false);
+  useEffect(() => {
+    const stats = new Stats();
+    stats.showPanel(0);
+    if (showFps) {
+      stats.dom.id = "fpsMeter";
+      document.body.appendChild(stats.dom);
+
+      const animate = () => {
+        stats.begin();
+        stats.end();
+        requestAnimationFrame(animate);
+      };
+
+      requestAnimationFrame(animate);
+    } else {
+      const fpsMeter = document.getElementById("fpsMeter");
+      if (fpsMeter) document.body.removeChild(fpsMeter);
+    }
+  }, [showFps]);
+
   return (
     <>
       <CustomHead title={"Редактирование главы " + chapter?.id} />
@@ -335,6 +358,8 @@ export default function StageEditScreenChakra({
             </PopoverContent>
           </Portal>
         </Popover>
+        <Text>Глава {chapter?.id}</Text>
+        <Checkbox onChange={() => setShowFps(!showFps)}>Счётчик ФПС</Checkbox>
       </Box>
       <Box h="calc(100vh - 83px)">
         {/* Штука для редактирования стадий */}

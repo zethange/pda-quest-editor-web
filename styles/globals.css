@@ -18,3 +18,7 @@ a {
 a:visited {
   color: black;
 }
+
+::-webkit-scrollbar {
+  width: 0;
+}
