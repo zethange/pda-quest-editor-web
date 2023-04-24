@@ -69,10 +69,7 @@ export default function EditStage({ data }: { data: any }) {
             size="xs"
             colorScheme="teal"
             onClick={() => {
-              newTextToStore({
-                text: "Новый текст",
-                condition: {},
-              });
+              newTextToStore();
               setRerender(!rerender);
             }}
           >
