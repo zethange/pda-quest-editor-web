@@ -10,6 +10,7 @@ import {
 } from "@/store/store";
 import CreateParam from "@/components/EditStage/EditActions/CreateParam";
 import { Box, Button, Input, Select } from "@chakra-ui/react";
+import CreateParamEmpty from "@/components/EditStage/EditActions/CreateParamEmpty";
 
 export default function EditActions() {
   const { data, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
@@ -18,7 +19,6 @@ export default function EditActions() {
   const [rerender, setRerender] = useState(false);
 
   const [method, setMethod] = useState<string>("add");
-  console.log(Object.entries(storeStage.actions));
 
   return (
     <>
@@ -88,12 +88,21 @@ export default function EditActions() {
                   <option value="reset">Сбросить</option>
                 </Select>
                 <Box>
-                  <CreateParam
-                    data={data}
-                    indexAction={indexAction}
-                    isLoading={isLoading}
-                    setRerender={() => setRerender(!rerender)}
-                  />
+                  {action[0] === "xp" || "money" || "reset" || "+" || "-" ? (
+                    <CreateParamEmpty
+                      data={data}
+                      indexAction={indexAction}
+                      isLoading={isLoading}
+                      setRerender={() => setRerender(!rerender)}
+                    />
+                  ) : (
+                    <CreateParam
+                      data={data}
+                      indexAction={indexAction}
+                      isLoading={isLoading}
+                      setRerender={() => setRerender(!rerender)}
+                    />
+                  )}
                   <Box display="grid" gap={1}>
                     {action[1].map((key: any, index: number) => (
                       <Input
