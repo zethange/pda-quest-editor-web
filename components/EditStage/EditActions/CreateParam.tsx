@@ -1,14 +1,20 @@
 import { newParamInAction } from "@/store/store";
 import { useState } from "react";
-import { Box, Grid, Select } from "@chakra-ui/react";
+import { Box, Button, Grid, Input, Select, Spacer } from "@chakra-ui/react";
 
 type Props = {
   data: any;
   isLoading: boolean;
   indexAction: any;
+  setRerender: () => void;
 };
 
-export default function CreateParam({ data, isLoading, indexAction }: Props) {
+export default function CreateParam({
+  data,
+  isLoading,
+  indexAction,
+  setRerender,
+}: Props) {
   const [showCreateParam, setShowCreateParam] = useState<boolean>(false);
 
   const arrParam: string[] = ["68", "1"];
@@ -20,19 +26,21 @@ export default function CreateParam({ data, isLoading, indexAction }: Props) {
 
   return (
     <>
-      <Box display="flex">
+      <Box display="flex" my={1}>
         Значения:
-        <Box m="auto" />
-        <button
+        <Spacer />
+        <Button
+          size="xs"
+          py={1}
           onClick={() => {
             setShowCreateParam(!showCreateParam);
           }}
         >
           {showCreateParam ? "-" : "+"}
-        </button>
+        </Button>
       </Box>
       {showCreateParam && (
-        <Box backgroundColor="white" p={2} borderRadius={5}>
+        <Box backgroundColor="white" display="flex" gap={1}>
           <Select
             size="md"
             name="select"
@@ -49,22 +57,23 @@ export default function CreateParam({ data, isLoading, indexAction }: Props) {
                 </optgroup>
               ))}
           </Select>
-          <input
-            style={{ width: "100px" }}
+          <Input
             placeholder="Количество"
             required={true}
+            width="70px"
             defaultValue={arrParam[1]}
             onChange={(event) => onChangeNewParam(event.target.value, "count")}
           />
-          <button
-            className="btn"
+          <Button
+            fontWeight="normal"
             onClick={() => {
               newParamInAction(indexAction, arrParam.join(":"));
               setShowCreateParam(false);
+              setRerender();
             }}
           >
             Сохранить
-          </button>
+          </Button>
         </Box>
       )}
     </>

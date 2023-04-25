@@ -15,6 +15,7 @@ export default function EditActions() {
   const { data, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
 
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
+  const [rerender, setRerender] = useState(false);
 
   const [method, setMethod] = useState<string>("add");
   console.log(Object.entries(storeStage.actions));
@@ -45,6 +46,9 @@ export default function EditActions() {
                 <option value="remove">Удалить</option>
                 <option value="xp">Добавить/удалить опыт</option>
                 <option value="money">Добавить/удалить деньги</option>
+                <option value="+">Увеличить отношения</option>
+                <option value="-">Уменьшить отношения</option>
+                <option value="reset">Сбросить</option>
               </Select>
               <Button
                 colorScheme="teal"
@@ -88,6 +92,7 @@ export default function EditActions() {
                     data={data}
                     indexAction={indexAction}
                     isLoading={isLoading}
+                    setRerender={() => setRerender(!rerender)}
                   />
                   <Box display="grid" gap={1}>
                     {action[1].map((key: any, index: number) => (

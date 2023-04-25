@@ -4,7 +4,7 @@ import {
   editValueInConditions,
   storeStage,
 } from "@/store/store";
-import { Box, Select } from "@chakra-ui/react";
+import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import { useState } from "react";
 
 export default function CreateTransfer({
@@ -19,20 +19,22 @@ export default function CreateTransfer({
 
   return (
     <>
-      <Box display="flex">
+      <Box display="flex" my={1}>
         Условия:
-        <Box mx="auto"></Box>
-        <button
+        <Spacer />
+        <Button
+          size="xs"
+          colorScheme="teal"
           onClick={() =>
             setCreateConditionInTransfer(!createConditionInTransfer)
           }
         >
           {createConditionInTransfer ? "-" : "+"}
-        </button>
+        </Button>
       </Box>
       <Box backgroundColor="gray.50" p={2} borderRadius={5}>
         {createConditionInTransfer && (
-          <>
+          <Box display="flex" gap={1}>
             <Select
               size="md"
               onChange={(event) => setTypeCondition(Number(event.target.value))}
@@ -40,48 +42,43 @@ export default function CreateTransfer({
               <option value="1">Показывать если есть параметр</option>
               <option value="2">Показывать если нет параметра</option>
             </Select>
-            <button
-              className="btn"
-              style={{ padding: "1px" }}
+            <Button
+              fontWeight="normal"
               onClick={() => {
                 createConditionsInTransfer(transferIndex, typeCondition);
                 setCreateConditionInTransfer(false);
               }}
             >
               Сохранить
-            </button>
-          </>
+            </Button>
+          </Box>
         )}
         {storeStage?.transfers[transferIndex]?.condition &&
           Object.entries(storeStage.transfers[transferIndex].condition).map(
             (condition: any, conditionIndex: number) => (
-              <div>
-                <div style={{ display: "flex" }}>
+              <Box>
+                <Box display="flex" style={{ display: "flex" }}>
                   Если
                   {condition[0] === "has"
                     ? " есть параметр:"
                     : " нет параметра:"}
-                  <div className="mx-auto"></div>
-                  <button
+                  <Spacer />
+                  <Button
+                    size="xs"
+                    mb={1}
+                    colorScheme="teal"
                     onClick={() => {
                       createValueInCondition(transferIndex, conditionIndex);
                       setShowNewValue(!showNewValue);
                     }}
                   >
                     +
-                  </button>
-                </div>
-                <div
-                  className="stage-card"
-                  style={{
-                    background: "var(--white)",
-                    display: "grid",
-                    gap: "4px",
-                  }}
-                >
+                  </Button>
+                </Box>
+                <Box display="grid" gap="4px">
                   {condition[1].map(
                     (conditionValue: any, valueIndex: number) => (
-                      <input
+                      <Input
                         defaultValue={conditionValue}
                         onChange={(event) =>
                           editValueInConditions(
@@ -94,8 +91,8 @@ export default function CreateTransfer({
                       />
                     )
                   )}
-                </div>
-              </div>
+                </Box>
+              </Box>
             )
           )}
       </Box>
