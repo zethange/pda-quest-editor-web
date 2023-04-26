@@ -1,20 +1,15 @@
 import { useState } from "react";
-import useSWR from "swr";
-import { fetcher } from "@/store/tools";
 
 import {
-  editMethodInAction,
   editParamInAction,
   newMethodInAction,
   storeStage,
 } from "@/store/store";
-import CreateParam from "@/components/EditStage/EditActions/CreateParam";
 import { Box, Button, Input, Select } from "@chakra-ui/react";
 import CreateParamEmpty from "@/components/EditStage/EditActions/CreateParamEmpty";
+import { commandLocalizer, typeCommand } from "@/store/utils/commandsAction";
 
 export default function EditActions() {
-  const { data, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
-
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
   const [rerender, setRerender] = useState(false);
 
@@ -35,7 +30,7 @@ export default function EditActions() {
           </Button>
         </Box>
         {showCreateMethod && (
-          <Box p={2} borderRadius="10px" backgroundColor="gray.50">
+          <Box p={2} borderRadius="10px" backgroundColor="gray.50" my={1}>
             Создание новой команды:{" "}
             <Box display="flex" gap={1}>
               <Select
@@ -62,7 +57,7 @@ export default function EditActions() {
             </Box>
           </Box>
         )}
-        <Box display="grid" gap={2}>
+        <Box display="grid" gap={2} mt={1}>
           {Object.entries(storeStage.actions).map(
             (action: any, indexAction: number) => (
               <Box
@@ -72,41 +67,19 @@ export default function EditActions() {
                 key={indexAction}
               >
                 Команда:{" "}
-                <Select
-                  size="md"
-                  onChange={(e) => {
-                    editMethodInAction(e.target.value, indexAction);
-                  }}
-                  defaultValue={action[0]}
-                >
-                  <option value="add">Добавить</option>
-                  <option value="remove">Удалить</option>
-                  <option value="xp">Добавить/удалить опыт</option>
-                  <option value="money">Добавить/удалить деньги</option>
-                  <option value="+">Увеличить отношения</option>
-                  <option value="-">Уменьшить отношения</option>
-                  <option value="reset">Сбросить</option>
-                </Select>
+                <Input
+                  readOnly={true}
+                  defaultValue={commandLocalizer(action[0])}
+                />
                 <Box>
-                  {action[0] === "xp" || "money" || "reset" || "+" || "-" ? (
-                    <CreateParamEmpty
-                      data={data}
-                      indexAction={indexAction}
-                      isLoading={isLoading}
-                      setRerender={() => setRerender(!rerender)}
-                    />
-                  ) : (
-                    <CreateParam
-                      data={data}
-                      indexAction={indexAction}
-                      isLoading={isLoading}
-                      setRerender={() => setRerender(!rerender)}
-                    />
-                  )}
+                  <CreateParamEmpty
+                    indexAction={indexAction}
+                    type={typeCommand(action[0])}
+                    setRerender={() => setRerender(!rerender)}
+                  />
                   <Box display="grid" gap={1}>
                     {action[1].map((key: any, index: number) => (
                       <Input
-                        type="text"
                         defaultValue={key}
                         onChange={(e) => {
                           editParamInAction(e.target.value, indexAction, index);

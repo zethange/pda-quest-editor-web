@@ -21,7 +21,7 @@ export default function EditStage({ data }: { data: any }) {
         background={`
             url(${
               storeStage?.background
-                ? `https://files.artux.net/static/${data?.background}`
+                ? `https://cdn.artux.net/static/${data?.background}`
                 : "/no_background.png"
             })
           `}
