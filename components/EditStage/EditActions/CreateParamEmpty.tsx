@@ -39,10 +39,8 @@ function Empty({
   );
 }
 
-function WithItems({ indexAction, setRerender }: any) {
+function WithItems({ indexAction, setRerender, setShowCreateParam }: any) {
   const { data, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
-
-  const [showCreateParam, setShowCreateParam] = useState<boolean>(false);
 
   const arrParam: string[] = ["68", "1"];
   const onChangeNewParam = (message: string, type: string) => {
@@ -154,6 +152,7 @@ export default function CreateParamEmpty({
                   <WithItems
                     indexAction={indexAction}
                     setRerender={setRerender}
+                    setShowCreateParam={setShowCreateParam}
                   />
                 </>
               )}
