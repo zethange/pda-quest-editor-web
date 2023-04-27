@@ -1,11 +1,13 @@
 import { useState } from "react";
 
 import {
+  deleteMethodInAction,
+  deleteParamInAction,
   editParamInAction,
   newMethodInAction,
   storeStage,
 } from "@/store/store";
-import { Box, Button, Input, Select } from "@chakra-ui/react";
+import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import CreateParamEmpty from "@/components/EditStage/EditActions/CreateParamEmpty";
 import { commandLocalizer, typeCommand } from "@/store/utils/commandsAction";
 
@@ -20,7 +22,7 @@ export default function EditActions() {
       <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <Box display="flex">
           <b>Действия:</b>
-          <Box mx="auto" />
+          <Spacer />
           <Button
             colorScheme="teal"
             size="xs"
@@ -57,34 +59,61 @@ export default function EditActions() {
             </Box>
           </Box>
         )}
-        <Box display="grid" gap={2} mt={1}>
+        <Box display="grid">
           {Object.entries(storeStage.actions).map(
-            (action: any, indexAction: number) => (
+            (action: any, indexMethod: number) => (
               <Box
+                mt={1}
                 p={2}
                 backgroundColor="white"
                 borderRadius="10px"
-                key={indexAction}
+                key={indexMethod}
               >
-                Команда:{" "}
+                <Box display="flex" gap={1} mb={1}>
+                  Команда:
+                  <Spacer />
+                  <Button
+                    size="xs"
+                    onClick={() => {
+                      deleteMethodInAction(indexMethod);
+                      setRerender(!rerender);
+                    }}
+                  >
+                    -
+                  </Button>
+                </Box>
                 <Input
                   readOnly={true}
                   defaultValue={commandLocalizer(action[0])}
                 />
                 <Box>
                   <CreateParamEmpty
-                    indexAction={indexAction}
+                    indexAction={indexMethod}
                     type={typeCommand(action[0])}
                     setRerender={() => setRerender(!rerender)}
                   />
                   <Box display="grid" gap={1}>
-                    {action[1].map((key: any, index: number) => (
-                      <Input
-                        defaultValue={key}
-                        onChange={(e) => {
-                          editParamInAction(e.target.value, indexAction, index);
-                        }}
-                      />
+                    {action[1].map((key: any, indexParam: number) => (
+                      <Box display="flex" gap={1}>
+                        <Input
+                          defaultValue={key}
+                          onChange={(e) => {
+                            editParamInAction(
+                              e.target.value,
+                              indexMethod,
+                              indexParam
+                            );
+                          }}
+                        />
+                        <Button
+                          onClick={() => {
+                            deleteParamInAction(indexMethod, indexParam);
+                            setRerender(!rerender);
+                          }}
+                        >
+                          -
+                        </Button>
+                      </Box>
                     ))}
                   </Box>
                 </Box>

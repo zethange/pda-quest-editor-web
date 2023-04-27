@@ -122,27 +122,32 @@ export function editTransferInStore(id: number, transfer: any) {
   console.log("Изменение перехода в сторе", storeStage.transfers);
 }
 
-export function editMethodInAction(editedMethod: string, indexAction: number) {
+export function deleteMethodInAction(indexMethod: number): void {
   const arrayActions: any = Object.entries(storeStage.actions);
-  arrayActions[indexAction][1] = editedMethod;
+  arrayActions.splice(indexMethod, 1);
   storeStage.actions = Object.fromEntries(arrayActions);
-  console.log("Изменение метода в action", storeStage.actions);
 }
 
 export function editParamInAction(
   editedParam: string,
-  indexAction: number,
+  indexMethod: number,
   indexParam: number
 ) {
   const arrayActions: any = Object.entries(storeStage.actions);
-  arrayActions[indexAction][1][indexParam] = editedParam;
+  arrayActions[indexMethod][1][indexParam] = editedParam;
   storeStage.actions = Object.fromEntries(arrayActions);
   console.log("Изменение параметра в action", storeStage.actions);
 }
 
-export function newParamInAction(indexAction: number, param: string) {
+export function deleteParamInAction(indexMethod: number, indexParam: number) {
   const arrayActions: any = Object.entries(storeStage.actions);
-  arrayActions[indexAction][1].push(param);
+  arrayActions[indexMethod][1].splice(indexParam, 1);
+  storeStage.actions = Object.fromEntries(arrayActions);
+}
+
+export function newParamInAction(indexMethod: number, param: string) {
+  const arrayActions: any = Object.entries(storeStage.actions);
+  arrayActions[indexMethod][1].push(param);
   storeStage.actions = Object.fromEntries(arrayActions);
   console.log("Новый параметр в action", storeStage);
 }

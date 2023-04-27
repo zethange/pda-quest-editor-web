@@ -1,6 +1,6 @@
 import { createConditionsInTransfer } from "@/store/store";
 import { useState } from "react";
-import { Box, Select } from "@chakra-ui/react";
+import { Box, Select, Spacer } from "@chakra-ui/react";
 
 export default function CreateConditionInTransferJsx({
   transferIndex,
@@ -17,7 +17,7 @@ export default function CreateConditionInTransferJsx({
   return (
     <>
       <Box display="flex">
-        Условия: <Box mx="auto" />
+        Условия: <Spacer />
         <button
           onClick={() => {
             setShowCreateConditionInTransfer(!showCreateConditionInTransfer);

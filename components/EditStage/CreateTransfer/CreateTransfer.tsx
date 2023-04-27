@@ -1,6 +1,7 @@
-import {
+import deleteConditionInTransfer, {
   createConditionsInTransfer,
   createValueInCondition,
+  deleteValueInCondition,
   editValueInConditions,
   storeStage,
 } from "@/store/store";
@@ -16,6 +17,7 @@ export default function CreateTransfer({
     useState<boolean>(false);
   const [typeCondition, setTypeCondition] = useState<number>(1);
   const [showNewValue, setShowNewValue] = useState<boolean>(false);
+  const [rerender, setRerender] = useState<boolean>(false);
 
   return (
     <>
@@ -34,7 +36,7 @@ export default function CreateTransfer({
       </Box>
       <Box backgroundColor="gray.50" p={2} borderRadius={5}>
         {createConditionInTransfer && (
-          <Box display="flex" gap={1}>
+          <Box display="flex" gap={1} mb={1}>
             <Select
               size="md"
               onChange={(event) => setTypeCondition(Number(event.target.value))}
@@ -57,12 +59,21 @@ export default function CreateTransfer({
           Object.entries(storeStage.transfers[transferIndex].condition).map(
             (condition: any, conditionIndex: number) => (
               <Box>
-                <Box display="flex" style={{ display: "flex" }}>
+                <Box display="flex" gap={1}>
                   Если
                   {condition[0] === "has"
                     ? " есть параметр:"
                     : " нет параметра:"}
                   <Spacer />
+                  <Button
+                    size="xs"
+                    onClick={() => {
+                      deleteConditionInTransfer(transferIndex, conditionIndex);
+                      setRerender(!rerender);
+                    }}
+                  >
+                    -
+                  </Button>
                   <Button
                     size="xs"
                     mb={1}
@@ -78,17 +89,31 @@ export default function CreateTransfer({
                 <Box display="grid" gap="4px">
                   {condition[1].map(
                     (conditionValue: any, valueIndex: number) => (
-                      <Input
-                        defaultValue={conditionValue}
-                        onChange={(event) =>
-                          editValueInConditions(
-                            transferIndex,
-                            conditionIndex,
-                            valueIndex,
-                            event.target.value
-                          )
-                        }
-                      />
+                      <Box display="flex" gap={1}>
+                        <Input
+                          defaultValue={conditionValue}
+                          onChange={(event) =>
+                            editValueInConditions(
+                              transferIndex,
+                              conditionIndex,
+                              valueIndex,
+                              event.target.value
+                            )
+                          }
+                        />
+                        <Button
+                          onClick={() => {
+                            deleteValueInCondition(
+                              transferIndex,
+                              conditionIndex,
+                              valueIndex
+                            );
+                            setRerender(!rerender);
+                          }}
+                        >
+                          -
+                        </Button>
+                      </Box>
                     )
                   )}
                 </Box>
