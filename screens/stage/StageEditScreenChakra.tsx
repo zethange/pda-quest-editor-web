@@ -122,6 +122,7 @@ export default function StageEditScreenChakra({
           ),
           text: stage.texts && stage.texts[0].text,
           id: stage.id,
+          actions: stage.actions || {},
         },
         position: { x: stage.editor.x, y: stage.editor.y },
       });

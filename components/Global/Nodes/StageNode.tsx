@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
-import { Box, Text } from "@chakra-ui/react";
+import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/react";
 
 type data = {
   label: React.ReactNode;
   text: string;
+  actions: any;
 };
 
 export function NodeStage({
@@ -37,6 +38,28 @@ export function NodeStage({
         {words?.substr(0, 30)}
         {words?.length > 30 && "..."}
       </small>
+      <Box display="grid" gap={1}>
+        {Object.entries(data.actions).map(
+          (action: any, indexMethod: number) => (
+            <>
+              {action[0] === "add" && (
+                <SimpleGrid columns={action[1].length > 1 ? 2 : 1} gap={1}>
+                  {action[1].map((param: string, indexParam: number) => (
+                    <Badge colorScheme="green">{param}</Badge>
+                  ))}
+                </SimpleGrid>
+              )}
+              {action[0] === "remove" && (
+                <SimpleGrid columns={2} gap={1}>
+                  {action[1].map((param: string, indexParam: number) => (
+                    <Badge colorScheme="red">{param}</Badge>
+                  ))}
+                </SimpleGrid>
+              )}
+            </>
+          )
+        )}
+      </Box>
       <Handle
         type="source"
         position={Position.Bottom}
