@@ -50,7 +50,7 @@ export function NodeStage({
                 </SimpleGrid>
               )}
               {action[0] === "remove" && (
-                <SimpleGrid columns={2} gap={1}>
+                <SimpleGrid columns={action[1].length > 1 ? 2 : 1} gap={1}>
                   {action[1].map((param: string, indexParam: number) => (
                     <Badge colorScheme="red">{param}</Badge>
                   ))}
