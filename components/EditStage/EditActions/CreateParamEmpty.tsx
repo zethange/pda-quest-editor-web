@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import useSWR from "swr";
 import { fetcher } from "@/store/tools";
+import { groupItem } from "@/store/utils/groupItem";
 
 type Props = {
   indexAction: any;
@@ -18,7 +19,7 @@ function Empty({
   newParam,
 }: any) {
   return (
-    <Box display="flex" gap={1} mb={1}>
+    <Box display="flex" gap={1}>
       <Input
         placeholder="Параметр..."
         required={true}
@@ -49,7 +50,7 @@ function WithItems({ indexAction, setRerender, setShowCreateParam }: any) {
     console.log(arrParam.join(":"));
   };
   return (
-    <Box display="flex" gap={1} mb={1}>
+    <Box display="flex" gap={1}>
       <Select
         size="md"
         name="select"
@@ -59,7 +60,7 @@ function WithItems({ indexAction, setRerender, setShowCreateParam }: any) {
       >
         {!isLoading &&
           Object.entries(data).map((category: any) => (
-            <optgroup label={category[0]}>
+            <optgroup label={groupItem(category[0])}>
               {category[1].map((item: any) => (
                 <option value={item.baseId}>{item.title}</option>
               ))}
@@ -135,7 +136,7 @@ export default function CreateParamEmpty({
                 mb={1}
                 w="100%"
               >
-                {typeCreate ? "Добавить предмет" : "Добавить параметр"}
+                {typeCreate ? "Параметр" : "Предмет"}
               </Button>
               {typeCreate ? (
                 <>

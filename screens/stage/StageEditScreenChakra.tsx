@@ -78,6 +78,7 @@ export default function StageEditScreenChakra({
   const [transferIndex, setTransferIndex] = useState<string>("");
 
   const toast = useToast();
+
   // Вытаскивание главы из localStorage
   useEffect(() => {
     const chapterFromLocalStorage =
@@ -132,6 +133,7 @@ export default function StageEditScreenChakra({
           id: `${stage.id}-${transfer.stage}`,
           source: String(stage.id),
           target: String(transfer.stage),
+          label: transfer.text.substring(0, 30),
           markerEnd: {
             type: MarkerType.ArrowClosed,
           },
@@ -236,7 +238,7 @@ export default function StageEditScreenChakra({
     const updatedStageWithUpdatedPosition = {
       id: storeStage.id,
       type_stage: storeStage.type_stage,
-      background: storeStage.background,
+      background: storeStage.background || "",
       title: storeStage.title,
       message: storeStage.message,
       type_message: storeStage.type_stage,

@@ -30,6 +30,7 @@ export function newTransferToStore(transfer: stageTransfer) {
       )
     );
     storeStage.transfers.splice(index, 1, transfer);
+    return storeStage.transfers.indexOf(transfer);
   }
 }
 
@@ -52,6 +53,7 @@ export function createConditionsInTransfer(
   transferIndex: number,
   typeCondition: number
 ) {
+  console.log(storeStage.transfers, transferIndex);
   if (typeCondition === 1)
     storeStage.transfers[transferIndex].condition = {
       ...storeStage.transfers[transferIndex].condition,

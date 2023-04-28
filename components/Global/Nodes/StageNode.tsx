@@ -17,6 +17,7 @@ export function NodeStage({
   selected: boolean;
 }) {
   const words = useMemo(() => data?.text, [data]);
+
   return (
     <Box
       p="10px"

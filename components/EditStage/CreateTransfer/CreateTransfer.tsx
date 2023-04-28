@@ -19,6 +19,8 @@ export default function CreateTransfer({
   const [showNewValue, setShowNewValue] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
 
+  console.log(transferIndex);
+
   return (
     <>
       <Box display="flex" my={1}>
@@ -34,9 +36,15 @@ export default function CreateTransfer({
           {createConditionInTransfer ? "-" : "+"}
         </Button>
       </Box>
-      <Box backgroundColor="gray.50" p={2} borderRadius={5}>
+      <Box
+        backgroundColor="gray.50"
+        p={2}
+        borderRadius={5}
+        display="grid"
+        gap={1}
+      >
         {createConditionInTransfer && (
-          <Box display="flex" gap={1} mb={1}>
+          <Box display="flex" gap={1}>
             <Select
               size="md"
               onChange={(event) => setTypeCondition(Number(event.target.value))}
