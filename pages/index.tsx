@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import store from "store2";
 import { downloadZip } from "client-zip";
@@ -9,16 +9,33 @@ import {
   Box,
   Button,
   Card,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  FormLabel,
   Heading,
+  Icon,
+  Input,
+  Select,
   SimpleGrid,
   Spacer,
   Text,
+  Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import UserButton from "@/components/UI/NavBar/UserButton";
+import { BiEdit } from "react-icons/bi";
+import { storyType } from "@/store/types/storyType";
 
 export default function Home() {
   const [stories, setStories] = useState<any>([]);
+  const [editStory, setEditStory] = useState<any>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     store.each((key: string, value: string) => {
@@ -123,6 +140,16 @@ export default function Home() {
     });
   };
 
+  const saveUpdatedStory = () => {
+    const storiesCopy = JSON.parse(JSON.stringify(stories));
+    const indexEditedStory = storiesCopy.indexOf(
+      storiesCopy.find((story: storyType) => story.id === editStory.id)
+    );
+    storiesCopy.splice(indexEditedStory, 1, editStory);
+    setStories(storiesCopy);
+    store.set(`story_${editStory?.id}_info`, editStory);
+  };
+
   return (
     <>
       <CustomHead title="Редактор историй" />
@@ -179,17 +206,135 @@ export default function Home() {
                     </Text>
                   </Box>
                 </Link>
-                <Button
-                  fontWeight="10px"
-                  onClick={() => downloadStory(story?.id)}
-                >
-                  Скачать
-                </Button>
+                <Box display="flex" gap={1}>
+                  <Button
+                    fontWeight="normal"
+                    w="100%"
+                    onClick={() => downloadStory(story?.id)}
+                  >
+                    Скачать
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      onOpen();
+                      setEditStory(story);
+                    }}
+                  >
+                    <Icon as={BiEdit} />
+                  </Button>
+                </Box>
               </Card>
             ))}
           </SimpleGrid>
         </Box>
       </Box>
+      {/* drawer */}
+      <Drawer isOpen={isOpen} placement="right" size="md" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader borderBottomWidth="1px">
+            Редактирование истории {editStory?.id}
+          </DrawerHeader>
+
+          <DrawerBody>
+            <Box display="grid" gap={2}>
+              <Box>
+                <FormLabel>ID</FormLabel>
+                <Input
+                  defaultValue={editStory?.id}
+                  placeholder="ID истории..."
+                  type="number"
+                  readOnly={true}
+                />
+              </Box>
+
+              <Box>
+                <FormLabel>Название</FormLabel>
+                <Input
+                  defaultValue={editStory?.title}
+                  placeholder="Название истории..."
+                  onChange={(e) =>
+                    setEditStory((story: storyType) => {
+                      return {
+                        ...story,
+                        title: e.target.value,
+                      };
+                    })
+                  }
+                />
+              </Box>
+
+              <Box>
+                <FormLabel>Описание</FormLabel>
+                <Textarea
+                  defaultValue={editStory?.desc}
+                  placeholder="Описание истории..."
+                  onChange={(e) =>
+                    setEditStory((story: storyType) => {
+                      return {
+                        ...story,
+                        desc: e.target.value,
+                      };
+                    })
+                  }
+                />
+              </Box>
+
+              <Box>
+                <FormLabel>Иконка</FormLabel>
+                <Input
+                  placeholder="Иконка истории..."
+                  defaultValue={editStory?.icon}
+                  onChange={(e) =>
+                    setEditStory((story: storyType) => {
+                      return {
+                        ...story,
+                        icon: e.target.value,
+                      };
+                    })
+                  }
+                />
+              </Box>
+
+              <Box>
+                <FormLabel>Уровень доступа</FormLabel>
+                <Select
+                  defaultValue={editStory?.access}
+                  onChange={(e) =>
+                    setEditStory((story: storyType) => {
+                      return {
+                        ...story,
+                        access: e.target.value,
+                      };
+                    })
+                  }
+                >
+                  <option value="USER">USER</option>
+                  <option value="TESTER">TESTER</option>
+                  <option value="MODERATOR">MODERATOR</option>
+                  <option value="ADMIN">ADMIN</option>
+                </Select>
+              </Box>
+            </Box>
+          </DrawerBody>
+
+          <DrawerFooter borderTopWidth="1px">
+            <Button variant="outline" mr={3} onClick={onClose}>
+              Закрыть
+            </Button>
+            <Button
+              colorScheme="teal"
+              onClick={() => {
+                saveUpdatedStory();
+                onClose();
+              }}
+            >
+              Сохранить
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
