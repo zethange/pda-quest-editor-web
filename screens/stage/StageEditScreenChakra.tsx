@@ -202,7 +202,9 @@ export default function StageEditScreenChakra({
           id: stage.id,
           actions: stage.actions || {},
         },
-        position: { x: stage.editor.x, y: stage.editor.y },
+        position: stage.editor
+          ? { x: stage?.editor?.x || 0, y: stage?.editor?.y || 0 }
+          : { x: stage?.editor?.x, y: stage?.editor?.y },
       });
     });
 

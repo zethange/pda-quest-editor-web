@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@types/dagre": "^0.7.48",
+    "@types/leaflet": "^1.9.3",
     "@types/stats.js": "^0.17.0",
     "typescript": "^4.9.5"
   }

@@ -37,19 +37,20 @@ const TransferEdge: FC<EdgeProps> = ({
             {data.label}
             {data.label.length === 30 && "..."}
             <Box display="grid" gap={1}>
-              {Object.keys(data.transfer.condition).length !== 0 && (
-                <>
-                  {Object.entries(data.transfer.condition).map(
-                    (condition: any, conditionIndex: number) => (
-                      <>
-                        {condition[1].map((condition: string) => (
-                          <Badge colorScheme="red">{condition}</Badge>
-                        ))}
-                      </>
-                    )
-                  )}
-                </>
-              )}
+              {data?.transfer?.condition &&
+                Object.keys(data?.transfer?.condition).length !== 0 && (
+                  <>
+                    {Object.entries(data.transfer.condition).map(
+                      (condition: any, conditionIndex: number) => (
+                        <>
+                          {condition[1].map((condition: string) => (
+                            <Badge colorScheme="red">{condition}</Badge>
+                          ))}
+                        </>
+                      )
+                    )}
+                  </>
+                )}
             </Box>
           </Box>
           {label}
