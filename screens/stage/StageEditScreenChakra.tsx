@@ -10,7 +10,6 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 import {
-  Badge,
   Box,
   Button,
   Checkbox,
@@ -47,7 +46,7 @@ import "reactflow/dist/style.css";
 import { newStage } from "@/store/createTools";
 import CustomHead from "@/components/Global/CustomHead";
 import EditActions from "@/components/EditStage/EditActions/EditActions";
-import { NodeStage } from "@/components/Global/Nodes/StageNode";
+import { NodeStage } from "@/components/Global/StageNode";
 import MapStage from "@/components/EditStage/MapStage";
 import EditStage from "@/components/EditStage/EditStage";
 import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer";
@@ -147,6 +146,7 @@ export default function StageEditScreenChakra({
         });
       });
     });
+    console.log("rerender chapter");
 
     if (initialNodes.length !== 0) setNodes(initialNodes);
     if (initialEdges.length !== 0) setEdges(initialEdges);
@@ -173,6 +173,7 @@ export default function StageEditScreenChakra({
           path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`).stages;
 
         initialStages?.splice(idInitialStage, 1, updatedStageWithPosition);
+        console.log("да");
 
         updateChapter(
           {
@@ -190,7 +191,7 @@ export default function StageEditScreenChakra({
   const onEdgesClick = useCallback(
     (event: React.MouseEvent, edge: Edge): void => {
       const chapterFromLocalStorage =
-        path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+        path[0] && store.get(`story_${path[0]}_ch apter_${path[1]}`);
 
       const stage = chapterFromLocalStorage.stages.find(
         (stage: any) => stage.id === Number(edge.source)
@@ -311,9 +312,7 @@ export default function StageEditScreenChakra({
   }
 
   const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
-  const edgeTypes = {
-    custom: TransferEdge,
-  };
+  const edgeTypes = useMemo(() => ({ custom: TransferEdge }), []);
 
   const [showFps, setShowFps] = useState(false);
   useEffect(() => {

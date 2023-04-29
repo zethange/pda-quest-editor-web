@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import { EdgeProps, getBezierPath, EdgeLabelRenderer } from "reactflow";
 import { Badge, Box } from "@chakra-ui/react";
 
@@ -21,7 +21,7 @@ const TransferEdge: FC<EdgeProps> = ({
     targetY,
     targetPosition,
   });
-
+  console.log(id);
   return (
     <>
       <path id={id} className="react-flow__edge-path" d={edgePath} />
@@ -59,4 +59,4 @@ const TransferEdge: FC<EdgeProps> = ({
   );
 };
 
-export default TransferEdge;
+export default memo(TransferEdge);
