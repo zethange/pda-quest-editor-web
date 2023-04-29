@@ -60,16 +60,19 @@ export function createConditionsInTransfer(
         ...storeStage.transfers[transferIndex].condition,
         has: ["параметр"],
       };
+      break;
     case "!has":
       storeStage.transfers[transferIndex].condition = {
         ...storeStage.transfers[transferIndex].condition,
         "!has": ["параметр"],
       };
+      break;
     case "money>=":
       storeStage.transfers[transferIndex].condition = {
         ...storeStage.transfers[transferIndex].condition,
         "money>=": ["100"],
       };
+      break;
   }
 }
 
