@@ -15,7 +15,7 @@ export function commandLocalizer(param: string): string {
     case "reset":
       return "Сбросить";
     default:
-      return "Не добавили пока что";
+      return param;
   }
 }
 

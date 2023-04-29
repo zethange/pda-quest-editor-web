@@ -26,7 +26,20 @@ export function newChapter(id: string) {
   };
 }
 
-export function newStage(type: string, id: number) {
+interface IPosition {
+  x: number;
+  y: number;
+}
+
+export function newStage(
+  type: "default" | "exit",
+  id: number,
+  customPosition: boolean = false,
+  data?: IPosition
+) {
+  const position = customPosition
+    ? data
+    : { x: Math.random() * 500, y: Math.random() * 500 };
   if (type === "default") {
     return {
       id,
@@ -43,14 +56,14 @@ export function newStage(type: string, id: number) {
       ],
       transfers: [],
       actions: {},
-      editor: { x: Math.random() * 500, y: Math.random() * 500 },
+      editor: position,
     };
   } else if (type === "exit") {
     return {
       id,
       type_stage: 4,
       data: { map: "1", pos: "235:235" },
-      editor: { x: Math.random() * 500, y: Math.random() * 500 },
+      editor: position,
     };
   }
 }

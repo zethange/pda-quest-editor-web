@@ -34,7 +34,7 @@ export function NodeStage({
         position={Position.Top}
         isConnectable={isConnectable}
       />
-      <button onClick={data.onClick}>
+      <button onClick={() => data.onClick()}>
         <Text align="center">{data.label}</Text>
         <small>
           {words?.substr(0, 30)}

@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import store from "store2";
 import dagre from "dagre";
 
@@ -55,6 +61,7 @@ import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer
 import { chapterType, stageTransfer, stageType } from "@/store/types/types";
 import Stats from "stats.js";
 import TransferEdge from "@/components/Global/TransferEdge";
+import { stageName, stageTypes } from "@/store/utils/stageName";
 
 export default function StageEditScreenChakra({
   path,
@@ -79,6 +86,8 @@ export default function StageEditScreenChakra({
 
   const [connectionInfo, setConnectionInfo] = useState<any>();
   const [transferIndex, setTransferIndex] = useState<string>("");
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
   const toast = useToast();
 
@@ -148,13 +157,15 @@ export default function StageEditScreenChakra({
         const stage = copyChapter.stages.find(
           (stage: stageType) => stage.id === +node.id
         );
-        if (+stage.id !== +node.id) {
-          console.log(stage.id, node.id);
+        if (stage) {
+          if (+stage.id !== +node.id) {
+            console.log(stage.id, node.id);
+          }
+          stage.editor = {
+            x: node.position.x,
+            y: node.position.y,
+          };
         }
-        stage.editor = {
-          x: node.position.x,
-          y: node.position.y,
-        };
       });
 
       updateChapter(copyChapter, false);
@@ -169,15 +180,15 @@ export default function StageEditScreenChakra({
     const initialNodes: any[] = [];
     const initialEdges: any[] = [];
 
-    let timer = 0;
     chapter?.stages?.map((stage: any) => {
-      timer++;
       initialNodes.push({
         id: String(stage.id),
         type: "nodeStage",
         selected: false,
         data: {
-          label: stage.title ? stage.title : "Переход на карту",
+          label: stageName(stage.type_stage)
+            ? stageName(stage.type_stage)
+            : stage.title,
           onClick: () => {
             setStageToStore(null);
             setEditableStage(null);
@@ -194,7 +205,6 @@ export default function StageEditScreenChakra({
         position: { x: stage.editor.x, y: stage.editor.y },
       });
     });
-    console.log("Всего нод:", timer);
 
     chapter?.stages?.map((stage: stageType): void => {
       stage?.transfers?.map((transfer: stageTransfer): void => {
@@ -241,12 +251,10 @@ export default function StageEditScreenChakra({
           path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`).stages;
 
         initialStages?.splice(idInitialStage, 1, updatedStageWithPosition);
-        console.log("да");
 
         updateChapter(
           {
             id: chapter.id,
-            music: chapter.music,
             stages: initialStages,
           },
           false
@@ -271,33 +279,11 @@ export default function StageEditScreenChakra({
       );
 
       const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
-      console.log(targetTransfer, indexTargetTransfer);
       setShowModalEditTransfer(true);
       setStageToStore({ ...stage, targetTransfer, indexTargetTransfer });
     },
     [chapter]
   );
-
-  // Создание стадии
-  const createStage = (type: string): void => {
-    const chapterFromLocalStorage =
-      path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
-
-    const idLastStage =
-      chapterFromLocalStorage?.stages[
-        chapterFromLocalStorage?.stages?.length - 1
-      ].id;
-
-    const updatedChapter = {
-      id: chapterFromLocalStorage?.id,
-      music: chapterFromLocalStorage?.music,
-      stages: [
-        ...chapterFromLocalStorage?.stages,
-        newStage(type, idLastStage + 1),
-      ],
-    };
-    updateChapter(updatedChapter, true);
-  };
 
   // Обновление стадии
   const updateStage = (stageId: number): void => {
@@ -404,6 +390,53 @@ export default function StageEditScreenChakra({
     }
   }, [showFps]);
 
+  const onDragStart = (event: any, nodeType: any) => {
+    event.dataTransfer.setData("application/reactflow", nodeType);
+    event.dataTransfer.effectAllowed = "move";
+  };
+
+  const onDragOver = useCallback((event: any) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    (event: any) => {
+      event.preventDefault();
+
+      // @ts-ignore
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      const type = event.dataTransfer.getData("application/reactflow");
+
+      // check if the dropped element is valid
+      if (typeof type === "undefined" || !type) {
+        return;
+      }
+
+      const chapterFromLocalStorage =
+        path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+      const idLastStage =
+        chapterFromLocalStorage?.stages[
+          chapterFromLocalStorage?.stages?.length - 1
+        ].id;
+
+      // @ts-ignore
+      const position = reactFlowInstance.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
+      const updatedChapter = {
+        id: chapterFromLocalStorage?.id,
+        stages: [
+          ...chapterFromLocalStorage?.stages,
+          newStage(type, idLastStage + 1, true, position),
+        ],
+      };
+      updateChapter(updatedChapter, true);
+    },
+    [reactFlowInstance]
+  );
+
   return (
     <>
       <CustomHead title={"Редактирование главы " + chapter?.id} />
@@ -427,10 +460,20 @@ export default function StageEditScreenChakra({
               <PopoverCloseButton />
               <PopoverBody>
                 <SimpleGrid gap={2}>
-                  <Button fontWeight={1} onClick={() => createStage("default")}>
+                  <Button
+                    fontWeight={1}
+                    onDragStart={(event) => onDragStart(event, "default")}
+                    cursor="grab"
+                    draggable
+                  >
                     Обычная стадия
                   </Button>
-                  <Button fontWeight={1} onClick={() => createStage("exit")}>
+                  <Button
+                    fontWeight={1}
+                    onDragStart={(event) => onDragStart(event, "exit")}
+                    cursor="grab"
+                    draggable
+                  >
                     Переход на карту
                   </Button>
                 </SimpleGrid>
@@ -473,10 +516,10 @@ export default function StageEditScreenChakra({
           >
             {/* Панель редактирования */}
             <Box h="calc(100vh - 171px)" overflowY="scroll">
-              {storeStage?.type_stage === 4 && (
+              {stageTypes(storeStage?.type_stage) === "map" && (
                 <MapStage data={storeStage?.data} />
               )}
-              {storeStage?.type_stage === 0 && (
+              {stageTypes(storeStage?.type_stage) === "default" && (
                 <EditStage data={editableStage} />
               )}
               {storeStage?.actions && <EditActions />}
@@ -529,28 +572,30 @@ export default function StageEditScreenChakra({
             </Flex>
           </Box>
         )}
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgeClick={onEdgesClick}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-          snapToGrid
-          snapGrid={[10, 10]}
-          edgeTypes={edgeTypes}
-          fitView
-        >
-          <MiniMap zoomable pannable />
-          <Controls />
-          <Background
-            color={colorMode === "light" ? "#000000" : "#ffffff"}
-            style={{
-              backgroundColor: colorMode === "light" ? "#f5f5f5" : "#1e293b",
-            }}
-            gap={20}
-          />
-        </ReactFlow>
+        <Box ref={reactFlowWrapper} height="100%">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgeClick={onEdgesClick}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            onInit={setReactFlowInstance}
+            edgeTypes={edgeTypes}
+            fitView
+          >
+            <MiniMap zoomable pannable />
+            <Controls />
+            <Background
+              color={colorMode === "light" ? "#000000" : "#ffffff"}
+              style={{
+                backgroundColor: colorMode === "light" ? "#f5f5f5" : "#1e293b",
+              }}
+            />
+          </ReactFlow>
+        </Box>
 
         <Modal
           onClose={() => {
