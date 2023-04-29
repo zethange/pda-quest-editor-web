@@ -25,5 +25,5 @@ TODO:
 - [x] Importing/exporting chapters
 - [x] Visualization of stages
 - [x] Basic stage editing
-- [ ] Drug and drop creating stage
-- [ ] Integrate with dagre.js 
+- [x] Drug and drop creating stage
+- [x] Integrate with dagre.js 

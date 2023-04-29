@@ -51,19 +51,26 @@ export default function deleteConditionInTransfer(
 // Создание условия в переходе
 export function createConditionsInTransfer(
   transferIndex: number,
-  typeCondition: number
+  typeCondition: string
 ) {
   console.log(storeStage.transfers, transferIndex);
-  if (typeCondition === 1)
-    storeStage.transfers[transferIndex].condition = {
-      ...storeStage.transfers[transferIndex].condition,
-      has: ["параметр"],
-    };
-  if (typeCondition === 2)
-    storeStage.transfers[transferIndex].condition = {
-      ...storeStage.transfers[transferIndex].condition,
-      "!has": ["параметр"],
-    };
+  switch (typeCondition) {
+    case "has":
+      storeStage.transfers[transferIndex].condition = {
+        ...storeStage.transfers[transferIndex].condition,
+        has: ["параметр"],
+      };
+    case "!has":
+      storeStage.transfers[transferIndex].condition = {
+        ...storeStage.transfers[transferIndex].condition,
+        "!has": ["параметр"],
+      };
+    case "money>=":
+      storeStage.transfers[transferIndex].condition = {
+        ...storeStage.transfers[transferIndex].condition,
+        "money>=": ["100"],
+      };
+  }
 }
 
 // Создание параметра в условии

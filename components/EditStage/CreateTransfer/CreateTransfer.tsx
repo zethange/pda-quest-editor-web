@@ -7,6 +7,7 @@ import deleteConditionInTransfer, {
 } from "@/store/store";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import { useState } from "react";
+import { conditionType } from "@/store/utils/conditionType";
 
 export default function CreateTransfer({
   transferIndex,
@@ -15,7 +16,7 @@ export default function CreateTransfer({
 }) {
   const [createConditionInTransfer, setCreateConditionInTransfer] =
     useState<boolean>(false);
-  const [typeCondition, setTypeCondition] = useState<number>(1);
+  const [typeCondition, setTypeCondition] = useState<string>("has");
   const [showNewValue, setShowNewValue] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
 
@@ -47,10 +48,14 @@ export default function CreateTransfer({
           <Box display="flex" gap={1}>
             <Select
               size="md"
-              onChange={(event) => setTypeCondition(Number(event.target.value))}
+              defaultValue={typeCondition}
+              onChange={(event) => setTypeCondition(event.target.value)}
             >
-              <option value="1">Показывать если есть параметр</option>
-              <option value="2">Показывать если нет параметра</option>
+              <option value="has">Показывать если есть параметр</option>
+              <option value="!has">Показывать если нет параметра</option>
+              <option value="money>=">
+                Если есть большее или равное количество денег
+              </option>{" "}
             </Select>
             <Button
               fontWeight="normal"
@@ -68,10 +73,7 @@ export default function CreateTransfer({
             (condition: any, conditionIndex: number) => (
               <Box>
                 <Box display="flex" gap={1}>
-                  Если
-                  {condition[0] === "has"
-                    ? " есть параметр:"
-                    : " нет параметра:"}
+                  {conditionType(condition[0])}
                   <Spacer />
                   <Button
                     size="xs"

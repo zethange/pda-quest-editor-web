@@ -9,7 +9,7 @@ export default function CreateConditionInTransferJsx({
   transferIndex: number;
   functionAdd: any;
 }) {
-  const [typeCondition, setTypeCondition] = useState<number>(1);
+  const [typeCondition, setTypeCondition] = useState<string>("has");
   const [rerender, setRerender] = useState<boolean>(false);
   const [showCreateConditionInTransfer, setShowCreateConditionInTransfer] =
     useState<boolean>(false);
@@ -31,10 +31,14 @@ export default function CreateConditionInTransferJsx({
         <Box backgroundColor="white" p={2} borderRadius={5}>
           <Select
             size="md"
-            onChange={(event) => setTypeCondition(Number(event.target.value))}
+            defaultValue={typeCondition}
+            onChange={(event) => setTypeCondition(event.target.value)}
           >
-            <option value="1">Показывать если есть параметр</option>
-            <option value="2">Показывать если нет параметра</option>
+            <option value="has">Показывать если есть параметр</option>
+            <option value="!has">Показывать если нет параметра</option>
+            <option value="money>=">
+              Если есть большее или равное количество денег
+            </option>
           </Select>
           <button
             className="btn"

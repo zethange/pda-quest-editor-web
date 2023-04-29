@@ -21,6 +21,7 @@ import {
   Button,
   Checkbox,
   Flex,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -40,7 +41,6 @@ import {
   Text,
   Textarea,
   useColorMode,
-  useToast,
 } from "@chakra-ui/react";
 
 import {
@@ -89,7 +89,7 @@ export default function StageEditScreenChakra({
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
-  const toast = useToast();
+  const [selectedStage, setSelectedStage] = useState<number>(0);
 
   // Вытаскивание главы из localStorage
   useEffect(() => {
@@ -483,6 +483,33 @@ export default function StageEditScreenChakra({
         </Popover>
         <Text>Глава {chapter?.id}</Text>
         <Spacer />
+        <Box px={2} display="flex" alignItems="center" gap={1}>
+          <Button
+            colorScheme="teal"
+            fontWeight="normal"
+            onClick={() => {
+              setStageToStore(null);
+              setEditableStage(null);
+              const stage = chapter.stages.find(
+                (stage: stageType) => stage.id === selectedStage
+              );
+              setTimeout(() => {
+                setStageToStore(stage);
+                setEditableStage(stage);
+              }, 0);
+            }}
+          >
+            Перейти к стадии:{" "}
+          </Button>
+          <Input
+            defaultValue={selectedStage}
+            py={2}
+            w="100px"
+            placeholder="ID..."
+            type="number"
+            onChange={(e) => setSelectedStage(+e.target.value)}
+          />
+        </Box>
         <Button
           onClick={() => {
             onLayout("TB");
@@ -533,18 +560,6 @@ export default function StageEditScreenChakra({
                 onClick={() => {
                   updateStage(storeStage?.id);
                   setEditableStage(null);
-                  toast({
-                    title: "Стадия обновлена",
-                    description:
-                      "Стадия " + storeStage?.id + " была успешно обновлена",
-                    status: "success",
-                    containerStyle: {
-                      textColor: "white",
-                    },
-                    duration: 1800,
-                    isClosable: true,
-                    position: "bottom-right",
-                  });
                 }}
               >
                 Сохранить
