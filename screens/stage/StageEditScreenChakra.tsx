@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import store from "store2";
+import dagre from "dagre";
 
 import ReactFlow, {
   applyNodeChanges,
@@ -29,6 +30,7 @@ import {
   PopoverTrigger,
   Portal,
   SimpleGrid,
+  Spacer,
   Text,
   Textarea,
   useColorMode,
@@ -96,31 +98,95 @@ export default function StageEditScreenChakra({
     }
   };
 
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+  const nodeWidth = 300;
+  const nodeHeight = 100;
+
+  const getLayoutedElements = (
+    nodes: any[],
+    edges: any[],
+    direction = "TB"
+  ) => {
+    const isHorizontal = direction === "LR";
+    dagreGraph.setGraph({ rankdir: direction });
+
+    nodes.forEach((node: any) => {
+      dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    });
+
+    edges.forEach((edge: any) => {
+      dagreGraph.setEdge(edge.source, edge.target);
+    });
+
+    dagre.layout(dagreGraph);
+
+    nodes.forEach((node: any) => {
+      const nodeWithPosition = dagreGraph.node(node.id);
+      node.targetPosition = isHorizontal ? "left" : "top";
+      node.sourcePosition = isHorizontal ? "right" : "bottom";
+
+      node.position = {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
+      };
+
+      return node;
+    });
+
+    return { nodes, edges };
+  };
+
+  const onLayout = useCallback(
+    (direction: any) => {
+      const { nodes: layoutedNodes, edges: layoutedEdges } =
+        // @ts-ignore
+        getLayoutedElements(nodes, edges, direction);
+
+      const copyChapter = store.get(`story_${path[0]}_chapter_${path[1]}`);
+      layoutedNodes.map((node) => {
+        const stage = copyChapter.stages.find(
+          (stage: stageType) => stage.id === +node.id
+        );
+        if (+stage.id !== +node.id) {
+          console.log(stage.id, node.id);
+        }
+        stage.editor = {
+          x: node.position.x,
+          y: node.position.y,
+        };
+      });
+
+      updateChapter(copyChapter, false);
+      setNodes([...layoutedNodes]);
+      setEdges([...layoutedEdges]);
+    },
+    [nodes, edges]
+  );
+
+  // отрисовка nodes и edges
   useEffect(() => {
     const initialNodes: any[] = [];
     const initialEdges: any[] = [];
 
+    let timer = 0;
     chapter?.stages?.map((stage: any) => {
+      timer++;
       initialNodes.push({
         id: String(stage.id),
         type: "nodeStage",
         selected: false,
         data: {
-          label: (
-            <button
-              onClick={() => {
-                setStageToStore(null);
-                setEditableStage(null);
+          label: stage.title ? stage.title : "Переход на карту",
+          onClick: () => {
+            setStageToStore(null);
+            setEditableStage(null);
 
-                setTimeout(() => {
-                  setStageToStore(stage);
-                  setEditableStage(stage);
-                }, 0);
-              }}
-            >
-              {stage.title ? stage.title : "Переход на карту"}
-            </button>
-          ),
+            setTimeout(() => {
+              setStageToStore(stage);
+              setEditableStage(stage);
+            }, 0);
+          },
           text: stage.texts && stage.texts[0].text,
           id: stage.id,
           actions: stage.actions || {},
@@ -128,6 +194,7 @@ export default function StageEditScreenChakra({
         position: { x: stage.editor.x, y: stage.editor.y },
       });
     });
+    console.log("Всего нод:", timer);
 
     chapter?.stages?.map((stage: stageType): void => {
       stage?.transfers?.map((transfer: stageTransfer): void => {
@@ -147,12 +214,12 @@ export default function StageEditScreenChakra({
         });
       });
     });
-    console.log("rerender chapter");
 
     if (initialNodes.length !== 0) setNodes(initialNodes);
     if (initialEdges.length !== 0) setEdges(initialEdges);
   }, [chapter]);
 
+  // передвижение node
   const onNodesChange = useCallback(
     (changes: any): void => {
       setNodes((nds: any) => applyNodeChanges(changes, nds));
@@ -189,6 +256,7 @@ export default function StageEditScreenChakra({
     [chapter]
   );
 
+  // нажатие на edge
   const onEdgesClick = useCallback(
     (event: React.MouseEvent, edge: Edge) => {
       const chapterFromLocalStorage =
@@ -371,7 +439,19 @@ export default function StageEditScreenChakra({
           </Portal>
         </Popover>
         <Text>Глава {chapter?.id}</Text>
-        <Checkbox onChange={() => setShowFps(!showFps)}>Счётчик ФПС</Checkbox>
+        <Spacer />
+        <Button
+          onClick={() => {
+            onLayout("TB");
+          }}
+          fontWeight="normal"
+          borderRadius={0}
+        >
+          Prettify
+        </Button>
+        <Checkbox onChange={() => setShowFps(!showFps)} mr={1}>
+          Счётчик ФПС
+        </Checkbox>
       </Box>
       <Box h="calc(100vh - 83px)">
         {/* Штука для редактирования стадий */}

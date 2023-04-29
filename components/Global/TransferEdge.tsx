@@ -21,7 +21,6 @@ const TransferEdge: FC<EdgeProps> = ({
     targetY,
     targetPosition,
   });
-  console.log(id);
   return (
     <>
       <path id={id} className="react-flow__edge-path" d={edgePath} />
