@@ -10,6 +10,7 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 import {
+  Badge,
   Box,
   Button,
   Checkbox,
@@ -50,8 +51,9 @@ import { NodeStage } from "@/components/Global/Nodes/StageNode";
 import MapStage from "@/components/EditStage/MapStage";
 import EditStage from "@/components/EditStage/EditStage";
 import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer";
-import { chapterType, stageType } from "@/store/types/types";
+import { chapterType, stageTransfer, stageType } from "@/store/types/types";
 import Stats from "stats.js";
+import TransferEdge from "@/components/Global/TransferEdge";
 
 export default function StageEditScreenChakra({
   path,
@@ -128,13 +130,17 @@ export default function StageEditScreenChakra({
       });
     });
 
-    chapter?.stages?.map((stage: any): void => {
-      stage?.transfers?.map((transfer: any): void => {
+    chapter?.stages?.map((stage: stageType): void => {
+      stage?.transfers?.map((transfer: stageTransfer): void => {
         initialEdges.push({
           id: `${stage.id}-${transfer.stage}`,
           source: String(stage.id),
           target: String(transfer.stage),
-          label: transfer.text.substring(0, 30),
+          type: "custom",
+          data: {
+            label: transfer.text.substring(0, 30),
+            transfer,
+          },
           markerEnd: {
             type: MarkerType.ArrowClosed,
           },
@@ -305,6 +311,9 @@ export default function StageEditScreenChakra({
   }
 
   const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
+  const edgeTypes = {
+    custom: TransferEdge,
+  };
 
   const [showFps, setShowFps] = useState(false);
   useEffect(() => {
@@ -449,6 +458,7 @@ export default function StageEditScreenChakra({
           nodeTypes={nodeTypes}
           snapToGrid
           snapGrid={[10, 10]}
+          edgeTypes={edgeTypes}
           fitView
         >
           <MiniMap zoomable pannable />
