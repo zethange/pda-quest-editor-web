@@ -193,6 +193,7 @@ export default function Home() {
                   color: "white",
                 }}
                 shadow="none"
+                display="grid"
                 p={2}
               >
                 <Link href={"/edit/story/" + story?.id}>
@@ -200,7 +201,9 @@ export default function Home() {
                     {story?.title}
                   </Heading>
                   <Box>
-                    <Text _dark={{ color: "white" }}>{story?.desc}</Text>
+                    <Text _dark={{ color: "white" }}>
+                      {story?.desc.substring(0, 30)}...
+                    </Text>
                     <Text _dark={{ color: "white" }}>
                       Уровень доступа: {story?.access}
                     </Text>
