@@ -139,6 +139,7 @@ export default function StageEditScreenChakra({
           data: {
             label: transfer.text.substring(0, 30),
             transfer,
+            onClick: onEdgesClick,
           },
           markerEnd: {
             type: MarkerType.ArrowClosed,
@@ -189,9 +190,9 @@ export default function StageEditScreenChakra({
   );
 
   const onEdgesClick = useCallback(
-    (event: React.MouseEvent, edge: Edge): void => {
+    (event: React.MouseEvent, edge: Edge) => {
       const chapterFromLocalStorage =
-        path[0] && store.get(`story_${path[0]}_ch apter_${path[1]}`);
+        path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
       const stage = chapterFromLocalStorage.stages.find(
         (stage: any) => stage.id === Number(edge.source)

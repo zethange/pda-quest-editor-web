@@ -36,6 +36,7 @@ const TransferEdge: FC<EdgeProps> = ({
         >
           <Box>
             {data.label}
+            {data.label.length === 30 && "..."}
             <Box display="grid" gap={1}>
               {Object.keys(data.transfer.condition).length !== 0 && (
                 <>
