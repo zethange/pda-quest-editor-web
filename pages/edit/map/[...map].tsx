@@ -24,7 +24,6 @@ export default function mapEdit() {
   const onLoadImage = (target: any) => {
     setDiffHeight(target.target.naturalHeight / target.target.clientHeight);
     setDiffWidth(target.target.naturalWidth / target.target.clientWidth);
-    console.log(diffHeight, diffWidth);
   };
 
   console.log(map);
@@ -43,6 +42,7 @@ export default function mapEdit() {
       <Box h="calc(100vh - 57px)" display="flex">
         <Box position="relative">
           <Image
+            h="calc(100vh - 57px)"
             src={
               map?.editor?.url
                 ? `/static/maps${map?.editor?.url}`
@@ -62,6 +62,18 @@ export default function mapEdit() {
                 bottom={`${+point.pos.split(":")[1] / diffHeight}px`}
                 alt={point.name}
                 onClick={() => console.log(point)}
+              />
+            </Tooltip>
+          ))}
+          {map?.spawns.map((spawn) => (
+            <Tooltip label={JSON.stringify(spawn, null, 2)}>
+              <Image
+                w="10px"
+                src={`/static/tags/yellow.png`}
+                position="absolute"
+                left={`${+spawn.pos.split(":")[0] / diffWidth}px`}
+                bottom={`${+spawn.pos.split(":")[1] / diffHeight}px`}
+                onClick={() => console.log(spawn)}
               />
             </Tooltip>
           ))}

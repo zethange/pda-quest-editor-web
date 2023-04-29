@@ -417,10 +417,9 @@ export default function StageEditScreenChakra({
 
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
-      const idLastStage =
-        chapterFromLocalStorage?.stages[
-          chapterFromLocalStorage?.stages?.length - 1
-        ].id;
+      const idLastStage = Math.max(
+        ...chapterFromLocalStorage?.stages.map((stage: stageType) => stage.id)
+      );
 
       // @ts-ignore
       const position = reactFlowInstance.project({
