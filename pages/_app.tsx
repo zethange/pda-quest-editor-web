@@ -1,8 +1,10 @@
 import "@/styles/globals.css";
 import "@/styles/node.css";
 import type { AppProps } from "next/app";
+import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
+import store from "@/store/reduxStore";
 
 export default function App({
   Component,
@@ -11,7 +13,9 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <ChakraProvider>
-        <Component {...pageProps} />
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
       </ChakraProvider>
     </SessionProvider>
   );

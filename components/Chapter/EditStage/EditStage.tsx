@@ -7,7 +7,7 @@ import {
   storeStage,
 } from "@/store/store";
 import React, { useState } from "react";
-import { Box, Button, Flex, Input, Spacer, Textarea } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
 import Confetti from "react-confetti";
 
 export default function EditStage({ data }: { data: any }) {

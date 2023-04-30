@@ -19,17 +19,26 @@ import UserButton from "@/components/UI/NavBar/UserButton";
 import { imagePoint, translateTypePoint } from "@/store/utils/map/typePoint";
 import CreatePointButtons from "@/components/Map/CreatePointButtons";
 
+import { useSelector, useDispatch } from "react-redux";
+import { addPoint, setMap } from "@/store/reduxStore/mapSlice";
+
 export default function mapEdit() {
   const { query, isReady } = useRouter();
   const mapRoute = (query.map as string[]) || [];
-  const [map, setMap] = useState<mapType>();
+
+  const map: mapType = useSelector((state: any) => state.map.map);
+  const dispatch = useDispatch();
+
+  //const [map, setMap] = useState<mapType>();
   const [showQuestPoints, setShowQuestPoints] = useState(true);
   const [showSpawns, setShowSpawns] = useState(false);
 
   const parentMapRef: React.RefObject<any> = createRef();
 
   useEffect(() => {
-    setMap(store.get(`story_${mapRoute[0]}_map_${mapRoute[1]}`));
+    dispatch(
+      setMap({ map: store.get(`story_${mapRoute[0]}_map_${mapRoute[1]}`) })
+    );
   }, [isReady]);
 
   const [diffHeight, setDiffHeight] = useState<number>(0);
@@ -69,21 +78,22 @@ export default function mapEdit() {
       ),
     };
 
-    const mapCopy = JSON.parse(JSON.stringify(map));
-    const data = e.dataTransfer.getData("application/pdaquesteditor");
-    mapCopy.points.push({
-      type: data,
-      name: "Блокпост НИИЧАЗ",
-      pos: `${position.x}:${position.y}`,
-      data: {
-        chapter: "1",
-        stage: "14",
-      },
-    });
-    setMap(mapCopy);
+    const data = e.dataTransfer.getData("application/pdaquesteditor") as string;
+    dispatch(
+      addPoint({
+        point: {
+          type: data,
+          name: "Блокпост НИИЧАЗ",
+          pos: `${position.x}:${position.y}`,
+          data: {
+            chapter: "1",
+            stage: "14",
+          },
+        },
+      })
+    );
   };
 
-  console.log(map);
   return (
     <>
       <CustomHead title={`Редактирование карты ${map?.title}`} />
@@ -113,6 +123,7 @@ export default function mapEdit() {
             onDragOver={(e) => handleDragOver(e)}
             onDragEnter={(e) => handleDragEnter(e)}
             onDragLeave={(e) => handleDragLeave(e)}
+            draggable={false}
             h="calc(100vh - (80px + 57px))"
             src={
               map?.editor?.url
@@ -122,12 +133,13 @@ export default function mapEdit() {
             onLoad={(target: any) => onLoadImage(target)}
           />
           {showQuestPoints &&
-            map?.points.map((point) => (
+            map?.points?.map((point) => (
               <Tooltip
                 label={point.name + ". Тип: " + translateTypePoint(point.type)}
               >
                 <Image
                   w="20px"
+                  draggable={false}
                   src={`/static/tags/${imagePoint(point.type)}`}
                   position="absolute"
                   left={`${+point.pos.split(":")[0] / diffWidth}px`}
@@ -142,6 +154,7 @@ export default function mapEdit() {
               <Tooltip label={JSON.stringify(spawn, null, 2)}>
                 <Image
                   w="10px"
+                  draggable={false}
                   src={`/static/tags/yellow.png`}
                   position="absolute"
                   left={`${+spawn.pos.split(":")[0] / diffWidth}px`}
