@@ -20,48 +20,26 @@ import {
   Box,
   Button,
   Checkbox,
-  Flex,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Popover,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  Portal,
-  SimpleGrid,
   Spacer,
   Text,
-  Textarea,
   useColorMode,
 } from "@chakra-ui/react";
 
-import {
-  editTransferInStore,
-  newTransferToStore,
-  setStageToStore,
-  storeStage,
-} from "@/store/store";
+import { setStageToStore, storeStage } from "@/store/store";
 import "reactflow/dist/style.css";
 
 import { newStage } from "@/store/createTools";
 import CustomHead from "@/components/Global/CustomHead";
-import EditActions from "@/components/EditStage/EditActions/EditActions";
 import { NodeStage } from "@/components/Global/StageNode";
-import MapStage from "@/components/EditStage/MapStage";
-import EditStage from "@/components/EditStage/EditStage";
-import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer";
 import { chapterType, stageTransfer, stageType } from "@/store/types/types";
 import Stats from "stats.js";
 import TransferEdge from "@/components/Global/TransferEdge";
-import { stageName, stageTypes } from "@/store/utils/stageName";
+import { stageName } from "@/store/utils/stageName";
+import ToStage from "@/components/Chapter/ToStage";
+import CreateStage from "@/components/Chapter/CreateStage";
+import CreateTransferModal from "@/components/EditStage/CreateTransferModal";
+import EditTransferModal from "@/components/EditStage/EditTransferModal";
+import EditStagePopover from "@/components/EditStage/EditStagePopover";
 
 export default function StageEditScreenChakra({
   path,
@@ -88,8 +66,6 @@ export default function StageEditScreenChakra({
   const [transferIndex, setTransferIndex] = useState<string>("");
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
-
-  const [selectedStage, setSelectedStage] = useState<number>(0);
 
   // Вытаскивание главы из localStorage
   useEffect(() => {
@@ -450,68 +426,10 @@ export default function StageEditScreenChakra({
         alignItems="center"
         borderBottomColor="gray.200"
       >
-        <Popover>
-          <PopoverTrigger>
-            <Button borderRadius={0} fontWeight={1}>
-              Создать стадию
-            </Button>
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent>
-              <PopoverHeader>Создание стадии</PopoverHeader>
-              <PopoverCloseButton />
-              <PopoverBody>
-                <SimpleGrid gap={2}>
-                  <Button
-                    fontWeight={1}
-                    onDragStart={(event) => onDragStart(event, "default")}
-                    cursor="grab"
-                    draggable
-                  >
-                    Обычная стадия
-                  </Button>
-                  <Button
-                    fontWeight={1}
-                    onDragStart={(event) => onDragStart(event, "exit")}
-                    cursor="grab"
-                    draggable
-                  >
-                    Переход на карту
-                  </Button>
-                </SimpleGrid>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover>
+        <CreateStage onDragStart={onDragStart} />
         <Text>Глава {chapter?.id}</Text>
         <Spacer />
-        <Box px={2} display="flex" alignItems="center" gap={1}>
-          <Button
-            colorScheme="teal"
-            fontWeight="normal"
-            onClick={() => {
-              setStageToStore(null);
-              setEditableStage(null);
-              const stage = chapter.stages.find(
-                (stage: stageType) => stage.id === selectedStage
-              );
-              setTimeout(() => {
-                setStageToStore(stage);
-                setEditableStage(stage);
-              }, 0);
-            }}
-          >
-            Перейти к стадии:{" "}
-          </Button>
-          <Input
-            defaultValue={selectedStage}
-            py={2}
-            w="100px"
-            placeholder="ID..."
-            type="number"
-            onChange={(e) => setSelectedStage(+e.target.value)}
-          />
-        </Box>
+        <ToStage setEditableStage={setEditableStage} chapter={chapter} />
         <Button
           onClick={() => {
             onLayout("TB");
@@ -519,7 +437,7 @@ export default function StageEditScreenChakra({
           fontWeight="normal"
           borderRadius={0}
         >
-          Prettify
+          Сортировка
         </Button>
         <Checkbox onChange={() => setShowFps(!showFps)} mr={1}>
           Счётчик ФПС
@@ -527,68 +445,12 @@ export default function StageEditScreenChakra({
       </Box>
       <Box h="calc(100vh - 83px)">
         {/* Штука для редактирования стадий */}
-        {editableStage && (
-          <Box
-            zIndex="popover"
-            p={5}
-            w={450}
-            borderLeft="2px"
-            borderColor="gray.200"
-            backgroundColor="white"
-            _dark={{
-              backgroundColor: "gray.900",
-              color: "white",
-            }}
-            position="absolute"
-            right="0"
-            bottom="0"
-          >
-            {/* Панель редактирования */}
-            <Box h="calc(100vh - 171px)" overflowY="scroll">
-              {stageTypes(storeStage?.type_stage) === "map" && (
-                <MapStage data={storeStage?.data} />
-              )}
-              {stageTypes(storeStage?.type_stage) === "default" && (
-                <EditStage data={editableStage} />
-              )}
-              {storeStage?.actions && <EditActions />}
-            </Box>
-            <Flex>
-              <Button
-                colorScheme="teal"
-                size="md"
-                mt={2}
-                me={2}
-                onClick={() => {
-                  updateStage(storeStage?.id);
-                  setEditableStage(null);
-                }}
-              >
-                Сохранить
-              </Button>
-              <Button
-                size="md"
-                mt={2}
-                colorScheme="teal"
-                onClick={() => {
-                  setStageToStore(null);
-                  setEditableStage(null);
-                }}
-              >
-                Закрыть
-              </Button>
-              <Box m="auto" />
-              <Button
-                colorScheme="red"
-                size="md"
-                mt={2}
-                onClick={() => deleteStage(storeStage?.id)}
-              >
-                Удалить
-              </Button>
-            </Flex>
-          </Box>
-        )}
+        <EditStagePopover
+          editableStage={editableStage}
+          updateStage={updateStage}
+          deleteStage={deleteStage}
+          setEditableStage={setEditableStage}
+        />
         <Box ref={reactFlowWrapper} height="100%">
           <ReactFlow
             nodes={nodes}
@@ -614,124 +476,21 @@ export default function StageEditScreenChakra({
           </ReactFlow>
         </Box>
 
-        <Modal
-          onClose={() => {
-            setIsOpenCreateTransfer(false);
-            setConnectionInfo(null);
-            setTransferIndex("");
-          }}
-          isOpen={isOpenCreateTransfer}
-          isCentered
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader fontWeight={1}>
-              Создание перехода со стадии {connectionInfo?.source} на{" "}
-              {connectionInfo?.target}
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Textarea
-                placeholder="Введите текст..."
-                defaultValue={connectionInfo?.targetTransfer?.text}
-                onClick={(event: any) => {
-                  event.target.style.height = "inherit";
-                  event.target.style.height = `${event.target.scrollHeight}px`;
-                }}
-                onInput={(event: any) => {
-                  event.target.style.height = "inherit";
-                  event.target.style.height = `${event.target.scrollHeight}px`;
-                  setTransferIndex(
-                    String(
-                      newTransferToStore({
-                        text: event.target.value,
-                        stage: connectionInfo?.target,
-                        condition: {},
-                      })
-                    )
-                  );
-                }}
-              />
-              {transferIndex ? (
-                <CreateTransfer transferIndex={Number(transferIndex)} />
-              ) : (
-                "Для добавления условий необходимо заполнить текст"
-              )}
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                colorScheme="teal"
-                onClick={() => {
-                  updateStage(storeStage.id);
-                  setConnectionInfo(null);
-                  setTransferIndex("");
-                  setIsOpenCreateTransfer(false);
-                }}
-                mx={2}
-              >
-                Сохранить
-              </Button>
-              <Button
-                onClick={() => {
-                  setTransferIndex("");
-                  setConnectionInfo(null);
-                  setIsOpenCreateTransfer(false);
-                }}
-              >
-                Закрыть
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+        <CreateTransferModal
+          setIsOpenCreateTransfer={setIsOpenCreateTransfer}
+          setConnectionInfo={setConnectionInfo}
+          setTransferIndex={setTransferIndex}
+          updateStage={updateStage}
+          connectionInfo={connectionInfo}
+          transferIndex={transferIndex}
+          isOpenCreateTransfer={isOpenCreateTransfer}
+        />
 
-        <Modal
-          onClose={() => {
-            setShowModalEditTransfer(false);
-          }}
-          isOpen={showModalEditTransfer}
-          isCentered
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader fontWeight={1}>
-              Переход с {storeStage?.id} на {storeStage?.targetTransfer?.stage}
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Textarea
-                placeholder="Введите текст..."
-                defaultValue={storeStage?.targetTransfer?.text}
-                onChange={(event) => {
-                  editTransferInStore(storeStage?.indexTargetTransfer, {
-                    ...storeStage?.targetTransfer,
-                    text: event.target.value,
-                  });
-                }}
-              />
-              <CreateTransfer transferIndex={storeStage?.indexTargetTransfer} />
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                colorScheme="teal"
-                onClick={() => {
-                  updateStage(storeStage.id);
-                  setShowModalEditTransfer(false);
-                }}
-                mr={2}
-              >
-                Сохранить
-              </Button>
-              <Button
-                colorScheme="teal"
-                onClick={() => {
-                  setShowModalEditTransfer(false);
-                }}
-              >
-                Закрыть
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+        <EditTransferModal
+          setShowModalEditTransfer={setShowModalEditTransfer}
+          showModalEditTransfer={showModalEditTransfer}
+          updateStage={updateStage}
+        />
       </Box>
     </>
   );
