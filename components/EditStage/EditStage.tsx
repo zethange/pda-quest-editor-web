@@ -7,7 +7,7 @@ import {
   storeStage,
 } from "@/store/store";
 import React, { useState } from "react";
-import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Spacer, Textarea } from "@chakra-ui/react";
 import Confetti from "react-confetti";
 
 export default function EditStage({ data }: { data: any }) {
@@ -31,19 +31,25 @@ export default function EditStage({ data }: { data: any }) {
         border={!storeStage?.background ? "1px solid" : "0 solid"}
         borderColor="gray.100"
         borderRadius="10px"
+        height="215px"
+        position="relative"
       >
-        <Box>
+        <Box
+          display="grid"
+          gridColumn="1"
+          height="199px"
+          alignContent="space-between"
+        >
           {JSON.stringify(storeStage).includes("Максим лох") && (
             <Confetti width={1920} height={1080} />
           )}
-          <Textarea
+          <Input
             placeholder="Заголовок стадии..."
             backgroundColor="white"
-            height="150px"
-            opacity="0.95"
+            opacity="0.75"
             _dark={{
               backgroundColor: "black",
-              opacity: "0.95",
+              opacity: "0.75",
             }}
             defaultValue={data?.title}
             onChange={(event) => editTitleInStore(event.target.value)}
@@ -51,9 +57,13 @@ export default function EditStage({ data }: { data: any }) {
           <Input
             placeholder="Ссылка на фон..."
             backgroundColor="white"
-            opacity="0.95"
+            opacity="0.75"
             defaultValue={data?.background}
             mt={2}
+            _dark={{
+              backgroundColor: "black",
+              opacity: "0.75",
+            }}
             onChange={(event) => {
               editBackgroundInStore(event.target.value);
               setRerender(!rerender);
@@ -85,12 +95,19 @@ export default function EditStage({ data }: { data: any }) {
                   placeholder="Текст..."
                   defaultValue={text.text}
                   backgroundColor="white"
-                  onChange={(event) =>
+                  onClick={(event: any) => {
+                    event.target.style.height = "inherit";
+                    event.target.style.height = `${event.target.scrollHeight}px`;
+                  }}
+                  onInput={(event: any) => {
+                    event.target.style.height = "inherit";
+                    event.target.style.height = `${event.target.scrollHeight}px`;
+
                     editTextInStore(index, {
                       text: event.target.value,
                       condition: text.condition,
-                    })
-                  }
+                    });
+                  }}
                 />
               )
           )}
@@ -102,7 +119,13 @@ export default function EditStage({ data }: { data: any }) {
           Показывать сообщение:{" "}
           <input
             type="checkbox"
-            onChange={() => {
+            onClick={(event: any) => {
+              event.target.style.height = "inherit";
+              event.target.style.height = `${event.target.scrollHeight}px`;
+            }}
+            onInput={(event: any) => {
+              event.target.style.height = "inherit";
+              event.target.style.height = `${event.target.scrollHeight}px`;
               setCheckBoxMessage(!checkBoxMessage);
               if (!checkBoxMessage) editMessageInStore("Новое уведомление");
               if (checkBoxMessage) editMessageInStore("");

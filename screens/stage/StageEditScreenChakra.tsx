@@ -633,7 +633,13 @@ export default function StageEditScreenChakra({
               <Textarea
                 placeholder="Введите текст..."
                 defaultValue={connectionInfo?.targetTransfer?.text}
-                onChange={(event) => {
+                onClick={(event: any) => {
+                  event.target.style.height = "inherit";
+                  event.target.style.height = `${event.target.scrollHeight}px`;
+                }}
+                onInput={(event: any) => {
+                  event.target.style.height = "inherit";
+                  event.target.style.height = `${event.target.scrollHeight}px`;
                   setTransferIndex(
                     String(
                       newTransferToStore({
