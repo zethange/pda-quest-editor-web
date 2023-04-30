@@ -37,9 +37,9 @@ import TransferEdge from "@/components/Global/TransferEdge";
 import { stageName } from "@/store/utils/stageName";
 import ToStage from "@/components/Chapter/ToStage";
 import CreateStage from "@/components/Chapter/CreateStage";
-import CreateTransferModal from "@/components/EditStage/CreateTransferModal";
-import EditTransferModal from "@/components/EditStage/EditTransferModal";
-import EditStagePopover from "@/components/EditStage/EditStagePopover";
+import CreateTransferModal from "@/components/Chapter/EditStage/CreateTransferModal";
+import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal";
+import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
 
 export default function StageEditScreenChakra({
   path,
@@ -386,7 +386,6 @@ export default function StageEditScreenChakra({
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData("application/reactflow");
 
-      // check if the dropped element is valid
       if (typeof type === "undefined" || !type) {
         return;
       }
@@ -425,6 +424,9 @@ export default function StageEditScreenChakra({
         borderBottom="1px"
         alignItems="center"
         borderBottomColor="gray.200"
+        _dark={{
+          borderBottom: "1px solid #171923",
+        }}
       >
         <CreateStage onDragStart={onDragStart} />
         <Text>Глава {chapter?.id}</Text>

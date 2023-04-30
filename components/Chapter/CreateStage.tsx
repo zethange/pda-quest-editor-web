@@ -31,16 +31,16 @@ const CreateStage = ({ onDragStart }: IProps) => {
             <SimpleGrid gap={2}>
               <Button
                 fontWeight={1}
-                onDragStart={(event) => onDragStart(event, "default")}
                 cursor="grab"
+                onDragStart={(event) => onDragStart(event, "default")}
                 draggable
               >
                 Обычная стадия
               </Button>
               <Button
                 fontWeight={1}
-                onDragStart={(event) => onDragStart(event, "exit")}
                 cursor="grab"
+                onDragStart={(event) => onDragStart(event, "exit")}
                 draggable
               >
                 Переход на карту

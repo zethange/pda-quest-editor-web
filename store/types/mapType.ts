@@ -18,7 +18,7 @@ export type pointType = {
     chapter: string;
     stage: string;
   };
-  condition: any;
+  condition?: any;
 };
 
 export enum spawnGroup {

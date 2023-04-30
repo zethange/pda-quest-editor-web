@@ -11,7 +11,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { editTransferInStore, storeStage } from "@/store/store";
-import CreateTransfer from "@/components/EditStage/CreateTransfer/CreateTransfer";
+import CreateTransfer from "@/components/Chapter/EditStage/CreateTransfer/CreateTransfer";
 
 interface IProps {
   setShowModalEditTransfer: (value: boolean) => void;

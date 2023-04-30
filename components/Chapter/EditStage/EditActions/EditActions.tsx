@@ -8,7 +8,7 @@ import {
   storeStage,
 } from "@/store/store";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
-import CreateParamEmpty from "@/components/EditStage/EditActions/CreateParamEmpty";
+import CreateParamEmpty from "@/components/Chapter/EditStage/EditActions/CreateParamEmpty";
 import { commandLocalizer, typeCommand } from "@/store/utils/commandsAction";
 
 export default function EditActions() {

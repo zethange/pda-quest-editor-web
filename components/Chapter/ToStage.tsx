@@ -59,7 +59,7 @@ const ToStage = ({ setEditableStage, chapter }: IProps) => {
                     }, 0);
                   }}
                 >
-                  Перейти к стадии:{" "}
+                  Перейти к стадии
                 </Button>
               </SimpleGrid>
             </PopoverBody>

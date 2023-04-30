@@ -2,9 +2,9 @@ import React from "react";
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { stageTypes } from "@/store/utils/stageName";
 import { setStageToStore, storeStage } from "@/store/store";
-import MapStage from "@/components/EditStage/MapStage";
-import EditStage from "@/components/EditStage/EditStage";
-import EditActions from "@/components/EditStage/EditActions/EditActions";
+import MapStage from "@/components/Chapter/EditStage/MapStage";
+import EditStage from "@/components/Chapter/EditStage/EditStage";
+import EditActions from "@/components/Chapter/EditStage/EditActions/EditActions";
 import { stageType } from "@/store/types/types";
 
 interface IProps {

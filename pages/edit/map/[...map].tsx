@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { mapType } from "@/store/types/mapType";
 import store from "store2";
 import CustomHead from "@/components/Global/CustomHead";
@@ -17,6 +17,7 @@ import {
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import UserButton from "@/components/UI/NavBar/UserButton";
 import { imagePoint, translateTypePoint } from "@/store/utils/map/typePoint";
+import CreatePointButtons from "@/components/Map/CreatePointButtons";
 
 export default function mapEdit() {
   const { query, isReady } = useRouter();
@@ -24,6 +25,8 @@ export default function mapEdit() {
   const [map, setMap] = useState<mapType>();
   const [showQuestPoints, setShowQuestPoints] = useState(true);
   const [showSpawns, setShowSpawns] = useState(false);
+
+  const parentMapRef: React.RefObject<any> = createRef();
 
   useEffect(() => {
     setMap(store.get(`story_${mapRoute[0]}_map_${mapRoute[1]}`));
@@ -35,6 +38,49 @@ export default function mapEdit() {
   const onLoadImage = (target: any) => {
     setDiffHeight(target.target.naturalHeight / target.target.clientHeight);
     setDiffWidth(target.target.naturalWidth / target.target.clientWidth);
+  };
+
+  const onDragStart = (e: React.DragEvent, type: string) => {
+    e.dataTransfer.setData("application/pdaquesteditor", type);
+    e.dataTransfer.effectAllowed = "move";
+  };
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent | any) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const parentMap = parentMapRef.current.getBoundingClientRect();
+    const position = {
+      x: Math.round((e.clientX - parentMap.left) * diffHeight),
+      y: Math.round(
+        e.target.naturalHeight - (e.clientY - parentMap.top) * diffHeight
+      ),
+    };
+
+    const mapCopy = JSON.parse(JSON.stringify(map));
+    const data = e.dataTransfer.getData("application/pdaquesteditor");
+    mapCopy.points.push({
+      type: data,
+      name: "Блокпост НИИЧАЗ",
+      pos: `${position.x}:${position.y}`,
+      data: {
+        chapter: "1",
+        stage: "14",
+      },
+    });
+    setMap(mapCopy);
   };
 
   console.log(map);
@@ -56,8 +102,17 @@ export default function mapEdit() {
         justifyContent="space-between"
         p={10}
       >
-        <Box position="relative" me={10} border="1px solid #000">
+        <Box
+          position="relative"
+          me={10}
+          border="1px solid #000"
+          ref={parentMapRef}
+        >
           <Image
+            onDrop={(e) => handleDrop(e)}
+            onDragOver={(e) => handleDragOver(e)}
+            onDragEnter={(e) => handleDragEnter(e)}
+            onDragLeave={(e) => handleDragLeave(e)}
             h="calc(100vh - (80px + 57px))"
             src={
               map?.editor?.url
@@ -96,7 +151,12 @@ export default function mapEdit() {
               </Tooltip>
             ))}
         </Box>
-        <Box backgroundColor="gray.50">
+        <Box
+          backgroundColor="gray.50"
+          p={2}
+          _dark={{ backgroundColor: "gray.700" }}
+          borderRadius="10px"
+        >
           <Text>Опции</Text>
           <Box>
             Показывать точки квестов:{" "}
@@ -112,6 +172,7 @@ export default function mapEdit() {
               onChange={() => setShowSpawns(!showSpawns)}
             />
           </Box>
+          <CreatePointButtons onDragStart={onDragStart} />
         </Box>
       </Box>
     </>
