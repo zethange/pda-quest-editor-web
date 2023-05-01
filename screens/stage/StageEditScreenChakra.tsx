@@ -158,11 +158,11 @@ export default function StageEditScreenChakra({
     const initialNodes: any[] = [];
     const initialEdges: any[] = [];
 
-    chapter?.stages?.map((stage: any) => {
+    chapter?.stages?.map((stage: stageType) => {
       initialNodes.push({
         id: String(stage.id),
         type: "nodeStage",
-        selected: false,
+        selected: stage.id === storeStage.id,
         data: {
           label: stageName(stage.type_stage)
             ? stageName(stage.type_stage)
@@ -181,8 +181,8 @@ export default function StageEditScreenChakra({
           actions: stage.actions || {},
         },
         position: stage.editor
-          ? { x: stage?.editor?.x || 0, y: stage?.editor?.y || 0 }
-          : { x: stage?.editor?.x, y: stage?.editor?.y },
+          ? { x: stage.editor.x, y: stage.editor.y }
+          : { x: 0, y: 0 },
       });
     });
 

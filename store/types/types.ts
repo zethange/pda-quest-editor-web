@@ -18,9 +18,9 @@ export type stageType = {
     map: string;
     pos: string;
   };
-  editor: {
-    x: number;
-    y: number;
+  editor?: {
+    x?: number;
+    y?: number;
   };
 };
 

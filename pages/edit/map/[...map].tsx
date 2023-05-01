@@ -58,6 +58,8 @@ export default function mapEdit() {
   const [diffHeight, setDiffHeight] = useState<number>(0);
   const [diffWidth, setDiffWidth] = useState<number>(0);
 
+  const [selectedPoint, setSelectedPoint] = useState("");
+
   const onLoadImage = (target: any) => {
     setDiffHeight(target.target.naturalHeight / target.target.clientHeight);
     setDiffWidth(target.target.naturalWidth / target.target.clientWidth);
@@ -158,6 +160,8 @@ export default function mapEdit() {
                   left={`${+point.pos.split(":")[0] / diffWidth}px`}
                   bottom={`${+point.pos.split(":")[1] / diffHeight}px`}
                   alt={point.name}
+                  transform={selectedPoint === point.name ? "scale(2)" : ""}
+                  transition="all 0.3s ease-out"
                   onClick={() => {
                     dispatch(setOpenPoint(point));
                     setShowEditPointModal(true);
@@ -185,23 +189,49 @@ export default function mapEdit() {
           p={2}
           _dark={{ backgroundColor: "gray.700" }}
           borderRadius="10px"
+          display="grid"
+          alignContent="space-between"
         >
-          <Text>Опции</Text>
           <Box>
-            Показывать точки квестов:{" "}
-            <Switch
-              isChecked={showQuestPoints}
-              onChange={() => setShowQuestPoints(!showQuestPoints)}
-            />
+            <Text>Опции</Text>
+            <Box>
+              Показывать точки квестов:{" "}
+              <Switch
+                isChecked={showQuestPoints}
+                onChange={() => setShowQuestPoints(!showQuestPoints)}
+              />
+            </Box>
+            <Box>
+              Показывать спавны:{" "}
+              <Switch
+                isChecked={showSpawns}
+                onChange={() => setShowSpawns(!showSpawns)}
+              />
+            </Box>
+            <CreatePointButtons onDragStart={onDragStart} />
           </Box>
           <Box>
-            Показывать спавны:{" "}
-            <Switch
-              isChecked={showSpawns}
-              onChange={() => setShowSpawns(!showSpawns)}
-            />
+            Метки:
+            <Box display="grid" gap={2} h="200px" overflowY="auto">
+              {map?.points?.map((point) => (
+                <Button
+                  p={1}
+                  fontWeight="normal"
+                  backgroundColor="white"
+                  borderRadius="10px"
+                  onMouseEnter={() => setSelectedPoint(point.name)}
+                  onMouseLeave={() => setSelectedPoint("")}
+                  onClick={() => {
+                    dispatch(setOpenPoint(point));
+                    setShowEditPointModal(true);
+                  }}
+                  key={point.pos}
+                >
+                  {point.name}
+                </Button>
+              ))}
+            </Box>
           </Box>
-          <CreatePointButtons onDragStart={onDragStart} />
         </Box>
         <CreatePointModal
           showCreatePointModal={showCreatePointModal}
