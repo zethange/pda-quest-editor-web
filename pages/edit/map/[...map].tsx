@@ -20,7 +20,13 @@ import { imagePoint, translateTypePoint } from "@/store/utils/map/typePoint";
 import CreatePointButtons from "@/components/Map/CreatePointButtons";
 
 import { useSelector, useDispatch } from "react-redux";
-import { addPoint, setMap } from "@/store/reduxStore/mapSlice";
+import {
+  onPointCreate,
+  setMap,
+  setOpenPoint,
+} from "@/store/reduxStore/mapSlice";
+import CreatePointModal from "@/components/Map/CreatePointModal";
+import UpdatePointModal from "@/components/Map/UpdatePointModal";
 
 export default function mapEdit() {
   const { query, isReady } = useRouter();
@@ -29,9 +35,12 @@ export default function mapEdit() {
   const map: mapType = useSelector((state: any) => state.map.map);
   const dispatch = useDispatch();
 
-  //const [map, setMap] = useState<mapType>();
+  // опции
   const [showQuestPoints, setShowQuestPoints] = useState(true);
   const [showSpawns, setShowSpawns] = useState(false);
+
+  const [showCreatePointModal, setShowCreatePointModal] = useState(false);
+  const [showEditPointModal, setShowEditPointModal] = useState(false);
 
   const parentMapRef: React.RefObject<any> = createRef();
 
@@ -40,6 +49,11 @@ export default function mapEdit() {
       setMap({ map: store.get(`story_${mapRoute[0]}_map_${mapRoute[1]}`) })
     );
   }, [isReady]);
+
+  const updateMap = () => {
+    store.set(`story_${mapRoute[0]}_map_${mapRoute[1]}`, map);
+    console.log("updating map:", map);
+  };
 
   const [diffHeight, setDiffHeight] = useState<number>(0);
   const [diffWidth, setDiffWidth] = useState<number>(0);
@@ -79,17 +93,13 @@ export default function mapEdit() {
     };
 
     const data = e.dataTransfer.getData("application/pdaquesteditor") as string;
+    setShowCreatePointModal(true);
     dispatch(
-      addPoint({
-        point: {
-          type: data,
-          name: "Блокпост НИИЧАЗ",
-          pos: `${position.x}:${position.y}`,
-          data: {
-            chapter: "1",
-            stage: "14",
-          },
-        },
+      onPointCreate({
+        type: data,
+        pos: `${position.x}:${position.y}`,
+        name: "",
+        data: { chapter: "", stage: "" },
       })
     );
   };
@@ -124,6 +134,7 @@ export default function mapEdit() {
             onDragEnter={(e) => handleDragEnter(e)}
             onDragLeave={(e) => handleDragLeave(e)}
             draggable={false}
+            userSelect="none"
             h="calc(100vh - (80px + 57px))"
             src={
               map?.editor?.url
@@ -135,17 +146,22 @@ export default function mapEdit() {
           {showQuestPoints &&
             map?.points?.map((point) => (
               <Tooltip
+                key={point.name}
                 label={point.name + ". Тип: " + translateTypePoint(point.type)}
               >
                 <Image
                   w="20px"
                   draggable={false}
+                  userSelect="none"
                   src={`/static/tags/${imagePoint(point.type)}`}
                   position="absolute"
                   left={`${+point.pos.split(":")[0] / diffWidth}px`}
                   bottom={`${+point.pos.split(":")[1] / diffHeight}px`}
                   alt={point.name}
-                  onClick={() => console.log(point)}
+                  onClick={() => {
+                    dispatch(setOpenPoint(point));
+                    setShowEditPointModal(true);
+                  }}
                 />
               </Tooltip>
             ))}
@@ -187,6 +203,16 @@ export default function mapEdit() {
           </Box>
           <CreatePointButtons onDragStart={onDragStart} />
         </Box>
+        <CreatePointModal
+          showCreatePointModal={showCreatePointModal}
+          setShowCreatePointModal={setShowCreatePointModal}
+          updateMap={updateMap}
+        />
+        <UpdatePointModal
+          showEditPointModal={showEditPointModal}
+          setShowEditPointModal={setShowEditPointModal}
+          updateMap={updateMap}
+        />
       </Box>
     </>
   );

@@ -1,9 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { pointType } from "@/store/types/mapType";
+import { mapType, pointType } from "@/store/types/mapType";
 
 const mapSlice = createSlice({
   name: "map",
   initialState: {
+    openPoint: {},
+    newPoint: {
+      type: "",
+      pos: "",
+      data: {
+        chapter: "",
+        stage: "",
+      },
+    },
     map: {
       points: [],
       spawns: [],
@@ -11,23 +20,52 @@ const mapSlice = createSlice({
   },
   reducers: {
     setMap(state, action) {
-      console.log(state, action);
       state.map = action.payload.map;
-      console.log("Внутри стора", state);
     },
-    addPoint(state, action: { payload: { point: pointType }; type: string }) {
+    setOpenPoint(state, action) {
+      state.openPoint = action.payload;
+    },
+    onPointCreate(state, action) {
+      state.newPoint = action.payload;
+    },
+    addPoint(state, action) {
       // @ts-ignore
-      state.map.points.push(action.payload.point);
+      state.map.points.push(action.payload);
     },
     addSpawn(state, action) {},
-    deletePoint(state, action) {},
+    deletePoint(state, action) {
+      console.log(
+        state.map.points.filter(
+          (point: pointType) =>
+            JSON.stringify(point) !== JSON.stringify(action.payload)
+        )
+      );
+    },
     deleteSpawn(state, action) {},
-    editPoint(state, action) {},
+    editPoint(state, action) {
+      const copyState = JSON.parse(JSON.stringify(state.map));
+      const openPoint = JSON.parse(JSON.stringify(state.openPoint));
+      const index = copyState.points.findIndex(
+        (point: pointType) =>
+          JSON.stringify(point) === JSON.stringify(openPoint)
+      );
+
+      // @ts-ignore
+      state.map.points.splice(index, 1, action.payload);
+    },
     editSpawn(state, action) {},
   },
 });
 
-export const { setMap, addPoint, addSpawn, deleteSpawn, editSpawn, editPoint } =
-  mapSlice.actions;
+export const {
+  setMap,
+  setOpenPoint,
+  addPoint,
+  addSpawn,
+  deleteSpawn,
+  editSpawn,
+  editPoint,
+  onPointCreate,
+} = mapSlice.actions;
 
 export default mapSlice.reducer;
