@@ -10,5 +10,5 @@ export default function ChapterEditById() {
   const { query, isReady } = useRouter();
   const chapterRoute = (query.chapter as string[]) || [];
 
-  return <StageScreen path={chapterRoute} isReady={isReady} />;
+  return <StageScreen path={chapterRoute} query={query} isReady={isReady} />;
 }

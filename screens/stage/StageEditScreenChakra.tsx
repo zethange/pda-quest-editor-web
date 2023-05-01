@@ -44,8 +44,10 @@ import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
 export default function StageEditScreenChakra({
   path,
   isReady,
+  query,
 }: {
   path: string[];
+  query: any;
   isReady: boolean;
 }) {
   const [chapter, setChapter] = useState<chapterType | any>();
@@ -413,6 +415,24 @@ export default function StageEditScreenChakra({
     },
     [chapter, reactFlowInstance]
   );
+
+  useEffect(() => {
+    if (query.stage) {
+      setStageToStore(null);
+      setEditableStage(null);
+
+      const chapterFromLocalStorage =
+        path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+
+      const stage = chapterFromLocalStorage.stages.find(
+        (stage: stageType) => stage.id === +query.stage
+      );
+      setTimeout(() => {
+        setStageToStore(stage);
+        setEditableStage(stage);
+      }, 0);
+    }
+  }, [isReady]);
 
   return (
     <>

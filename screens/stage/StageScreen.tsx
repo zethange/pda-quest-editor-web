@@ -15,9 +15,11 @@ import MapScreen from "../map/MapScreen";
 
 const StageScreen = ({
   path,
+  query,
   isReady,
 }: {
   path: string[];
+  query: any;
   isReady: boolean;
 }) => {
   console.log(path);
@@ -39,7 +41,7 @@ const StageScreen = ({
       <TabIndicator mt="-1.5px" height="1px" bg="blue.500" borderRadius="1px" />
       <TabPanels>
         <TabPanel p={0}>
-          <StageEditScreenChakra path={path} isReady={isReady} />
+          <StageEditScreenChakra path={path} query={query} isReady={isReady} />
         </TabPanel>
         <TabPanel>
           <MapScreen path={path} isReady={isReady} />

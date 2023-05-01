@@ -34,7 +34,6 @@ const CreatePointModal = ({
 
   useEffect(() => {
     setNewPoint(initialPoint);
-    updateMap();
   }, [showCreatePointModal]);
 
   const savePoint = () => {

@@ -211,6 +211,7 @@ export default function mapEdit() {
         <UpdatePointModal
           showEditPointModal={showEditPointModal}
           setShowEditPointModal={setShowEditPointModal}
+          storyId={mapRoute[0]}
           updateMap={updateMap}
         />
       </Box>

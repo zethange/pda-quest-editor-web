@@ -14,16 +14,21 @@ export default function EditStage({ data }: { data: any }) {
   const [rerender, setRerender] = useState<boolean>(false);
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
 
+  let background: string;
+  if (storeStage.background.includes("http")) {
+    background = storeStage.background;
+  } else if (!storeStage.background) {
+    background = "/no_background.png";
+  } else {
+    background = `https://cdn.artux.net/static/${data?.background}`;
+  }
+
   return (
     <>
       <Box
         p={2}
         background={`
-            url(${
-              storeStage?.background
-                ? `https://cdn.artux.net/static/${data?.background}`
-                : "/no_background.png"
-            })
+            url(${background})
           `}
         backgroundRepeat="no-repeat"
         backgroundSize="408px"

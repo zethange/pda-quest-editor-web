@@ -16,14 +16,17 @@ import {
 import { pointType } from "@/store/types/mapType";
 import { useDispatch, useSelector } from "react-redux";
 import { editPoint } from "@/store/reduxStore/mapSlice";
+import Link from "next/link";
 
 interface IProps {
   showEditPointModal: boolean;
+  storyId: string;
   setShowEditPointModal: (value: boolean) => void;
   updateMap: () => void;
 }
 
 const UpdatePointModal = ({
+  storyId,
   showEditPointModal,
   setShowEditPointModal,
   updateMap,
@@ -34,7 +37,6 @@ const UpdatePointModal = ({
 
   useEffect(() => {
     setUpdatedPoint(initialPoint);
-    updateMap();
   }, [showEditPointModal]);
 
   const updatePoint = () => {
@@ -96,7 +98,17 @@ const UpdatePointModal = ({
                 />
               </Box>
               <Box>
-                <FormLabel>Стадия:</FormLabel>
+                <FormLabel>
+                  Стадия:{" "}
+                  <Link
+                    href={{
+                      pathname: `/edit/chapter/${storyId}/${updatedPoint?.data?.chapter}`,
+                      query: { stage: updatedPoint?.data?.stage },
+                    }}
+                  >
+                    <Button size="xs">Перейти</Button>
+                  </Link>
+                </FormLabel>
                 <Input
                   required
                   value={updatedPoint?.data?.stage}
