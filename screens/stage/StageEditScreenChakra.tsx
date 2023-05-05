@@ -509,7 +509,6 @@ export default function StageEditScreenChakra({
           setIsOpenCreateTransfer={setIsOpenCreateTransfer}
           setTransferIndex={setTransferIndex}
           updateStage={updateStage}
-          transferIndex={transferIndex}
           isOpenCreateTransfer={isOpenCreateTransfer}
         />
 
