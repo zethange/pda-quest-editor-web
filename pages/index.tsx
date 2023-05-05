@@ -30,6 +30,7 @@ import {
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import UserButton from "@/components/UI/NavBar/UserButton";
 import { BiEdit } from "react-icons/bi";
+import { BsCloudUpload } from "react-icons/bs";
 import { storyType } from "@/store/types/storyType";
 
 export default function Home() {
@@ -147,6 +148,42 @@ export default function Home() {
     store.set(`story_${editStory?.id}_info`, editStory);
   };
 
+  const uploadStoryToServer = async (storyId: number) => {
+    const info = await store.get(`story_${storyId}_info`);
+
+    let chapters: object = {};
+    let maps: object = {};
+    await store.each(async (key: string, value: any) => {
+      if (key.includes(`story_${storyId}_chapter`)) {
+        const arrChapters: any = Object.entries(chapters);
+        arrChapters.push([`chapter_${key.split("_")[3]}`, value]);
+        chapters = Object.fromEntries(arrChapters);
+      }
+      if (key.includes(`story_${storyId}_map`)) {
+        const arrMaps: any = Object.entries(maps);
+        arrMaps.push([`map_${key.split("_")[3]}`, value]);
+        maps = Object.fromEntries(arrMaps);
+      }
+      if (key === "stopLoop") return false;
+    });
+
+    const data = {
+      ...info,
+      chapters,
+      maps,
+      missions: [],
+    };
+    const res = await fetch(
+      "https://dev.artux.net/pdanetwork/quest/uploadCustom",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    );
+    const dataRes = await res.json();
+    console.log(dataRes);
+  };
+
   return (
     <>
       <CustomHead title="Редактор историй" />
@@ -213,6 +250,9 @@ export default function Home() {
                     onClick={() => downloadStory(story?.id)}
                   >
                     Скачать
+                  </Button>
+                  <Button onClick={() => uploadStoryToServer(story.id)}>
+                    <Icon as={BsCloudUpload} />
                   </Button>
                   <Button
                     onClick={() => {
