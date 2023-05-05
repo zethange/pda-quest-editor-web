@@ -12,8 +12,9 @@ import {
   Portal,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { setStageToStore } from "@/store/store";
 import { chapterType, stageType } from "@/store/types/types";
+import { useDispatch } from "react-redux";
+import { setStageToStore } from "@/store/reduxStore/stageSlice";
 
 interface IProps {
   setEditableStage: (stage: stageType | null) => void;
@@ -22,6 +23,7 @@ interface IProps {
 
 const ToStage = ({ setEditableStage, chapter }: IProps) => {
   const [selectedStage, setSelectedStage] = useState<number>(0);
+  const dispatch = useDispatch();
 
   return (
     <Box px={2} display="flex" alignItems="center" gap={1}>
@@ -48,13 +50,13 @@ const ToStage = ({ setEditableStage, chapter }: IProps) => {
                   colorScheme="teal"
                   fontWeight="normal"
                   onClick={() => {
-                    setStageToStore(null);
+                    dispatch(setStageToStore(null));
                     setEditableStage(null);
                     const stage = chapter.stages.find(
                       (stage: stageType) => stage.id === selectedStage
                     );
                     setTimeout(() => {
-                      setStageToStore(stage);
+                      dispatch(setStageToStore(stage));
                       setEditableStage(stage || null);
                     }, 0);
                   }}

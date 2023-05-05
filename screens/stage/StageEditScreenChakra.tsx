@@ -25,7 +25,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 
-import { setStageToStore, storeStage } from "@/store/store";
 import "reactflow/dist/style.css";
 
 import { newStage } from "@/store/createTools";
@@ -40,6 +39,11 @@ import CreateStage from "@/components/Chapter/CreateStage";
 import CreateTransferModal from "@/components/Chapter/EditStage/CreateTransferModal";
 import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal";
 import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setConnection,
+  setStageToStore as setStageToRedux,
+} from "@/store/reduxStore/stageSlice";
 
 export default function StageEditScreenChakra({
   path,
@@ -52,6 +56,8 @@ export default function StageEditScreenChakra({
 }) {
   const [chapter, setChapter] = useState<chapterType | any>();
   const { colorMode } = useColorMode();
+  const dispatch = useDispatch();
+  const storeStage = useSelector((state: any) => state.stage.stage);
 
   const [nodes, setNodes] = useState<any[]>();
   const [edges, setEdges] = useState<any[]>();
@@ -64,7 +70,6 @@ export default function StageEditScreenChakra({
   const [showModalEditTransfer, setShowModalEditTransfer] =
     useState<boolean>(false);
 
-  const [connectionInfo, setConnectionInfo] = useState<any>();
   const [transferIndex, setTransferIndex] = useState<string>("");
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
@@ -168,11 +173,10 @@ export default function StageEditScreenChakra({
             ? stageName(stage.type_stage)
             : stage.title,
           onClick: () => {
-            setStageToStore(null);
+            dispatch(setStageToRedux(null));
             setEditableStage(null);
-
             setTimeout(() => {
-              setStageToStore(stage);
+              dispatch(setStageToRedux(stage));
               setEditableStage(stage);
             }, 0);
           },
@@ -260,7 +264,9 @@ export default function StageEditScreenChakra({
 
       const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
       setShowModalEditTransfer(true);
-      setStageToStore({ ...stage, targetTransfer, indexTargetTransfer });
+      dispatch(
+        setStageToRedux({ ...stage, targetTransfer, indexTargetTransfer })
+      );
     },
     [chapter]
   );
@@ -312,10 +318,9 @@ export default function StageEditScreenChakra({
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-      setConnectionInfo({
-        source: connection.source,
-        target: connection.target,
-      });
+      dispatch(
+        setConnection({ source: connection.source, target: connection.target })
+      );
 
       const targetTransfer = chapterFromLocalStorage?.stages[
         connection.source
@@ -323,10 +328,12 @@ export default function StageEditScreenChakra({
 
       setIsOpenCreateTransfer(true);
 
-      setStageToStore({
-        ...chapterFromLocalStorage?.stages[connection.source],
-        targetTransfer,
-      });
+      dispatch(
+        setStageToRedux({
+          ...chapterFromLocalStorage?.stages[connection.source],
+          targetTransfer,
+        })
+      );
     },
     [setEdges, chapter]
   );
@@ -342,7 +349,7 @@ export default function StageEditScreenChakra({
     chapterFromLocalStorage?.stages?.splice(indexStage, 1);
 
     chapterFromLocalStorage && updateChapter(chapterFromLocalStorage, true);
-    setStageToStore(null);
+    dispatch(setStageToRedux(null));
     setEditableStage(null);
   }
 
@@ -418,7 +425,7 @@ export default function StageEditScreenChakra({
 
   useEffect(() => {
     if (query.stage) {
-      setStageToStore(null);
+      dispatch(setStageToRedux(null));
       setEditableStage(null);
 
       const chapterFromLocalStorage =
@@ -428,7 +435,7 @@ export default function StageEditScreenChakra({
         (stage: stageType) => stage.id === +query.stage
       );
       setTimeout(() => {
-        setStageToStore(stage);
+        dispatch(setStageToRedux(stage));
         setEditableStage(stage);
       }, 0);
     }
@@ -500,10 +507,8 @@ export default function StageEditScreenChakra({
 
         <CreateTransferModal
           setIsOpenCreateTransfer={setIsOpenCreateTransfer}
-          setConnectionInfo={setConnectionInfo}
           setTransferIndex={setTransferIndex}
           updateStage={updateStage}
-          connectionInfo={connectionInfo}
           transferIndex={transferIndex}
           isOpenCreateTransfer={isOpenCreateTransfer}
         />

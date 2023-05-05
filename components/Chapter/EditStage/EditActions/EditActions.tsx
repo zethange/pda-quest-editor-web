@@ -1,19 +1,20 @@
 import { useState } from "react";
 
-import {
-  deleteMethodInAction,
-  deleteParamInAction,
-  editParamInAction,
-  newMethodInAction,
-  storeStage,
-} from "@/store/store";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import CreateParamEmpty from "@/components/Chapter/EditStage/EditActions/CreateParamEmpty";
 import { commandLocalizer, typeCommand } from "@/store/utils/commandsAction";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteMethodInAction,
+  deleteParamInMethod,
+  editParamInAction,
+  newMethodInAction,
+} from "@/store/reduxStore/stageSlice";
 
 export default function EditActions() {
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
-  const [rerender, setRerender] = useState(false);
+  const storeStage = useSelector((state: any) => state.stage.stage);
+  const dispatch = useDispatch();
 
   const [method, setMethod] = useState<string>("add");
 
@@ -50,7 +51,7 @@ export default function EditActions() {
               <Button
                 colorScheme="teal"
                 onClick={() => {
-                  newMethodInAction(method);
+                  dispatch(newMethodInAction(method));
                   setShowCreateMethod(false);
                 }}
               >
@@ -67,7 +68,7 @@ export default function EditActions() {
                 p={2}
                 backgroundColor="white"
                 borderRadius="10px"
-                key={indexMethod}
+                key={JSON.stringify(action)}
               >
                 <Box display="flex" gap={1} mb={1}>
                   Команда:
@@ -75,8 +76,7 @@ export default function EditActions() {
                   <Button
                     size="xs"
                     onClick={() => {
-                      deleteMethodInAction(indexMethod);
-                      setRerender(!rerender);
+                      dispatch(deleteMethodInAction({ indexMethod }));
                     }}
                   >
                     -
@@ -90,7 +90,6 @@ export default function EditActions() {
                   <CreateParamEmpty
                     indexAction={indexMethod}
                     type={typeCommand(action[0])}
-                    setRerender={() => setRerender(!rerender)}
                   />
                   <Box display="grid" gap={1}>
                     {action[1].map((key: any, indexParam: number) => (
@@ -98,17 +97,20 @@ export default function EditActions() {
                         <Input
                           defaultValue={key}
                           onChange={(e) => {
-                            editParamInAction(
-                              e.target.value,
-                              indexMethod,
-                              indexParam
+                            dispatch(
+                              editParamInAction({
+                                editedParam: e.target.value,
+                                indexMethod,
+                                indexParam,
+                              })
                             );
                           }}
                         />
                         <Button
                           onClick={() => {
-                            deleteParamInAction(indexMethod, indexParam);
-                            setRerender(!rerender);
+                            dispatch(
+                              deleteParamInMethod({ indexMethod, indexParam })
+                            );
                           }}
                         >
                           -

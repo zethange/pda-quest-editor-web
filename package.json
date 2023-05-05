@@ -14,20 +14,17 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@reduxjs/toolkit": "^1.9.5",
-    "@skyra/discord-components-react": "^3.6.0",
     "client-zip": "^2.3.1",
     "dagre": "^0.8.5",
     "framer-motion": "^10.9.1",
-    "next": "13.1.6",
+    "next": "13.4.1",
     "next-auth": "^4.20.1",
     "react": "^18.2.0",
     "react-confetti": "^6.1.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
-    "react-markdown": "^8.0.5",
     "react-redux": "^8.0.5",
     "reactflow": "^11.5.6",
-    "remark-gfm": "^3.0.1",
     "stats.js": "^0.17.0",
     "store2": "^2.14.2",
     "swr": "^2.1.0"
@@ -35,10 +32,10 @@
   "devDependencies": {
     "@types/dagre": "^0.7.48",
     "@types/leaflet": "^1.9.3",
-    "@types/node": "18.14.0",
-    "@types/react": "18.0.28",
-    "@types/react-dom": "18.0.11",
+    "@types/node": "20.0.0",
+    "@types/react": "18.2.5",
+    "@types/react-dom": "18.2.3",
     "@types/stats.js": "^0.17.0",
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.4"
   }
 }

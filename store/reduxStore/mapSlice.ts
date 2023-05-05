@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { mapType, pointType } from "@/store/types/mapType";
+import { pointType } from "@/store/types/mapType";
 
 const mapSlice = createSlice({
   name: "map",

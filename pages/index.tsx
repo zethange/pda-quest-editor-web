@@ -75,7 +75,6 @@ export default function Home() {
           input: JSON.stringify(value, null, 2),
         });
       } else if (key.includes(`story_${story_id}_map`)) {
-        console.log(value);
         arrChapters.push({
           name: `maps/${value.id}_${
             value?.tmx?.split(".")[0] || undefined
@@ -98,7 +97,6 @@ export default function Home() {
   const uploadStory = async (e: any) => {
     const files: any[] = [...e.target.files];
 
-    console.log(e.target.files);
     let idStory: number;
 
     const infoFile: any = files.filter(
@@ -120,7 +118,6 @@ export default function Home() {
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.onload = () => {
-        console.log(file.webkitRelativePath);
         if (file.name.includes("chapter")) {
           store.set(
             `story_${idStory}_chapter_${
@@ -257,7 +254,7 @@ export default function Home() {
                 <Input
                   defaultValue={editStory?.title}
                   placeholder="Название истории..."
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setEditStory((story: storyType) => {
                       return {
                         ...story,
@@ -273,7 +270,7 @@ export default function Home() {
                 <Textarea
                   defaultValue={editStory?.desc}
                   placeholder="Описание истории..."
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setEditStory((story: storyType) => {
                       return {
                         ...story,
@@ -289,7 +286,7 @@ export default function Home() {
                 <Input
                   placeholder="Иконка истории..."
                   defaultValue={editStory?.icon}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setEditStory((story: storyType) => {
                       return {
                         ...story,
@@ -304,7 +301,7 @@ export default function Home() {
                 <FormLabel>Уровень доступа</FormLabel>
                 <Select
                   defaultValue={editStory?.access}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                     setEditStory((story: storyType) => {
                       return {
                         ...story,

@@ -10,8 +10,9 @@ import {
   ModalOverlay,
   Textarea,
 } from "@chakra-ui/react";
-import { editTransferInStore, storeStage } from "@/store/store";
 import CreateTransfer from "@/components/Chapter/EditStage/CreateTransfer/CreateTransfer";
+import { useDispatch, useSelector } from "react-redux";
+import { editTransferInStore } from "@/store/reduxStore/stageSlice";
 
 interface IProps {
   setShowModalEditTransfer: (value: boolean) => void;
@@ -24,6 +25,9 @@ const EditTransferModal = ({
   showModalEditTransfer,
   updateStage,
 }: IProps) => {
+  const storeStage = useSelector((state: any) => state.stage.stage);
+  const dispatch = useDispatch();
+
   return (
     <Modal
       onClose={() => {
@@ -42,11 +46,16 @@ const EditTransferModal = ({
           <Textarea
             placeholder="Введите текст..."
             defaultValue={storeStage?.targetTransfer?.text}
-            onChange={(event) => {
-              editTransferInStore(storeStage?.indexTargetTransfer, {
-                ...storeStage?.targetTransfer,
-                text: event.target.value,
-              });
+            onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+              dispatch(
+                editTransferInStore({
+                  id: storeStage?.indexTargetTransfer,
+                  transfer: {
+                    ...storeStage?.targetTransfer,
+                    text: event.target.value,
+                  },
+                })
+              );
             }}
           />
           <CreateTransfer transferIndex={storeStage?.indexTargetTransfer} />

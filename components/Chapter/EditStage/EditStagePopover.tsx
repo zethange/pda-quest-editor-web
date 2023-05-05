@@ -1,11 +1,12 @@
 import React from "react";
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { stageTypes } from "@/store/utils/stageName";
-import { setStageToStore, storeStage } from "@/store/store";
 import MapStage from "@/components/Chapter/EditStage/MapStage";
 import EditStage from "@/components/Chapter/EditStage/EditStage";
 import EditActions from "@/components/Chapter/EditStage/EditActions/EditActions";
 import { stageType } from "@/store/types/types";
+import { useDispatch, useSelector } from "react-redux";
+import { setStageToStore } from "@/store/reduxStore/stageSlice";
 
 interface IProps {
   editableStage: stageType | null;
@@ -20,6 +21,9 @@ const EditStagePopover = ({
   deleteStage,
   setEditableStage,
 }: IProps) => {
+  const storeStage = useSelector((state: any) => state.stage.stage);
+  const dispatch = useDispatch();
+
   return (
     <>
       {editableStage && (
@@ -66,7 +70,7 @@ const EditStagePopover = ({
               mt={2}
               colorScheme="teal"
               onClick={() => {
-                setStageToStore(null);
+                dispatch(setStageToStore(null));
                 setEditableStage(null);
               }}
             >

@@ -1,18 +1,20 @@
+import React, { useState } from "react";
+import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
+import Confetti from "react-confetti";
+import { stageText } from "@/store/types/types";
+import { useDispatch, useSelector } from "react-redux";
 import {
   editBackgroundInStore,
   editMessageInStore,
   editTextInStore,
   editTitleInStore,
-  newTextToStore,
-  storeStage,
-} from "@/store/store";
-import React, { useState } from "react";
-import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
-import Confetti from "react-confetti";
+  newTextInStore,
+} from "@/store/reduxStore/stageSlice";
 
 export default function EditStage({ data }: { data: any }) {
-  const [rerender, setRerender] = useState<boolean>(false);
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
+  const storeStage = useSelector((state: any) => state.stage.stage);
+  const dispatch = useDispatch();
 
   let background: string;
   if (storeStage.background.includes("http")) {
@@ -20,7 +22,7 @@ export default function EditStage({ data }: { data: any }) {
   } else if (!storeStage.background) {
     background = "/no_background.png";
   } else {
-    background = `https://cdn.artux.net/static/${data?.background}`;
+    background = `https://cdn.artux.net/static/${storeStage.background}`;
   }
 
   return (
@@ -57,7 +59,7 @@ export default function EditStage({ data }: { data: any }) {
               opacity: "0.75",
             }}
             defaultValue={data?.title}
-            onChange={(event) => editTitleInStore(event.target.value)}
+            onChange={(event) => dispatch(editTitleInStore(event.target.value))}
           />
           <Input
             placeholder="Ссылка на фон..."
@@ -70,8 +72,7 @@ export default function EditStage({ data }: { data: any }) {
               opacity: "0.75",
             }}
             onChange={(event) => {
-              editBackgroundInStore(event.target.value);
-              setRerender(!rerender);
+              dispatch(editBackgroundInStore(event.target.value));
             }}
           />
         </Box>
@@ -84,8 +85,7 @@ export default function EditStage({ data }: { data: any }) {
             size="xs"
             colorScheme="teal"
             onClick={() => {
-              newTextToStore();
-              setRerender(!rerender);
+              dispatch(newTextInStore({}));
             }}
           >
             +
@@ -93,7 +93,7 @@ export default function EditStage({ data }: { data: any }) {
         </Flex>
         <Box display="grid" gap={1}>
           {storeStage?.texts?.map(
-            (text: any, index: number) =>
+            (text: stageText, index: number) =>
               text.text && (
                 <Textarea
                   key={index}
@@ -108,10 +108,15 @@ export default function EditStage({ data }: { data: any }) {
                     event.target.style.height = "inherit";
                     event.target.style.height = `${event.target.scrollHeight}px`;
 
-                    editTextInStore(index, {
-                      text: event.target.value,
-                      condition: text.condition,
-                    });
+                    dispatch(
+                      editTextInStore({
+                        id: index,
+                        text: {
+                          text: event.target.value,
+                          condition: text.condition,
+                        },
+                      })
+                    );
                   }}
                 />
               )
@@ -132,17 +137,20 @@ export default function EditStage({ data }: { data: any }) {
               event.target.style.height = "inherit";
               event.target.style.height = `${event.target.scrollHeight}px`;
               setCheckBoxMessage(!checkBoxMessage);
-              if (!checkBoxMessage) editMessageInStore("Новое уведомление");
-              if (checkBoxMessage) editMessageInStore("");
+              if (!checkBoxMessage)
+                dispatch(editMessageInStore("Новое уведомление"));
+              if (checkBoxMessage) dispatch(editMessageInStore(""));
             }}
-            checked={storeStage?.message}
+            defaultChecked={storeStage?.message}
           />
           {storeStage?.message && (
             <Textarea
               placeholder="Уведомление..."
               defaultValue={data?.message}
               backgroundColor="white"
-              onChange={(event) => editMessageInStore(event.target.value)}
+              onChange={(event) =>
+                dispatch(editMessageInStore(event.target.value))
+              }
             />
           )}
         </Box>

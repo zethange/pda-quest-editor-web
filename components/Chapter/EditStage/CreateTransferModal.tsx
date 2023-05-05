@@ -10,33 +10,33 @@ import {
   ModalOverlay,
   Textarea,
 } from "@chakra-ui/react";
-import { newTransferToStore, storeStage } from "@/store/store";
-import CreateTransfer from "@/components/Chapter/EditStage/CreateTransfer/CreateTransfer";
+import {
+  newTransferInStore,
+  setConnection,
+} from "@/store/reduxStore/stageSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 interface IProps {
   setIsOpenCreateTransfer: (value: boolean) => void;
-  setConnectionInfo: (value: any) => void;
   setTransferIndex: (value: string) => void;
   updateStage: (stageId: number) => void;
-  connectionInfo: any;
   isOpenCreateTransfer: boolean;
-  transferIndex: string;
 }
 
 const CreateTransferModal = ({
   isOpenCreateTransfer,
   setIsOpenCreateTransfer,
-  setConnectionInfo,
   setTransferIndex,
-  connectionInfo,
   updateStage,
-  transferIndex,
 }: IProps) => {
+  const storeStage = useSelector((state: any) => state.stage.stage);
+  const connectionInfo = useSelector((state: any) => state.stage.connection);
+  const dispatch = useDispatch();
+
   return (
     <Modal
       onClose={() => {
         setIsOpenCreateTransfer(false);
-        setConnectionInfo(null);
         setTransferIndex("");
       }}
       isOpen={isOpenCreateTransfer}
@@ -60,29 +60,23 @@ const CreateTransferModal = ({
             onInput={(event: any) => {
               event.target.style.height = "inherit";
               event.target.style.height = `${event.target.scrollHeight}px`;
-              setTransferIndex(
-                String(
-                  newTransferToStore({
-                    text: event.target.value,
-                    stage: connectionInfo?.target,
-                    condition: {},
-                  })
-                )
+              dispatch(
+                newTransferInStore({
+                  text: event.target.value,
+                  stage: connectionInfo?.target,
+                  condition: {},
+                })
               );
             }}
           />
-          {transferIndex ? (
-            <CreateTransfer transferIndex={Number(transferIndex)} />
-          ) : (
-            "Для добавления условий необходимо заполнить текст"
-          )}
+          Условия можно добавить после сохранения
         </ModalBody>
         <ModalFooter>
           <Button
             colorScheme="teal"
             onClick={() => {
               updateStage(storeStage.id);
-              setConnectionInfo(null);
+              dispatch(setConnection(null));
               setTransferIndex("");
               setIsOpenCreateTransfer(false);
             }}
@@ -93,7 +87,7 @@ const CreateTransferModal = ({
           <Button
             onClick={() => {
               setTransferIndex("");
-              setConnectionInfo(null);
+              dispatch(setConnection(null));
               setIsOpenCreateTransfer(false);
             }}
           >

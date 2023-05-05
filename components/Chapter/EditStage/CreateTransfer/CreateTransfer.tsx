@@ -1,26 +1,27 @@
-import deleteConditionInTransfer, {
-  createConditionsInTransfer,
-  createValueInCondition,
-  deleteValueInCondition,
-  editValueInConditions,
-  storeStage,
-} from "@/store/store";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import { useState } from "react";
 import { conditionType } from "@/store/utils/conditionType";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createConditionInTransfer,
+  createValueInCondition,
+  deleteConditionInTransfer,
+  deleteValueInCondition,
+  editValueInConditions,
+} from "@/store/reduxStore/stageSlice";
 
 export default function CreateTransfer({
   transferIndex,
 }: {
   transferIndex: number;
 }) {
-  const [createConditionInTransfer, setCreateConditionInTransfer] =
+  const [showCreateConditionInTransfer, setShowCreateConditionInTransfer] =
     useState<boolean>(false);
   const [typeCondition, setTypeCondition] = useState<string>("has");
   const [showNewValue, setShowNewValue] = useState<boolean>(false);
-  const [rerender, setRerender] = useState<boolean>(false);
 
-  console.log(transferIndex);
+  const storeStage = useSelector((state: any) => state.stage.stage);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -31,10 +32,10 @@ export default function CreateTransfer({
           size="xs"
           colorScheme="teal"
           onClick={() =>
-            setCreateConditionInTransfer(!createConditionInTransfer)
+            setShowCreateConditionInTransfer(!showCreateConditionInTransfer)
           }
         >
-          {createConditionInTransfer ? "-" : "+"}
+          {showCreateConditionInTransfer ? "-" : "+"}
         </Button>
       </Box>
       <Box
@@ -44,12 +45,14 @@ export default function CreateTransfer({
         display="grid"
         gap={1}
       >
-        {createConditionInTransfer && (
+        {showCreateConditionInTransfer && (
           <Box display="flex" gap={1}>
             <Select
               size="md"
               defaultValue={typeCondition}
-              onChange={(event) => setTypeCondition(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                setTypeCondition(event.target.value)
+              }
             >
               <option value="has">Показывать если есть параметр</option>
               <option value="!has">Показывать если нет параметра</option>
@@ -60,8 +63,10 @@ export default function CreateTransfer({
             <Button
               fontWeight="normal"
               onClick={() => {
-                createConditionsInTransfer(transferIndex, typeCondition);
-                setCreateConditionInTransfer(false);
+                dispatch(
+                  createConditionInTransfer({ transferIndex, typeCondition })
+                );
+                setShowCreateConditionInTransfer(false);
               }}
             >
               Сохранить
@@ -78,8 +83,12 @@ export default function CreateTransfer({
                   <Button
                     size="xs"
                     onClick={() => {
-                      deleteConditionInTransfer(transferIndex, conditionIndex);
-                      setRerender(!rerender);
+                      dispatch(
+                        deleteConditionInTransfer({
+                          transferIndex,
+                          conditionIndex,
+                        })
+                      );
                     }}
                   >
                     -
@@ -89,7 +98,12 @@ export default function CreateTransfer({
                     mb={1}
                     colorScheme="teal"
                     onClick={() => {
-                      createValueInCondition(transferIndex, conditionIndex);
+                      dispatch(
+                        createValueInCondition({
+                          transferIndex,
+                          conditionIndex,
+                        })
+                      );
                       setShowNewValue(!showNewValue);
                     }}
                   >
@@ -102,23 +116,28 @@ export default function CreateTransfer({
                       <Box display="flex" gap={1}>
                         <Input
                           defaultValue={conditionValue}
-                          onChange={(event) =>
-                            editValueInConditions(
-                              transferIndex,
-                              conditionIndex,
-                              valueIndex,
-                              event.target.value
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) =>
+                            dispatch(
+                              editValueInConditions({
+                                transferIndex,
+                                conditionIndex,
+                                valueIndex,
+                                value: event.target.value,
+                              })
                             )
                           }
                         />
                         <Button
                           onClick={() => {
-                            deleteValueInCondition(
-                              transferIndex,
-                              conditionIndex,
-                              valueIndex
+                            dispatch(
+                              deleteValueInCondition({
+                                transferIndex,
+                                conditionIndex,
+                                valueIndex,
+                              })
                             );
-                            setRerender(!rerender);
                           }}
                         >
                           -

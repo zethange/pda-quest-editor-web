@@ -1,23 +1,24 @@
-import { newParamInAction } from "@/store/store";
 import { useState } from "react";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import useSWR from "swr";
 import { fetcher } from "@/store/tools";
 import { groupItem } from "@/store/utils/groupItem";
+import { newParamInMethod } from "@/store/reduxStore/stageSlice";
+import { useDispatch } from "react-redux";
 
 type Props = {
   indexAction: any;
   type: string;
-  setRerender: () => void;
 };
 
 function Empty({
   onChangeNewParam,
   setShowCreateParam,
-  setRerender,
   indexAction,
   newParam,
 }: any) {
+  const dispatch = useDispatch();
+
   return (
     <Box display="flex" gap={1}>
       <Input
@@ -29,9 +30,10 @@ function Empty({
       <Button
         fontWeight="normal"
         onClick={() => {
-          newParamInAction(indexAction, newParam);
+          dispatch(
+            newParamInMethod({ indexMethod: indexAction, param: newParam })
+          );
           setShowCreateParam(false);
-          setRerender();
         }}
       >
         Сохранить
@@ -40,8 +42,9 @@ function Empty({
   );
 }
 
-function WithItems({ indexAction, setRerender, setShowCreateParam }: any) {
+function WithItems({ indexAction, setShowCreateParam }: any) {
   const { data, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
+  const dispatch = useDispatch();
 
   const arrParam: string[] = ["68", "1"];
   const onChangeNewParam = (message: string, type: string) => {
@@ -77,9 +80,13 @@ function WithItems({ indexAction, setRerender, setShowCreateParam }: any) {
       <Button
         fontWeight="normal"
         onClick={() => {
-          newParamInAction(indexAction, arrParam.join(":"));
+          dispatch(
+            newParamInMethod({
+              indexMethod: indexAction,
+              param: arrParam.join(":"),
+            })
+          );
           setShowCreateParam(false);
-          setRerender();
         }}
       >
         Сохранить
@@ -88,11 +95,7 @@ function WithItems({ indexAction, setRerender, setShowCreateParam }: any) {
   );
 }
 
-export default function CreateParamEmpty({
-  indexAction,
-  setRerender,
-  type,
-}: Props) {
+export default function CreateParamEmpty({ indexAction, type }: Props) {
   const [showCreateParam, setShowCreateParam] = useState<boolean>(false);
   const [newParam, setNewParam] = useState("");
   const [typeCreate, setTypeCreate] = useState(true);
@@ -100,7 +103,6 @@ export default function CreateParamEmpty({
   const onChangeNewParam = (param: string) => {
     setNewParam(param);
   };
-  console.log(type);
 
   return (
     <>
@@ -123,7 +125,6 @@ export default function CreateParamEmpty({
             <Empty
               onChangeNewParam={onChangeNewParam}
               setShowCreateParam={setShowCreateParam}
-              setRerender={setRerender}
               indexAction={indexAction}
               newParam={newParam}
             />
@@ -143,7 +144,6 @@ export default function CreateParamEmpty({
                   <Empty
                     onChangeNewParam={onChangeNewParam}
                     setShowCreateParam={setShowCreateParam}
-                    setRerender={setRerender}
                     indexAction={indexAction}
                     newParam={newParam}
                   />
@@ -152,7 +152,6 @@ export default function CreateParamEmpty({
                 <>
                   <WithItems
                     indexAction={indexAction}
-                    setRerender={setRerender}
                     setShowCreateParam={setShowCreateParam}
                   />
                 </>

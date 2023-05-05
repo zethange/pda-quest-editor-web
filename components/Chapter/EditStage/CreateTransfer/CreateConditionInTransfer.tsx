@@ -1,6 +1,7 @@
-import { createConditionsInTransfer } from "@/store/store";
 import { useState } from "react";
 import { Box, Select, Spacer } from "@chakra-ui/react";
+import { createConditionInTransfer } from "@/store/reduxStore/stageSlice";
+import { useDispatch } from "react-redux";
 
 export default function CreateConditionInTransferJsx({
   transferIndex,
@@ -10,9 +11,10 @@ export default function CreateConditionInTransferJsx({
   functionAdd: any;
 }) {
   const [typeCondition, setTypeCondition] = useState<string>("has");
-  const [rerender, setRerender] = useState<boolean>(false);
   const [showCreateConditionInTransfer, setShowCreateConditionInTransfer] =
     useState<boolean>(false);
+
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -21,7 +23,6 @@ export default function CreateConditionInTransferJsx({
         <button
           onClick={() => {
             setShowCreateConditionInTransfer(!showCreateConditionInTransfer);
-            setRerender(!rerender);
           }}
         >
           {showCreateConditionInTransfer ? "-" : "+"}
@@ -44,9 +45,10 @@ export default function CreateConditionInTransferJsx({
             className="btn"
             style={{ padding: "1px" }}
             onClick={() => {
-              createConditionsInTransfer(transferIndex, typeCondition);
+              dispatch(
+                createConditionInTransfer({ transferIndex, typeCondition })
+              );
               setShowCreateConditionInTransfer(false);
-              setRerender(false);
               functionAdd();
             }}
           >
