@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 interface IProps {
   setIsOpenCreateTransfer: (value: boolean) => void;
-  setTransferIndex: (value: string) => void;
   updateStage: (stageId: number) => void;
   isOpenCreateTransfer: boolean;
 }
@@ -26,7 +25,6 @@ interface IProps {
 const CreateTransferModal = ({
   isOpenCreateTransfer,
   setIsOpenCreateTransfer,
-  setTransferIndex,
   updateStage,
 }: IProps) => {
   const storeStage = useSelector((state: any) => state.stage.stage);
@@ -37,7 +35,6 @@ const CreateTransferModal = ({
     <Modal
       onClose={() => {
         setIsOpenCreateTransfer(false);
-        setTransferIndex("");
       }}
       isOpen={isOpenCreateTransfer}
       isCentered
@@ -77,7 +74,6 @@ const CreateTransferModal = ({
             onClick={() => {
               updateStage(storeStage.id);
               dispatch(setConnection(null));
-              setTransferIndex("");
               setIsOpenCreateTransfer(false);
             }}
             mx={2}
@@ -86,7 +82,6 @@ const CreateTransferModal = ({
           </Button>
           <Button
             onClick={() => {
-              setTransferIndex("");
               dispatch(setConnection(null));
               setIsOpenCreateTransfer(false);
             }}

@@ -47,8 +47,8 @@ export default function EditStage({ data }: { data: any }) {
           height="199px"
           alignContent="space-between"
         >
-          {JSON.stringify(storeStage).includes("Максим лох") && (
-            <Confetti width={1920} height={1080} />
+          {JSON.stringify(storeStage).includes("Максим") && (
+            <Confetti width={1920} height={1000} numberOfPieces={500} />
           )}
           <Input
             placeholder="Заголовок стадии..."

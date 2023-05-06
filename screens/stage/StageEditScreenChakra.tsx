@@ -70,7 +70,6 @@ export default function StageEditScreenChakra({
   const [showModalEditTransfer, setShowModalEditTransfer] =
     useState<boolean>(false);
 
-  const [transferIndex, setTransferIndex] = useState<string>("");
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
@@ -507,7 +506,6 @@ export default function StageEditScreenChakra({
 
         <CreateTransferModal
           setIsOpenCreateTransfer={setIsOpenCreateTransfer}
-          setTransferIndex={setTransferIndex}
           updateStage={updateStage}
           isOpenCreateTransfer={isOpenCreateTransfer}
         />

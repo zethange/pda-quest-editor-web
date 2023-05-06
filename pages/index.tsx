@@ -32,6 +32,8 @@ import UserButton from "@/components/UI/NavBar/UserButton";
 import { BiEdit } from "react-icons/bi";
 import { BsCloudUpload } from "react-icons/bs";
 import { storyType } from "@/store/types/storyType";
+import { chapterType } from "@/store/types/types";
+import { mapType } from "@/store/types/mapType";
 
 export default function Home() {
   const [stories, setStories] = useState<any>([]);
@@ -153,16 +155,17 @@ export default function Home() {
 
     let chapters: object = {};
     let maps: object = {};
-    await store.each(async (key: string, value: any) => {
+    await store.each(async (key: string, value: chapterType | mapType) => {
       if (key.includes(`story_${storyId}_chapter`)) {
         const arrChapters: any = Object.entries(chapters);
-        arrChapters.push([`chapter_${key.split("_")[3]}`, value]);
+        arrChapters.push([`${value.id}`, value]);
         chapters = Object.fromEntries(arrChapters);
       }
       if (key.includes(`story_${storyId}_map`)) {
         const arrMaps: any = Object.entries(maps);
-        arrMaps.push([`map_${key.split("_")[3]}`, value]);
+        arrMaps.push([`${value.id}`, value]);
         maps = Object.fromEntries(arrMaps);
+        console.log(maps);
       }
       if (key === "stopLoop") return false;
     });
@@ -173,15 +176,15 @@ export default function Home() {
       maps,
       missions: [],
     };
-    const res = await fetch(
-      "https://dev.artux.net/pdanetwork/quest/uploadCustom",
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-      }
-    );
+    const res = await fetch("/pdanetwork/quest/uploadCustom", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     const dataRes = await res.json();
-    console.log(dataRes);
+    console.log("Отправлено:", data, "\nОтвет:", dataRes);
   };
 
   return (
