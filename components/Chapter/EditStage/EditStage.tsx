@@ -122,10 +122,11 @@ export default function EditStage({ data }: { data: any }) {
       </Box>
       <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Сообщение:</b>
-        <Box display="flex" alignItems="center">
+        <Box>
           Показывать сообщение:{" "}
           <Checkbox
             size="sm"
+            mt={2}
             onChange={() => {
               setCheckBoxMessage(!checkBoxMessage);
               if (!checkBoxMessage)

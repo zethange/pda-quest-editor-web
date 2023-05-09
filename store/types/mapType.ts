@@ -2,12 +2,12 @@ export type mapType = {
   id: string;
   title: string;
   tmx: string;
-  defPos: string;
+  defPos?: string;
   editor?: {
-    url: string;
+    url?: string;
   };
-  points: pointType[];
-  spawns: spawnType[];
+  points?: pointType[];
+  spawns?: spawnType[];
 };
 
 export type pointType = {

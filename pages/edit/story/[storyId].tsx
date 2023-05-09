@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import CustomHead from "@/components/Global/CustomHead";
 import NavBar from "@/components/UI/NavBar/NavBar";
-import { newChapter } from "@/store/createTools";
+import { newChapter } from "@/store/tools/createTools";
 import {
   Box,
   Button,

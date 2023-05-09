@@ -27,7 +27,7 @@ import {
 
 import "reactflow/dist/style.css";
 
-import { newStage } from "@/store/createTools";
+import { newStage } from "@/store/tools/createTools";
 import CustomHead from "@/components/Global/CustomHead";
 import { NodeStage } from "@/components/Global/StageNode";
 import { chapterType, stageTransfer, stageType } from "@/store/types/types";
