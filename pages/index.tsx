@@ -26,6 +26,7 @@ import {
   Text,
   Textarea,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import UserButton from "@/components/UI/NavBar/UserButton";
@@ -39,6 +40,7 @@ export default function Home() {
   const [stories, setStories] = useState<any>([]);
   const [editStory, setEditStory] = useState<any>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   useEffect(() => {
     store.each((key: string, value: string) => {
@@ -184,6 +186,20 @@ export default function Home() {
       body: JSON.stringify(data),
     });
     const dataRes = await res.json();
+
+    if (dataRes.code === 200) {
+      toast({
+        colorScheme: "green",
+        title: "Сервер сказал что всё чики-брики",
+        description: dataRes.description,
+      });
+    } else {
+      toast({
+        colorScheme: "red",
+        title: `Ну всё пипец, сервер послал ${dataRes.code} ответ`,
+        description: dataRes.description,
+      });
+    }
     console.log("Отправлено:", data, "\nОтвет:", dataRes);
   };
 

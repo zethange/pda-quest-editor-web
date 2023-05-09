@@ -20,7 +20,7 @@ function Empty({
   const dispatch = useDispatch();
 
   return (
-    <Box display="flex" gap={1}>
+    <Box display="flex" gap={1} mb={1}>
       <Input
         placeholder="Параметр..."
         required={true}
@@ -53,7 +53,7 @@ function WithItems({ indexAction, setShowCreateParam }: any) {
     console.log(arrParam.join(":"));
   };
   return (
-    <Box display="flex" gap={1}>
+    <Box display="flex" gap={1} mb={1}>
       <Select
         size="md"
         name="select"

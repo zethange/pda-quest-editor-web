@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Flex, Input, Textarea } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Flex, Input, Textarea } from "@chakra-ui/react";
 import Confetti from "react-confetti";
 import { stageText } from "@/store/types/types";
 import { useDispatch, useSelector } from "react-redux";
@@ -92,50 +92,41 @@ export default function EditStage({ data }: { data: any }) {
           </Button>
         </Flex>
         <Box display="grid" gap={1}>
-          {storeStage?.texts?.map(
-            (text: stageText, index: number) =>
-              text.text && (
-                <Textarea
-                  key={index}
-                  placeholder="Текст..."
-                  defaultValue={text.text}
-                  backgroundColor="white"
-                  onClick={(event: any) => {
-                    event.target.style.height = "inherit";
-                    event.target.style.height = `${event.target.scrollHeight}px`;
-                  }}
-                  onInput={(event: any) => {
-                    event.target.style.height = "inherit";
-                    event.target.style.height = `${event.target.scrollHeight}px`;
+          {storeStage?.texts?.map((text: stageText, index: number) => (
+            <Textarea
+              key={index}
+              placeholder="Текст..."
+              defaultValue={text.text}
+              backgroundColor="white"
+              onClick={(event: any) => {
+                event.target.style.height = "inherit";
+                event.target.style.height = `${event.target.scrollHeight}px`;
+              }}
+              onInput={(event: any) => {
+                event.target.style.height = "inherit";
+                event.target.style.height = `${event.target.scrollHeight}px`;
 
-                    dispatch(
-                      editTextInStore({
-                        id: index,
-                        text: {
-                          text: event.target.value,
-                          condition: text.condition,
-                        },
-                      })
-                    );
-                  }}
-                />
-              )
-          )}
+                dispatch(
+                  editTextInStore({
+                    id: index,
+                    text: {
+                      text: event.target.value,
+                      condition: text.condition,
+                    },
+                  })
+                );
+              }}
+            />
+          ))}
         </Box>
       </Box>
       <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Сообщение:</b>
-        <Box>
+        <Box display="flex" alignItems="center">
           Показывать сообщение:{" "}
-          <input
-            type="checkbox"
-            onClick={(event: any) => {
-              event.target.style.height = "inherit";
-              event.target.style.height = `${event.target.scrollHeight}px`;
-            }}
-            onInput={(event: any) => {
-              event.target.style.height = "inherit";
-              event.target.style.height = `${event.target.scrollHeight}px`;
+          <Checkbox
+            size="sm"
+            onChange={() => {
               setCheckBoxMessage(!checkBoxMessage);
               if (!checkBoxMessage)
                 dispatch(editMessageInStore("Новое уведомление"));
@@ -148,9 +139,15 @@ export default function EditStage({ data }: { data: any }) {
               placeholder="Уведомление..."
               defaultValue={data?.message}
               backgroundColor="white"
-              onChange={(event) =>
-                dispatch(editMessageInStore(event.target.value))
-              }
+              onClick={(event: any) => {
+                event.target.style.height = "inherit";
+                event.target.style.height = `${event.target.scrollHeight}px`;
+              }}
+              onChange={(event) => {
+                event.target.style.height = "inherit";
+                event.target.style.height = `${event.target.scrollHeight}px`;
+                dispatch(editMessageInStore(event.target.value));
+              }}
             />
           )}
         </Box>
