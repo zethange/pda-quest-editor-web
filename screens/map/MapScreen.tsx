@@ -34,7 +34,7 @@ const MapScreen = ({ path, isReady }: Props) => {
   }, [isReady]);
 
   const handleCreateMap = (map: Map) => {
-    const maxId = Math.max(...maps.map((map: mapType) => +map.id));
+    const maxId = Math.max(...maps.map((map: mapType) => +map.id), 0);
     const newMap = createMap(map, maxId + 1);
     if (newMap) {
       setMaps([...maps, newMap]);
