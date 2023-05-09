@@ -1,38 +1,42 @@
-import { memo, useState } from "react";
+import { memo, useRef, useState } from "react";
+import { Box } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { mapType } from "@/store/types/mapType";
+import { editPosInData } from "@/store/reduxStore/stageSlice";
+import { stageType } from "@/store/types/types";
 
-const MapStage = ({ data }: { data: any }) => {
-  let mapString: string = "загрузка...";
-  let mapImg: string = "https://files.artux.net";
+interface IProps {
+  data: {
+    map: string;
+    pos: string;
+  };
+}
 
-  if (data?.map === "0") {
-    mapString = "Ч-4";
-    mapImg = "https://files.artux.net/static/maps/map_ch_4.png";
-  } else if (data?.map === "1") {
-    mapString = "Кордонеc";
-    mapImg = "https://files.artux.net/static/maps/map_escape.png";
-  } else if (data?.map === "2") {
-    mapString = "Свалка";
-    mapImg = "https://files.artux.net/static/maps/map_garbage.png";
-  } else if (data?.map === "3") {
-    mapString = "Бар";
-    mapImg = "https://files.artux.net/static/maps/map_bar.png";
-  } else if (data?.map === "4") {
-    mapString = "Дикая территория";
-  } else if (data?.map === "5") {
-    mapString = "Темная долина";
-    mapImg = "https://files.artux.net/static/maps/map_darkvalley.png";
-  } else if (data?.map === "6") {
-    mapString = "Янтарь";
-    mapImg = "https://files.artux.net/static/maps/map_yantar.png";
-  } else if (data?.map === "7") {
-    mapString = "Армейские склады";
-    mapImg = "https://files.artux.net/static/maps/map_military.png";
-  } else if (data?.map === "8") {
-    mapString = "НИИ Агропром";
-    mapImg = "https://files.artux.net/static/maps/map_agroprom.png";
-  }
+const MapStage = ({ data }: IProps) => {
+  const dispatch = useDispatch();
 
-  console.log(data.pos.split(":"));
+  const maps = useSelector((state: any) => state.maps.maps);
+  const map: mapType = maps.find((map: mapType) => map.id === data?.map);
+  const stage: stageType = useSelector((state: any) => state.stage.stage);
+
+  const [position, setPosition] = useState({
+    x: Number(stage?.data?.pos.split(":")[0]) || 0,
+    y: Number(stage?.data?.pos.split(":")[1]) || 0,
+  });
+  const parentMapRef: any = useRef();
+
+  const handleClick = (e: any) => {
+    const parentMap = parentMapRef.current.getBoundingClientRect();
+    const position = {
+      x: Math.round((e.clientX - parentMap.left) * diffHeight),
+      y: Math.round(
+        e.target.naturalHeight - (e.clientY - parentMap.top) * diffHeight
+      ),
+    };
+    console.log(position);
+    setPosition(position);
+    dispatch(editPosInData(`${position.x}:${position.y}`));
+  };
 
   const [diffHeight, setDiffHeight] = useState<number>(0);
   const [diffWidth, setDiffWidth] = useState<number>(0);
@@ -43,34 +47,39 @@ const MapStage = ({ data }: { data: any }) => {
   };
 
   return (
-    <div className="stage-card">
-      Переход на локацию: {mapString}
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
-        <div>
+    <Box>
+      Переход на локацию: {map?.title}
+      <Box position="relative">
+        <Box ref={parentMapRef}>
           <img
-            src={mapImg}
+            src={"/static/maps" + map?.editor?.url}
+            draggable={false}
             onLoad={(target: any) => onLoadImage(target)}
-            alt={mapString}
-            style={{ borderRadius: "5px", marginTop: "5px", width: "340px" }}
+            onClick={(e) => handleClick(e)}
+            style={{
+              borderRadius: "5px",
+              marginTop: "5px",
+              width: "450px",
+              userSelect: "none",
+            }}
+            alt={map?.title}
           />
           <img
             style={{
               position: "absolute",
-              left: `${data.pos.split(":")[0] / diffWidth}px`,
-              bottom: `${data.pos.split(":")[1] / diffHeight}px`,
+              left: `${position.x / diffWidth}px`,
+              bottom: `${position.y / diffHeight}px`,
               color: "#fff",
+              userSelect: "none",
             }}
+            draggable={false}
             alt="Метка"
             src="/quest.png"
           />
-        </div>
-      </div>
-      <div>Позиция: {data.pos}</div>
-    </div>
+        </Box>
+      </Box>
+      <p>Позиция: {data?.pos}</p>
+    </Box>
   );
 };
 

@@ -44,6 +44,7 @@ import {
   setConnection,
   setStageToStore as setStageToRedux,
 } from "@/store/reduxStore/stageSlice";
+import { setMaps } from "@/store/reduxStore/chapterMapsSlice";
 
 export default function StageEditScreenChakra({
   path,
@@ -55,6 +56,8 @@ export default function StageEditScreenChakra({
   isReady: boolean;
 }) {
   const [chapter, setChapter] = useState<chapterType | any>();
+  const maps = useSelector((state: any) => state.maps.maps);
+
   const { colorMode } = useColorMode();
   const dispatch = useDispatch();
   const storeStage = useSelector((state: any) => state.stage.stage);
@@ -70,8 +73,19 @@ export default function StageEditScreenChakra({
   const [showModalEditTransfer, setShowModalEditTransfer] =
     useState<boolean>(false);
 
+  // для dnd
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+
+  // вытаскивание карт
+  useEffect(() => {
+    store.each((key, value) => {
+      if (key.includes(`story_${path[0]}_map`) && maps) {
+        dispatch(setMaps(value));
+      }
+      if (key === "stopLoop") return false;
+    });
+  }, [isReady]);
 
   // Вытаскивание главы из localStorage
   useEffect(() => {
@@ -166,7 +180,7 @@ export default function StageEditScreenChakra({
       initialNodes.push({
         id: String(stage.id),
         type: "nodeStage",
-        selected: stage.id === storeStage.id,
+        selected: stage.id === storeStage?.id,
         data: {
           label: stageName(stage.type_stage)
             ? stageName(stage.type_stage)
@@ -210,7 +224,7 @@ export default function StageEditScreenChakra({
 
     if (initialNodes.length !== 0) setNodes(initialNodes);
     if (initialEdges.length !== 0) setEdges(initialEdges);
-  }, [chapter]);
+  }, [chapter, storeStage]);
 
   // передвижение node
   const onNodesChange = useCallback(

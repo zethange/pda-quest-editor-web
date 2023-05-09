@@ -23,6 +23,9 @@ const stageSlice = createSlice({
         },
       ],
       transfers: [],
+      data: {
+        pos: "",
+      },
       actions: {},
     },
   },
@@ -188,6 +191,9 @@ const stageSlice = createSlice({
         state.connection.target = action.payload.target;
       }
     },
+    editPosInData(state, action) {
+      state.stage.data.pos = action.payload;
+    },
   },
 });
 
@@ -211,6 +217,7 @@ export const {
   deleteConditionInTransfer,
   deleteValueInCondition,
   setConnection,
+  editPosInData,
 } = stageSlice.actions;
 
 export default stageSlice.reducer;
