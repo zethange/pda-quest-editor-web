@@ -19,10 +19,6 @@ const MapStage = ({ data }: IProps) => {
   const map: mapType = maps.find((map: mapType) => map.id === data?.map);
   const stage: stageType = useSelector((state: any) => state.stage.stage);
 
-  const [position, setPosition] = useState({
-    x: Number(stage?.data?.pos.split(":")[0]) || 0,
-    y: Number(stage?.data?.pos.split(":")[1]) || 0,
-  });
   const parentMapRef: any = useRef();
 
   const handleClick = (e: any) => {
@@ -34,7 +30,6 @@ const MapStage = ({ data }: IProps) => {
       ),
     };
     console.log(position);
-    setPosition(position);
     dispatch(editPosInData(`${position.x}:${position.y}`));
   };
 
@@ -67,8 +62,10 @@ const MapStage = ({ data }: IProps) => {
           <img
             style={{
               position: "absolute",
-              left: `${position.x / diffWidth}px`,
-              bottom: `${position.y / diffHeight}px`,
+              left: `${Number(stage?.data?.pos.split(":")[0]) / diffWidth}px`,
+              bottom: `${
+                Number(stage?.data?.pos.split(":")[1]) / diffHeight
+              }px`,
               color: "#fff",
               userSelect: "none",
             }}

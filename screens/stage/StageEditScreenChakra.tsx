@@ -43,6 +43,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setConnection,
   setStageToStore as setStageToRedux,
+  setTargetTransfer,
 } from "@/store/reduxStore/stageSlice";
 import { setMaps } from "@/store/reduxStore/chapterMapsSlice";
 
@@ -277,42 +278,34 @@ export default function StageEditScreenChakra({
 
       const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
       setShowModalEditTransfer(true);
-      dispatch(
-        setStageToRedux({ ...stage, targetTransfer, indexTargetTransfer })
-      );
+      dispatch(setTargetTransfer({ targetTransfer, indexTargetTransfer }));
+      dispatch(setStageToRedux({ ...stage }));
     },
     [chapter]
   );
 
   // Обновление стадии
   const updateStage = (stageId: number): void => {
+    console.log(storeStage);
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
     const storeStageTrueId = chapterFromLocalStorage.stages.findIndex(
-      (stage: any) =>
+      (stage: stageType) =>
         stage ===
         chapterFromLocalStorage.stages.find(
-          (stage: any) => stage.id === stageId
+          (stage: stageType) => stage.id === stageId
         )
     );
 
     const updatedStageWithUpdatedPosition = {
-      id: storeStage.id,
-      type_stage: storeStage.type_stage,
-      background: storeStage.background || "",
-      title: storeStage.title,
-      message: storeStage.message,
-      type_message: storeStage.type_stage,
-      texts: storeStage.texts,
-      transfers: storeStage.transfers,
-      actions: storeStage.actions,
+      ...storeStage,
       editor: {
         x: chapterFromLocalStorage.stages.find(
-          (stage: any) => stage.id === stageId
+          (stage: stageType) => stage.id === stageId
         ).editor.x,
         y: chapterFromLocalStorage.stages.find(
-          (stage: any) => stage.id === stageId
+          (stage: stageType) => stage.id === stageId
         ).editor.y,
       },
     };
@@ -341,10 +334,10 @@ export default function StageEditScreenChakra({
 
       setIsOpenCreateTransfer(true);
 
+      dispatch(setTargetTransfer(targetTransfer));
       dispatch(
         setStageToRedux({
           ...chapterFromLocalStorage?.stages[connection.source],
-          targetTransfer,
         })
       );
     },

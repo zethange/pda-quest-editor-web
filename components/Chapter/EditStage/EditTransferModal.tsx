@@ -26,6 +26,9 @@ const EditTransferModal = ({
   updateStage,
 }: IProps) => {
   const storeStage = useSelector((state: any) => state.stage.stage);
+  const targetTransfer = useSelector(
+    (state: any) => state.stage.targetTransfer
+  );
   const dispatch = useDispatch();
 
   return (
@@ -39,26 +42,26 @@ const EditTransferModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader fontWeight={1}>
-          Переход с {storeStage?.id} на {storeStage?.targetTransfer?.stage}
+          Переход с {storeStage?.id} на {targetTransfer?.targetTransfer?.stage}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Textarea
             placeholder="Введите текст..."
-            defaultValue={storeStage?.targetTransfer?.text}
+            defaultValue={targetTransfer?.targetTransfer?.text}
             onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
               dispatch(
                 editTransferInStore({
-                  id: storeStage?.indexTargetTransfer,
+                  id: targetTransfer?.indexTargetTransfer,
                   transfer: {
-                    ...storeStage?.targetTransfer,
+                    ...targetTransfer?.targetTransfer,
                     text: event.target.value,
                   },
                 })
               );
             }}
           />
-          <CreateTransfer transferIndex={storeStage?.indexTargetTransfer} />
+          <CreateTransfer transferIndex={targetTransfer?.indexTargetTransfer} />
         </ModalBody>
         <ModalFooter>
           <Button

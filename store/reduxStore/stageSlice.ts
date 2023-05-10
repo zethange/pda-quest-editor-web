@@ -4,6 +4,10 @@ import { stageTransfer } from "@/store/types/types";
 const stageSlice = createSlice({
   name: "stage",
   initialState: {
+    targetTransfer: {
+      targetTransfer: {},
+      indexTargetTransfer: 0,
+    },
     connection: {
       source: 0,
       target: 0,
@@ -194,6 +198,9 @@ const stageSlice = createSlice({
     editPosInData(state, action) {
       state.stage.data.pos = action.payload;
     },
+    setTargetTransfer(state, action) {
+      state.targetTransfer = action.payload;
+    },
   },
 });
 
@@ -218,6 +225,7 @@ export const {
   deleteValueInCondition,
   setConnection,
   editPosInData,
+  setTargetTransfer,
 } = stageSlice.actions;
 
 export default stageSlice.reducer;
