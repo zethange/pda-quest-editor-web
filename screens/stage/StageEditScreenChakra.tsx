@@ -56,7 +56,6 @@ export default function StageEditScreenChakra({
   query: any;
   isReady: boolean;
 }) {
-  const [chapterIsLoading, setChapterIsLoading] = useState(false);
   const [chapter, setChapter] = useState<chapterType | any>();
   const maps = useSelector((state: any) => state.maps.maps);
 
@@ -88,10 +87,6 @@ export default function StageEditScreenChakra({
       if (key === "stopLoop") return false;
     });
   }, [isReady]);
-
-  useEffect(() => {
-    if (chapter) setChapterIsLoading(true);
-  }, [chapter]);
 
   // Вытаскивание главы из localStorage
   useEffect(() => {
@@ -230,7 +225,7 @@ export default function StageEditScreenChakra({
 
     if (initialNodes.length !== 0) setNodes(initialNodes);
     if (initialEdges.length !== 0) setEdges(initialEdges);
-  }, [chapterIsLoading]);
+  }, [chapter]);
 
   // передвижение node
   const onNodesChange = useCallback(
