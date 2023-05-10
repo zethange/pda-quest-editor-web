@@ -29,6 +29,7 @@ const stageSlice = createSlice({
       transfers: [],
       data: {
         pos: "",
+        map: "",
       },
       actions: {},
     },
@@ -198,6 +199,9 @@ const stageSlice = createSlice({
     editPosInData(state, action) {
       state.stage.data.pos = action.payload;
     },
+    editMapInData(state, action) {
+      state.stage.data.map = action.payload;
+    },
     setTargetTransfer(state, action) {
       state.targetTransfer = action.payload;
     },
@@ -225,6 +229,7 @@ export const {
   deleteValueInCondition,
   setConnection,
   editPosInData,
+  editMapInData,
   setTargetTransfer,
 } = stageSlice.actions;
 

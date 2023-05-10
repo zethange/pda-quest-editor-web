@@ -1,8 +1,8 @@
 import { memo, useRef, useState } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Select } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { mapType } from "@/store/types/mapType";
-import { editPosInData } from "@/store/reduxStore/stageSlice";
+import { editMapInData, editPosInData } from "@/store/reduxStore/stageSlice";
 import { stageType } from "@/store/types/types";
 
 interface IProps {
@@ -43,7 +43,17 @@ const MapStage = ({ data }: IProps) => {
 
   return (
     <Box>
-      Переход на локацию: {map?.title}
+      Переход на локацию:
+      <Box>
+        <Select
+          defaultValue={stage?.data?.map}
+          onChange={(event) => dispatch(editMapInData(event.target.value))}
+        >
+          {maps.map((map: mapType) => (
+            <option value={`${map.id}`}>{map.title}</option>
+          ))}
+        </Select>
+      </Box>
       <Box position="relative">
         <Box ref={parentMapRef}>
           <img
@@ -62,12 +72,15 @@ const MapStage = ({ data }: IProps) => {
           <img
             style={{
               position: "absolute",
-              left: `${Number(stage?.data?.pos.split(":")[0]) / diffWidth}px`,
+              left: `${
+                Number(stage?.data?.pos.split(":")[0]) / diffWidth - 10
+              }px`,
               bottom: `${
-                Number(stage?.data?.pos.split(":")[1]) / diffHeight
+                Number(stage?.data?.pos.split(":")[1]) / diffHeight - 10
               }px`,
               color: "#fff",
               userSelect: "none",
+              width: "20px",
             }}
             draggable={false}
             alt="Метка"
