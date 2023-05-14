@@ -14,12 +14,14 @@ export function commandLocalizer(param: string): string {
       return "Уменьшить отношения";
     case "reset":
       return "Сбросить";
+    case "syncNow":
+      return "Синхронизация с сервером";
     default:
       return param;
   }
 }
 
-export function typeCommand(param: string): "item" | "empty" {
+export function typeCommand(param: string): "item" | "empty" | "null" {
   switch (param) {
     case "add":
       return "item";
@@ -35,6 +37,8 @@ export function typeCommand(param: string): "item" | "empty" {
       return "empty";
     case "reset":
       return "empty";
+    case "syncNow":
+      return "null";
     default:
       return "empty";
   }

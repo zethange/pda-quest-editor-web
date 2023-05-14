@@ -47,6 +47,7 @@ export default function EditActions() {
                 <option value="+">Увеличить отношения</option>
                 <option value="-">Уменьшить отношения</option>
                 <option value="reset">Сбросить</option>
+                <option value="syncNow">Синхронизация с сервером</option>
               </Select>
               <Button
                 colorScheme="teal"
