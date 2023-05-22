@@ -29,6 +29,9 @@ const TransferEdge: FC<EdgeProps> = ({
           position="absolute"
           transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
           backgroundColor="#ffffff"
+          _dark={{
+            backgroundColor: "gray.900",
+          }}
           p={1}
           fontSize="10px"
           borderRadius="5px"
@@ -41,13 +44,11 @@ const TransferEdge: FC<EdgeProps> = ({
                 Object.keys(data?.transfer?.condition).length !== 0 && (
                   <>
                     {Object.entries(data.transfer.condition).map(
-                      (condition: any, conditionIndex: number) => (
-                        <>
-                          {condition[1].map((condition: string) => (
-                            <Badge colorScheme="red">{condition}</Badge>
-                          ))}
-                        </>
-                      )
+                      (condition: any) => {
+                        return condition[1].map((condition: string) => (
+                          <Badge colorScheme="red">{condition}</Badge>
+                        ));
+                      }
                     )}
                   </>
                 )}

@@ -24,7 +24,11 @@ export function NodeStage({
     <Box
       p="10px"
       borderRadius={5}
-      backgroundColor={selected ? "hsl(212, 90%, 90%)" : "white"}
+      backgroundColor={selected ? "teal.200" : "white"}
+      _dark={{
+        color: "white",
+        backgroundColor: selected ? "teal.500" : "gray.900",
+      }}
       border={"1px solid"}
       borderColor="gray.800"
       color="black"
@@ -41,19 +45,17 @@ export function NodeStage({
           {words?.length > 30 && "..."}
         </small>
         <Box display="grid" gap={1}>
-          {Object.entries(data.actions).map(
-            (action: any, indexMethod: number) => (
-              <>
-                {action[0] === "add" && (
-                  <SimpleGrid columns={action[1].length > 1 ? 2 : 1} gap={1}>
-                    {action[1].map((param: string, indexParam: number) => (
-                      <Badge colorScheme="green">{param}</Badge>
-                    ))}
-                  </SimpleGrid>
-                )}
-              </>
-            )
-          )}
+          {Object.entries(data.actions).map((action: any) => {
+            return (
+              action[0] === "add" && (
+                <SimpleGrid columns={action[1].length > 1 ? 2 : 1} gap={1}>
+                  {action[1].map((param: string) => (
+                    <Badge colorScheme="green">{param}</Badge>
+                  ))}
+                </SimpleGrid>
+              )
+            );
+          })}
         </Box>
       </button>
       <Handle

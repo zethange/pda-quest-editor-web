@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "turbo": "next dev --turbo",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
