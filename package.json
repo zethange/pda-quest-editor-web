@@ -32,7 +32,6 @@
   },
   "devDependencies": {
     "@types/dagre": "^0.7.48",
-    "@types/leaflet": "^1.9.3",
     "@types/node": "20.0.0",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.3",
