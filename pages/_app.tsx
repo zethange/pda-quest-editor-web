@@ -10,11 +10,12 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
+  const AnyComponent = Component as any;
   return (
     <SessionProvider session={session}>
       <ChakraProvider>
         <Provider store={store}>
-          <Component {...pageProps} />
+          <AnyComponent {...pageProps} />
         </Provider>
       </ChakraProvider>
     </SessionProvider>
