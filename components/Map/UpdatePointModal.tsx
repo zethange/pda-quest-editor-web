@@ -14,9 +14,9 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { pointType } from "@/store/types/mapType";
-import { useDispatch, useSelector } from "react-redux";
 import { editPoint } from "@/store/reduxStore/mapSlice";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 
 interface IProps {
   showEditPointModal: boolean;
@@ -32,8 +32,8 @@ const UpdatePointModal = ({
   updateMap,
 }: IProps) => {
   const [updatedPoint, setUpdatedPoint] = useState<pointType | any>({});
-  const initialPoint = useSelector((state: any) => state.map.openPoint);
-  const dispatch = useDispatch();
+  const initialPoint = useAppSelector((state) => state.map.openPoint);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setUpdatedPoint(initialPoint);
@@ -41,6 +41,7 @@ const UpdatePointModal = ({
 
   const updatePoint = () => {
     dispatch(editPoint(updatedPoint));
+    updateMap();
   };
 
   return (

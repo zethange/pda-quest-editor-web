@@ -3,10 +3,15 @@ import mapReducer from "./mapSlice";
 import stageReducer from "./stageSlice";
 import mapsSlice from "./chapterMapsSlice";
 
-export default configureStore({
+const store = configureStore({
   reducer: {
     map: mapReducer,
     maps: mapsSlice,
     stage: stageReducer,
   },
 });
+
+export default store;
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

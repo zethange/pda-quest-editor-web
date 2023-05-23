@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { createRef, useEffect, useState } from "react";
-import { mapType } from "@/store/types/mapType";
+import { mapType, pointType, spawnType } from "@/store/types/mapType";
 import store from "store2";
 import CustomHead from "@/components/Global/CustomHead";
 import NavBar from "@/components/UI/NavBar/NavBar";
@@ -19,7 +19,6 @@ import UserButton from "@/components/UI/NavBar/UserButton";
 import { imagePoint, translateTypePoint } from "@/store/utils/map/typePoint";
 import CreatePointButtons from "@/components/Map/CreatePointButtons";
 
-import { useSelector, useDispatch } from "react-redux";
 import {
   onPointCreate,
   setMap,
@@ -27,13 +26,18 @@ import {
 } from "@/store/reduxStore/mapSlice";
 import CreatePointModal from "@/components/Map/CreatePointModal";
 import UpdatePointModal from "@/components/Map/UpdatePointModal";
+import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { useStore } from "react-redux";
+import { Store } from "redux";
+import { RootState } from "@/store/reduxStore";
 
 export default function mapEdit() {
   const { query, isReady } = useRouter();
   const mapRoute = (query.map as string[]) || [];
 
-  const map: mapType = useSelector((state: any) => state.map.map);
-  const dispatch = useDispatch();
+  const map: mapType | any = useAppSelector((state) => state.map.map);
+  const dispatch = useAppDispatch();
+  const storeRedux: Store<RootState> = useStore();
 
   // опции
   const [showQuestPoints, setShowQuestPoints] = useState(true);
@@ -51,6 +55,7 @@ export default function mapEdit() {
   }, [isReady]);
 
   const updateMap = () => {
+    const map = storeRedux.getState().map.map;
     store.set(`story_${mapRoute[0]}_map_${mapRoute[1]}`, map);
     console.log("updating map:", map);
   };
@@ -146,7 +151,7 @@ export default function mapEdit() {
             onLoad={(target: any) => onLoadImage(target)}
           />
           {showQuestPoints &&
-            map?.points?.map((point) => (
+            map?.points?.map((point: pointType) => (
               <Tooltip
                 key={point.name}
                 label={point.name + ". Тип: " + translateTypePoint(point.type)}
@@ -170,7 +175,7 @@ export default function mapEdit() {
               </Tooltip>
             ))}
           {showSpawns &&
-            map?.spawns?.map((spawn) => (
+            map?.spawns?.map((spawn: spawnType) => (
               <Tooltip label={JSON.stringify(spawn, null, 2)}>
                 <Image
                   w="10px"
@@ -213,7 +218,7 @@ export default function mapEdit() {
           <Box>
             Метки:
             <Box display="grid" gap={2} h="200px" overflowY="auto">
-              {map?.points?.map((point) => (
+              {map?.points?.map((point: pointType) => (
                 <Button
                   p={1}
                   fontWeight="normal"

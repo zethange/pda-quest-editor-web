@@ -13,9 +13,9 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
 import { pointType } from "@/store/types/mapType";
 import { addPoint } from "@/store/reduxStore/mapSlice";
+import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 
 interface IProps {
   showCreatePointModal: boolean;
@@ -28,8 +28,8 @@ const CreatePointModal = ({
   setShowCreatePointModal,
   updateMap,
 }: IProps) => {
-  const dispatch = useDispatch();
-  const initialPoint = useSelector((state: any) => state.map.newPoint);
+  const dispatch = useAppDispatch();
+  const initialPoint = useAppSelector((state) => state.map.newPoint);
   const [newPoint, setNewPoint] = useState<pointType | any>({});
 
   useEffect(() => {
@@ -37,8 +37,9 @@ const CreatePointModal = ({
   }, [showCreatePointModal]);
 
   const savePoint = () => {
-    dispatch(addPoint(newPoint));
+    console.log(dispatch(addPoint(newPoint)));
     console.log("point:", newPoint);
+    updateMap();
   };
 
   return (
