@@ -155,19 +155,14 @@ export default function Home() {
   const uploadStoryToServer = async (storyId: number) => {
     const info = await store.get(`story_${storyId}_info`);
 
-    let chapters: object = {};
-    let maps: object = {};
+    let chapters: chapterType[] = [];
+    let maps: mapType[] = [];
     await store.each(async (key: string, value: chapterType | mapType) => {
       if (key.includes(`story_${storyId}_chapter`)) {
-        const arrChapters: any = Object.entries(chapters);
-        arrChapters.push([`${value.id}`, value]);
-        chapters = Object.fromEntries(arrChapters);
+        chapters.push(value as chapterType);
       }
       if (key.includes(`story_${storyId}_map`)) {
-        const arrMaps: any = Object.entries(maps);
-        arrMaps.push([`${value.id}`, value]);
-        maps = Object.fromEntries(arrMaps);
-        console.log(maps);
+        maps.push(value as mapType);
       }
       if (key === "stopLoop") return false;
     });
@@ -178,13 +173,18 @@ export default function Home() {
       maps,
       missions: [],
     };
-    const res = await fetch("/pdanetwork/quest/uploadCustom", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    console.log(data);
+    const res = await fetch(
+      "https://dev.artux.net/pdanetwork/api/v1/admin/quest/upload/private",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
     const dataRes = await res.json();
 
     if (dataRes.code === 200) {

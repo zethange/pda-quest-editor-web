@@ -10,6 +10,9 @@ const nextConfig = {
       },
     ],
   },
+  httpAgentOptions: {
+    keepAlive: false,
+  },
   async rewrites() {
     return [
       {

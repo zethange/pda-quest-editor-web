@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
-import useSWR from "swr";
 import { fetcher } from "@/store/tools";
 import { groupItem } from "@/store/utils/groupItem";
 import { newParamInMethod } from "@/store/reduxStore/stageSlice";
 import { useDispatch } from "react-redux";
+import useFetching from "@/hooks/useFetching";
+import { itemsContainerType, itemType } from "@/store/types/itemsType";
 
 type Props = {
   indexAction: any;
@@ -43,11 +44,13 @@ function Empty({
 }
 
 function WithItems({ indexAction, setShowCreateParam }: any) {
-  const { data, isLoading } = useSWR("/pdanetwork/items/all", fetcher);
+  const { data, isLoading } = useFetching<itemsContainerType>(
+    "/pdanetwork/api/v1/items/all"
+  );
   const dispatch = useDispatch();
 
   const arrParam: string[] = ["68", "1"];
-  const onChangeNewParam = (message: string, type: string) => {
+  const onChangeNewParam = (message: string, type: "item" | "count") => {
     if (type === "item") arrParam[0] = message;
     if (type === "count") arrParam[1] = message;
     console.log(arrParam.join(":"));
@@ -62,13 +65,15 @@ function WithItems({ indexAction, setShowCreateParam }: any) {
         defaultValue={arrParam[0]}
       >
         {!isLoading &&
-          Object.entries(data).map((category: any) => (
-            <optgroup label={groupItem(category[0])}>
-              {category[1].map((item: any) => (
-                <option value={item.baseId}>{item.title}</option>
-              ))}
-            </optgroup>
-          ))}
+          Object.entries(data as itemsContainerType).map(
+            (category: [string, itemType[]]) => (
+              <optgroup label={groupItem(category[0])}>
+                {category[1].map((item: itemType) => (
+                  <option value={item.baseId}>{item.title}</option>
+                ))}
+              </optgroup>
+            )
+          )}
       </Select>
       <Input
         placeholder="Количество"
@@ -140,21 +145,17 @@ export default function CreateParamEmpty({ indexAction, type }: Props) {
                 {typeCreate ? "Параметр" : "Предмет"}
               </Button>
               {typeCreate ? (
-                <>
-                  <Empty
-                    onChangeNewParam={onChangeNewParam}
-                    setShowCreateParam={setShowCreateParam}
-                    indexAction={indexAction}
-                    newParam={newParam}
-                  />
-                </>
+                <Empty
+                  onChangeNewParam={onChangeNewParam}
+                  setShowCreateParam={setShowCreateParam}
+                  indexAction={indexAction}
+                  newParam={newParam}
+                />
               ) : (
-                <>
-                  <WithItems
-                    indexAction={indexAction}
-                    setShowCreateParam={setShowCreateParam}
-                  />
-                </>
+                <WithItems
+                  indexAction={indexAction}
+                  setShowCreateParam={setShowCreateParam}
+                />
               )}
             </Box>
           )}

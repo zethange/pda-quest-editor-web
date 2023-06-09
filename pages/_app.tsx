@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 import store from "@/store/reduxStore";
+import AuthProvider from "@/store/utils/providers/AuthProvider";
 
 export default function App({
   Component,
@@ -14,9 +15,11 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <ChakraProvider>
-        <Provider store={store}>
-          <AnyComponent {...pageProps} />
-        </Provider>
+        <AuthProvider>
+          <Provider store={store}>
+            <AnyComponent {...pageProps} />
+          </Provider>
+        </AuthProvider>
       </ChakraProvider>
     </SessionProvider>
   );

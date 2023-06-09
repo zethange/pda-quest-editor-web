@@ -6,6 +6,7 @@ import React, {
   useRef,
 } from "react";
 import store from "store2";
+import querystring from "querystring";
 import dagre from "dagre";
 
 import ReactFlow, {
@@ -16,6 +17,7 @@ import ReactFlow, {
   MarkerType,
   MiniMap,
 } from "reactflow";
+
 import {
   Box,
   Button,
@@ -26,7 +28,6 @@ import {
 } from "@chakra-ui/react";
 
 import "reactflow/dist/style.css";
-
 import { newStage } from "@/store/tools/createTools";
 import CustomHead from "@/components/Global/CustomHead";
 import { NodeStage } from "@/components/Global/StageNode";
@@ -53,7 +54,7 @@ export default function StageEditScreenChakra({
   query,
 }: {
   path: string[];
-  query: any;
+  query: querystring.ParsedUrlQuery;
   isReady: boolean;
 }) {
   const [chapter, setChapter] = useState<chapterType | any>();
@@ -437,9 +438,11 @@ export default function StageEditScreenChakra({
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-      const stage = chapterFromLocalStorage.stages.find(
-        (stage: stageType) => stage.id === +query.stage
-      );
+      const stage = chapterFromLocalStorage.stages.find((stage: stageType) => {
+        if (query.stage) {
+          return stage.id === +query.stage;
+        }
+      });
       setTimeout(() => {
         dispatch(setStageToRedux(stage));
         setEditableStage(stage);

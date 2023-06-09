@@ -1,3 +1,6 @@
+import React from "react";
+import * as querystring from "querystring";
+
 import {
   Button,
   Spacer,
@@ -8,7 +11,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import React from "react";
+
 import StageEditScreenChakra from "@/screens/stage/StageEditScreenChakra";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import MapScreen from "../map/MapScreen";
@@ -19,7 +22,7 @@ const StageScreen = ({
   isReady,
 }: {
   path: string[];
-  query: any;
+  query: querystring.ParsedUrlQuery;
   isReady: boolean;
 }) => {
   console.log(path);

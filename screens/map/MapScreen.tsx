@@ -13,7 +13,8 @@ import {
 import store from "store2";
 import { mapType } from "@/store/types/mapType";
 import Link from "next/link";
-import { createMap, Map } from "@/store/tools/mapTools";
+import { createMap, MapsApiType } from "@/store/tools/mapTools";
+import useFetching from "@/hooks/useFetching";
 
 interface Props {
   path: string[];
@@ -22,6 +23,9 @@ interface Props {
 
 const MapScreen = ({ path, isReady }: Props) => {
   const [maps, setMaps] = useState<mapType[]>([]);
+  const { data } = useFetching<MapsApiType[]>(
+    "/pdanetwork/api/v1/admin/quest/maps/all"
+  );
 
   useEffect(() => {
     store.each((key, value) => {
@@ -33,9 +37,8 @@ const MapScreen = ({ path, isReady }: Props) => {
     });
   }, [isReady]);
 
-  const handleCreateMap = (map: Map) => {
-    const maxId = Math.max(...maps.map((map: mapType) => +map.id), 0);
-    const newMap = createMap(map, maxId + 1);
+  const handleCreateMap = (map: MapsApiType) => {
+    const newMap = createMap(map);
     if (newMap) {
       setMaps([...maps, newMap]);
       store.set(`story_${path[0]}_map_${newMap.id}`, newMap);
@@ -43,32 +46,16 @@ const MapScreen = ({ path, isReady }: Props) => {
   };
 
   return (
-    <Fragment>
+    <>
       <Box display="flex" p={0} gap={2} mb={4} alignItems="center">
         <Menu>
           <MenuButton as={Button}>Создать карту</MenuButton>
           <MenuList>
-            <MenuItem onClick={() => handleCreateMap("CH4")}>Ч-4</MenuItem>
-            <MenuItem onClick={() => handleCreateMap("ESCAPE")}>
-              Кордон
-            </MenuItem>
-            <MenuItem onClick={() => handleCreateMap("AGROPROM")}>
-              Агропром
-            </MenuItem>
-            <MenuItem onClick={() => handleCreateMap("GARBAGE")}>
-              Свалка
-            </MenuItem>
-            <MenuItem onClick={() => handleCreateMap("DARK_VALLEY")}>
-              Тёмная долина
-            </MenuItem>
-            <MenuItem onClick={() => handleCreateMap("BAR")}>Бар</MenuItem>
-            <MenuItem onClick={() => handleCreateMap("ROSTOK")}>
-              Дикая территория
-            </MenuItem>
-            <MenuItem onClick={() => handleCreateMap("MILITARY")}>
-              Военные склады
-            </MenuItem>
-            <MenuItem onClick={() => handleCreateMap("RADAR")}>Радар</MenuItem>
+            {data?.map((map) => (
+              <MenuItem onClick={() => handleCreateMap(map)} key={map.id}>
+                {map.title}
+              </MenuItem>
+            ))}
           </MenuList>
         </Menu>
       </Box>
@@ -100,7 +87,7 @@ const MapScreen = ({ path, isReady }: Props) => {
           ))}
         </SimpleGrid>
       </Box>
-    </Fragment>
+    </>
   );
 };
 

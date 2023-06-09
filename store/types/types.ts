@@ -1,7 +1,11 @@
+import { pointType, spawnType } from "@/store/types/mapType";
+
 export type chapterType = {
   id: number;
   music: any;
   stages: stageType[];
+  points?: pointType[];
+  spawns?: spawnType[];
 };
 
 export type stageType = {
