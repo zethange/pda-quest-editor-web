@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Box, Button, Checkbox, Flex, Input, Textarea } from "@chakra-ui/react";
-import Confetti from "react-confetti";
 import { stageText } from "@/store/types/types";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -47,9 +46,6 @@ export default function EditStage({ data }: { data: any }) {
           height="199px"
           alignContent="space-between"
         >
-          {JSON.stringify(storeStage).includes("Максим") && (
-            <Confetti width={1920} height={1000} numberOfPieces={500} />
-          )}
           <Input
             placeholder="Заголовок стадии..."
             backgroundColor="white"

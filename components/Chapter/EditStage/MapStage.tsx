@@ -12,7 +12,7 @@ interface IProps {
   };
 }
 
-const MapStage = ({ data }: IProps) => {
+const MapStage = memo(({ data }: IProps) => {
   const dispatch = useDispatch();
 
   const maps = useSelector((state: any) => state.maps.maps);
@@ -91,6 +91,6 @@ const MapStage = ({ data }: IProps) => {
       <p>Позиция: {data?.pos}</p>
     </Box>
   );
-};
+});
 
-export default memo(MapStage);
+export default MapStage;
