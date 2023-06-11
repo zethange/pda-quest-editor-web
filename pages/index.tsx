@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import Link from "next/link";
 import store from "store2";
 import { downloadZip } from "client-zip";
@@ -20,6 +20,12 @@ import {
   Heading,
   Icon,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Select,
   SimpleGrid,
   Spacer,
@@ -27,9 +33,9 @@ import {
   Textarea,
   useDisclosure,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
-import UserButton from "@/components/UI/NavBar/UserButton";
 import { BiEdit } from "react-icons/bi";
 import { BsCloudUpload } from "react-icons/bs";
 import { storyType } from "@/store/types/storyType";
@@ -37,9 +43,21 @@ import { chapterType } from "@/store/types/types";
 import { mapType } from "@/store/types/mapType";
 
 export default function Home() {
-  const [stories, setStories] = useState<any>([]);
+  const [stories, setStories] = useState<any[]>([]);
+  const [storiesFromServer, setStoriesFromServer] = useState<any>([]);
   const [editStory, setEditStory] = useState<any>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [openStoryId, setOpenStoryId] = useState<number>(0);
+  const {
+    isOpen: modalIsOpen,
+    onOpen: modalOnOpen,
+    onClose: modalOnClose,
+  } = useDisclosure();
+  const {
+    isOpen: downloadModalIsOpen,
+    onOpen: downloadModalOnOpen,
+    onClose: downloadModalOnClose,
+  } = useDisclosure();
   const toast = useToast();
 
   useEffect(() => {
@@ -99,8 +117,8 @@ export default function Home() {
     link.remove();
   }
 
-  const uploadStory = async (e: any) => {
-    const files: any[] = [...e.target.files];
+  const uploadStoryFromFolder = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files: any[] = [...(e.target.files as unknown as any[])];
 
     let idStory: number;
 
@@ -152,7 +170,7 @@ export default function Home() {
     store.set(`story_${editStory?.id}_info`, editStory);
   };
 
-  const uploadStoryToServer = async (storyId: number) => {
+  const uploadStoryToServer = async (type: string, storyId: number) => {
     const info = await store.get(`story_${storyId}_info`);
 
     let chapters: chapterType[] = [];
@@ -175,7 +193,7 @@ export default function Home() {
     };
     console.log(data);
     const res = await fetch(
-      "https://dev.artux.net/pdanetwork/api/v1/admin/quest/upload/private",
+      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/upload/${type}`,
       {
         method: "POST",
         headers: {
@@ -203,6 +221,53 @@ export default function Home() {
     console.log("Отправлено:", data, "\nОтвет:", dataRes);
   };
 
+  const downloadStoryFromServer = async () => {
+    const storiesRes = await fetch(
+      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/status`,
+      {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const { stories } = await storiesRes.json();
+    setStoriesFromServer(stories);
+    downloadModalOnOpen();
+  };
+
+  const downloadStoryFromServerById = async (id: number) => {
+    const res = await fetch(
+      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/${id}`,
+      {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    store.set(
+      `story_${data.id}_info`,
+      {
+        id: data.id,
+        title: data.title,
+        desc: data.desc,
+        icon: data.icon,
+        needs: data.needs,
+        access: data.access,
+      },
+      true
+    );
+    data.chapters.map((chapter: chapterType) => {
+      store.set(`story_${data.id}_chapter_${chapter.id}`, chapter, true);
+    });
+    data.maps.map((map: mapType) => {
+      store.set(`story_${data.id}_maps_${map.id}`, map, true);
+    });
+  };
+
   return (
     <>
       <CustomHead title="Редактор историй" />
@@ -212,15 +277,18 @@ export default function Home() {
             type="file"
             {...{ directory: "", webkitdirectory: "" }}
             id="input"
-            onChange={(e) => uploadStory(e)}
+            onChange={(e) => uploadStoryFromFolder(e)}
           />
-          <Button fontWeight="10px" onClick={() => createStory()}>
+          <Button fontWeight="normal" onClick={() => createStory()}>
             Создать историю
           </Button>
           <Spacer />
           <ChangeThemeButton rounded={true} />
+          <Button fontWeight="normal" onClick={() => downloadStoryFromServer()}>
+            Выкачать истории с сервера
+          </Button>
           <Button
-            fontWeight="10px"
+            fontWeight="normal"
             onClick={() => {
               localStorage.clear();
               window.location.reload();
@@ -228,7 +296,6 @@ export default function Home() {
           >
             Удалить всё
           </Button>
-          <UserButton />
         </NavBar>
         <Box
           h="calc(100vh - 57px)"
@@ -270,7 +337,13 @@ export default function Home() {
                   >
                     Скачать
                   </Button>
-                  <Button onClick={() => uploadStoryToServer(story.id)}>
+                  <Button
+                    onClick={() => {
+                      modalOnOpen();
+                      setOpenStoryId(story.id);
+                      //uploadStoryToServer(story.id);
+                    }}
+                  >
                     <Icon as={BsCloudUpload} />
                   </Button>
                   <Button
@@ -287,6 +360,61 @@ export default function Home() {
           </SimpleGrid>
         </Box>
       </Box>
+      <Modal onClose={modalOnClose} isOpen={modalIsOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Загрузка истории на сервер</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack>
+              <Button
+                w="100%"
+                onClick={() => {
+                  uploadStoryToServer("private", openStoryId);
+                  modalOnClose();
+                }}
+              >
+                Загрузить приватно
+              </Button>
+              <Button
+                w="100%"
+                onClick={() => {
+                  uploadStoryToServer("public", openStoryId);
+                  modalOnClose();
+                }}
+              >
+                Загрузить публично
+              </Button>
+            </VStack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal
+        onClose={downloadModalOnClose}
+        isOpen={downloadModalIsOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Загрузка истории с сервера</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack>
+              {storiesFromServer.map((story: any) => (
+                <Button
+                  w="100%"
+                  onClick={() => {
+                    downloadStoryFromServerById(story.id);
+                    downloadModalOnClose();
+                  }}
+                >
+                  {story.title}
+                </Button>
+              ))}
+            </VStack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       {/* drawer */}
       <Drawer isOpen={isOpen} placement="right" size="md" onClose={onClose}>
         <DrawerOverlay />

@@ -76,7 +76,7 @@ export default function StageEditScreenChakra({
     useState<boolean>(false);
 
   // для dnd
-  const reactFlowWrapper = useRef(null);
+  const reactFlowWrapper: any = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
   // вытаскивание карт
@@ -398,7 +398,6 @@ export default function StageEditScreenChakra({
     (event: any) => {
       event.preventDefault();
 
-      // @ts-ignore
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData("application/reactflow");
 

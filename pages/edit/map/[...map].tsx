@@ -15,7 +15,6 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
-import UserButton from "@/components/UI/NavBar/UserButton";
 import { imagePoint, translateTypePoint } from "@/store/utils/map/typePoint";
 import CreatePointButtons from "@/components/Map/CreatePointButtons";
 
@@ -121,7 +120,6 @@ export default function mapEdit() {
         <Heading fontSize={25}>{map?.title}</Heading>
         <Spacer />
         <ChangeThemeButton rounded={true} />
-        <UserButton />
       </NavBar>
       <Box
         h="calc(100vh - 57px)"

@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 import { chapterType } from "@/store/types/types";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
-import UserButton from "@/components/UI/NavBar/UserButton";
 
 export default function storyId() {
   const { query, isReady } = useRouter();
@@ -65,7 +64,6 @@ export default function storyId() {
           </Button>
           <Spacer />
           <ChangeThemeButton rounded={true} />
-          <UserButton />
         </NavBar>
         <Box
           h="calc(100vh - 57px)"
