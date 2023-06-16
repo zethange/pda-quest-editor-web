@@ -51,13 +51,13 @@ const ToStage = ({ setEditableStage, chapter }: IProps) => {
                   fontWeight="normal"
                   onClick={() => {
                     dispatch(setStageToStore(null));
-                    setEditableStage(null);
+                    setEditableStage(undefined);
                     const stage = chapter.stages.find(
                       (stage: stageType) => stage.id === selectedStage
                     );
                     setTimeout(() => {
                       dispatch(setStageToStore(stage));
-                      setEditableStage(stage || null);
+                      setEditableStage(stage || undefined);
                     }, 0);
                   }}
                 >
