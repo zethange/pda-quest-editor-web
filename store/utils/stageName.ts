@@ -40,7 +40,9 @@ export function stageTypes(type_stage: number) {
       return "seller";
     case 7:
       return "default";
+    case 777:
+      return "fromMap";
     default:
-      return "default";
+      return "unknown";
   }
 }

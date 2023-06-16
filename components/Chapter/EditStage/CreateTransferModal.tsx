@@ -72,7 +72,8 @@ const CreateTransferModal = ({
           <Button
             colorScheme="teal"
             onClick={() => {
-              updateStage(storeStage.id);
+              console.log("storeStage, createTransfer", storeStage);
+              updateStage(+storeStage.id);
               dispatch(setConnection(null));
               setIsOpenCreateTransfer(false);
             }}

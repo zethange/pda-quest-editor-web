@@ -45,10 +45,14 @@ export function NodeStage({
           {words?.length > 30 && "..."}
         </small>
         <Box display="grid" gap={1}>
-          {Object.entries(data.actions).map((action: any) => {
+          {Object.entries(data.actions).map((action: any, index: number) => {
             return (
               action[0] === "add" && (
-                <SimpleGrid columns={action[1].length > 1 ? 2 : 1} gap={1}>
+                <SimpleGrid
+                  columns={action[1].length > 1 ? 2 : 1}
+                  gap={1}
+                  key={index}
+                >
                   {action[1].map((param: string) => (
                     <Badge colorScheme="green">{param}</Badge>
                   ))}

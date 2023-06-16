@@ -187,6 +187,7 @@ export default function Home() {
 
     const data = {
       ...info,
+      needs: [0],
       chapters,
       maps,
       missions: [],

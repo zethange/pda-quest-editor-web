@@ -10,7 +10,7 @@ import {
   newTextInStore,
 } from "@/store/reduxStore/stageSlice";
 
-export default function EditStage({ data }: { data: any }) {
+export default function EditStage() {
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
   const storeStage = useSelector((state: any) => state.stage.stage);
   const dispatch = useDispatch();
@@ -54,14 +54,14 @@ export default function EditStage({ data }: { data: any }) {
               backgroundColor: "black",
               opacity: "0.75",
             }}
-            defaultValue={data?.title}
+            defaultValue={storeStage?.title}
             onChange={(event) => dispatch(editTitleInStore(event.target.value))}
           />
           <Input
             placeholder="Ссылка на фон..."
             backgroundColor="white"
             opacity="0.75"
-            defaultValue={data?.background}
+            defaultValue={storeStage?.background}
             mt={2}
             _dark={{
               backgroundColor: "black",
@@ -134,7 +134,7 @@ export default function EditStage({ data }: { data: any }) {
           {storeStage?.message && (
             <Textarea
               placeholder="Уведомление..."
-              defaultValue={data?.message}
+              defaultValue={storeStage?.message}
               backgroundColor="white"
               onClick={(event: any) => {
                 event.target.style.height = "inherit";

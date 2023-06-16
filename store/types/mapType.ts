@@ -11,6 +11,7 @@ export type mapType = {
 };
 
 export type pointType = {
+  id?: string;
   type: string;
   name: string;
   pos: string;
@@ -19,6 +20,10 @@ export type pointType = {
     stage: string;
   };
   condition?: any;
+  editor?: {
+    x?: number;
+    y?: number;
+  };
 };
 
 export enum spawnGroup {

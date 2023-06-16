@@ -1,40 +1,39 @@
-import { memo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Box, Select } from "@chakra-ui/react";
-import { mapType } from "@/store/types/mapType";
-import { editMapInData, editPosInData } from "@/store/reduxStore/stageSlice";
-import { stageType } from "@/store/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { mapType, pointType } from "@/store/types/mapType";
+import {
+  editMapIdInTransition,
+  editPosInTransition,
+} from "@/store/reduxStore/stageSlice";
+import { useSelector } from "react-redux";
 import useFetching from "@/hooks/useFetching";
 
-interface IProps {
-  data:
-    | {
-        map: string;
-        pos: string;
-      }
-    | undefined;
+export interface IFromMapStage {
+  id: number;
+  mapId: `${number}`;
+  type_stage: 777;
+  point: pointType;
 }
 
-const MapStage = memo(({ data }: IProps) => {
+const FromMapStage = () => {
   const dispatch = useAppDispatch();
+  const maps: mapType[] = useAppSelector((state) => state.maps.maps);
+  const stage: IFromMapStage = useSelector(
+    (state: any) => state.stage.transitionFromMap
+  );
+  const map: mapType | undefined = maps.find((map: mapType) => {
+    return +map.id === +stage?.mapId;
+  });
 
-  const maps = useAppSelector((state: any) => state.maps.maps);
-  const map: mapType = maps.find((map: mapType) => map.id === data?.map);
-  const stage: stageType = useAppSelector((state: any) => state.stage.stage);
-
-  const parentMapRef: any = useRef();
-
-  const { data: dataMaps } = useFetching<any[]>(
+  const { data } = useFetching<any[]>(
     "/pdanetwork/api/v1/admin/quest/maps/all"
   );
+  const mapBackground = data?.filter((map) => {
+    return +map.id === +stage?.mapId;
+  })[0].background;
 
-  if (dataMaps) {
-    var backgroundSelectedMap = dataMaps.find((map) => {
-      if (stage?.data?.map) {
-        return +map.id === +stage?.data?.map;
-      }
-    }).background;
-  }
+  const parentMapRef: any = useRef();
 
   const handleClick = (e: any) => {
     const parentMap = parentMapRef.current.getBoundingClientRect();
@@ -44,8 +43,7 @@ const MapStage = memo(({ data }: IProps) => {
         e.target.naturalHeight - (e.clientY - parentMap.top) * diffHeight
       ),
     };
-    console.log(position);
-    dispatch(editPosInData(`${position.x}:${position.y}`));
+    dispatch(editPosInTransition(`${position.x}:${position.y}`));
   };
 
   const [diffHeight, setDiffHeight] = useState<number>(0);
@@ -61,18 +59,22 @@ const MapStage = memo(({ data }: IProps) => {
       Переход на локацию:
       <Box>
         <Select
-          defaultValue={stage?.data?.map}
-          onChange={(event) => dispatch(editMapInData(event.target.value))}
+          defaultValue={stage?.mapId}
+          onChange={(event) =>
+            dispatch(editMapIdInTransition(event.target.value))
+          }
         >
           {maps.map((map: mapType) => (
-            <option value={`${map.id}`}>{map.title}</option>
+            <option value={`${map.id}`} key={map.id}>
+              {map.title}
+            </option>
           ))}
         </Select>
       </Box>
       <Box position="relative">
         <Box ref={parentMapRef}>
           <img
-            src={"/static/maps/" + backgroundSelectedMap}
+            src={"/static/maps/" + mapBackground}
             draggable={false}
             onLoad={(target: any) => onLoadImage(target)}
             onClick={(e) => handleClick(e)}
@@ -88,10 +90,10 @@ const MapStage = memo(({ data }: IProps) => {
             style={{
               position: "absolute",
               left: `${
-                Number(stage?.data?.pos.split(":")[0]) / diffWidth - 10
+                Number(stage?.point?.pos.split(":")[0]) / diffWidth - 10
               }px`,
               bottom: `${
-                Number(stage?.data?.pos.split(":")[1]) / diffHeight - 10
+                Number(stage?.point?.pos.split(":")[1]) / diffHeight - 10
               }px`,
               color: "#fff",
               userSelect: "none",
@@ -103,9 +105,9 @@ const MapStage = memo(({ data }: IProps) => {
           />
         </Box>
       </Box>
-      <p>Позиция: {data?.pos}</p>
+      <p>Позиция: {stage?.point?.pos}</p>
     </Box>
   );
-});
+};
 
-export default MapStage;
+export default FromMapStage;

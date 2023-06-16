@@ -1,19 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { stageTransfer } from "@/store/types/types";
+import { stageTransfer, stageType } from "@/store/types/types";
+import { pointType } from "@/store/types/mapType";
 
-const stageSlice = createSlice({
-  name: "stage",
-  initialState: {
-    targetTransfer: {
-      targetTransfer: {},
-      indexTargetTransfer: 0,
+interface IOriginalPoint extends pointType {
+  mapId: `${number}`;
+}
+
+interface IState {
+  targetTransfer: {
+    targetTransfer: stageTransfer;
+    indexTargetTransfer: number;
+  };
+  transition: { point: pointType; targetStage: stageType };
+  connection: {
+    source: number;
+    target: number;
+    indexCreatedTransfer: number;
+  };
+  stage: stageType;
+  transitionFromMap: {
+    id: number;
+    mapId: `${number}`;
+    originalPoint: IOriginalPoint;
+    point: pointType;
+  };
+}
+
+const initialState: IState = {
+  transition: {
+    point: {
+      data: { stage: "", chapter: "" },
+      id: "",
+      condition: {},
+      pos: "",
+      name: "",
+      type: "",
     },
-    connection: {
-      source: 0,
-      target: 0,
-      indexCreatedTransfer: 0,
-    },
-    stage: {
+    targetStage: {
       id: 0,
       type_stage: 0,
       background: "",
@@ -34,19 +57,84 @@ const stageSlice = createSlice({
       actions: {},
     },
   },
+  targetTransfer: {
+    targetTransfer: {
+      text: "",
+      condition: {},
+      stage: 0,
+    },
+    indexTargetTransfer: 0,
+  },
+  connection: {
+    source: 0,
+    target: 0,
+    indexCreatedTransfer: 0,
+  },
+  stage: {
+    id: 0,
+    type_stage: 0,
+    background: "",
+    title: "",
+    message: "",
+    type_message: 0,
+    texts: [
+      {
+        text: "",
+        condition: {},
+      },
+    ],
+    transfers: [],
+    data: {
+      pos: "",
+      map: "",
+    },
+    actions: {},
+  },
+  transitionFromMap: {
+    id: 0,
+    mapId: "0",
+    point: {
+      data: { stage: "", chapter: "" },
+      id: "",
+      condition: {},
+      pos: "",
+      name: "",
+      type: "",
+    },
+    originalPoint: {
+      mapId: "0",
+      data: { stage: "", chapter: "" },
+      id: "",
+      condition: {},
+      pos: "",
+      name: "",
+      type: "",
+    },
+  },
+};
+
+const stageSlice = createSlice({
+  name: "stage",
+  initialState,
   reducers: {
     setStageToStore(state, action) {
       state.stage = action.payload;
     },
     newTextInStore(state, action) {
-      state.stage.texts.push({ text: "Новый текст", condition: {} });
+      if (state.stage.texts) {
+        state.stage.texts.push({ text: "Новый текст", condition: {} });
+      }
     },
     newTransferInStore(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const transfer: stageTransfer = action.payload;
+
+      if (!storeStage.transfers) {
+        storeStage.transfers = [];
+      }
       if (
         !storeStage.transfers.find(
-          (findTransfer: any) => findTransfer.stage === transfer.stage
+          (findTransfer: stageTransfer) => findTransfer.stage === transfer.stage
         )
       ) {
         storeStage.transfers.push(transfer);
@@ -54,7 +142,8 @@ const stageSlice = createSlice({
       } else {
         const index = storeStage.transfers.indexOf(
           storeStage.transfers.find(
-            (findTransfer: any) => findTransfer.stage === transfer.stage
+            (findTransfer: stageTransfer) =>
+              findTransfer.stage === transfer.stage
           )
         );
         storeStage.transfers.splice(index, 1, transfer);
@@ -197,13 +286,29 @@ const stageSlice = createSlice({
       }
     },
     editPosInData(state, action) {
-      state.stage.data.pos = action.payload;
+      if (state.stage.data) {
+        state.stage.data.pos = action.payload;
+      }
     },
     editMapInData(state, action) {
-      state.stage.data.map = action.payload;
+      if (state.stage.data) {
+        state.stage.data.map = action.payload;
+      }
+    },
+    setTransition(state, action) {
+      state.transitionFromMap = action.payload;
+    },
+    editMapIdInTransition(state, action) {
+      state.transitionFromMap.mapId = action.payload;
+    },
+    editPosInTransition(state, action) {
+      state.transitionFromMap.point.pos = action.payload;
     },
     setTargetTransfer(state, action) {
       state.targetTransfer = action.payload;
+    },
+    setTransitionToStore(state, action) {
+      state.transition = action.payload;
     },
   },
 });
@@ -230,7 +335,11 @@ export const {
   setConnection,
   editPosInData,
   editMapInData,
+  setTransition,
+  editPosInTransition,
+  editMapIdInTransition,
   setTargetTransfer,
+  setTransitionToStore,
 } = stageSlice.actions;
 
 export default stageSlice.reducer;

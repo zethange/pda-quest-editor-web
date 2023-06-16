@@ -8,6 +8,7 @@ import React, {
 import store from "store2";
 import querystring from "querystring";
 import dagre from "dagre";
+import { v4 as uuidv4, validate as uuidValidate } from "uuid";
 
 import ReactFlow, {
   applyNodeChanges,
@@ -40,15 +41,21 @@ import CreateStage from "@/components/Chapter/CreateStage";
 import CreateTransferModal from "@/components/Chapter/EditStage/CreateTransferModal";
 import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal";
 import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import {
   setConnection,
   setStageToStore as setStageToRedux,
   setTargetTransfer,
+  setTransition,
+  setTransitionToStore,
 } from "@/store/reduxStore/stageSlice";
 import { setMaps } from "@/store/reduxStore/chapterMapsSlice";
+import { Store } from "redux";
+import { RootState } from "@/store/reduxStore";
+import { pointType } from "@/store/types/mapType";
+import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
 
-export default function StageEditScreenChakra({
+export default function StageEditScreen({
   path,
   isReady,
   query,
@@ -57,7 +64,7 @@ export default function StageEditScreenChakra({
   query: querystring.ParsedUrlQuery;
   isReady: boolean;
 }) {
-  const [chapter, setChapter] = useState<chapterType | any>();
+  const [chapter, setChapter] = useState<chapterType>();
   const maps = useSelector((state: any) => state.maps.maps);
 
   const { colorMode } = useColorMode();
@@ -67,17 +74,20 @@ export default function StageEditScreenChakra({
   const [nodes, setNodes] = useState<any[]>();
   const [edges, setEdges] = useState<any[]>();
 
-  const [editableStage, setEditableStage] = useState<stageType | any>();
+  const [editableStage, setEditableStage] = useState<stageType>();
 
   const [isOpenCreateTransfer, setIsOpenCreateTransfer] =
     useState<boolean>(false);
 
   const [showModalEditTransfer, setShowModalEditTransfer] =
     useState<boolean>(false);
+  const [showModalEditTransition, setShowModalEditTransition] =
+    useState<boolean>(false);
 
   // для dnd
   const reactFlowWrapper: any = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const storeRedux: Store<RootState> = useStore();
 
   // вытаскивание карт
   useEffect(() => {
@@ -166,12 +176,41 @@ export default function StageEditScreenChakra({
         }
       });
 
-      updateChapter(copyChapter, true);
       setNodes([...layoutedNodes]);
       setEdges([...layoutedEdges]);
+      updateChapter(copyChapter, true);
     },
     [nodes, edges]
   );
+
+  // set id for points
+  useEffect(() => {
+    if (
+      path[0] &&
+      store.get(`story_${path[0]}_chapter_${path[1]}`) &&
+      chapter?.points
+    ) {
+      const chapter =
+        path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+
+      const points = chapter?.points;
+      // @ts-ignore
+      const pointsValues: any = Object.values(points);
+
+      pointsValues.map((pointsGroup: any) => {
+        pointsGroup.forEach((item: any) => {
+          if (!item.id) {
+            item.id = uuidv4();
+          }
+        });
+      });
+      const updatedChapter = {
+        ...chapter,
+        points,
+      };
+      updateChapter(updatedChapter, true);
+    }
+  }, [isReady]);
 
   // отрисовка nodes и edges
   useEffect(() => {
@@ -189,7 +228,8 @@ export default function StageEditScreenChakra({
             : stage.title,
           onClick: () => {
             dispatch(setStageToRedux(null));
-            setEditableStage(null);
+            dispatch(setTransition(null));
+            setEditableStage(undefined);
             setTimeout(() => {
               dispatch(setStageToRedux(stage));
               setEditableStage(stage);
@@ -224,6 +264,60 @@ export default function StageEditScreenChakra({
       });
     });
 
+    // отрисовка точек
+    if (chapter?.points) {
+      Object.entries(chapter?.points).map((points) => {
+        points[1].map((point) => {
+          const stage = {
+            id: point.id,
+            mapId: points[0],
+            type_stage: 777,
+            originalPoint: { point, mapId: points[0] },
+            point: {
+              id: point.id,
+              ...point,
+            },
+          };
+          initialNodes.push({
+            id: String(point.id),
+            type: "nodeStage",
+            selected: false,
+            data: {
+              label: "Переход с карты",
+              onClick: () => {
+                dispatch(setTransition(null));
+                dispatch(setStageToRedux(null));
+                setEditableStage(undefined);
+                setTimeout(() => {
+                  dispatch(setTransition(stage));
+                  setEditableStage(stage as unknown as stageType);
+                }, 0);
+              },
+              id: point.id,
+              actions: {},
+            },
+            position: point.editor
+              ? { x: point.editor.x, y: point.editor.y }
+              : { x: 0, y: 0 },
+          });
+          if (point.data.stage !== "") {
+            initialEdges.push({
+              id: `${point.id}-${point.data.stage}`,
+              source: String(point.id),
+              target: String(point.data.stage),
+              type: "custom",
+              data: {
+                onClick: () => {},
+              },
+              markerEnd: {
+                type: MarkerType.ArrowClosed,
+              },
+            });
+          }
+        });
+      });
+    }
+
     if (initialNodes.length !== 0) setNodes(initialNodes);
     if (initialEdges.length !== 0) setEdges(initialEdges);
   }, [chapter]);
@@ -234,30 +328,44 @@ export default function StageEditScreenChakra({
       setNodes((nds: any) => applyNodeChanges(changes, nds));
 
       if (changes[0].position) {
-        const updatedStageWithPosition = {
-          ...chapter?.stages[changes[0].id],
-          editor: {
-            x: changes[0].position.x,
-            y: changes[0].position.y,
-          },
-        };
+        if (uuidValidate(changes[0].id)) {
+          // @ts-ignore
+          const points = JSON.parse(JSON.stringify(chapter?.points));
+          const pointsValues: pointType[][] = Object.values(points);
+          pointsValues.map((points) => {
+            points.forEach((point) => {
+              if (point.id === changes[0].id) {
+                point.editor = {
+                  x: changes[0].position.x,
+                  y: changes[0].position.y,
+                };
+              }
+            });
+          });
+          const updatedChapter = {
+            ...chapter,
+            points,
+          };
+          updateChapter(updatedChapter, false);
+        } else {
+          const idStage = chapter?.stages?.indexOf(
+            chapter?.stages?.filter((stage) => +stage.id === +changes[0].id)[0]
+          ) as number;
+          const updatedStageWithPosition = {
+            ...chapter?.stages[idStage],
+            editor: {
+              x: changes[0].position.x,
+              y: changes[0].position.y,
+            },
+          };
 
-        const idInitialStage = chapter?.stages?.indexOf(
-          chapter.stages[changes[0].id]
-        );
+          const initialChapter =
+            path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-        const initialStages =
-          path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`).stages;
+          initialChapter.stages?.splice(idStage, 1, updatedStageWithPosition);
 
-        initialStages?.splice(idInitialStage, 1, updatedStageWithPosition);
-
-        updateChapter(
-          {
-            id: chapter.id,
-            stages: initialStages,
-          },
-          false
-        );
+          updateChapter(initialChapter, false);
+        }
       }
     },
     [chapter]
@@ -269,50 +377,104 @@ export default function StageEditScreenChakra({
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-      const stage = chapterFromLocalStorage.stages.find(
-        (stage: any) => stage.id === Number(edge.source)
-      );
+      if (uuidValidate(edge.source)) {
+        const points = JSON.parse(
+          JSON.stringify(chapterFromLocalStorage?.points)
+        );
+        const pointsValues: pointType[] = Object.values(
+          points
+        ).flat() as pointType[];
+        const targetPoint = pointsValues.find(
+          (point) => point.id === edge.source
+        );
+        const targetStage = chapterFromLocalStorage?.stages?.find(
+          (stage: stageType) => {
+            return +stage.id === +edge.target;
+          }
+        );
+        dispatch(setTransitionToStore({ point: targetPoint, targetStage }));
+        setShowModalEditTransition(true);
+      } else {
+        const stage = chapterFromLocalStorage.stages.find(
+          (stage: stageType) => +stage.id === +edge.source
+        );
 
-      const targetTransfer = stage?.transfers?.find(
-        (transfer: any) => transfer.stage === edge.target
-      );
+        const targetTransfer = stage?.transfers?.find(
+          (transfer: stageTransfer) => +transfer.stage === +edge.target
+        );
 
-      const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
-      setShowModalEditTransfer(true);
-      dispatch(setTargetTransfer({ targetTransfer, indexTargetTransfer }));
-      dispatch(setStageToRedux({ ...stage }));
+        const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
+        setShowModalEditTransfer(true);
+        dispatch(setTargetTransfer({ targetTransfer, indexTargetTransfer }));
+        dispatch(setStageToRedux({ ...stage }));
+      }
     },
     [chapter]
   );
 
-  // Обновление стадии
-  const updateStage = (stageId: number): void => {
-    console.log(storeStage);
+  const updateTransitionFromMap = () => {
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-    const storeStageTrueId = chapterFromLocalStorage.stages.findIndex(
-      (stage: stageType) =>
-        stage ===
-        chapterFromLocalStorage.stages.find(
-          (stage: stageType) => stage.id === stageId
+    const transitionFromMap = storeRedux.getState().stage.transitionFromMap;
+    if (!chapterFromLocalStorage.points[transitionFromMap.mapId]) {
+      chapterFromLocalStorage.points[transitionFromMap.mapId] = [];
+    }
+    const transitionFromMapIndex = chapterFromLocalStorage.points[
+      transitionFromMap.mapId
+    ].indexOf(transitionFromMap.originalPoint);
+    chapterFromLocalStorage.points[transitionFromMap.mapId].splice(
+      transitionFromMapIndex,
+      1,
+      transitionFromMap.point
+    );
+    console.log(chapterFromLocalStorage);
+    if (transitionFromMap.mapId !== transitionFromMap.originalPoint.mapId) {
+      const transitionIndex = chapterFromLocalStorage.points[
+        transitionFromMap.originalPoint.mapId
+      ].indexOf(
+        chapterFromLocalStorage.points[
+          transitionFromMap.originalPoint.mapId
+        ].find(
+          (point: pointType) => point.id === transitionFromMap.originalPoint.id
         )
+      );
+      chapterFromLocalStorage.points[
+        transitionFromMap.originalPoint.mapId
+      ].splice(transitionIndex, 1);
+    }
+    console.log(chapterFromLocalStorage);
+
+    updateChapter(chapterFromLocalStorage, true);
+  };
+
+  // Обновление стадии
+  const updateStage = (stageId: number): void => {
+    const chapterFromLocalStorage =
+      path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+
+    const stageIndex = chapterFromLocalStorage.stages.indexOf(
+      chapterFromLocalStorage.stages.find(
+        (stage: stageType) => stage.id === stageId
+      )
     );
 
     const updatedStageWithUpdatedPosition = {
       ...storeStage,
       editor: {
-        x: chapterFromLocalStorage.stages.find(
-          (stage: stageType) => stage.id === stageId
-        ).editor.x,
-        y: chapterFromLocalStorage.stages.find(
-          (stage: stageType) => stage.id === stageId
-        ).editor.y,
+        x:
+          chapterFromLocalStorage.stages?.find(
+            (stage: stageType) => +stage.id === +stageId
+          ).editor.x || 0,
+        y:
+          chapterFromLocalStorage.stages?.find(
+            (stage: stageType) => +stage.id === +stageId
+          ).editor.y || 0,
       },
     };
 
     chapterFromLocalStorage.stages.splice(
-      storeStageTrueId,
+      stageIndex,
       1,
       updatedStageWithUpdatedPosition
     );
@@ -325,22 +487,52 @@ export default function StageEditScreenChakra({
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-      dispatch(
-        setConnection({ source: connection.source, target: connection.target })
-      );
+      if (uuidValidate(connection.source)) {
+        const points = JSON.parse(
+          JSON.stringify(chapterFromLocalStorage?.points)
+        );
+        const pointsValues: pointType[] = Object.values(
+          points
+        ).flat() as pointType[];
+        const targetPoint = pointsValues.find(
+          (point) => point.id === connection.source
+        );
+        targetPoint!.data = {
+          stage: String(connection.target),
+          chapter: String(path[1]),
+        };
+        updateChapter(
+          {
+            ...chapterFromLocalStorage,
+            points,
+          },
+          true
+        );
+      } else {
+        dispatch(
+          setConnection({
+            source: connection.source,
+            target: connection.target,
+          })
+        );
 
-      const targetTransfer = chapterFromLocalStorage?.stages[
-        connection.source
-      ].transfers.find((transfer: any) => transfer.stage === connection.target);
+        const stageIndex = chapterFromLocalStorage.stages.indexOf(
+          chapterFromLocalStorage.stages.find(
+            (stage: stageType) => +stage.id === +connection.source
+          )
+        );
 
-      setIsOpenCreateTransfer(true);
+        const targetTransfer = chapterFromLocalStorage?.stages[
+          stageIndex
+        ]?.transfers.find(
+          (transfer: stageTransfer) => transfer.stage === connection.target
+        );
 
-      dispatch(setTargetTransfer(targetTransfer));
-      dispatch(
-        setStageToRedux({
-          ...chapterFromLocalStorage?.stages[connection.source],
-        })
-      );
+        setIsOpenCreateTransfer(true);
+
+        dispatch(setTargetTransfer(targetTransfer));
+        dispatch(setStageToRedux(chapterFromLocalStorage?.stages[stageIndex]));
+      }
     },
     [setEdges, chapter]
   );
@@ -357,7 +549,7 @@ export default function StageEditScreenChakra({
 
     chapterFromLocalStorage && updateChapter(chapterFromLocalStorage, true);
     dispatch(setStageToRedux(null));
-    setEditableStage(null);
+    setEditableStage(undefined);
   }
 
   const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
@@ -417,14 +609,44 @@ export default function StageEditScreenChakra({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
-      const updatedChapter = {
-        id: chapterFromLocalStorage?.id,
-        stages: [
-          ...chapterFromLocalStorage?.stages,
-          newStage(type, idLastStage + 1, true, position),
-        ],
-      };
-      updateChapter(updatedChapter, true);
+      if (type === "transition") {
+        const newPoint = {
+          id: uuidv4(),
+          type: 0,
+          name: "Переход с карты",
+          pos: "500:500",
+          data: {
+            chapter: String(chapter?.id),
+            stage: "",
+          },
+          condition: {},
+          editor: {
+            ...position,
+          },
+        };
+        if (!chapterFromLocalStorage.points) {
+          chapterFromLocalStorage.points = {
+            "0": [],
+          };
+        }
+        const updatedChapter = {
+          ...chapterFromLocalStorage,
+          points: {
+            ...chapterFromLocalStorage.points,
+            "0": [...chapterFromLocalStorage.points["0"], newPoint],
+          },
+        };
+        updateChapter(updatedChapter, true);
+      } else {
+        const updatedChapter = {
+          ...chapterFromLocalStorage,
+          stages: [
+            ...chapterFromLocalStorage?.stages,
+            newStage(type, idLastStage + 1, true, position),
+          ],
+        };
+        updateChapter(updatedChapter, true);
+      }
     },
     [chapter, reactFlowInstance]
   );
@@ -432,7 +654,7 @@ export default function StageEditScreenChakra({
   useEffect(() => {
     if (query.stage) {
       dispatch(setStageToRedux(null));
-      setEditableStage(null);
+      setEditableStage(undefined);
 
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
@@ -466,7 +688,9 @@ export default function StageEditScreenChakra({
         <CreateStage onDragStart={onDragStart} />
         <Text>Глава {chapter?.id}</Text>
         <Spacer />
-        <ToStage setEditableStage={setEditableStage} chapter={chapter} />
+        {chapter && (
+          <ToStage setEditableStage={setEditableStage} chapter={chapter} />
+        )}
         <Button
           onClick={() => {
             onLayout("TB");
@@ -487,6 +711,7 @@ export default function StageEditScreenChakra({
           updateStage={updateStage}
           deleteStage={deleteStage}
           setEditableStage={setEditableStage}
+          updateTransitionFromMap={updateTransitionFromMap}
         />
         <Box ref={reactFlowWrapper} height="100%">
           <ReactFlow
@@ -523,6 +748,10 @@ export default function StageEditScreenChakra({
           setShowModalEditTransfer={setShowModalEditTransfer}
           showModalEditTransfer={showModalEditTransfer}
           updateStage={updateStage}
+        />
+        <EditTransitionModal
+          setShowModalEditTransition={setShowModalEditTransition}
+          showModalEditTransition={showModalEditTransition}
         />
       </Box>
     </>

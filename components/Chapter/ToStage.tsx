@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { setStageToStore } from "@/store/reduxStore/stageSlice";
 
 interface IProps {
-  setEditableStage: (stage: stageType | null) => void;
+  setEditableStage: (stage: stageType | undefined) => void;
   chapter: chapterType;
 }
 

@@ -8,7 +8,7 @@ export default function CreateConditionInTransferJsx({
   functionAdd,
 }: {
   transferIndex: number;
-  functionAdd: any;
+  functionAdd: () => void;
 }) {
   const [typeCondition, setTypeCondition] = useState<string>("has");
   const [showCreateConditionInTransfer, setShowCreateConditionInTransfer] =

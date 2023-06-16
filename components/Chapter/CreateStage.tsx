@@ -12,7 +12,10 @@ import {
 } from "@chakra-ui/react";
 
 interface IProps {
-  onDragStart: (event: React.DragEvent, type: "default" | "exit") => void;
+  onDragStart: (
+    event: React.DragEvent,
+    type: "default" | "exit" | "transition"
+  ) => void;
 }
 
 const CreateStage = ({ onDragStart }: IProps) => {
@@ -44,6 +47,14 @@ const CreateStage = ({ onDragStart }: IProps) => {
                 draggable
               >
                 Переход на карту
+              </Button>
+              <Button
+                fontWeight={1}
+                cursor="grab"
+                onDragStart={(event) => onDragStart(event, "transition")}
+                draggable
+              >
+                Переход с карты
               </Button>
             </SimpleGrid>
           </PopoverBody>

@@ -2,10 +2,10 @@ import { pointType, spawnType } from "@/store/types/mapType";
 
 export type chapterType = {
   id: number;
-  music: any;
+  music?: string[];
   stages: stageType[];
-  points?: pointType[];
-  spawns?: spawnType[];
+  points?: { [key: `${number}`]: pointType[] };
+  spawns?: { [key: `${number}`]: spawnType[] };
 };
 
 export type stageType = {
@@ -30,11 +30,15 @@ export type stageType = {
 
 export type stageText = {
   text: string;
-  condition: any;
+  condition: {
+    [key: string]: string[];
+  };
 };
 
 export type stageTransfer = {
   text: string;
   stage: number;
-  condition: any;
+  condition: {
+    [type: string]: any[];
+  };
 };

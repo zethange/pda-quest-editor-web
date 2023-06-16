@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -62,7 +62,7 @@ const MapScreen = ({ path, isReady }: Props) => {
       <Box>
         <SimpleGrid columns={4} spacing={5}>
           {maps.map((map: mapType) => (
-            <Link href={`/edit/map/${path[0]}/${map.id}`}>
+            <Link href={`/edit/map/${path[0]}/${map.id}`} key={map.id}>
               <Card
                 key={map.id}
                 border="1px"

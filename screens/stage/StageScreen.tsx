@@ -12,7 +12,7 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 
-import StageEditScreenChakra from "@/screens/stage/StageEditScreenChakra";
+import StageEditScreen from "@/screens/stage/StageEditScreen";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import MapScreen from "../map/MapScreen";
 
@@ -44,7 +44,7 @@ const StageScreen = ({
       <TabIndicator mt="-1.5px" height="1px" bg="blue.500" borderRadius="1px" />
       <TabPanels>
         <TabPanel p={0}>
-          <StageEditScreenChakra path={path} query={query} isReady={isReady} />
+          <StageEditScreen path={path} query={query} isReady={isReady} />
         </TabPanel>
         <TabPanel>
           <MapScreen path={path} isReady={isReady} />

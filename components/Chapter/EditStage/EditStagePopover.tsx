@@ -1,18 +1,22 @@
 import React from "react";
+
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { stageTypes } from "@/store/utils/stageName";
 import MapStage from "@/components/Chapter/EditStage/MapStage";
 import EditStage from "@/components/Chapter/EditStage/EditStage";
 import EditActions from "@/components/Chapter/EditStage/EditActions/EditActions";
 import { stageType } from "@/store/types/types";
-import { useDispatch, useSelector } from "react-redux";
-import { setStageToStore } from "@/store/reduxStore/stageSlice";
+import { setStageToStore, setTransition } from "@/store/reduxStore/stageSlice";
+import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
+import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { useSelector } from "react-redux";
 
 interface IProps {
-  editableStage: stageType | null;
+  editableStage: stageType | undefined;
   updateStage: (stageId: number) => void;
   deleteStage: (stageId: number) => void;
-  setEditableStage: (stage: stageType | null) => void;
+  setEditableStage: (stage: stageType | undefined) => void;
+  updateTransitionFromMap: () => void;
 }
 
 const EditStagePopover = ({
@@ -20,9 +24,13 @@ const EditStagePopover = ({
   updateStage,
   deleteStage,
   setEditableStage,
+  updateTransitionFromMap,
 }: IProps) => {
-  const storeStage = useSelector((state: any) => state.stage.stage);
-  const dispatch = useDispatch();
+  const storeStage = useAppSelector((state) => state.stage.stage);
+  const transitionFromMap = useSelector(
+    (state: any) => state.stage.transitionFromMap
+  );
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -44,12 +52,11 @@ const EditStagePopover = ({
         >
           {/* Панель редактирования */}
           <Box h="calc(100vh - 171px)" overflowY="scroll">
+            {transitionFromMap?.type_stage === 777 && <FromMapStage />}
             {stageTypes(storeStage?.type_stage) === "map" && (
               <MapStage data={storeStage?.data} />
             )}
-            {stageTypes(storeStage?.type_stage) === "default" && (
-              <EditStage data={editableStage} />
-            )}
+            {stageTypes(storeStage?.type_stage) === "default" && <EditStage />}
             {storeStage?.actions && <EditActions />}
           </Box>
           <Flex>
@@ -59,8 +66,12 @@ const EditStagePopover = ({
               mt={2}
               me={2}
               onClick={() => {
-                updateStage(storeStage?.id);
-                setEditableStage(null);
+                if (!transitionFromMap) {
+                  updateStage(storeStage?.id);
+                } else {
+                  updateTransitionFromMap();
+                }
+                setEditableStage(undefined);
               }}
             >
               Сохранить
@@ -71,20 +82,23 @@ const EditStagePopover = ({
               colorScheme="teal"
               onClick={() => {
                 dispatch(setStageToStore(null));
-                setEditableStage(null);
+                dispatch(setTransition(null));
+                setEditableStage(undefined);
               }}
             >
               Закрыть
             </Button>
             <Box m="auto" />
-            <Button
-              colorScheme="red"
-              size="md"
-              mt={2}
-              onClick={() => deleteStage(storeStage?.id)}
-            >
-              Удалить
-            </Button>
+            {!transitionFromMap && (
+              <Button
+                colorScheme="red"
+                size="md"
+                mt={2}
+                onClick={() => deleteStage(storeStage?.id)}
+              >
+                Удалить
+              </Button>
+            )}
           </Flex>
         </Box>
       )}
