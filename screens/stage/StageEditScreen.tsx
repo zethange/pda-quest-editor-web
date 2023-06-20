@@ -9,6 +9,7 @@ import store from "store2";
 import querystring from "querystring";
 import dagre from "dagre";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+import Stats from "stats.js";
 
 import ReactFlow, {
   applyNodeChanges,
@@ -17,6 +18,7 @@ import ReactFlow, {
   Edge,
   MarkerType,
   MiniMap,
+  Node,
 } from "reactflow";
 
 import {
@@ -33,7 +35,6 @@ import { newStage } from "@/store/tools/createTools";
 import CustomHead from "@/components/Global/CustomHead";
 import { NodeStage } from "@/components/Global/StageNode";
 import { chapterType, stageTransfer, stageType } from "@/store/types/types";
-import Stats from "stats.js";
 import TransferEdge from "@/components/Global/TransferEdge";
 import { stageName } from "@/store/utils/stageName";
 import ToStage from "@/components/Chapter/ToStage";
@@ -41,7 +42,7 @@ import CreateStage from "@/components/Chapter/CreateStage";
 import CreateTransferModal from "@/components/Chapter/EditStage/CreateTransferModal";
 import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal";
 import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import { useStore } from "react-redux";
 import {
   setConnection,
   setStageToStore as setStageToRedux,
@@ -52,8 +53,9 @@ import {
 import { setMaps } from "@/store/reduxStore/chapterMapsSlice";
 import { Store } from "redux";
 import { RootState } from "@/store/reduxStore";
-import { pointType } from "@/store/types/mapType";
+import { mapType, pointType } from "@/store/types/mapType";
 import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
+import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 
 export default function StageEditScreen({
   path,
@@ -65,14 +67,14 @@ export default function StageEditScreen({
   isReady: boolean;
 }) {
   const [chapter, setChapter] = useState<chapterType>();
-  const maps = useSelector((state: any) => state.maps.maps);
+  const maps: mapType[] = useAppSelector((state) => state.maps.maps);
 
   const { colorMode } = useColorMode();
-  const dispatch = useDispatch();
-  const storeStage = useSelector((state: any) => state.stage.stage);
+  const dispatch = useAppDispatch();
+  const storeStage = useAppSelector((state) => state.stage.stage);
 
-  const [nodes, setNodes] = useState<any[]>();
-  const [edges, setEdges] = useState<any[]>();
+  const [nodes, setNodes] = useState<Node[]>();
+  const [edges, setEdges] = useState<Edge[]>();
 
   const [editableStage, setEditableStage] = useState<stageType>();
 
@@ -155,21 +157,28 @@ export default function StageEditScreen({
   };
 
   const onLayout = useCallback(
-    (direction: any) => {
+    (direction: "TB" | "LB") => {
       const { nodes: layoutedNodes, edges: layoutedEdges } =
-        // @ts-ignore
-        getLayoutedElements(nodes, edges, direction);
+        getLayoutedElements(nodes as any[], edges as any[], direction);
 
       const copyChapter = store.get(`story_${path[0]}_chapter_${path[1]}`);
+      const points = Object.values(copyChapter?.points!).flat() as pointType[];
       layoutedNodes.map((node) => {
         const stage = copyChapter.stages.find(
           (stage: stageType) => stage.id === +node.id
         );
+        const point = points.find((point) => point.id === node.id);
         if (stage) {
           if (+stage.id !== +node.id) {
             console.log(stage.id, node.id);
           }
           stage.editor = {
+            x: node.position.x,
+            y: node.position.y,
+          };
+        }
+        if (point) {
+          point.editor = {
             x: node.position.x,
             y: node.position.y,
           };
@@ -587,11 +596,11 @@ export default function StageEditScreen({
   }, []);
 
   const onDrop = useCallback(
-    (event: any) => {
+    (event: DragEvent) => {
       event.preventDefault();
 
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData("application/reactflow");
+      const type = event?.dataTransfer?.getData("application/reactflow");
 
       if (typeof type === "undefined" || !type) {
         return;
@@ -642,7 +651,12 @@ export default function StageEditScreen({
           ...chapterFromLocalStorage,
           stages: [
             ...chapterFromLocalStorage?.stages,
-            newStage(type, idLastStage + 1, true, position),
+            newStage(
+              type as "default" | "exit",
+              idLastStage + 1,
+              true,
+              position
+            ),
           ],
         };
         updateChapter(updatedChapter, true);
@@ -721,7 +735,7 @@ export default function StageEditScreen({
             onEdgeClick={onEdgesClick}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
-            onDrop={onDrop}
+            onDrop={onDrop as () => void}
             onDragOver={onDragOver}
             onInit={setReactFlowInstance}
             edgeTypes={edgeTypes}

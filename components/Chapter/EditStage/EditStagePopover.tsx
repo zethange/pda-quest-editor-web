@@ -9,7 +9,6 @@ import { stageType } from "@/store/types/types";
 import { setStageToStore, setTransition } from "@/store/reduxStore/stageSlice";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
-import { useSelector } from "react-redux";
 
 interface IProps {
   editableStage: stageType | undefined;
@@ -27,8 +26,8 @@ const EditStagePopover = ({
   updateTransitionFromMap,
 }: IProps) => {
   const storeStage = useAppSelector((state) => state.stage.stage);
-  const transitionFromMap = useSelector(
-    (state: any) => state.stage.transitionFromMap
+  const transitionFromMap = useAppSelector(
+    (state) => state.stage.transitionFromMap
   );
   const dispatch = useAppDispatch();
 
@@ -52,7 +51,7 @@ const EditStagePopover = ({
         >
           {/* Панель редактирования */}
           <Box h="calc(100vh - 171px)" overflowY="scroll">
-            {transitionFromMap?.type_stage === 777 && <FromMapStage />}
+            {transitionFromMap && <FromMapStage />}
             {stageTypes(storeStage?.type_stage) === "map" && (
               <MapStage data={storeStage?.data} />
             )}

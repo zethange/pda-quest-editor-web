@@ -11,8 +11,8 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import CreateTransfer from "@/components/Chapter/EditStage/CreateTransfer/CreateTransfer";
-import { useDispatch, useSelector } from "react-redux";
 import { editTransferInStore } from "@/store/reduxStore/stageSlice";
+import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 
 interface IProps {
   setShowModalEditTransfer: (value: boolean) => void;
@@ -25,11 +25,9 @@ const EditTransferModal = ({
   showModalEditTransfer,
   updateStage,
 }: IProps) => {
-  const storeStage = useSelector((state: any) => state.stage.stage);
-  const targetTransfer = useSelector(
-    (state: any) => state.stage.targetTransfer
-  );
-  const dispatch = useDispatch();
+  const storeStage = useAppSelector((state) => state.stage.stage);
+  const targetTransfer = useAppSelector((state) => state.stage.targetTransfer);
+  const dispatch = useAppDispatch();
 
   return (
     <Modal

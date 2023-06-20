@@ -16,12 +16,16 @@ export function commandLocalizer(param: string): string {
       return "Сбросить";
     case "syncNow":
       return "Синхронизация с сервером";
+    case "script":
+      return "Скриптовуха";
     default:
       return param;
   }
 }
 
-export function typeCommand(param: string): "item" | "empty" | "null" {
+export function typeCommand(
+  param: string
+): "item" | "empty" | "null" | "codemirror" {
   switch (param) {
     case "add":
       return "item";
@@ -39,6 +43,8 @@ export function typeCommand(param: string): "item" | "empty" | "null" {
       return "empty";
     case "syncNow":
       return "null";
+    case "script":
+      return "codemirror";
     default:
       return "empty";
   }

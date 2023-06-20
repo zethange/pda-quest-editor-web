@@ -1,7 +1,10 @@
+import { conditionType } from "@/store/types/types";
+
 export type mapType = {
   id: string;
   title: string;
   tmx: string;
+  background?: string;
   defPos?: string;
   editor?: {
     url?: string;
@@ -19,7 +22,7 @@ export type pointType = {
     chapter: string;
     stage: string;
   };
-  condition?: any;
+  condition?: conditionType;
   editor?: {
     x?: number;
     y?: number;
@@ -53,4 +56,16 @@ export type spawnType = {
   r: string;
   // позиция
   pos: string;
+};
+
+export type mapApiType = {
+  id: number;
+  name: string;
+  tmx: string;
+  defaultPosition: {
+    x: number;
+    y: number;
+  };
+  title: string;
+  background: string;
 };

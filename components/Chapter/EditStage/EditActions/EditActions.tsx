@@ -4,6 +4,8 @@ import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import CreateParamEmpty from "@/components/Chapter/EditStage/EditActions/CreateParamEmpty";
 import { commandLocalizer, typeCommand } from "@/store/utils/commandsAction";
 import { useDispatch, useSelector } from "react-redux";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
 import {
   deleteMethodInAction,
   deleteParamInMethod,
@@ -48,6 +50,7 @@ export default function EditActions() {
                 <option value="-">Уменьшить отношения</option>
                 <option value="reset">Сбросить</option>
                 <option value="syncNow">Синхронизация с сервером</option>
+                <option value="script">Кастомный скрипт</option>
               </Select>
               <Button
                 colorScheme="teal"
@@ -94,19 +97,39 @@ export default function EditActions() {
                   />
                   <Box display="grid" gap={1}>
                     {action[1].map((key: any, indexParam: number) => (
-                      <Box display="flex" gap={1}>
-                        <Input
-                          defaultValue={key}
-                          onChange={(e) => {
-                            dispatch(
-                              editParamInAction({
-                                editedParam: e.target.value,
-                                indexMethod,
-                                indexParam,
-                              })
-                            );
-                          }}
-                        />
+                      <Box
+                        display={action[0] === "script" ? "grid" : "flex"}
+                        gap={1}
+                      >
+                        {action[0] === "script" ? (
+                          <CodeMirror
+                            value={key}
+                            height="200px"
+                            extensions={[javascript({ jsx: false })]}
+                            onBlur={(event) => {
+                              dispatch(
+                                editParamInAction({
+                                  editedParam: event.target.innerText,
+                                  indexMethod,
+                                  indexParam,
+                                })
+                              );
+                            }}
+                          />
+                        ) : (
+                          <Input
+                            defaultValue={key}
+                            onBlur={(e) => {
+                              dispatch(
+                                editParamInAction({
+                                  editedParam: e.target.value,
+                                  indexMethod,
+                                  indexParam,
+                                })
+                              );
+                            }}
+                          />
+                        )}
                         <Button
                           onClick={() => {
                             dispatch(

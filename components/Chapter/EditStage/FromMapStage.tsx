@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Box, Select } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
-import { mapType, pointType } from "@/store/types/mapType";
+import { mapApiType, mapType, pointType } from "@/store/types/mapType";
 import {
   editMapIdInTransition,
   editPosInTransition,
@@ -26,12 +26,12 @@ const FromMapStage = () => {
     return +map.id === +stage?.mapId;
   });
 
-  const { data } = useFetching<any[]>(
+  const { data } = useFetching<mapApiType[]>(
     "/pdanetwork/api/v1/admin/quest/maps/all"
   );
-  const mapBackground = data?.filter((map) => {
+  const mapBackground = data?.find((map) => {
     return +map.id === +stage?.mapId;
-  })[0].background;
+  })?.background;
 
   const parentMapRef: any = useRef();
 

@@ -267,6 +267,7 @@ export default function Home() {
     data.maps.map((map: mapType) => {
       store.set(`story_${data.id}_maps_${map.id}`, map, true);
     });
+    setStories([...stories, data]);
   };
 
   return (

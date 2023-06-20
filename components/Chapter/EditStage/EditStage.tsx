@@ -94,19 +94,23 @@ export default function EditStage() {
               placeholder="Текст..."
               defaultValue={text.text}
               backgroundColor="white"
-              onClick={(event: any) => {
-                event.target.style.height = "inherit";
-                event.target.style.height = `${event.target.scrollHeight}px`;
+              onClick={(event) => {
+                (event.target as HTMLTextAreaElement).style.height = "inherit";
+                (event.target as HTMLTextAreaElement).style.height = `${
+                  (event.target as HTMLTextAreaElement).scrollHeight
+                }px`;
               }}
-              onInput={(event: any) => {
-                event.target.style.height = "inherit";
-                event.target.style.height = `${event.target.scrollHeight}px`;
+              onInput={(event) => {
+                (event.target as HTMLTextAreaElement).style.height = "inherit";
+                (event.target as HTMLTextAreaElement).style.height = `${
+                  (event.target as HTMLTextAreaElement).scrollHeight
+                }px`;
 
                 dispatch(
                   editTextInStore({
                     id: index,
                     text: {
-                      text: event.target.value,
+                      text: (event.target as HTMLTextAreaElement).value,
                       condition: text.condition,
                     },
                   })

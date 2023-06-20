@@ -62,7 +62,7 @@ export function newStage(
     return {
       id,
       type_stage: 4,
-      data: { map: "1", pos: "235:235" },
+      data: { map: "0", pos: "235:235" },
       editor: position,
     };
   }

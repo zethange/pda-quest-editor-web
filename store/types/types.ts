@@ -28,17 +28,18 @@ export type stageType = {
   };
 };
 
+export type conditionType = {
+  has?: string[];
+  "!has"?: string[];
+};
+
 export type stageText = {
   text: string;
-  condition: {
-    [key: string]: string[];
-  };
+  condition: conditionType;
 };
 
 export type stageTransfer = {
   text: string;
   stage: number;
-  condition: {
-    [type: string]: any[];
-  };
+  condition: conditionType;
 };

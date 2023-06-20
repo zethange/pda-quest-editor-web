@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
-import { fetcher } from "@/store/tools";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
 import { groupItem } from "@/store/utils/groupItem";
 import { newParamInMethod } from "@/store/reduxStore/stageSlice";
 import { useDispatch } from "react-redux";
 import useFetching from "@/hooks/useFetching";
 import { itemsContainerType, itemType } from "@/store/types/itemsType";
+import { useAppDispatch } from "@/store/reduxHooks";
 
 type Props = {
   indexAction: any;
@@ -100,6 +102,41 @@ function WithItems({ indexAction, setShowCreateParam }: any) {
   );
 }
 
+function WithCodeMirror({
+  onChangeNewParam,
+  setShowCreateParam,
+  indexAction,
+  newParam,
+}: any) {
+  const dispatch = useAppDispatch();
+
+  const onChange = useCallback((value: string) => {
+    onChangeNewParam(value);
+  }, []);
+
+  return (
+    <Box display="grid" gap={1} mb={1}>
+      <CodeMirror
+        placeholder="скрипт"
+        height="200px"
+        extensions={[javascript({ jsx: false })]}
+        onChange={onChange}
+      />
+      <Button
+        fontWeight="normal"
+        onClick={() => {
+          dispatch(
+            newParamInMethod({ indexMethod: indexAction, param: newParam })
+          );
+          setShowCreateParam(false);
+        }}
+      >
+        Сохранить
+      </Button>
+    </Box>
+  );
+}
+
 export default function CreateParamEmpty({ indexAction, type }: Props) {
   const [showCreateParam, setShowCreateParam] = useState<boolean>(false);
   const [newParam, setNewParam] = useState("");
@@ -128,6 +165,14 @@ export default function CreateParamEmpty({ indexAction, type }: Props) {
         <>
           {type === "empty" && (
             <Empty
+              onChangeNewParam={onChangeNewParam}
+              setShowCreateParam={setShowCreateParam}
+              indexAction={indexAction}
+              newParam={newParam}
+            />
+          )}
+          {type === "codemirror" && (
+            <WithCodeMirror
               onChangeNewParam={onChangeNewParam}
               setShowCreateParam={setShowCreateParam}
               indexAction={indexAction}

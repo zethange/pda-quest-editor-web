@@ -1,6 +1,6 @@
 import { memo, useRef, useState } from "react";
 import { Box, Select } from "@chakra-ui/react";
-import { mapType } from "@/store/types/mapType";
+import { mapApiType, mapType } from "@/store/types/mapType";
 import { editMapInData, editPosInData } from "@/store/reduxStore/stageSlice";
 import { stageType } from "@/store/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
@@ -18,22 +18,23 @@ interface IProps {
 const MapStage = memo(({ data }: IProps) => {
   const dispatch = useAppDispatch();
 
-  const maps = useAppSelector((state: any) => state.maps.maps);
-  const map: mapType = maps.find((map: mapType) => map.id === data?.map);
-  const stage: stageType = useAppSelector((state: any) => state.stage.stage);
+  const maps: mapType[] = useAppSelector((state) => state.maps.maps);
+  const map = maps.find((map: mapType) => map.id === data?.map);
+  const stage: stageType = useAppSelector((state) => state.stage.stage);
 
   const parentMapRef: any = useRef();
 
-  const { data: dataMaps } = useFetching<any[]>(
+  const { data: dataMaps } = useFetching<mapApiType[]>(
     "/pdanetwork/api/v1/admin/quest/maps/all"
   );
 
   if (dataMaps) {
-    var backgroundSelectedMap = dataMaps.find((map) => {
+    var backgroundSelectedMap = dataMaps.find((map: mapApiType) => {
       if (stage?.data?.map) {
+        if (+map.id === +stage.data.map) console.log(stage, map);
         return +map.id === +stage?.data?.map;
       }
-    }).background;
+    })?.background;
   }
 
   const handleClick = (e: any) => {
