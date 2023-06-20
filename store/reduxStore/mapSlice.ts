@@ -12,7 +12,7 @@ const initialState: initialStateType = {
     id: "1",
     name: "",
     pos: "",
-    type: "",
+    type: 0,
     data: {
       chapter: "",
       stage: "",
@@ -22,7 +22,7 @@ const initialState: initialStateType = {
     id: "1",
     name: "",
     pos: "",
-    type: "",
+    type: 0,
     data: {
       chapter: "",
       stage: "",
