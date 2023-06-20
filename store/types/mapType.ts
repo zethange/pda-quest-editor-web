@@ -15,7 +15,7 @@ export type mapType = {
 
 export type pointType = {
   id?: string;
-  type: string;
+  type: number;
   name: string;
   pos: string;
   data: {

@@ -1,23 +1,45 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { pointType } from "@/store/types/mapType";
+import { mapType, pointType } from "@/store/types/mapType";
+
+type initialStateType = {
+  openPoint: pointType;
+  newPoint: pointType;
+  map: mapType;
+};
+
+const initialState: initialStateType = {
+  openPoint: {
+    id: "1",
+    name: "",
+    pos: "",
+    type: "",
+    data: {
+      chapter: "",
+      stage: "",
+    },
+  },
+  newPoint: {
+    id: "1",
+    name: "",
+    pos: "",
+    type: "",
+    data: {
+      chapter: "",
+      stage: "",
+    },
+  },
+  map: {
+    id: "",
+    title: "",
+    tmx: "",
+    points: [],
+    spawns: [],
+  },
+};
 
 const mapSlice = createSlice({
   name: "map",
-  initialState: {
-    openPoint: {},
-    newPoint: {
-      type: "",
-      pos: "",
-      data: {
-        chapter: "",
-        stage: "",
-      },
-    },
-    map: {
-      points: [],
-      spawns: [],
-    },
-  },
+  initialState,
   reducers: {
     setMap(state, action) {
       state.map = action.payload.map;
@@ -35,7 +57,7 @@ const mapSlice = createSlice({
     addSpawn(state, action) {},
     deletePoint(state, action) {
       console.log(
-        state.map.points.filter(
+        state.map.points?.filter(
           (point: pointType) =>
             JSON.stringify(point) !== JSON.stringify(action.payload)
         )

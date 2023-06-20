@@ -1,6 +1,11 @@
 import { useRouter } from "next/router";
 import React, { createRef, useEffect, useState } from "react";
-import { mapType, pointType, spawnType } from "@/store/types/mapType";
+import {
+  mapApiType,
+  mapType,
+  pointType,
+  spawnType,
+} from "@/store/types/mapType";
 import store from "store2";
 import CustomHead from "@/components/Global/CustomHead";
 import NavBar from "@/components/UI/NavBar/NavBar";
@@ -29,9 +34,15 @@ import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import { useStore } from "react-redux";
 import { Store } from "redux";
 import { RootState } from "@/store/reduxStore";
+import useFetching from "@/hooks/useFetching";
 
 export default function mapEdit() {
   const { query, isReady } = useRouter();
+  useEffect(() => {
+    dispatch(
+      setMap({ map: store.get(`story_${mapRoute[0]}_maps_${mapRoute[1]}`) })
+    );
+  }, [isReady]);
   const mapRoute = (query.map as string[]) || [];
 
   const map: mapType | any = useAppSelector((state) => state.map.map);
@@ -42,16 +53,24 @@ export default function mapEdit() {
   const [showQuestPoints, setShowQuestPoints] = useState(true);
   const [showSpawns, setShowSpawns] = useState(false);
 
+  const [background, setBackground] = useState("");
+
   const [showCreatePointModal, setShowCreatePointModal] = useState(false);
   const [showEditPointModal, setShowEditPointModal] = useState(false);
 
   const parentMapRef: React.RefObject<any> = createRef();
 
+  const { data: dataMaps, isLoading } = useFetching<mapApiType[]>(
+    "/pdanetwork/api/v1/admin/quest/maps/all"
+  );
   useEffect(() => {
-    dispatch(
-      setMap({ map: store.get(`story_${mapRoute[0]}_map_${mapRoute[1]}`) })
-    );
-  }, [isReady]);
+    const back = dataMaps?.find((mapApi) => {
+      console.log(map?.id, storeRedux.getState().map.map.id);
+      return +mapApi?.id === +storeRedux.getState().map.map.id;
+    });
+    console.log(back);
+    setBackground(back?.background as string);
+  }, [isLoading]);
 
   const updateMap = () => {
     const map = storeRedux.getState().map.map;
@@ -141,11 +160,7 @@ export default function mapEdit() {
             draggable={false}
             userSelect="none"
             h="calc(100vh - (80px + 57px))"
-            src={
-              map?.editor?.url
-                ? `/static/maps${map?.editor?.url}`
-                : `/static/maps/map_${map?.tmx?.split(".")[0]}.png`
-            }
+            src={`/static/maps/${background}`}
             onLoad={(target: any) => onLoadImage(target)}
           />
           {showQuestPoints &&
