@@ -3,11 +3,17 @@ import { Box, Select } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import { mapApiType, mapType, pointType } from "@/store/types/mapType";
 import {
+  createConditionInPoint,
+  createValueInPoint,
+  deleteConditionInPoint,
+  deleteValueInPoint,
   editMapIdInTransition,
   editPosInTransition,
+  editValueInPoint,
 } from "@/store/reduxStore/stageSlice";
 import { useSelector } from "react-redux";
 import useFetching from "@/hooks/useFetching";
+import ConditionList from "@/components/Chapter/EditStage/CreateTransfer/ConditionList";
 
 export interface IFromMapStage {
   id: number;
@@ -106,6 +112,14 @@ const FromMapStage = () => {
         </Box>
       </Box>
       <p>Позиция: {stage?.point?.pos}</p>
+      <ConditionList
+        condition={stage.point.condition!}
+        createCondition={createConditionInPoint}
+        createValue={createValueInPoint}
+        deleteCondition={deleteConditionInPoint}
+        deleteValue={deleteValueInPoint}
+        editValue={editValueInPoint}
+      />
     </Box>
   );
 };

@@ -13,6 +13,11 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     if (response?.status === 401) {
       setShowAuthModal(true);
+    } else {
+      fetch("/api/check/auth", {
+        method: "POST",
+        body: localStorage.getItem("token"),
+      }).then((res) => res.text());
     }
   }, [isLoading]);
 

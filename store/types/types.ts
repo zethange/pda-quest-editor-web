@@ -29,8 +29,7 @@ export type stageType = {
 };
 
 export type conditionType = {
-  has?: string[];
-  "!has"?: string[];
+  [key: string]: string[];
 };
 
 export type stageText = {

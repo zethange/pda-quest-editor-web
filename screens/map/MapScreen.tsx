@@ -84,13 +84,7 @@ const MapScreen = ({ path, isReady }: Props) => {
                 p={2}
               >
                 {map?.title}
-                <Image
-                  src={
-                    map?.editor?.url
-                      ? `/static/maps/${map?.editor?.url}`
-                      : `/static/maps/map_${map?.tmx?.split(".")[0]}.png`
-                  }
-                />
+                <Image src={`/static/maps${map?.editor?.url}`} />
               </Card>
             </Link>
           ))}

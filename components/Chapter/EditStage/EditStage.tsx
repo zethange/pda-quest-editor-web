@@ -1,17 +1,32 @@
 import React, { useState } from "react";
-import { Box, Button, Checkbox, Flex, Input, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  Icon,
+  IconButton,
+  Input,
+  Textarea,
+  VStack,
+} from "@chakra-ui/react";
 import { stageText } from "@/store/types/types";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteTextInStore,
   editBackgroundInStore,
   editMessageInStore,
   editTextInStore,
   editTitleInStore,
   newTextInStore,
+  setTargetText,
 } from "@/store/reduxStore/stageSlice";
+import { MdDelete, MdLockOutline } from "react-icons/md";
+import EditTextCondition from "@/components/Chapter/EditStage/EditTextCondition";
 
 export default function EditStage() {
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
+  const [openCondition, setOpenCondition] = useState<boolean>(false);
   const storeStage = useSelector((state: any) => state.stage.stage);
   const dispatch = useDispatch();
 
@@ -89,37 +104,70 @@ export default function EditStage() {
         </Flex>
         <Box display="grid" gap={1}>
           {storeStage?.texts?.map((text: stageText, index: number) => (
-            <Textarea
-              key={index}
-              placeholder="Текст..."
-              defaultValue={text.text}
-              backgroundColor="white"
-              onClick={(event) => {
-                (event.target as HTMLTextAreaElement).style.height = "inherit";
-                (event.target as HTMLTextAreaElement).style.height = `${
-                  (event.target as HTMLTextAreaElement).scrollHeight
-                }px`;
-              }}
-              onInput={(event) => {
-                (event.target as HTMLTextAreaElement).style.height = "inherit";
-                (event.target as HTMLTextAreaElement).style.height = `${
-                  (event.target as HTMLTextAreaElement).scrollHeight
-                }px`;
+            <Box display="flex" gap={1}>
+              <Textarea
+                placeholder="Текст..."
+                defaultValue={text.text}
+                backgroundColor="white"
+                onClick={(event) => {
+                  (event.target as HTMLTextAreaElement).style.height =
+                    "inherit";
+                  (event.target as HTMLTextAreaElement).style.height = `${
+                    (event.target as HTMLTextAreaElement).scrollHeight
+                  }px`;
+                }}
+                onInput={(event) => {
+                  (event.target as HTMLTextAreaElement).style.height =
+                    "inherit";
+                  (event.target as HTMLTextAreaElement).style.height = `${
+                    (event.target as HTMLTextAreaElement).scrollHeight
+                  }px`;
 
-                dispatch(
-                  editTextInStore({
-                    id: index,
-                    text: {
-                      text: (event.target as HTMLTextAreaElement).value,
-                      condition: text.condition,
-                    },
-                  })
-                );
-              }}
-            />
+                  dispatch(
+                    editTextInStore({
+                      id: index,
+                      text: {
+                        text: (event.target as HTMLTextAreaElement).value,
+                        condition: text.condition,
+                      },
+                    })
+                  );
+                }}
+              />
+              <VStack gap={1}>
+                <IconButton
+                  aria-label="Удалить текст"
+                  size="sm"
+                  onClick={() => {
+                    dispatch(deleteTextInStore(index));
+                  }}
+                >
+                  <Icon as={MdDelete} />
+                </IconButton>
+                <IconButton
+                  aria-label="Редактировать условие"
+                  size="sm"
+                  onClick={() => {
+                    dispatch(
+                      setTargetText({
+                        targetText: text,
+                        indexTargetText: index,
+                      })
+                    );
+                    setOpenCondition(true);
+                  }}
+                >
+                  <Icon as={MdLockOutline} />
+                </IconButton>
+              </VStack>
+            </Box>
           ))}
         </Box>
       </Box>
+      <EditTextCondition
+        openCondition={openCondition}
+        setOpenCondition={setOpenCondition}
+      />
       <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Сообщение:</b>
         <Box>
