@@ -43,7 +43,7 @@ import { chapterType } from "@/store/types/types";
 import { mapType } from "@/store/types/mapType";
 
 export default function Home() {
-  const [stories, setStories] = useState<any[]>([]);
+  const [stories, setStories] = useState<storyType[]>([]);
   const [storiesFromServer, setStoriesFromServer] = useState<any>([]);
   const [editStory, setEditStory] = useState<any>();
   const { isOpen, onOpen, onClose } = useDisclosure();

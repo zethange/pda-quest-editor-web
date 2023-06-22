@@ -192,7 +192,9 @@ const stageSlice = createSlice({
     newMethodInAction(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const typeMethod = action.payload || "add";
-      const arrayActions: any = Object.entries(storeStage.actions);
+      const arrayActions: [string, string[]][] = Object.entries(
+        storeStage.actions
+      );
       arrayActions.push([typeMethod, []]);
       storeStage.actions = Object.fromEntries(arrayActions);
       state.stage.actions = storeStage.actions;
@@ -201,7 +203,9 @@ const stageSlice = createSlice({
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { indexMethod, param }: { indexMethod: number; param: string } =
         action.payload;
-      const arrayActions: any = Object.entries(storeStage.actions);
+      const arrayActions: [string, string[]][] = Object.entries(
+        storeStage.actions
+      );
       arrayActions[indexMethod][1].push(param);
       storeStage.actions = Object.fromEntries(arrayActions);
       state.stage.actions = storeStage.actions;
@@ -209,7 +213,9 @@ const stageSlice = createSlice({
     editParamInAction(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { editedParam, indexMethod, indexParam } = action.payload;
-      const arrayActions: any = Object.entries(storeStage.actions);
+      const arrayActions: [string, string[]][] = Object.entries(
+        storeStage.actions
+      );
       arrayActions[+indexMethod][1][+indexParam] = editedParam;
       storeStage.actions = Object.fromEntries(arrayActions);
       state.stage.actions = storeStage.actions;
@@ -217,7 +223,9 @@ const stageSlice = createSlice({
     deleteMethodInAction(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { indexMethod } = action.payload;
-      const arrayActions: any = Object.entries(storeStage.actions);
+      const arrayActions: [string, string[]][] = Object.entries(
+        storeStage.actions
+      );
       arrayActions.splice(+indexMethod, 1);
       storeStage.actions = Object.fromEntries(arrayActions);
       state.stage.actions = storeStage.actions;
@@ -225,7 +233,9 @@ const stageSlice = createSlice({
     deleteParamInMethod(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { indexMethod, indexParam } = action.payload;
-      const arrayActions: any = Object.entries(storeStage.actions);
+      const arrayActions: [string, string[]][] = Object.entries(
+        storeStage.actions
+      );
       arrayActions[+indexMethod][1].splice(+indexParam, 1);
       storeStage.actions = Object.fromEntries(arrayActions);
       state.stage.actions = storeStage.actions;
@@ -293,7 +303,7 @@ const stageSlice = createSlice({
     createValueInCondition(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { index, conditionIndex } = action.payload;
-      const conditions: any = Object.entries(
+      const conditions: [string, string[]][] = Object.entries(
         storeStage.transfers[+index].condition
       );
       conditions[+conditionIndex][1].push("новый_параметр");
@@ -302,7 +312,7 @@ const stageSlice = createSlice({
     deleteConditionInTransfer(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { index, conditionIndex } = action.payload;
-      const conditions: any = Object.entries(
+      const conditions: [string, string[]][] = Object.entries(
         storeStage.transfers[+index].condition
       );
       conditions.splice(+conditionIndex, 1);
@@ -313,7 +323,7 @@ const stageSlice = createSlice({
     deleteValueInCondition(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { index, conditionIndex, valueIndex } = action.payload;
-      const conditions: any = Object.entries(
+      const conditions: [string, string[]][] = Object.entries(
         storeStage.transfers[+index].condition
       );
       conditions[+conditionIndex][1].splice(+valueIndex, 1);
@@ -322,7 +332,7 @@ const stageSlice = createSlice({
     editValueInConditions(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { index, conditionIndex, valueIndex, value } = action.payload;
-      const conditions: any = Object.entries(
+      const conditions: [string, string[]][] = Object.entries(
         storeStage.transfers[+index].condition
       );
       conditions[+conditionIndex][1][+valueIndex] = value;
@@ -357,7 +367,7 @@ const stageSlice = createSlice({
     createValueInText(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { index, conditionIndex } = action.payload;
-      const conditions: any = Object.entries(
+      const conditions: [string, string[]][] = Object.entries(
         storeStage.texts[+index].condition
       );
       conditions[+conditionIndex][1].push("новый_параметр");
@@ -375,7 +385,7 @@ const stageSlice = createSlice({
     deleteValueInText(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { index, conditionIndex, valueIndex } = action.payload;
-      const conditions: any = Object.entries(
+      const conditions: [string, string[]][] = Object.entries(
         storeStage.texts[+index].condition
       );
       conditions[+conditionIndex][1].splice(+valueIndex, 1);
@@ -384,7 +394,7 @@ const stageSlice = createSlice({
     editValueInText(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { index, conditionIndex, valueIndex, value } = action.payload;
-      const conditions: any = Object.entries(
+      const conditions: [string, string[]][] = Object.entries(
         storeStage.texts[+index].condition
       );
       conditions[+conditionIndex][1][+valueIndex] = value;
@@ -419,7 +429,7 @@ const stageSlice = createSlice({
     createValueInPoint(state, action) {
       const point = JSON.parse(JSON.stringify(state.transitionFromMap.point));
       const { conditionIndex } = action.payload;
-      const conditions: any = Object.entries(point.condition);
+      const conditions: [string, string[]][] = Object.entries(point.condition);
       conditions[+conditionIndex][1].push("новый_параметр");
       state.transitionFromMap.point = point;
     },
@@ -433,14 +443,14 @@ const stageSlice = createSlice({
     deleteValueInPoint(state, action) {
       const point = JSON.parse(JSON.stringify(state.transitionFromMap.point));
       const { conditionIndex, valueIndex } = action.payload;
-      const conditions: any = Object.entries(point.condition);
+      const conditions: [string, string[]][] = Object.entries(point.condition);
       conditions[+conditionIndex][1].splice(+valueIndex, 1);
       state.transitionFromMap.point = point;
     },
     editValueInPoint(state, action) {
       const point = JSON.parse(JSON.stringify(state.transitionFromMap.point));
       const { conditionIndex, valueIndex, value } = action.payload;
-      const conditions: any = Object.entries(point.condition);
+      const conditions: [string, string[]][] = Object.entries(point.condition);
       conditions[+conditionIndex][1][+valueIndex] = value;
       state.transitionFromMap.point = point;
     },

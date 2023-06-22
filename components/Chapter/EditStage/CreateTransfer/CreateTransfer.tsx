@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/store/reduxHooks";
 import ConditionList from "@/components/Chapter/EditStage/CreateTransfer/ConditionList";
 
 import {
@@ -14,7 +14,7 @@ export default function CreateTransfer({
 }: {
   transferIndex: number;
 }) {
-  const storeStage = useSelector((state: any) => state.stage.stage);
+  const storeStage = useAppSelector((state) => state.stage.stage);
 
   return (
     <ConditionList

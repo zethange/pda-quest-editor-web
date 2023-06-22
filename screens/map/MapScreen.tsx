@@ -15,6 +15,8 @@ import { mapApiType, mapType } from "@/store/types/mapType";
 import Link from "next/link";
 import { createMap } from "@/store/tools/mapTools";
 import useFetching from "@/hooks/useFetching";
+import { useAppDispatch } from "@/store/reduxHooks";
+import { setMaps as setMapsRedux } from "@/store/reduxStore/chapterMapsSlice";
 
 interface Props {
   path: string[];
@@ -26,15 +28,17 @@ const MapScreen = ({ path, isReady }: Props) => {
   const { data, isLoading } = useFetching<mapApiType[]>(
     "/pdanetwork/api/v1/admin/quest/maps/all"
   );
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (!isLoading) {
       store.each((key, value: mapType) => {
-        if (key.includes(`story_${path[0]}_map`)) {
+        if (
+          key.includes(`story_${path[0]}_map`) &&
+          !maps.find((map) => +map.id === +value.id)
+        ) {
           const background = data?.find(
             (map) => +map.id === +value.id
           )?.background;
-          console.log(key, value, maps);
           if (!value.editor) {
             value.editor = {};
             value.editor.url = `/${background}`;
@@ -50,7 +54,8 @@ const MapScreen = ({ path, isReady }: Props) => {
     const newMap = createMap(map);
     if (newMap) {
       setMaps([...maps, newMap]);
-      store.set(`story_${path[0]}_map_${newMap.id}`, newMap);
+      dispatch(setMapsRedux(newMap));
+      store.set(`story_${path[0]}_maps_${newMap.id}`, newMap);
     }
   };
 
@@ -71,7 +76,10 @@ const MapScreen = ({ path, isReady }: Props) => {
       <Box>
         <SimpleGrid columns={4} spacing={5}>
           {maps.map((map: mapType) => (
-            <Link href={`/edit/map/${path[0]}/${map.id}`} key={map.id}>
+            <Link
+              href={`/edit/chapter/maps/${path[0]}/${path[1]}/${map.id}`}
+              key={map.id}
+            >
               <Card
                 key={map.id}
                 border="1px"

@@ -65,7 +65,6 @@ export default function mapEdit() {
   );
   useEffect(() => {
     const back = dataMaps?.find((mapApi) => {
-      console.log(map?.id, storeRedux.getState().map.map.id);
       return +mapApi?.id === +storeRedux.getState().map.map.id;
     });
     console.log(back);
@@ -74,7 +73,7 @@ export default function mapEdit() {
 
   const updateMap = () => {
     const map = storeRedux.getState().map.map;
-    store.set(`story_${mapRoute[0]}_map_${mapRoute[1]}`, map);
+    store.set(`story_${mapRoute[0]}_maps_${mapRoute[1]}`, map);
     console.log("updating map:", map);
   };
 

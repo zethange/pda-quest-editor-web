@@ -104,7 +104,7 @@ export default function EditStage() {
         </Flex>
         <Box display="grid" gap={1}>
           {storeStage?.texts?.map((text: stageText, index: number) => (
-            <Box display="flex" gap={1}>
+            <Box display="flex" gap={1} key={index}>
               <Textarea
                 placeholder="Текст..."
                 defaultValue={text.text}

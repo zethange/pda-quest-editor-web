@@ -94,7 +94,10 @@ export default function StageEditScreen({
   // вытаскивание карт
   useEffect(() => {
     store.each((key, value) => {
-      if (key.includes(`story_${path[0]}_map`) && maps) {
+      if (
+        key.includes(`story_${path[0]}_map`) &&
+        !maps.find((map) => +map.id === +value.id)
+      ) {
         dispatch(setMaps(value));
       }
       if (key === "stopLoop") return false;
@@ -223,7 +226,13 @@ export default function StageEditScreen({
 
   // отрисовка nodes и edges
   useEffect(() => {
-    const initialNodes: any[] = [];
+    interface CustomNode extends Node {
+      position: {
+        x: number;
+        y: number;
+      };
+    }
+    const initialNodes: CustomNode[] = [];
     const initialEdges: any[] = [];
 
     chapter?.stages?.map((stage: stageType) => {
@@ -249,7 +258,7 @@ export default function StageEditScreen({
           actions: stage.actions || {},
         },
         position: stage.editor
-          ? { x: stage.editor.x, y: stage.editor.y }
+          ? { x: stage.editor.x as number, y: stage.editor.y as number }
           : { x: 0, y: 0 },
       });
     });
@@ -306,7 +315,7 @@ export default function StageEditScreen({
               actions: {},
             },
             position: point.editor
-              ? { x: point.editor.x, y: point.editor.y }
+              ? { x: point.editor.x as number, y: point.editor.y as number }
               : { x: 0, y: 0 },
           });
           if (point.data.stage !== "") {

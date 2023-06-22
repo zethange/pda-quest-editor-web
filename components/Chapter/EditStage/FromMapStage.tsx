@@ -55,9 +55,15 @@ const FromMapStage = () => {
   const [diffHeight, setDiffHeight] = useState<number>(0);
   const [diffWidth, setDiffWidth] = useState<number>(0);
 
-  const onLoadImage = (target: any) => {
-    setDiffHeight(target.target.naturalHeight / target.target.clientHeight);
-    setDiffWidth(target.target.naturalWidth / target.target.clientWidth);
+  const onLoadImage = (target: React.SyntheticEvent<HTMLImageElement>) => {
+    setDiffHeight(
+      (target.target as HTMLImageElement).naturalHeight /
+        (target.target as HTMLImageElement).clientHeight
+    );
+    setDiffWidth(
+      (target.target as HTMLImageElement).naturalWidth /
+        (target.target as HTMLImageElement).clientWidth
+    );
   };
 
   return (
@@ -82,7 +88,7 @@ const FromMapStage = () => {
           <img
             src={"/static/maps/" + mapBackground}
             draggable={false}
-            onLoad={(target: any) => onLoadImage(target)}
+            onLoad={(target) => onLoadImage(target)}
             onClick={(e) => handleClick(e)}
             style={{
               borderRadius: "5px",
