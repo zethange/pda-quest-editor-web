@@ -32,7 +32,7 @@ interface IPosition {
 }
 
 export function newStage(
-  type: "default" | "exit",
+  type: "default" | "exit" | "chapterEnd",
   id: number,
   customPosition: boolean = false,
   data?: IPosition
@@ -63,6 +63,13 @@ export function newStage(
       id,
       type_stage: 4,
       data: { map: "0", pos: "235:235" },
+      editor: position,
+    };
+  } else if (type === "chapterEnd") {
+    return {
+      id,
+      type_stage: 5,
+      actions: {},
       editor: position,
     };
   }

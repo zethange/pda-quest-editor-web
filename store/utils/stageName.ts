@@ -12,7 +12,7 @@ export function stageName(type_stage: number) {
     case 4:
       return "Переход на карту";
     case 5:
-      return "Конец главы";
+      return "Стадия с действиями";
     case 6:
       return "Продавец";
     case 7:

@@ -21,26 +21,29 @@ import {
 } from "@chakra-ui/react";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import { imagePoint, translateTypePoint } from "@/store/utils/map/typePoint";
-import CreatePointButtons from "@/components/Map/CreatePointButtons";
+import CreatePointButtons from "@/components/Map/Points/CreatePointButtons";
 
 import {
+  addSpawn,
   onPointCreate,
   setMap,
   setOpenPoint,
+  setOpenSpawn,
 } from "@/store/reduxStore/mapSlice";
-import CreatePointModal from "@/components/Map/CreatePointModal";
-import UpdatePointModal from "@/components/Map/UpdatePointModal";
+import CreatePointModal from "@/components/Map/Points/CreatePointModal";
+import UpdatePointModal from "@/components/Map/Points/UpdatePointModal";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import { useStore } from "react-redux";
 import { Store } from "redux";
 import { RootState } from "@/store/reduxStore";
 import useFetching from "@/hooks/useFetching";
+import EditSpawnModal from "@/components/Map/Spawns/EditSpawnModal";
 
 export default function mapEdit() {
   const { query, isReady } = useRouter();
   useEffect(() => {
     dispatch(
-      setMap({ map: store.get(`story_${mapRoute[0]}_maps_${mapRoute[1]}`) })
+      setMap(store.get(`story_${mapRoute[0]}_maps_${mapRoute[1]}`) as mapType)
     );
   }, [isReady]);
   const mapRoute = (query.map as string[]) || [];
@@ -57,6 +60,7 @@ export default function mapEdit() {
 
   const [showCreatePointModal, setShowCreatePointModal] = useState(false);
   const [showEditPointModal, setShowEditPointModal] = useState(false);
+  const [showEditSpawn, setShowEditSpawn] = useState(false);
 
   const parentMapRef: React.RefObject<any> = createRef();
 
@@ -117,15 +121,19 @@ export default function mapEdit() {
     };
 
     const data = e.dataTransfer.getData("application/pdaquesteditor") as string;
-    setShowCreatePointModal(true);
-    dispatch(
-      onPointCreate({
-        type: data,
-        pos: `${position.x}:${position.y}`,
-        name: "",
-        data: { chapter: "", stage: "" },
-      })
-    );
+    if (data !== "spawn") {
+      dispatch(
+        onPointCreate({
+          type: data,
+          pos: `${position.x}:${position.y}`,
+          name: "",
+          data: { chapter: "", stage: "" },
+        })
+      );
+      setShowCreatePointModal(true);
+    } else {
+      dispatch(addSpawn(`${position.x}:${position.y}`));
+    }
   };
 
   return (
@@ -187,16 +195,32 @@ export default function mapEdit() {
               </Tooltip>
             ))}
           {showSpawns &&
-            map?.spawns?.map((spawn: spawnType) => (
+            map?.spawns?.map((spawn: spawnType, index: number) => (
               <Tooltip label={JSON.stringify(spawn, null, 2)}>
-                <Image
-                  w="10px"
+                <Box
+                  w={`${spawn.r}px`}
+                  h={`${spawn.r}px`}
+                  background="#808080"
+                  borderRadius="50%"
+                  border="1px solid #000000"
+                  opacity=".7"
                   draggable={false}
-                  src={`/static/tags/yellow.png`}
                   position="absolute"
-                  left={`${+spawn.pos.split(":")[0] / diffWidth}px`}
-                  bottom={`${+spawn.pos.split(":")[1] / diffHeight}px`}
-                  onClick={() => console.log(spawn)}
+                  onClick={() => {
+                    dispatch(
+                      setOpenSpawn({
+                        openSpawn: spawn,
+                        openSpawnIndex: index,
+                      })
+                    );
+                    setShowEditSpawn(true);
+                  }}
+                  left={`${
+                    +spawn.pos.split(":")[0] / diffWidth - +spawn.r / 2
+                  }px`}
+                  bottom={`${
+                    +spawn.pos.split(":")[1] / diffHeight - +spawn.r / 2
+                  }px`}
                 />
               </Tooltip>
             ))}
@@ -259,6 +283,11 @@ export default function mapEdit() {
           showEditPointModal={showEditPointModal}
           setShowEditPointModal={setShowEditPointModal}
           storyId={mapRoute[0]}
+          updateMap={updateMap}
+        />
+        <EditSpawnModal
+          showEditSpawn={showEditSpawn}
+          setShowEditSpawn={setShowEditSpawn}
           updateMap={updateMap}
         />
       </Box>

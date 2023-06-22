@@ -1,8 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { mapType, pointType } from "@/store/types/mapType";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { mapType, pointType, spawnType } from "@/store/types/mapType";
 
 type initialStateType = {
   openPoint: pointType;
+  openSpawn: {
+    openSpawn: spawnType;
+    openSpawnIndex: number;
+  };
   newPoint: pointType;
   map: mapType;
 };
@@ -17,6 +21,16 @@ const initialState: initialStateType = {
       chapter: "",
       stage: "",
     },
+  },
+  openSpawn: {
+    openSpawn: {
+      group: "LONERS",
+      pos: "",
+      r: "",
+      strength: "WEAK",
+      n: "",
+    },
+    openSpawnIndex: 0,
   },
   newPoint: {
     id: "1",
@@ -37,33 +51,53 @@ const initialState: initialStateType = {
   },
 };
 
+interface ISetOpenStage {
+  openSpawn: spawnType;
+  openSpawnIndex: number;
+}
+
 const mapSlice = createSlice({
   name: "map",
   initialState,
   reducers: {
-    setMap(state, action) {
-      state.map = action.payload.map;
+    setMap(state, action: PayloadAction<mapType>) {
+      state.map = action.payload;
     },
     setOpenPoint(state, action) {
       state.openPoint = action.payload;
     },
+    addSpawn(state, action: PayloadAction<string>) {
+      state.map.spawns?.push({
+        group: "LONERS",
+        pos: action.payload,
+        r: "25",
+        strength: "WEAK",
+        n: "",
+      });
+    },
+    setOpenSpawn(state, action: PayloadAction<ISetOpenStage>) {
+      state.openSpawn = action.payload;
+    },
+    editSpawn(state, action: PayloadAction<pointType | any>) {
+      const updatedSpawn = {
+        ...state.map.spawns![state.openSpawn.openSpawnIndex],
+        ...action.payload,
+      };
+      console.log(updatedSpawn, action.payload);
+      state.map.spawns?.splice(state.openSpawn.openSpawnIndex, 1, updatedSpawn);
+    },
+    deleteSpawn(state, action: PayloadAction<number>) {
+      state.map.spawns?.splice(action.payload, 1);
+    },
     onPointCreate(state, action) {
       state.newPoint = action.payload;
     },
-    addPoint(state, action) {
-      // @ts-ignore
-      state.map.points.push(action.payload);
+    addPoint(state, action: PayloadAction<pointType>) {
+      state.map.points?.push(action.payload);
     },
-    addSpawn(state, action) {},
-    deletePoint(state, action) {
-      console.log(
-        state.map.points?.filter(
-          (point: pointType) =>
-            JSON.stringify(point) !== JSON.stringify(action.payload)
-        )
-      );
+    deletePoint(state, action: PayloadAction<number>) {
+      state.map.points?.splice(action.payload, 1);
     },
-    deleteSpawn(state, action) {},
     editPoint(state, action) {
       const copyState = JSON.parse(JSON.stringify(state.map));
       const openPoint = JSON.parse(JSON.stringify(state.openPoint));
@@ -72,10 +106,8 @@ const mapSlice = createSlice({
           JSON.stringify(point) === JSON.stringify(openPoint)
       );
 
-      // @ts-ignore
-      state.map.points.splice(index, 1, action.payload);
+      state.map.points?.splice(index, 1, action.payload);
     },
-    editSpawn(state, action) {},
   },
 });
 
@@ -83,11 +115,13 @@ export const {
   setMap,
   setOpenPoint,
   addPoint,
-  addSpawn,
-  deleteSpawn,
-  editSpawn,
   editPoint,
   onPointCreate,
+  setOpenSpawn,
+  deleteSpawn,
+  editSpawn,
+  addSpawn,
+  deletePoint,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

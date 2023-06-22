@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import useFetching from "@/hooks/useFetching";
 import { itemsContainerType, itemType } from "@/store/types/itemsType";
 import { useAppDispatch } from "@/store/reduxHooks";
+import { StreamLanguage } from "@codemirror/language";
+import { lua } from "@codemirror/legacy-modes/mode/lua";
 
 type Props = {
   indexAction: any;
@@ -46,7 +48,7 @@ function Empty({
 }
 
 function WithItems({ indexAction, setShowCreateParam }: any) {
-  const { data, isLoading } = useFetching<itemsContainerType>(
+  const { data } = useFetching<itemsContainerType>(
     "/pdanetwork/api/v1/items/all"
   );
   const dispatch = useDispatch();
@@ -57,6 +59,7 @@ function WithItems({ indexAction, setShowCreateParam }: any) {
     if (type === "count") arrParam[1] = message;
     console.log(arrParam.join(":"));
   };
+
   return (
     <Box display="flex" gap={1} mb={1}>
       <Select
@@ -66,7 +69,7 @@ function WithItems({ indexAction, setShowCreateParam }: any) {
         required={true}
         defaultValue={arrParam[0]}
       >
-        {!isLoading &&
+        {data &&
           Object.entries(data as itemsContainerType).map(
             (category: [string, itemType[]]) => (
               <optgroup label={groupItem(category[0])}>
@@ -119,7 +122,7 @@ function WithCodeMirror({
       <CodeMirror
         placeholder="скрипт"
         height="200px"
-        extensions={[javascript({ jsx: false })]}
+        extensions={[StreamLanguage.define(lua)]}
         onChange={onChange}
       />
       <Button
@@ -146,66 +149,70 @@ export default function CreateParamEmpty({ indexAction, type }: Props) {
     setNewParam(param);
   };
 
-  return (
-    <>
-      <Box display="flex" my={1}>
-        Значения:
-        <Spacer />
-        <Button
-          size="xs"
-          py={1}
-          onClick={() => {
-            setShowCreateParam(!showCreateParam);
-          }}
-        >
-          {showCreateParam ? "-" : "+"}
-        </Button>
-      </Box>
-      {showCreateParam && (
-        <>
-          {type === "empty" && (
-            <Empty
-              onChangeNewParam={onChangeNewParam}
-              setShowCreateParam={setShowCreateParam}
-              indexAction={indexAction}
-              newParam={newParam}
-            />
-          )}
-          {type === "codemirror" && (
-            <WithCodeMirror
-              onChangeNewParam={onChangeNewParam}
-              setShowCreateParam={setShowCreateParam}
-              indexAction={indexAction}
-              newParam={newParam}
-            />
-          )}
-          {type === "item" && (
-            <Box p={1} my={1} borderRadius="10px" backgroundColor="gray.50">
-              <Button
-                fontWeight="normal"
-                onClick={() => setTypeCreate(!typeCreate)}
-                mb={1}
-                w="100%"
-              >
-                {typeCreate ? "Параметр" : "Предмет"}
-              </Button>
-              {typeCreate ? (
-                <Empty
-                  onChangeNewParam={onChangeNewParam}
-                  setShowCreateParam={setShowCreateParam}
-                  indexAction={indexAction}
-                  newParam={newParam}
-                />
-              ) : (
-                <WithItems
-                  indexAction={indexAction}
-                  setShowCreateParam={setShowCreateParam}
-                />
-              )}
-            </Box>
-          )}
-        </>
-      )}
-    </>
-  );
+  if (type !== "null") {
+    return (
+      <>
+        <Box display="flex" my={1}>
+          Значения:
+          <Spacer />
+          <Button
+            size="xs"
+            py={1}
+            onClick={() => {
+              setShowCreateParam(!showCreateParam);
+            }}
+          >
+            {showCreateParam ? "-" : "+"}
+          </Button>
+        </Box>
+        {showCreateParam && (
+          <>
+            {type === "empty" && (
+              <Empty
+                onChangeNewParam={onChangeNewParam}
+                setShowCreateParam={setShowCreateParam}
+                indexAction={indexAction}
+                newParam={newParam}
+              />
+            )}
+            {type === "codemirror" && (
+              <WithCodeMirror
+                onChangeNewParam={onChangeNewParam}
+                setShowCreateParam={setShowCreateParam}
+                indexAction={indexAction}
+                newParam={newParam}
+              />
+            )}
+            {type === "item" && (
+              <Box p={1} my={1} borderRadius="10px" backgroundColor="gray.50">
+                <Button
+                  fontWeight="normal"
+                  onClick={() => setTypeCreate(!typeCreate)}
+                  mb={1}
+                  w="100%"
+                >
+                  {typeCreate ? "Параметр" : "Предмет"}
+                </Button>
+                {typeCreate ? (
+                  <Empty
+                    onChangeNewParam={onChangeNewParam}
+                    setShowCreateParam={setShowCreateParam}
+                    indexAction={indexAction}
+                    newParam={newParam}
+                  />
+                ) : (
+                  <WithItems
+                    indexAction={indexAction}
+                    setShowCreateParam={setShowCreateParam}
+                  />
+                )}
+              </Box>
+            )}
+          </>
+        )}
+      </>
+    );
+  } else {
+    return <Box></Box>;
+  }
 }

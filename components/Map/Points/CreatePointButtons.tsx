@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Divider } from "@chakra-ui/react";
 
 interface IProps {
   onDragStart: (event: React.DragEvent, type: string) => void;
@@ -63,6 +63,14 @@ const CreatePointButtons = ({ onDragStart }: IProps) => {
         draggable
       >
         Переход на другую локацию
+      </Button>
+      <Divider />
+      <Button
+        onDragStart={(event) => onDragStart(event, "spawn")}
+        fontWeight="normal"
+        draggable
+      >
+        Отряд
       </Button>
     </Box>
   );

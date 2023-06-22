@@ -10,9 +10,11 @@ import {
 } from "@/store/types/mapType";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import {
+  addSpawn,
   onPointCreate,
   setMap,
   setOpenPoint,
+  setOpenSpawn,
 } from "@/store/reduxStore/mapSlice";
 import { Store } from "redux";
 import { RootState } from "@/store/reduxStore";
@@ -32,9 +34,10 @@ import {
 } from "@chakra-ui/react";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import { imagePoint, translateTypePoint } from "@/store/utils/map/typePoint";
-import CreatePointButtons from "@/components/Map/CreatePointButtons";
-import CreatePointModal from "@/components/Map/CreatePointModal";
-import UpdatePointModal from "@/components/Map/UpdatePointModal";
+import CreatePointButtons from "@/components/Map/Points/CreatePointButtons";
+import CreatePointModal from "@/components/Map/Points/CreatePointModal";
+import UpdatePointModal from "@/components/Map/Points/UpdatePointModal";
+import EditSpawnModal from "@/components/Map/Spawns/EditSpawnModal";
 
 // /edit/chapter/maps/{storyId}/{chapterId}/{mapId}
 const MapChapter = () => {
@@ -54,14 +57,7 @@ const MapChapter = () => {
         `story_${query.map![0]}_maps_${query.map![2]}`
       ) as mapType;
       const points = chapter.points![String(query.map![2]) as `${number}`];
-      dispatch(
-        setMap({
-          map: {
-            ...map,
-            points,
-          },
-        })
-      );
+      dispatch(setMap({ ...map, points }));
     }
   }, [isReady]);
 
@@ -73,6 +69,7 @@ const MapChapter = () => {
 
   const [showCreatePointModal, setShowCreatePointModal] = useState(false);
   const [showEditPointModal, setShowEditPointModal] = useState(false);
+  const [showEditSpawn, setShowEditSpawn] = useState(false);
 
   const parentMapRef: React.RefObject<any> = createRef();
 
@@ -135,15 +132,19 @@ const MapChapter = () => {
     };
 
     const data = e.dataTransfer.getData("application/pdaquesteditor") as string;
-    setShowCreatePointModal(true);
-    dispatch(
-      onPointCreate({
-        type: data,
-        pos: `${position.x}:${position.y}`,
-        name: "",
-        data: { chapter: "", stage: "" },
-      })
-    );
+    if (data !== "spawn") {
+      dispatch(
+        onPointCreate({
+          type: data,
+          pos: `${position.x}:${position.y}`,
+          name: "",
+          data: { chapter: "", stage: "" },
+        })
+      );
+      setShowCreatePointModal(true);
+    } else {
+      dispatch(addSpawn(`${position.x}:${position.y}`));
+    }
   };
 
   if (query.map) {
@@ -208,16 +209,32 @@ const MapChapter = () => {
                 </Tooltip>
               ))}
             {showSpawns &&
-              map?.spawns?.map((spawn: spawnType) => (
+              map?.spawns?.map((spawn: spawnType, index: number) => (
                 <Tooltip label={JSON.stringify(spawn, null, 2)}>
-                  <Image
-                    w="10px"
+                  <Box
+                    w={`${spawn.r}px`}
+                    h={`${spawn.r}px`}
+                    background="#808080"
+                    borderRadius="50%"
+                    border="1px solid #000000"
+                    opacity=".7"
                     draggable={false}
-                    src={`/static/tags/yellow.png`}
                     position="absolute"
-                    left={`${+spawn.pos.split(":")[0] / diffWidth}px`}
-                    bottom={`${+spawn.pos.split(":")[1] / diffHeight}px`}
-                    onClick={() => console.log(spawn)}
+                    onClick={() => {
+                      dispatch(
+                        setOpenSpawn({
+                          openSpawn: spawn,
+                          openSpawnIndex: index,
+                        })
+                      );
+                      setShowEditSpawn(true);
+                    }}
+                    left={`${
+                      +spawn.pos.split(":")[0] / diffWidth - +spawn.r / 2
+                    }px`}
+                    bottom={`${
+                      +spawn.pos.split(":")[1] / diffHeight - +spawn.r / 2
+                    }px`}
                   />
                 </Tooltip>
               ))}
@@ -280,6 +297,11 @@ const MapChapter = () => {
             showEditPointModal={showEditPointModal}
             setShowEditPointModal={setShowEditPointModal}
             storyId={query.map![0]}
+            updateMap={updateMap}
+          />
+          <EditSpawnModal
+            showEditSpawn={showEditSpawn}
+            setShowEditSpawn={setShowEditSpawn}
             updateMap={updateMap}
           />
         </Box>

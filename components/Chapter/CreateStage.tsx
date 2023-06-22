@@ -14,7 +14,7 @@ import {
 interface IProps {
   onDragStart: (
     event: React.DragEvent,
-    type: "default" | "exit" | "transition"
+    type: "default" | "exit" | "transition" | "chapterEnd"
   ) => void;
 }
 
@@ -39,6 +39,14 @@ const CreateStage = ({ onDragStart }: IProps) => {
                 draggable
               >
                 Обычная стадия
+              </Button>
+              <Button
+                fontWeight={1}
+                cursor="grab"
+                onDragStart={(event) => onDragStart(event, "chapterEnd")}
+                draggable
+              >
+                Стадия с действиями
               </Button>
               <Button
                 fontWeight={1}

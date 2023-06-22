@@ -29,33 +29,34 @@ export type pointType = {
   };
 };
 
-export enum spawnGroup {
-  LONERS = "LONERS",
-  BANDITS = "BANDITS",
-  MILITARY = "MILITARY",
-  LIBERTY = "LIBERTY",
-  DUTY = "DUTY",
-  MONOLITH = "MONOLITH",
-  MERCENARIES = "MERCENARIES",
-  SCIENTISTS = "SCIENTISTS",
-  CLEARSKY = "CLEARSKY",
-}
-
-export enum spawnStrength {
-  WEAK = "WEAK",
-  MIDDLE = "MIDDLE",
-  STRONG = "STRONG",
-}
-
 export type spawnType = {
-  group: spawnGroup;
-  strength: spawnStrength;
+  // группировка
+  group:
+    | "LONERS"
+    | "BANDITS"
+    | "MILITARY"
+    | "LIBERTY"
+    | "DUTY"
+    | "MONOLITH"
+    | "MERCENARIES"
+    | "SCIENTISTS"
+    | "CLEARSKY";
+  // крутизна отряда
+  strength: "WEAK" | "MIDDLE" | "STRONG";
   // кол-во нпс на точке
   n: string;
   // радиус спавна
   r: string;
   // позиция
   pos: string;
+  title?: string;
+  description?: string;
+  actions?: {
+    [key: string]: string[];
+  };
+  condition?: {
+    [key: string]: string[];
+  };
 };
 
 export type mapApiType = {

@@ -676,7 +676,7 @@ export default function StageEditScreen({
           stages: [
             ...chapterFromLocalStorage?.stages,
             newStage(
-              type as "default" | "exit",
+              type as "default" | "exit" | "chapterEnd",
               idLastStage + 1,
               true,
               position

@@ -1,4 +1,4 @@
-export function commandLocalizer(param: string): string {
+export function commandLocalize(param: string): string {
   switch (param) {
     case "add":
       return "Добавить";
@@ -14,8 +14,18 @@ export function commandLocalizer(param: string): string {
       return "Уменьшить отношения";
     case "reset":
       return "Сбросить";
+    case "note":
+      return "Заметка";
     case "syncNow":
       return "Синхронизация с сервером";
+    case "openStage":
+      return "Открыть стадию";
+    case "openSeller":
+      return "Открыть торговца";
+    case "exitStory":
+      return "Закрыть историю";
+    case "finishStory":
+      return "Закончить историю";
     case "script":
       return "Скриптовуха";
     default:
@@ -39,9 +49,19 @@ export function typeCommand(
       return "empty";
     case "-":
       return "empty";
+    case "note":
+      return "empty";
     case "reset":
       return "empty";
     case "syncNow":
+      return "null";
+    case "openStage":
+      return "empty";
+    case "openSeller":
+      return "empty";
+    case "exitStory":
+      return "null";
+    case "finishStory":
       return "null";
     case "script":
       return "codemirror";

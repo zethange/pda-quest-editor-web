@@ -2,16 +2,17 @@ import { useState } from "react";
 
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 import CreateParamEmpty from "@/components/Chapter/EditStage/EditActions/CreateParamEmpty";
-import { commandLocalizer, typeCommand } from "@/store/utils/commandsAction";
+import { commandLocalize, typeCommand } from "@/store/utils/commandsAction";
 import { useDispatch, useSelector } from "react-redux";
 import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
 import {
   deleteMethodInAction,
   deleteParamInMethod,
   editParamInAction,
   newMethodInAction,
 } from "@/store/reduxStore/stageSlice";
+import { StreamLanguage } from "@codemirror/language";
+import { lua } from "@codemirror/legacy-modes/mode/lua";
 
 export default function EditActions() {
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
@@ -48,8 +49,13 @@ export default function EditActions() {
                 <option value="money">Добавить/удалить деньги</option>
                 <option value="+">Увеличить отношения</option>
                 <option value="-">Уменьшить отношения</option>
+                <option value="note">Заметка</option>
                 <option value="reset">Сбросить</option>
                 <option value="syncNow">Синхронизация с сервером</option>
+                <option value="openStage">Открыть стадию</option>
+                <option value="openSeller">Открыть торговца</option>
+                <option value="exitStory">Закрыть историю</option>
+                <option value="finishStory">Закончить историю</option>
                 <option value="script">Кастомный скрипт</option>
               </Select>
               <Button
@@ -88,7 +94,7 @@ export default function EditActions() {
                 </Box>
                 <Input
                   readOnly={true}
-                  defaultValue={commandLocalizer(action[0])}
+                  defaultValue={commandLocalize(action[0])}
                 />
                 <Box>
                   <CreateParamEmpty
@@ -105,7 +111,7 @@ export default function EditActions() {
                           <CodeMirror
                             value={key}
                             height="200px"
-                            extensions={[javascript({ jsx: false })]}
+                            extensions={[StreamLanguage.define(lua)]}
                             onBlur={(event) => {
                               dispatch(
                                 editParamInAction({

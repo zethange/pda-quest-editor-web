@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 import store from "@/store/reduxStore";
-import AuthProvider from "@/store/utils/providers/AuthProvider";
+import AuthProvider from "@/components/Providers/AuthProvider";
 
 export default function App({
   Component,
