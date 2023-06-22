@@ -280,184 +280,19 @@ const stageSlice = createSlice({
       state.targetText = action.payload;
     },
     // CONDITION_TRANSFER
-    createConditionInTransfer(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, typeCondition } = action.payload;
-      switch (typeCondition) {
-        case "has":
-          storeStage.transfers[+index].condition = {
-            ...storeStage.transfers[+index].condition,
-            has: ["параметр"],
-          };
-          break;
-        case "!has":
-          storeStage.transfers[+index].condition = {
-            ...storeStage.transfers[+index].condition,
-            "!has": ["параметр"],
-          };
-          break;
-        case "money>=":
-          storeStage.transfers[+index].condition = {
-            ...storeStage.transfers[+index].condition,
-            "money>=": ["100"],
-          };
-          break;
-      }
-      state.stage.transfers = storeStage.transfers;
-    },
-    createValueInCondition(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, conditionIndex } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(
-        storeStage.transfers[+index].condition
-      );
-      conditions[+conditionIndex][1].push("новый_параметр");
-      state.stage.transfers = storeStage.transfers;
-    },
-    deleteConditionInTransfer(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, conditionIndex } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(
-        storeStage.transfers[+index].condition
-      );
-      conditions.splice(+conditionIndex, 1);
-
-      storeStage.transfers[+index].condition = Object.fromEntries(conditions);
-      state.stage.transfers = storeStage.transfers;
-    },
-    deleteValueInCondition(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, conditionIndex, valueIndex } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(
-        storeStage.transfers[+index].condition
-      );
-      conditions[+conditionIndex][1].splice(+valueIndex, 1);
-      state.stage.transfers = storeStage.transfers;
-    },
-    editValueInConditions(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, conditionIndex, valueIndex, value } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(
-        storeStage.transfers[+index].condition
-      );
-      conditions[+conditionIndex][1][+valueIndex] = value;
-      state.stage.transfers = storeStage.transfers;
+    editConditionInTransfer(state, action) {
+      const { index, condition } = action.payload;
+      state.stage.transfers![+index].condition = condition;
     },
     // CONDITION_TEXT
-    createConditionInText(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, typeCondition } = action.payload;
-      switch (typeCondition) {
-        case "has":
-          storeStage.texts[+index].condition = {
-            ...storeStage.texts[+index].condition,
-            has: ["параметр"],
-          };
-          break;
-        case "!has":
-          storeStage.texts[+index].condition = {
-            ...storeStage.texts[+index].condition,
-            "!has": ["параметр"],
-          };
-          break;
-        case "money>=":
-          storeStage.texts[+index].condition = {
-            ...storeStage.texts[+index].condition,
-            "money>=": ["100"],
-          };
-          break;
-      }
-      state.stage.texts = storeStage.texts;
-    },
-    createValueInText(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, conditionIndex } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(
-        storeStage.texts[+index].condition
-      );
-      conditions[+conditionIndex][1].push("новый_параметр");
-      state.stage.texts = storeStage.texts;
-    },
-    deleteConditionInText(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, conditionIndex } = action.payload;
-      const conditions = Object.entries(storeStage.texts[+index].condition);
-      conditions.splice(+conditionIndex, 1);
-
-      storeStage.texts[+index].condition = Object.fromEntries(conditions);
-      state.stage.texts = storeStage.texts;
-    },
-    deleteValueInText(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, conditionIndex, valueIndex } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(
-        storeStage.texts[+index].condition
-      );
-      conditions[+conditionIndex][1].splice(+valueIndex, 1);
-      state.stage.texts = storeStage.texts;
-    },
-    editValueInText(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { index, conditionIndex, valueIndex, value } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(
-        storeStage.texts[+index].condition
-      );
-      conditions[+conditionIndex][1][+valueIndex] = value;
-      state.stage.texts = storeStage.texts;
+    editConditionInText(state, action) {
+      const { index, condition } = action.payload;
+      state.stage.texts![+index].condition = condition;
     },
     // CONDITION_POINT
-    createConditionInPoint(state, action) {
-      const point = JSON.parse(JSON.stringify(state.transitionFromMap.point));
-      const { typeCondition } = action.payload;
-      switch (typeCondition) {
-        case "has":
-          point.condition = {
-            ...point.condition,
-            has: ["параметр"],
-          };
-          break;
-        case "!has":
-          point.condition = {
-            ...point.condition,
-            "!has": ["параметр"],
-          };
-          break;
-        case "money>=":
-          point.condition = {
-            ...point.condition,
-            "money>=": ["100"],
-          };
-          break;
-      }
-      state.transitionFromMap.point = point;
-    },
-    createValueInPoint(state, action) {
-      const point = JSON.parse(JSON.stringify(state.transitionFromMap.point));
-      const { conditionIndex } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(point.condition);
-      conditions[+conditionIndex][1].push("новый_параметр");
-      state.transitionFromMap.point = point;
-    },
-    deleteConditionInPoint(state, action) {
-      const point = JSON.parse(JSON.stringify(state.transitionFromMap.point));
-      const { conditionIndex } = action.payload;
-      const conditions = Object.entries(point.condition);
-      conditions.splice(+conditionIndex, 1);
-      state.transitionFromMap.point = point;
-    },
-    deleteValueInPoint(state, action) {
-      const point = JSON.parse(JSON.stringify(state.transitionFromMap.point));
-      const { conditionIndex, valueIndex } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(point.condition);
-      conditions[+conditionIndex][1].splice(+valueIndex, 1);
-      state.transitionFromMap.point = point;
-    },
-    editValueInPoint(state, action) {
-      const point = JSON.parse(JSON.stringify(state.transitionFromMap.point));
-      const { conditionIndex, valueIndex, value } = action.payload;
-      const conditions: [string, string[]][] = Object.entries(point.condition);
-      conditions[+conditionIndex][1][+valueIndex] = value;
-      state.transitionFromMap.point = point;
+    editConditionInPoint(state, action) {
+      const { condition } = action.payload;
+      state.transitionFromMap.point.condition = condition;
     },
   },
 });
@@ -478,11 +313,6 @@ export const {
   editParamInAction,
   deleteMethodInAction,
   deleteParamInMethod,
-  createConditionInTransfer,
-  createValueInCondition,
-  editValueInConditions,
-  deleteConditionInTransfer,
-  deleteValueInCondition,
   setConnection,
   editPosInData,
   editMapInData,
@@ -491,17 +321,10 @@ export const {
   editMapIdInTransition,
   setTargetTransfer,
   setTransitionToStore,
-  createValueInText,
-  deleteConditionInText,
-  createConditionInText,
-  deleteValueInText,
-  editValueInText,
-  createValueInPoint,
-  deleteConditionInPoint,
-  deleteValueInPoint,
-  editValueInPoint,
-  createConditionInPoint,
   setParameters,
+  editConditionInText,
+  editConditionInTransfer,
+  editConditionInPoint,
 } = stageSlice.actions;
 
 export default stageSlice.reducer;

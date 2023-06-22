@@ -1,13 +1,7 @@
 import { useAppSelector } from "@/store/reduxHooks";
-import ConditionList from "@/components/Chapter/EditStage/CreateTransfer/ConditionList";
 
-import {
-  createConditionInTransfer,
-  createValueInCondition,
-  deleteConditionInTransfer,
-  deleteValueInCondition,
-  editValueInConditions,
-} from "@/store/reduxStore/stageSlice";
+import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
+import { editConditionInTransfer } from "@/store/reduxStore/stageSlice";
 
 export default function CreateTransfer({
   transferIndex,
@@ -17,14 +11,10 @@ export default function CreateTransfer({
   const storeStage = useAppSelector((state) => state.stage.stage);
 
   return (
-    <ConditionList
+    <ConditionListRefactor
       index={transferIndex}
       condition={storeStage?.transfers![transferIndex]?.condition}
-      createCondition={createConditionInTransfer}
-      createValue={createValueInCondition}
-      editValue={editValueInConditions}
-      deleteCondition={deleteConditionInTransfer}
-      deleteValue={deleteValueInCondition}
+      onChangeCondition={editConditionInTransfer}
     />
   );
 }

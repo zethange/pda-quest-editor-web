@@ -73,6 +73,7 @@ const mapSlice = createSlice({
         r: "25",
         strength: "WEAK",
         n: "",
+        condition: {},
       });
     },
     setOpenSpawn(state, action: PayloadAction<ISetOpenStage>) {

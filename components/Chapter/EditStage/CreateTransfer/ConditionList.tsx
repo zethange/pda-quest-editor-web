@@ -215,31 +215,6 @@ const ConditionList: React.FC<Props> = ({
                             ))}
                           </AutoCompleteList>
                         </AutoComplete>
-                        {/*<Input*/}
-                        {/*  defaultValue={conditionValue}*/}
-                        {/*  onChange={(*/}
-                        {/*    event: React.ChangeEvent<HTMLInputElement>*/}
-                        {/*  ) => {*/}
-                        {/*    if (isPoint) {*/}
-                        {/*      dispatch(*/}
-                        {/*        editValue({*/}
-                        {/*          conditionIndex,*/}
-                        {/*          valueIndex,*/}
-                        {/*          value: event.target.value,*/}
-                        {/*        })*/}
-                        {/*      );*/}
-                        {/*    } else {*/}
-                        {/*      dispatch(*/}
-                        {/*        editValue({*/}
-                        {/*          index,*/}
-                        {/*          conditionIndex,*/}
-                        {/*          valueIndex,*/}
-                        {/*          value: event.target.value,*/}
-                        {/*        })*/}
-                        {/*      );*/}
-                        {/*    }*/}
-                        {/*  }}*/}
-                        {/*/>*/}
                         <Button
                           onClick={() => {
                             if (isPoint) {

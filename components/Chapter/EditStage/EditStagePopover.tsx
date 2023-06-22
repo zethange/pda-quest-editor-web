@@ -35,7 +35,7 @@ const EditStagePopover = ({
     <>
       {editableStage && (
         <Box
-          zIndex="popover"
+          zIndex="1"
           p={5}
           w={450}
           borderLeft="2px"

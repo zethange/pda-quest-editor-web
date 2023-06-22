@@ -9,15 +9,9 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import ConditionList from "@/components/Chapter/EditStage/CreateTransfer/ConditionList";
 import { useAppSelector } from "@/store/reduxHooks";
-import {
-  createConditionInText,
-  createValueInText,
-  deleteConditionInText,
-  deleteValueInText,
-  editValueInText,
-} from "@/store/reduxStore/stageSlice";
+import { editConditionInText } from "@/store/reduxStore/stageSlice";
+import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
 
 interface Props {
   openCondition: boolean;
@@ -42,14 +36,10 @@ const EditTextCondition: React.FC<Props> = ({
         <ModalHeader>Создание условий</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <ConditionList
+          <ConditionListRefactor
             index={targetText.indexTargetText}
             condition={storeStage.texts![targetText.indexTargetText].condition}
-            createCondition={createConditionInText}
-            createValue={createValueInText}
-            deleteCondition={deleteConditionInText}
-            deleteValue={deleteValueInText}
-            editValue={editValueInText}
+            onChangeCondition={editConditionInText}
           />
         </ModalBody>
         <ModalFooter>
