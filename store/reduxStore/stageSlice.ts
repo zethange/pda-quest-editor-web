@@ -28,6 +28,7 @@ interface IState {
     targetText: stageText;
     indexTargetText: number;
   };
+  parameters: string[];
 }
 
 const initialState: IState = {
@@ -122,6 +123,7 @@ const initialState: IState = {
       type: 0,
     },
   },
+  parameters: [""],
 };
 
 const stageSlice = createSlice({
@@ -170,6 +172,9 @@ const stageSlice = createSlice({
     },
     editBackgroundInStore(state, action) {
       state.stage.background = action.payload;
+    },
+    setParameters(state, action) {
+      state.parameters = action.payload;
     },
     editMessageInStore(state, action) {
       state.stage.message = action.payload;
@@ -496,7 +501,7 @@ export const {
   deleteValueInPoint,
   editValueInPoint,
   createConditionInPoint,
-  deleteTransferInStore,
+  setParameters,
 } = stageSlice.actions;
 
 export default stageSlice.reducer;

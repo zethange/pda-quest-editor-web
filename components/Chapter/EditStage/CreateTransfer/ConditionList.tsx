@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
+import { Box, Button, Select, Spacer } from "@chakra-ui/react";
 import { conditionType } from "@/store/utils/conditionType";
 
-import { useAppDispatch } from "@/store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList,
+} from "@choc-ui/chakra-autocomplete";
 
 interface Props {
   index?: number;
@@ -30,6 +36,7 @@ const ConditionList: React.FC<Props> = ({
   const dispatch = useAppDispatch();
   const [showCreateMethod, setShowCreateMethod] = useState(false);
   const [typeCondition, setTypeCondition] = useState("has");
+  const parameters = useAppSelector((state) => state.stage.parameters);
 
   return (
     <>
@@ -146,17 +153,16 @@ const ConditionList: React.FC<Props> = ({
                   {condition[1].map(
                     (conditionValue: any, valueIndex: number) => (
                       <Box display="flex" gap={1}>
-                        <Input
-                          defaultValue={conditionValue}
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {
+                        <AutoComplete
+                          openOnFocus
+                          value={conditionValue}
+                          onChange={(value) => {
                             if (isPoint) {
                               dispatch(
                                 editValue({
                                   conditionIndex,
                                   valueIndex,
-                                  value: event.target.value,
+                                  value: value,
                                 })
                               );
                             } else {
@@ -165,12 +171,75 @@ const ConditionList: React.FC<Props> = ({
                                   index,
                                   conditionIndex,
                                   valueIndex,
-                                  value: event.target.value,
+                                  value: value,
                                 })
                               );
                             }
                           }}
-                        />
+                        >
+                          <AutoCompleteInput
+                            placeholder="Параметер"
+                            variant="outline"
+                            value={conditionValue}
+                            onChange={(event) => {
+                              console.log(event.target.value);
+                              if (isPoint) {
+                                dispatch(
+                                  editValue({
+                                    conditionIndex,
+                                    valueIndex,
+                                    value: event.target.value,
+                                  })
+                                );
+                              } else {
+                                dispatch(
+                                  editValue({
+                                    index,
+                                    conditionIndex,
+                                    valueIndex,
+                                    value: event.target.value,
+                                  })
+                                );
+                              }
+                            }}
+                          />
+                          <AutoCompleteList>
+                            {parameters.map((parameter, index) => (
+                              <AutoCompleteItem
+                                key={index}
+                                value={parameter}
+                                textTransform="none"
+                              >
+                                {parameter}
+                              </AutoCompleteItem>
+                            ))}
+                          </AutoCompleteList>
+                        </AutoComplete>
+                        {/*<Input*/}
+                        {/*  defaultValue={conditionValue}*/}
+                        {/*  onChange={(*/}
+                        {/*    event: React.ChangeEvent<HTMLInputElement>*/}
+                        {/*  ) => {*/}
+                        {/*    if (isPoint) {*/}
+                        {/*      dispatch(*/}
+                        {/*        editValue({*/}
+                        {/*          conditionIndex,*/}
+                        {/*          valueIndex,*/}
+                        {/*          value: event.target.value,*/}
+                        {/*        })*/}
+                        {/*      );*/}
+                        {/*    } else {*/}
+                        {/*      dispatch(*/}
+                        {/*        editValue({*/}
+                        {/*          index,*/}
+                        {/*          conditionIndex,*/}
+                        {/*          valueIndex,*/}
+                        {/*          value: event.target.value,*/}
+                        {/*        })*/}
+                        {/*      );*/}
+                        {/*    }*/}
+                        {/*  }}*/}
+                        {/*/>*/}
                         <Button
                           onClick={() => {
                             if (isPoint) {

@@ -6,7 +6,7 @@ interface Props {
 }
 
 const ChangeThemeButton = ({ rounded }: Props) => {
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { toggleColorMode } = useColorMode();
 
   return (
     <Button

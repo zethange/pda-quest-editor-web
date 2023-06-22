@@ -44,6 +44,7 @@ import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal"
 import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
 import { useStore } from "react-redux";
 import {
+  setParameters,
   setConnection,
   setStageToStore as setStageToRedux,
   setTargetTransfer,
@@ -232,6 +233,7 @@ export default function StageEditScreen({
         y: number;
       };
     }
+
     const initialNodes: CustomNode[] = [];
     const initialEdges: any[] = [];
 
@@ -335,6 +337,19 @@ export default function StageEditScreen({
         });
       });
     }
+
+    const parameters: string[] = [];
+    chapter?.stages?.forEach((stage: stageType) => {
+      if (stage.actions && stage.actions.add) {
+        stage.actions.add.forEach((item) => {
+          if (isNaN(Number(item.split(":")[0]))) {
+            console.log(item);
+            parameters.push(item);
+          }
+        });
+      }
+    });
+    dispatch(setParameters(parameters));
 
     if (initialNodes.length !== 0) setNodes(initialNodes);
     if (initialEdges.length !== 0) setEdges(initialEdges);

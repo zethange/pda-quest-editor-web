@@ -17,7 +17,9 @@ export type stageType = {
   type_message?: number;
   texts?: stageText[];
   transfers?: stageTransfer[];
-  actions?: {};
+  actions?: {
+    [key: string]: string[];
+  };
   data?: {
     map: string;
     pos: string;

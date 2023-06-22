@@ -12,11 +12,12 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.5.4",
+    "@choc-ui/chakra-autocomplete": "^5.1.5",
+    "@codemirror/lang-javascript": "^6.1.9",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@reduxjs/toolkit": "^1.9.5",
     "@uiw/react-codemirror": "^4.21.3",
-    "@codemirror/lang-javascript": "^6.1.9",
     "client-zip": "^2.3.1",
     "dagre": "^0.8.5",
     "framer-motion": "^10.9.1",
