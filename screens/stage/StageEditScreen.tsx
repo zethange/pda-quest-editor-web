@@ -258,6 +258,7 @@ export default function StageEditScreen({
           text: stage.texts && stage.texts[0].text,
           id: stage.id,
           actions: stage.actions || {},
+          _comment: stage._comment,
         },
         position: stage.editor
           ? { x: stage.editor.x as number, y: stage.editor.y as number }

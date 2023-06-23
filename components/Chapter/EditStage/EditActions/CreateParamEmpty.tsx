@@ -1,19 +1,16 @@
 import { useCallback, useState } from "react";
-import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
-import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-import { groupItem } from "@/store/utils/groupItem";
-import { newParamInMethod } from "@/store/reduxStore/stageSlice";
-import { useDispatch } from "react-redux";
 import useFetching from "@/hooks/useFetching";
-import { itemsContainerType, itemType } from "@/store/types/itemsType";
-import { useAppDispatch } from "@/store/reduxHooks";
+import CodeMirror from "@uiw/react-codemirror";
+import { groupItem } from "@/store/utils/groupItem";
 import { StreamLanguage } from "@codemirror/language";
 import { lua } from "@codemirror/legacy-modes/mode/lua";
+import { itemsContainerType, itemType } from "@/store/types/itemsType";
+import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
 
 type Props = {
   indexAction: any;
   type: string;
+  newParamInMethod: (indexMethod: number, param: string) => void;
 };
 
 function Empty({
@@ -21,9 +18,8 @@ function Empty({
   setShowCreateParam,
   indexAction,
   newParam,
+  newParamInMethod,
 }: any) {
-  const dispatch = useDispatch();
-
   return (
     <Box display="flex" gap={1} mb={1}>
       <Input
@@ -35,9 +31,7 @@ function Empty({
       <Button
         fontWeight="normal"
         onClick={() => {
-          dispatch(
-            newParamInMethod({ indexMethod: indexAction, param: newParam })
-          );
+          newParamInMethod(indexAction, newParam);
           setShowCreateParam(false);
         }}
       >
@@ -47,11 +41,10 @@ function Empty({
   );
 }
 
-function WithItems({ indexAction, setShowCreateParam }: any) {
+function WithItems({ indexAction, setShowCreateParam, newParamInMethod }: any) {
   const { data } = useFetching<itemsContainerType>(
     "/pdanetwork/api/v1/items/all"
   );
-  const dispatch = useDispatch();
 
   const arrParam: string[] = ["68", "1"];
   const onChangeNewParam = (message: string, type: "item" | "count") => {
@@ -90,12 +83,7 @@ function WithItems({ indexAction, setShowCreateParam }: any) {
       <Button
         fontWeight="normal"
         onClick={() => {
-          dispatch(
-            newParamInMethod({
-              indexMethod: indexAction,
-              param: arrParam.join(":"),
-            })
-          );
+          newParamInMethod(indexAction, arrParam.join(":"));
           setShowCreateParam(false);
         }}
       >
@@ -110,9 +98,8 @@ function WithCodeMirror({
   setShowCreateParam,
   indexAction,
   newParam,
+  newParamInMethod,
 }: any) {
-  const dispatch = useAppDispatch();
-
   const onChange = useCallback((value: string) => {
     onChangeNewParam(value);
   }, []);
@@ -128,9 +115,7 @@ function WithCodeMirror({
       <Button
         fontWeight="normal"
         onClick={() => {
-          dispatch(
-            newParamInMethod({ indexMethod: indexAction, param: newParam })
-          );
+          newParamInMethod(indexAction, newParam);
           setShowCreateParam(false);
         }}
       >
@@ -140,7 +125,11 @@ function WithCodeMirror({
   );
 }
 
-export default function CreateParamEmpty({ indexAction, type }: Props) {
+export default function CreateParamEmpty({
+  indexAction,
+  type,
+  newParamInMethod,
+}: Props) {
   const [showCreateParam, setShowCreateParam] = useState<boolean>(false);
   const [newParam, setNewParam] = useState("");
   const [typeCreate, setTypeCreate] = useState(true);
@@ -173,6 +162,7 @@ export default function CreateParamEmpty({ indexAction, type }: Props) {
                 setShowCreateParam={setShowCreateParam}
                 indexAction={indexAction}
                 newParam={newParam}
+                newParamInMethod={newParamInMethod}
               />
             )}
             {type === "codemirror" && (
@@ -181,6 +171,7 @@ export default function CreateParamEmpty({ indexAction, type }: Props) {
                 setShowCreateParam={setShowCreateParam}
                 indexAction={indexAction}
                 newParam={newParam}
+                newParamInMethod={newParamInMethod}
               />
             )}
             {type === "item" && (
@@ -199,11 +190,13 @@ export default function CreateParamEmpty({ indexAction, type }: Props) {
                     setShowCreateParam={setShowCreateParam}
                     indexAction={indexAction}
                     newParam={newParam}
+                    newParamInMethod={newParamInMethod}
                   />
                 ) : (
                   <WithItems
                     indexAction={indexAction}
                     setShowCreateParam={setShowCreateParam}
+                    newParamInMethod={newParamInMethod}
                   />
                 )}
               </Box>

@@ -13,7 +13,6 @@
   "dependencies": {
     "@chakra-ui/react": "^2.5.4",
     "@choc-ui/chakra-autocomplete": "^5.1.5",
-    "@codemirror/lang-javascript": "^6.1.9",
     "@codemirror/language": "^6.8.0",
     "@codemirror/legacy-modes": "^6.3.2",
     "@emotion/react": "^11.10.6",

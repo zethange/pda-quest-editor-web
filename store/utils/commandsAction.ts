@@ -1,3 +1,20 @@
+export const commands = [
+  ["add", "Добавить"],
+  ["remove", "Удалить"],
+  ["xp", "Добавить/удалить опыт"],
+  ["money", "Добавить/удалить деньги"],
+  ["+", "Увеличить отношения"],
+  ["-", "Уменьшить отношения"],
+  ["note", "Заметка"],
+  ["reset", "Сбросить"],
+  ["syncNow", "Синхронизация с сервером"],
+  ["openStage", "Открыть стадию"],
+  ["openSeller", "Открыть торговца"],
+  ["exitStory", "Закрыть историю"],
+  ["finishStory", "Закончить историю"],
+  ["script", "Кастомный скрипт"],
+];
+
 export function commandLocalize(param: string): string {
   switch (param) {
     case "add":

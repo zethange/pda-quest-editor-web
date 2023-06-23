@@ -179,6 +179,12 @@ const stageSlice = createSlice({
     editMessageInStore(state, action) {
       state.stage.message = action.payload;
     },
+    editStageInStore(state, action) {
+      state.stage = {
+        ...state.stage,
+        ...action.payload,
+      };
+    },
     editTextInStore(state, action) {
       const storeStage = JSON.parse(JSON.stringify(state.stage));
       const { id, text } = action.payload;
@@ -193,57 +199,6 @@ const stageSlice = createSlice({
       const { id, transfer } = action.payload;
       storeStage.transfers.splice(+id, 1, transfer);
       state.stage.transfers = storeStage.transfers;
-    },
-    newMethodInAction(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const typeMethod = action.payload || "add";
-      const arrayActions: [string, string[]][] = Object.entries(
-        storeStage.actions
-      );
-      arrayActions.push([typeMethod, []]);
-      storeStage.actions = Object.fromEntries(arrayActions);
-      state.stage.actions = storeStage.actions;
-    },
-    newParamInMethod(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { indexMethod, param }: { indexMethod: number; param: string } =
-        action.payload;
-      const arrayActions: [string, string[]][] = Object.entries(
-        storeStage.actions
-      );
-      arrayActions[indexMethod][1].push(param);
-      storeStage.actions = Object.fromEntries(arrayActions);
-      state.stage.actions = storeStage.actions;
-    },
-    editParamInAction(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { editedParam, indexMethod, indexParam } = action.payload;
-      const arrayActions: [string, string[]][] = Object.entries(
-        storeStage.actions
-      );
-      arrayActions[+indexMethod][1][+indexParam] = editedParam;
-      storeStage.actions = Object.fromEntries(arrayActions);
-      state.stage.actions = storeStage.actions;
-    },
-    deleteMethodInAction(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { indexMethod } = action.payload;
-      const arrayActions: [string, string[]][] = Object.entries(
-        storeStage.actions
-      );
-      arrayActions.splice(+indexMethod, 1);
-      storeStage.actions = Object.fromEntries(arrayActions);
-      state.stage.actions = storeStage.actions;
-    },
-    deleteParamInMethod(state, action) {
-      const storeStage = JSON.parse(JSON.stringify(state.stage));
-      const { indexMethod, indexParam } = action.payload;
-      const arrayActions: [string, string[]][] = Object.entries(
-        storeStage.actions
-      );
-      arrayActions[+indexMethod][1].splice(+indexParam, 1);
-      storeStage.actions = Object.fromEntries(arrayActions);
-      state.stage.actions = storeStage.actions;
     },
     setConnection(state, action) {
       if (action.payload) {
@@ -294,6 +249,10 @@ const stageSlice = createSlice({
       const { condition } = action.payload;
       state.transitionFromMap.point.condition = condition;
     },
+    // ACTIONS
+    editActions(state, action) {
+      state.stage.actions = action.payload;
+    },
   },
 });
 
@@ -308,11 +267,6 @@ export const {
   editTextInStore,
   editTransferInStore,
   setTargetText,
-  newMethodInAction,
-  newParamInMethod,
-  editParamInAction,
-  deleteMethodInAction,
-  deleteParamInMethod,
   setConnection,
   editPosInData,
   editMapInData,
@@ -325,6 +279,8 @@ export const {
   editConditionInText,
   editConditionInTransfer,
   editConditionInPoint,
+  editActions,
+  editStageInStore,
 } = stageSlice.actions;
 
 export default stageSlice.reducer;

@@ -70,6 +70,7 @@ export function newStage(
       id,
       type_stage: 5,
       actions: {},
+      transfers: [],
       editor: position,
     };
   }

@@ -4,9 +4,13 @@ import { Box, Button, Flex } from "@chakra-ui/react";
 import { stageTypes } from "@/store/utils/stageName";
 import MapStage from "@/components/Chapter/EditStage/MapStage";
 import EditStage from "@/components/Chapter/EditStage/EditStage";
-import EditActions from "@/components/Chapter/EditStage/EditActions/EditActions";
+import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 import { stageType } from "@/store/types/types";
-import { setStageToStore, setTransition } from "@/store/reduxStore/stageSlice";
+import {
+  editActions,
+  setStageToStore,
+  setTransition,
+} from "@/store/reduxStore/stageSlice";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 
@@ -56,7 +60,12 @@ const EditStagePopover = ({
               <MapStage data={storeStage?.data} />
             )}
             {stageTypes(storeStage?.type_stage) === "default" && <EditStage />}
-            {storeStage?.actions && <EditActions />}
+            {storeStage?.actions && (
+              <EditActionsRefactor
+                actions={storeStage?.actions}
+                onChangeActions={editActions}
+              />
+            )}
           </Box>
           <Flex>
             <Button

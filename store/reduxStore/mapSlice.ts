@@ -87,6 +87,13 @@ const mapSlice = createSlice({
       console.log(updatedSpawn, action.payload);
       state.map.spawns?.splice(state.openSpawn.openSpawnIndex, 1, updatedSpawn);
     },
+    editActionsSpawn(state, action: PayloadAction<pointType | any>) {
+      const updatedSpawn = {
+        ...state.map.spawns![state.openSpawn.openSpawnIndex],
+        actions: action.payload,
+      };
+      state.map.spawns?.splice(state.openSpawn.openSpawnIndex, 1, updatedSpawn);
+    },
     deleteSpawn(state, action: PayloadAction<number>) {
       state.map.spawns?.splice(action.payload, 1);
     },
@@ -123,6 +130,7 @@ export const {
   editSpawn,
   addSpawn,
   deletePoint,
+  editActionsSpawn,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

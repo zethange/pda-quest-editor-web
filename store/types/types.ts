@@ -12,6 +12,7 @@ export type stageType = {
   id: number;
   type_stage: number;
   background?: string;
+  _comment?: string;
   title?: string;
   message?: string;
   type_message?: number;

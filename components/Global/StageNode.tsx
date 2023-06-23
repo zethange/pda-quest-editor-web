@@ -7,6 +7,7 @@ type data = {
   onClick: () => void;
   text: string;
   actions: any;
+  _comment?: string;
 };
 
 export function NodeStage({
@@ -22,7 +23,7 @@ export function NodeStage({
 
   return (
     <Box
-      p="10px"
+      p="8px"
       borderRadius={5}
       backgroundColor={selected ? "teal.200" : "white"}
       _dark={{
@@ -41,9 +42,16 @@ export function NodeStage({
       <button onClick={() => data.onClick()}>
         <Text align="center">{data.label}</Text>
         <small>
-          {words?.substr(0, 30)}
+          {words?.substring(0, 30)}
           {words?.length > 30 && "..."}
         </small>
+        {data._comment && (
+          <Box>
+            <Badge fontSize="10px" colorScheme="gray">
+              {"# " + data._comment.substring(0, 10) + "..."}
+            </Badge>
+          </Box>
+        )}
         <Box display="grid" gap={1}>
           {Object.entries(data.actions).map((action: any, index: number) => {
             return (

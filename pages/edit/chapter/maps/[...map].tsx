@@ -56,8 +56,17 @@ const MapChapter = () => {
       const map = store.get(
         `story_${query.map![0]}_maps_${query.map![2]}`
       ) as mapType;
-      const points = chapter.points![String(query.map![2]) as `${number}`];
-      dispatch(setMap({ ...map, points }));
+      if (!chapter.points) {
+        chapter.points = {};
+      }
+      if (!chapter.spawns) {
+        chapter.spawns = {};
+      }
+      const points =
+        chapter.points![String(query.map![2]) as `${number}`]! || [];
+      const spawns =
+        chapter.spawns![String(query.map![2]) as `${number}`]! || [];
+      dispatch(setMap({ ...map, points, spawns }));
     }
   }, [isReady]);
 
@@ -88,6 +97,7 @@ const MapChapter = () => {
     const map = storeRedux.getState().map.map;
     const copyChapter = JSON.parse(JSON.stringify(chapter));
     copyChapter.points[`${query.map![2]}`] = map.points;
+    copyChapter.spawns[`${query.map![2]}`] = map.spawns;
     console.log(copyChapter);
     store.set(`story_${query.map![0]}_chapter_${query.map![1]}`, copyChapter);
   };

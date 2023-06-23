@@ -20,9 +20,14 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
-import { deleteSpawn, editSpawn } from "@/store/reduxStore/mapSlice";
+import {
+  deleteSpawn,
+  editActionsSpawn,
+  editSpawn,
+} from "@/store/reduxStore/mapSlice";
 import { groups, strength } from "@/store/utils/groupItem";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
+import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 
 interface Props {
   showEditSpawn: boolean;
@@ -163,12 +168,19 @@ const EditSpawnModal: React.FC<Props> = ({
               }}
             />
           </FormControl>
-          {openSpawnIndex && (
-            <ConditionListRefactor
-              condition={map.spawns![openSpawnIndex].condition!}
-              onChangeCondition={editSpawn}
-            />
+          {map && (
+            <FormControl>
+              <FormLabel>Действия</FormLabel>
+              <EditActionsRefactor
+                actions={map.spawns![openSpawnIndex]?.actions!}
+                onChangeActions={editActionsSpawn}
+              />
+            </FormControl>
           )}
+          <ConditionListRefactor
+            condition={map.spawns![openSpawnIndex]?.condition!}
+            onChangeCondition={editSpawn}
+          />
         </ModalBody>
         <ModalFooter>
           <Button

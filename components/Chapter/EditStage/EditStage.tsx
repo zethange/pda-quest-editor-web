@@ -11,11 +11,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { stageText } from "@/store/types/types";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   deleteTextInStore,
   editBackgroundInStore,
   editMessageInStore,
+  editStageInStore,
   editTextInStore,
   editTitleInStore,
   newTextInStore,
@@ -23,15 +24,16 @@ import {
 } from "@/store/reduxStore/stageSlice";
 import { MdDelete, MdLockOutline } from "react-icons/md";
 import EditTextCondition from "@/components/Chapter/EditStage/EditTextCondition";
+import { useAppSelector } from "@/store/reduxHooks";
 
 export default function EditStage() {
   const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
   const [openCondition, setOpenCondition] = useState<boolean>(false);
-  const storeStage = useSelector((state: any) => state.stage.stage);
+  const storeStage = useAppSelector((state) => state.stage.stage);
   const dispatch = useDispatch();
 
   let background: string;
-  if (storeStage.background.includes("http")) {
+  if (storeStage.background?.includes("http")) {
     background = storeStage.background;
   } else if (!storeStage.background) {
     background = "/no_background.png";
@@ -169,6 +171,21 @@ export default function EditStage() {
         setOpenCondition={setOpenCondition}
       />
       <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
+        <b>Комментарий:</b>
+        <Input
+          defaultValue={storeStage?._comment}
+          backgroundColor="white"
+          placeholder="Комментарий..."
+          onChange={(event) => {
+            dispatch(
+              editStageInStore({
+                _comment: event.target.value,
+              })
+            );
+          }}
+        />
+      </Box>
+      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
         <b>Сообщение:</b>
         <Box>
           Показывать сообщение:{" "}
@@ -181,7 +198,7 @@ export default function EditStage() {
                 dispatch(editMessageInStore("Новое уведомление"));
               if (checkBoxMessage) dispatch(editMessageInStore(""));
             }}
-            defaultChecked={storeStage?.message}
+            defaultChecked={!!storeStage?.message}
           />
           {storeStage?.message && (
             <Textarea
