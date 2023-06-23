@@ -64,7 +64,7 @@ const FromMapStage = () => {
 
   return (
     <Box>
-      Переход на локацию:
+      Переход из локации:
       <Box>
         <Select
           defaultValue={stage?.mapId}

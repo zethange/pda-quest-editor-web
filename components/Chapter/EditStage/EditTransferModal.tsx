@@ -11,7 +11,10 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import CreateTransfer from "@/components/Chapter/EditStage/CreateTransfer/CreateTransfer";
-import { editTransferInStore } from "@/store/reduxStore/stageSlice";
+import {
+  deleteTransferInStore,
+  editTransferInStore,
+} from "@/store/reduxStore/stageSlice";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 
 interface IProps {
@@ -63,22 +66,35 @@ const EditTransferModal = ({
         </ModalBody>
         <ModalFooter>
           <Button
-            colorScheme="teal"
+            colorScheme="red"
             onClick={() => {
+              dispatch(
+                deleteTransferInStore(targetTransfer.indexTargetTransfer)
+              );
               updateStage(storeStage.id);
               setShowModalEditTransfer(false);
             }}
-            mr={2}
+            me={2}
           >
-            Сохранить
+            Удалить
           </Button>
           <Button
             colorScheme="teal"
             onClick={() => {
               setShowModalEditTransfer(false);
             }}
+            me={2}
           >
             Закрыть
+          </Button>
+          <Button
+            colorScheme="teal"
+            onClick={() => {
+              updateStage(storeStage.id);
+              setShowModalEditTransfer(false);
+            }}
+          >
+            Сохранить
           </Button>
         </ModalFooter>
       </ModalContent>

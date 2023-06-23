@@ -1,4 +1,5 @@
 import { pointType, spawnType } from "@/store/types/mapType";
+import { missionType } from "@/store/types/missionType";
 
 export type chapterType = {
   id: number;
@@ -6,6 +7,7 @@ export type chapterType = {
   stages: stageType[];
   points?: { [key: `${number}`]: pointType[] };
   spawns?: { [key: `${number}`]: spawnType[] };
+  mission?: missionType;
 };
 
 export type stageType = {

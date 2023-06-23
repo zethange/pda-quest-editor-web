@@ -1,5 +1,3 @@
-export type missionsType = missionsType[];
-
 export type missionType = {
   title: string;
   name: string;
@@ -9,6 +7,11 @@ export type missionType = {
 export type checkpointType = {
   title: string;
   parameter: string;
-  chapter: string;
-  stage: string;
+  type: ["FIND_ITEM", "KILL", "TRAVEL"];
+  condition: {
+    [key: string]: string[];
+  };
+  actions: {
+    [key: string]: string[];
+  };
 };

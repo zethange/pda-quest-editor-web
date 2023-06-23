@@ -175,7 +175,15 @@ export default function CreateParamEmpty({
               />
             )}
             {type === "item" && (
-              <Box p={1} my={1} borderRadius="10px" backgroundColor="gray.50">
+              <Box
+                p={1}
+                my={1}
+                borderRadius="10px"
+                backgroundColor="gray.50"
+                _dark={{
+                  backgroundColor: "gray.700",
+                }}
+              >
                 <Button
                   fontWeight="normal"
                   onClick={() => setTypeCreate(!typeCreate)}

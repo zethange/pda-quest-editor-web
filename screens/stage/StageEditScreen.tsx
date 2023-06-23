@@ -344,7 +344,6 @@ export default function StageEditScreen({
       if (stage.actions && stage.actions.add) {
         stage.actions.add.forEach((item) => {
           if (isNaN(Number(item.split(":")[0]))) {
-            console.log(item);
             parameters.push(item);
           }
         });
@@ -352,8 +351,8 @@ export default function StageEditScreen({
     });
     dispatch(setParameters(parameters));
 
-    if (initialNodes.length !== 0) setNodes(initialNodes);
-    if (initialEdges.length !== 0) setEdges(initialEdges);
+    setNodes(initialNodes);
+    setEdges(initialEdges);
   }, [chapter]);
 
   // передвижение node
@@ -462,7 +461,6 @@ export default function StageEditScreen({
       1,
       transitionFromMap.point
     );
-    console.log(chapterFromLocalStorage);
     if (transitionFromMap.mapId !== transitionFromMap.originalPoint.mapId) {
       const transitionIndex = chapterFromLocalStorage.points[
         transitionFromMap.originalPoint.mapId
@@ -477,7 +475,6 @@ export default function StageEditScreen({
         transitionFromMap.originalPoint.mapId
       ].splice(transitionIndex, 1);
     }
-    console.log(chapterFromLocalStorage);
 
     updateChapter(chapterFromLocalStorage, true);
   };
@@ -494,7 +491,7 @@ export default function StageEditScreen({
     );
 
     const updatedStageWithUpdatedPosition = {
-      ...storeStage,
+      ...storeRedux.getState().stage.stage,
       editor: {
         x:
           chapterFromLocalStorage.stages?.find(
@@ -514,6 +511,26 @@ export default function StageEditScreen({
     );
 
     updateChapter(chapterFromLocalStorage, true);
+  };
+
+  const deletePoint = () => {
+    const chapterFromLocalStorage =
+      path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+    const points =
+      chapterFromLocalStorage.points[
+        storeRedux.getState().stage.transitionFromMap.mapId
+      ];
+
+    const pointIndex = points.indexOf(
+      storeRedux.getState().stage.transitionFromMap.originalPoint
+    );
+    console.log(points, pointIndex);
+
+    points.splice(pointIndex, 1);
+    updateChapter(chapterFromLocalStorage, true);
+    dispatch(setStageToRedux(null));
+    setEditableStage(undefined);
+    dispatch(setTransition(null));
   };
 
   const onConnect = useCallback(
@@ -749,6 +766,7 @@ export default function StageEditScreen({
           editableStage={editableStage}
           updateStage={updateStage}
           deleteStage={deleteStage}
+          deletePoint={deletePoint}
           setEditableStage={setEditableStage}
           updateTransitionFromMap={updateTransitionFromMap}
         />

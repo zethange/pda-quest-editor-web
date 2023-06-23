@@ -46,7 +46,15 @@ const EditActionsRefactor: FC<Props> = ({ onChangeActions, actions }) => {
 
   return (
     <>
-      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
+      <Box
+        p={2}
+        my={2}
+        backgroundColor="gray.100"
+        _dark={{
+          backgroundColor: "gray.700",
+        }}
+        borderRadius="10px"
+      >
         <Box display="flex">
           <b>Действия:</b>
           <Spacer />
@@ -59,7 +67,15 @@ const EditActionsRefactor: FC<Props> = ({ onChangeActions, actions }) => {
           </Button>
         </Box>
         {showCreateMethod && (
-          <Box p={2} borderRadius="10px" backgroundColor="gray.50" my={1}>
+          <Box
+            p={2}
+            borderRadius="10px"
+            backgroundColor="gray.50"
+            _dark={{
+              backgroundColor: "gray.600",
+            }}
+            my={1}
+          >
             Создание новой команды:{" "}
             <Box display="flex" gap={1}>
               <Select
@@ -89,6 +105,9 @@ const EditActionsRefactor: FC<Props> = ({ onChangeActions, actions }) => {
               mt={1}
               p={2}
               backgroundColor="white"
+              _dark={{
+                backgroundColor: "gray.600",
+              }}
               borderRadius="10px"
               key={JSON.stringify(action)}
             >

@@ -64,6 +64,9 @@ const ConditionListRefactor: React.FC<Props> = ({
       </Box>
       <Box
         backgroundColor="gray.50"
+        _dark={{
+          backgroundColor: "gray.600",
+        }}
         p={2}
         borderRadius={5}
         display="grid"

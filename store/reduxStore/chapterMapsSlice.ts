@@ -1,10 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { mapType } from "@/store/types/mapType";
-
-interface ActionSetMaps {
-  payload: mapType;
-  type: string;
-}
 
 const mapsSlice = createSlice({
   name: "maps",
@@ -12,7 +7,7 @@ const mapsSlice = createSlice({
     maps: [],
   },
   reducers: {
-    setMaps: (state, action: ActionSetMaps) => {
+    setMaps: (state, action: PayloadAction<mapType>) => {
       // @ts-ignore
       state.maps.push(action.payload);
     },

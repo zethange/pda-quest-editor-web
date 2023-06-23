@@ -13,11 +13,13 @@ import {
 } from "@/store/reduxStore/stageSlice";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import EditMission from "../EditMission/EditMission";
 
 interface IProps {
   editableStage: stageType | undefined;
   updateStage: (stageId: number) => void;
   deleteStage: (stageId: number) => void;
+  deletePoint: () => void;
   setEditableStage: (stage: stageType | undefined) => void;
   updateTransitionFromMap: () => void;
 }
@@ -26,6 +28,7 @@ const EditStagePopover = ({
   editableStage,
   updateStage,
   deleteStage,
+  deletePoint,
   setEditableStage,
   updateTransitionFromMap,
 }: IProps) => {
@@ -48,6 +51,7 @@ const EditStagePopover = ({
           _dark={{
             backgroundColor: "gray.900",
             color: "white",
+            borderColor: "gray.900",
           }}
           position="absolute"
           right="0"
@@ -65,6 +69,9 @@ const EditStagePopover = ({
                 actions={storeStage?.actions}
                 onChangeActions={editActions}
               />
+            )}
+            {stageTypes(storeStage?.type_stage) === "default" && (
+              <EditMission />
             )}
           </Box>
           <Flex>
@@ -97,16 +104,20 @@ const EditStagePopover = ({
               Закрыть
             </Button>
             <Box m="auto" />
-            {!transitionFromMap && (
-              <Button
-                colorScheme="red"
-                size="md"
-                mt={2}
-                onClick={() => deleteStage(storeStage?.id)}
-              >
-                Удалить
-              </Button>
-            )}
+            <Button
+              colorScheme="red"
+              size="md"
+              mt={2}
+              onClick={() => {
+                if (!transitionFromMap) {
+                  deleteStage(storeStage?.id);
+                } else {
+                  deletePoint();
+                }
+              }}
+            >
+              Удалить
+            </Button>
           </Flex>
         </Box>
       )}

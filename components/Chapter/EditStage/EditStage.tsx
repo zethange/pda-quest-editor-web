@@ -90,7 +90,15 @@ export default function EditStage() {
           />
         </Box>
       </Box>
-      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
+      <Box
+        p={2}
+        my={2}
+        backgroundColor="gray.100"
+        _dark={{
+          backgroundColor: "gray.700",
+        }}
+        borderRadius="10px"
+      >
         <Flex mb={1} alignItems="center">
           <b>Тексты:</b>
           <Box m="auto" />
@@ -111,6 +119,9 @@ export default function EditStage() {
                 placeholder="Текст..."
                 defaultValue={text.text}
                 backgroundColor="white"
+                _dark={{
+                  backgroundColor: "gray.900",
+                }}
                 onClick={(event) => {
                   (event.target as HTMLTextAreaElement).style.height =
                     "inherit";
@@ -170,12 +181,23 @@ export default function EditStage() {
         openCondition={openCondition}
         setOpenCondition={setOpenCondition}
       />
-      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
+      <Box
+        p={2}
+        my={2}
+        backgroundColor="gray.100"
+        _dark={{
+          backgroundColor: "gray.700",
+        }}
+        borderRadius="10px"
+      >
         <b>Комментарий:</b>
         <Input
           defaultValue={storeStage?._comment}
           backgroundColor="white"
           placeholder="Комментарий..."
+          _dark={{
+            backgroundColor: "gray.900",
+          }}
           onChange={(event) => {
             dispatch(
               editStageInStore({
@@ -185,7 +207,15 @@ export default function EditStage() {
           }}
         />
       </Box>
-      <Box p={2} my={2} backgroundColor="gray.100" borderRadius="10px">
+      <Box
+        p={2}
+        my={2}
+        backgroundColor="gray.100"
+        _dark={{
+          backgroundColor: "gray.700",
+        }}
+        borderRadius="10px"
+      >
         <b>Сообщение:</b>
         <Box>
           Показывать сообщение:{" "}
@@ -205,6 +235,9 @@ export default function EditStage() {
               placeholder="Уведомление..."
               defaultValue={storeStage?.message}
               backgroundColor="white"
+              _dark={{
+                backgroundColor: "gray.900",
+              }}
               onClick={(event: any) => {
                 event.target.style.height = "inherit";
                 event.target.style.height = `${event.target.scrollHeight}px`;
