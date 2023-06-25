@@ -106,7 +106,7 @@ export default function EditStage() {
             size="xs"
             colorScheme="teal"
             onClick={() => {
-              dispatch(newTextInStore({}));
+              dispatch(newTextInStore());
             }}
           >
             +
