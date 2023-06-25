@@ -57,6 +57,7 @@ import { RootState } from "@/store/reduxStore";
 import { mapType, pointType } from "@/store/types/mapType";
 import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { setMissions } from "@/store/reduxStore/missionSlice";
 
 export default function StageEditScreen({
   path,
@@ -350,6 +351,9 @@ export default function StageEditScreen({
       }
     });
     dispatch(setParameters(parameters));
+    if (chapter?.mission) {
+      dispatch(setMissions(chapter.mission));
+    }
 
     setNodes(initialNodes);
     setEdges(initialEdges);

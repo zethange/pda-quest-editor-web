@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import "reactflow/dist/style.css";
 
-import StageScreen from "@/screens/stage/StageScreen";
+import StageScreen from "@/screens/StageScreen";
 
 export default function ChapterEditById() {
   const { query, isReady } = useRouter();

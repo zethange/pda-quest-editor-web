@@ -6,7 +6,7 @@ export function newChapter(id: string) {
         id: 0,
         type_stage: 0,
         background: "",
-        title: "...",
+        title: "",
         message: "",
         type_message: 0,
         texts: [
@@ -25,7 +25,7 @@ export function newChapter(id: string) {
     ],
     points: {},
     spawns: {},
-    mission: {},
+    mission: [],
   };
 }
 
@@ -48,12 +48,12 @@ export function newStage(
       id,
       type_stage: 0,
       background: "",
-      title: "Новая стадия",
+      title: "",
       message: "",
       type_message: 0,
       texts: [
         {
-          text: "...",
+          text: "",
           condition: {},
         },
       ],

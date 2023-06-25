@@ -18,6 +18,7 @@ interface Props {
   // TODO: какой ужас, any
   onChangeCondition: (type: any) => any;
   isPoint?: boolean;
+  customOnChange?: () => void;
 }
 
 const ConditionListRefactor: React.FC<Props> = ({
@@ -25,6 +26,7 @@ const ConditionListRefactor: React.FC<Props> = ({
   condition,
   onChangeCondition,
   isPoint,
+  customOnChange,
 }) => {
   const dispatch = useAppDispatch();
   const [showCreateMethod, setShowCreateMethod] = useState(false);
@@ -43,9 +45,12 @@ const ConditionListRefactor: React.FC<Props> = ({
 
   const onChange = () => {
     if (isPoint) {
-      dispatch(onChangeCondition({ condition: conditionList }));
-    } else {
       dispatch(onChangeCondition({ index, condition: conditionList }));
+    } else {
+      dispatch(onChangeCondition({ condition: conditionList }));
+    }
+    if (customOnChange) {
+      customOnChange();
     }
   };
 

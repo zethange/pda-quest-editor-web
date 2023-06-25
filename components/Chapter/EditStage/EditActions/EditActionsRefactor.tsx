@@ -17,9 +17,18 @@ interface Props {
     [key: string]: string[];
   };
   onChangeActions: (actions: any) => any;
+  indexRequired?: boolean;
+  index?: number;
+  customOnChange?: () => void;
 }
 
-const EditActionsRefactor: FC<Props> = ({ onChangeActions, actions }) => {
+const EditActionsRefactor: FC<Props> = ({
+  onChangeActions,
+  actions,
+  index,
+  indexRequired,
+  customOnChange,
+}) => {
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
@@ -36,7 +45,14 @@ const EditActionsRefactor: FC<Props> = ({ onChangeActions, actions }) => {
   const actionsEntry: [string, string[]][] = Object.entries(actionsList);
 
   const onChange = () => {
-    dispatch(onChangeActions(actionsList));
+    if (indexRequired) {
+      dispatch(onChangeActions({ index, actions: actionsList }));
+    } else {
+      dispatch(onChangeActions(actionsList));
+    }
+    if (customOnChange) {
+      customOnChange();
+    }
   };
 
   const newParamInMethod = (indexMethod: number, param: string) => {

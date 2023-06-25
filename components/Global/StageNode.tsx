@@ -40,7 +40,7 @@ export function NodeStage({
         isConnectable={isConnectable}
       />
       <button onClick={() => data.onClick()}>
-        <Text align="center">{data.label}</Text>
+        <Text align="center">{data.label || "Стадия без названия"}</Text>
         <small>
           {words?.substring(0, 30)}
           {words?.length > 30 && "..."}

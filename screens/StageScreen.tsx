@@ -14,7 +14,8 @@ import {
 
 import StageEditScreen from "@/screens/stage/StageEditScreen";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
-import MapScreen from "../map/MapScreen";
+import MapScreen from "./MapScreen";
+import MissionScreen from "@/screens/MissionScreen";
 
 const StageScreen = ({
   path,
@@ -38,6 +39,7 @@ const StageScreen = ({
         </Button>
         <Tab>Глава</Tab>
         <Tab>Карты</Tab>
+        <Tab>Миссии</Tab>
         <Spacer />
         <ChangeThemeButton rounded={false} />
       </TabList>
@@ -48,6 +50,9 @@ const StageScreen = ({
         </TabPanel>
         <TabPanel>
           <MapScreen path={path} isReady={isReady} />
+        </TabPanel>
+        <TabPanel>
+          <MissionScreen />
         </TabPanel>
       </TabPanels>
     </Tabs>

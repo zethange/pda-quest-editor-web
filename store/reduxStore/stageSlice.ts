@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { stageText, stageTransfer, stageType } from "@/store/types/types";
 import { pointType } from "@/store/types/mapType";
-import { missionType } from "../types/missionType";
 
 interface IOriginalPoint extends pointType {
   mapId: `${number}`;
@@ -30,7 +29,6 @@ interface IState {
     indexTargetText: number;
   };
   parameters: string[];
-  mission: missionType;
 }
 
 const initialState: IState = {
@@ -126,11 +124,6 @@ const initialState: IState = {
     },
   },
   parameters: [""],
-  mission: {
-    checkpoints: [],
-    name: "",
-    title: "",
-  },
 };
 
 const stageSlice = createSlice({
@@ -140,7 +133,7 @@ const stageSlice = createSlice({
     setStageToStore(state, action) {
       state.stage = action.payload;
     },
-    newTextInStore(state, action) {
+    newTextInStore(state) {
       if (state.stage.texts) {
         state.stage.texts.push({ text: "Новый текст", condition: {} });
       }
@@ -260,9 +253,6 @@ const stageSlice = createSlice({
     editActions(state, action) {
       state.stage.actions = action.payload;
     },
-    setMissionInStore(state, action) {
-      state.mission = { ...state.mission, ...action.payload };
-    },
   },
 });
 
@@ -292,7 +282,6 @@ export const {
   editActions,
   editStageInStore,
   deleteTransferInStore,
-  setMissionInStore,
 } = stageSlice.actions;
 
 export default stageSlice.reducer;

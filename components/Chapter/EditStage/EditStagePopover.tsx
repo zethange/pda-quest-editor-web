@@ -13,7 +13,6 @@ import {
 } from "@/store/reduxStore/stageSlice";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
-import EditMission from "../EditMission/EditMission";
 
 interface IProps {
   editableStage: stageType | undefined;
@@ -69,9 +68,6 @@ const EditStagePopover = ({
                 actions={storeStage?.actions}
                 onChangeActions={editActions}
               />
-            )}
-            {stageTypes(storeStage?.type_stage) === "default" && (
-              <EditMission />
             )}
           </Box>
           <Flex>

@@ -36,6 +36,11 @@ const TransferEdge: FC<EdgeProps> = ({
             p={1}
             fontSize="10px"
             borderRadius="5px"
+            style={{
+              pointerEvents: "all",
+            }}
+            cursor={"pointer"}
+            className="nopan"
           >
             <Box>
               {data.label}
