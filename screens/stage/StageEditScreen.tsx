@@ -679,8 +679,12 @@ export default function StageEditScreen({
             ...position,
           },
         };
-        if (!chapterFromLocalStorage.points) {
+        if (
+          !chapterFromLocalStorage.points ||
+          !chapterFromLocalStorage.points["0"]
+        ) {
           chapterFromLocalStorage.points = {
+            ...chapterFromLocalStorage.points!,
             "0": [],
           };
         }
@@ -724,6 +728,9 @@ export default function StageEditScreen({
           return stage.id === +query.stage;
         }
       });
+      dispatch(setTransition(null));
+      dispatch(setStageToRedux(null));
+      setEditableStage(undefined);
       setTimeout(() => {
         dispatch(setStageToRedux(stage));
         setEditableStage(stage);
