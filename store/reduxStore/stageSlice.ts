@@ -225,6 +225,12 @@ const stageSlice = createSlice({
     editPosInTransition(state, action) {
       state.transitionFromMap.point.pos = action.payload;
     },
+    editTransition(state, action) {
+      state.transitionFromMap.point = {
+        ...state.transitionFromMap.point,
+        ...action.payload,
+      };
+    },
     setTargetTransfer(state, action) {
       state.targetTransfer = action.payload;
     },
@@ -282,6 +288,7 @@ export const {
   editActions,
   editStageInStore,
   deleteTransferInStore,
+  editTransition,
 } = stageSlice.actions;
 
 export default stageSlice.reducer;

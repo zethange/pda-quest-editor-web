@@ -1,11 +1,17 @@
 import React, { useRef, useState } from "react";
 import { Box, Select } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
-import { mapApiType, mapType, pointType } from "@/store/types/mapType";
+import {
+  mapApiType,
+  mapType,
+  pointType,
+  typePoints,
+} from "@/store/types/mapType";
 import {
   editConditionInPoint,
   editMapIdInTransition,
   editPosInTransition,
+  editTransition,
 } from "@/store/reduxStore/stageSlice";
 import { useSelector } from "react-redux";
 import useFetching from "@/hooks/useFetching";
@@ -113,6 +119,21 @@ const FromMapStage = () => {
           />
         </Box>
       </Box>
+      <Select
+        mt={2}
+        defaultValue={String(stage?.point?.type)}
+        onChange={(e) => {
+          dispatch(
+            editTransition({
+              type: +e.target.value,
+            })
+          );
+        }}
+      >
+        {typePoints.map((type) => (
+          <option value={type[0]}>{type[1]}</option>
+        ))}
+      </Select>
       <p>Позиция: {stage?.point?.pos}</p>
       <ConditionListRefactor
         condition={stage.point.condition!}
