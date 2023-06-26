@@ -10,6 +10,7 @@ import querystring from "querystring";
 import dagre from "dagre";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
 import Stats from "stats.js";
+import useKeydown from "@buildinams/use-keydown";
 
 import ReactFlow, {
   applyNodeChanges,
@@ -738,6 +739,20 @@ export default function StageEditScreen({
       }, 0);
     }
   }, [isReady]);
+
+  useKeydown(["Delete"], () => {
+    if (storeRedux.getState().stage.stage) {
+      deleteStage(storeRedux.getState().stage.stage.id);
+    }
+    if (storeRedux.getState().stage.transitionFromMap) {
+      deletePoint();
+    }
+  });
+  useKeydown(["Escape"], () => {
+    dispatch(setTransition(null));
+    dispatch(setStageToRedux(null));
+    setEditableStage(undefined);
+  });
 
   return (
     <>
