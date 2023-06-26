@@ -688,6 +688,7 @@ export default function StageEditScreen({
             "0": [],
           };
         }
+
         const updatedChapter = {
           ...chapterFromLocalStorage,
           points: {
