@@ -2,7 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { stageText, stageTransfer, stageType } from "@/store/types/types";
 import { pointType } from "@/store/types/mapType";
 
-interface IOriginalPoint extends pointType {
+interface IOriginalPoint {
+  point: pointType;
   mapId: `${number}`;
 }
 
@@ -115,12 +116,14 @@ const initialState: IState = {
     },
     originalPoint: {
       mapId: "0",
-      data: { stage: "", chapter: "" },
-      id: "",
-      condition: {},
-      pos: "",
-      name: "",
-      type: 0,
+      point: {
+        data: { stage: "", chapter: "" },
+        id: "",
+        condition: {},
+        pos: "",
+        name: "",
+        type: 0,
+      },
     },
   },
   parameters: [""],

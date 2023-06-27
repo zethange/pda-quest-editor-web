@@ -458,14 +458,6 @@ export default function StageEditScreen({
     if (!chapterFromLocalStorage.points[transitionFromMap.mapId]) {
       chapterFromLocalStorage.points[transitionFromMap.mapId] = [];
     }
-    const transitionFromMapIndex = chapterFromLocalStorage.points[
-      transitionFromMap.mapId
-    ].indexOf(transitionFromMap.originalPoint);
-    chapterFromLocalStorage.points[transitionFromMap.mapId].splice(
-      transitionFromMapIndex,
-      1,
-      transitionFromMap.point
-    );
     if (transitionFromMap.mapId !== transitionFromMap.originalPoint.mapId) {
       const transitionIndex = chapterFromLocalStorage.points[
         transitionFromMap.originalPoint.mapId
@@ -473,12 +465,30 @@ export default function StageEditScreen({
         chapterFromLocalStorage.points[
           transitionFromMap.originalPoint.mapId
         ].find(
-          (point: pointType) => point.id === transitionFromMap.originalPoint.id
+          (point: pointType) =>
+            point.id === transitionFromMap.originalPoint.point.id
         )
       );
       chapterFromLocalStorage.points[
         transitionFromMap.originalPoint.mapId
       ].splice(transitionIndex, 1);
+      chapterFromLocalStorage.points[transitionFromMap.mapId].push(
+        transitionFromMap.point
+      );
+    } else {
+      const transitionIndex = chapterFromLocalStorage.points[
+        transitionFromMap.mapId
+      ].indexOf(
+        chapterFromLocalStorage.points[transitionFromMap.mapId].find(
+          (point: pointType) =>
+            point.id === transitionFromMap.originalPoint.point.id
+        )
+      );
+      chapterFromLocalStorage.points[transitionFromMap.mapId].splice(
+        transitionIndex,
+        1,
+        transitionFromMap.point
+      );
     }
 
     updateChapter(chapterFromLocalStorage, true);
@@ -709,8 +719,8 @@ export default function StageEditScreen({
               true,
               position,
               {
-                title: reduxStore.getState().stage.stage.title || "",
-                background: reduxStore.getState().stage.stage.background || "",
+                title: reduxStore.getState().stage.stage?.title || "",
+                background: reduxStore.getState().stage.stage?.background || "",
               }
             ),
           ],
