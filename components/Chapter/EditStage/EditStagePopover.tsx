@@ -6,13 +6,9 @@ import MapStage from "@/components/Chapter/EditStage/MapStage";
 import EditStage from "@/components/Chapter/EditStage/EditStage";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 import { stageType } from "@/store/types/types";
-import {
-  editActions,
-  setStageToStore,
-  setTransition,
-} from "@/store/reduxStore/stageSlice";
+import { editActions } from "@/store/reduxStore/stageSlice";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxHooks";
 
 interface IProps {
   editableStage: stageType | undefined;
@@ -35,7 +31,6 @@ const EditStagePopover = ({
   const transitionFromMap = useAppSelector(
     (state) => state.stage.transitionFromMap
   );
-  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -92,8 +87,6 @@ const EditStagePopover = ({
               mt={2}
               colorScheme="teal"
               onClick={() => {
-                dispatch(setStageToStore(null));
-                dispatch(setTransition(null));
                 setEditableStage(undefined);
               }}
             >

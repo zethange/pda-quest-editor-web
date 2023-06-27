@@ -54,7 +54,7 @@ import {
 } from "@/store/reduxStore/stageSlice";
 import { setMaps } from "@/store/reduxStore/chapterMapsSlice";
 import { Store } from "redux";
-import { RootState } from "@/store/reduxStore";
+import reduxStore, { RootState } from "@/store/reduxStore";
 import { mapType, pointType } from "@/store/types/mapType";
 import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
@@ -707,7 +707,11 @@ export default function StageEditScreen({
               type as "default" | "exit" | "chapterEnd",
               idLastStage + 1,
               true,
-              position
+              position,
+              {
+                title: reduxStore.getState().stage.stage.title || "",
+                background: reduxStore.getState().stage.stage.background || "",
+              }
             ),
           ],
         };
@@ -749,8 +753,6 @@ export default function StageEditScreen({
     }
   });
   useKeydown(["Escape"], () => {
-    dispatch(setTransition(null));
-    dispatch(setStageToRedux(null));
     setEditableStage(undefined);
   });
 

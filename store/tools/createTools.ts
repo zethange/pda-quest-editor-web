@@ -33,12 +33,17 @@ interface IPosition {
   x: number;
   y: number;
 }
+interface Props {
+  background: string;
+  title: string;
+}
 
 export function newStage(
   type: "default" | "exit" | "chapterEnd",
   id: number,
   customPosition: boolean = false,
-  data?: IPosition
+  data?: IPosition,
+  props?: Props
 ) {
   const position = customPosition
     ? data
@@ -47,8 +52,8 @@ export function newStage(
     return {
       id,
       type_stage: 0,
-      background: "",
-      title: "",
+      background: props?.background || "",
+      title: props?.title || "",
       message: "",
       type_message: 0,
       texts: [
