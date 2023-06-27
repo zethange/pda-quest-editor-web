@@ -190,7 +190,6 @@ export default function Home() {
       needs: [0],
       chapters,
       maps,
-      missions: [],
     };
     console.log(data);
     const res = await fetch(

@@ -15,6 +15,7 @@ export default function CreateTransfer({
       index={transferIndex}
       condition={storeStage?.transfers![transferIndex]?.condition}
       onChangeCondition={editConditionInTransfer}
+      isPoint
     />
   );
 }
