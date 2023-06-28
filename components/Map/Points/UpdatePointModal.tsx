@@ -14,7 +14,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { pointType } from "@/store/types/mapType";
-import { editPoint } from "@/store/reduxStore/mapSlice";
+import { deletePoint, editPoint } from "@/store/reduxStore/mapSlice";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 
@@ -129,6 +129,17 @@ const UpdatePointModal = ({
           </Box>
         </ModalBody>
         <ModalFooter>
+          <Button
+            onClick={() => {
+              dispatch(deletePoint());
+              setShowEditPointModal(false);
+              updateMap();
+            }}
+            mr={2}
+            colorScheme="red"
+          >
+            Удалить
+          </Button>
           <Button onClick={() => setShowEditPointModal(false)}>Закрыть</Button>
           <Button
             onClick={() => {

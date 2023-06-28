@@ -110,8 +110,15 @@ const mapSlice = createSlice({
     addPoint(state, action: PayloadAction<pointType>) {
       state.map.points?.push(action.payload);
     },
-    deletePoint(state, action: PayloadAction<number>) {
-      state.map.points?.splice(action.payload, 1);
+    deletePoint(state) {
+      const copyState = JSON.parse(JSON.stringify(state.map));
+      const openPoint = JSON.parse(JSON.stringify(state.openPoint));
+      const index = copyState.points.findIndex(
+        (point: pointType) =>
+          JSON.stringify(point) === JSON.stringify(openPoint)
+      );
+
+      state.map.points?.splice(index, 1);
     },
     editPoint(state, action) {
       const copyState = JSON.parse(JSON.stringify(state.map));

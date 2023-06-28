@@ -145,7 +145,7 @@ const MapChapter = () => {
     if (data !== "spawn") {
       dispatch(
         onPointCreate({
-          type: data,
+          type: +data,
           pos: `${position.x}:${position.y}`,
           name: "",
           data: { chapter: "", stage: "" },
