@@ -6,7 +6,12 @@ type data = {
   label: string;
   onClick: () => void;
   text: string;
-  actions: any;
+  actions: {
+    [key: string]: string[];
+  };
+  condition?: {
+    [key: string]: string[];
+  };
   _comment?: string;
 };
 
@@ -73,6 +78,25 @@ export function NodeStage({
             }
           )}
         </Box>
+        {data.condition && (
+          <Box display="grid" gap={1}>
+            {Object.entries(data.condition).map(
+              (condition: [string, unknown], index: number) => {
+                return (
+                  <SimpleGrid
+                    columns={(condition[1] as string[]).length > 1 ? 2 : 1}
+                    gap={1}
+                    key={index}
+                  >
+                    {(condition[1] as string[]).map((param: string) => {
+                      return <Badge colorScheme="red">{param}</Badge>;
+                    })}
+                  </SimpleGrid>
+                );
+              }
+            )}
+          </Box>
+        )}
       </button>
       <Handle
         type="source"

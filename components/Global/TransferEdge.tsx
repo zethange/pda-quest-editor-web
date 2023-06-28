@@ -50,10 +50,12 @@ const TransferEdge: FC<EdgeProps> = ({
                   Object.keys(data?.transfer?.condition).length !== 0 && (
                     <>
                       {Object.entries(data.transfer.condition).map(
-                        (condition: any) => {
-                          return condition[1].map((condition: string) => (
-                            <Badge colorScheme="red">{condition}</Badge>
-                          ));
+                        (condition: [string, unknown]) => {
+                          return (condition[1] as string[]).map(
+                            (condition: string) => (
+                              <Badge colorScheme="messenger">{condition}</Badge>
+                            )
+                          );
                         }
                       )}
                     </>

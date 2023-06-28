@@ -311,6 +311,7 @@ export default function StageEditScreen({
               },
               id: point.id,
               actions: {},
+              condition: point.condition,
             },
             position: point.editor
               ? { x: point.editor.x as number, y: point.editor.y as number }
