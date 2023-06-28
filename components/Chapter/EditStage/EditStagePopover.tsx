@@ -65,7 +65,7 @@ const EditStagePopover = ({
               <MapStage data={storeStage?.data} />
             )}
             {stageTypes(storeStage?.type_stage) === "default" && <EditStage />}
-            {storeStage?.actions && (
+            {stageTypes(storeStage?.type_stage) === "default" && (
               <EditActionsRefactor
                 actions={storeStage?.actions}
                 onChangeActions={editActions}

@@ -13,7 +13,7 @@ import { lua } from "@codemirror/legacy-modes/mode/lua";
 import { useAppDispatch } from "@/store/reduxHooks";
 
 interface Props {
-  actions: {
+  actions?: {
     [key: string]: string[];
   };
   onChangeActions: (actions: any) => any;
