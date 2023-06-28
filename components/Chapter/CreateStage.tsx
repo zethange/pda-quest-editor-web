@@ -22,7 +22,7 @@ const CreateStage = ({ onDragStart }: IProps) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button borderRadius={0} fontWeight={1}>
+        <Button fontWeight="normal" size="sm">
           Создать стадию
         </Button>
       </PopoverTrigger>

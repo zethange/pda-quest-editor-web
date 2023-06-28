@@ -29,11 +29,12 @@ const StageScreen = ({
   console.log(path);
   return (
     <Tabs position="relative">
-      <TabList>
+      <TabList alignItems="center">
         <Button
-          borderRadius="none"
-          fontWeight="10px"
+          fontWeight="normal"
           onClick={() => history.go(-1)}
+          size="sm"
+          ml={1}
         >
           Назад
         </Button>

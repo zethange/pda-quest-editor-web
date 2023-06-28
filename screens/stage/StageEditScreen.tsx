@@ -9,7 +9,6 @@ import store from "store2";
 import querystring from "querystring";
 import dagre from "dagre";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
-import Stats from "stats.js";
 import useKeydown from "@buildinams/use-keydown";
 
 import ReactFlow, {
@@ -20,16 +19,10 @@ import ReactFlow, {
   MarkerType,
   MiniMap,
   Node,
+  ReactFlowProvider,
 } from "reactflow";
 
-import {
-  Box,
-  Button,
-  Checkbox,
-  Spacer,
-  Text,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Box, Button, Spacer, Text, useColorMode } from "@chakra-ui/react";
 
 import "reactflow/dist/style.css";
 import { newStage } from "@/store/tools/createTools";
@@ -163,7 +156,7 @@ export default function StageEditScreen({
   };
 
   const onLayout = useCallback(
-    (direction: "TB" | "LB") => {
+    (direction: "TB" | "LR") => {
       const { nodes: layoutedNodes, edges: layoutedEdges } =
         getLayoutedElements(nodes as any[], edges as any[], direction);
 
@@ -621,27 +614,6 @@ export default function StageEditScreen({
   const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
   const edgeTypes = useMemo(() => ({ custom: TransferEdge }), []);
 
-  const [showFps, setShowFps] = useState(false);
-  useEffect(() => {
-    const stats = new Stats();
-    stats.showPanel(0);
-    if (showFps) {
-      stats.dom.id = "fpsMeter";
-      document.body.appendChild(stats.dom);
-
-      const animate = () => {
-        stats.begin();
-        stats.end();
-        requestAnimationFrame(animate);
-      };
-
-      requestAnimationFrame(animate);
-    } else {
-      const fpsMeter = document.getElementById("fpsMeter");
-      if (fpsMeter) document.body.removeChild(fpsMeter);
-    }
-  }, [showFps]);
-
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
@@ -750,6 +722,8 @@ export default function StageEditScreen({
       setTimeout(() => {
         dispatch(setStageToRedux(stage));
         setEditableStage(stage);
+
+        focusOnTheNode(query.stage as string);
       }, 0);
     }
   }, [isReady]);
@@ -766,12 +740,21 @@ export default function StageEditScreen({
     setEditableStage(undefined);
   });
 
+  const focusOnTheNode = (nodeId: string) => {
+    const targetNode = nodes?.find((node) => node.id === nodeId);
+
+    const x = targetNode?.position?.x! + targetNode?.width! / 2;
+    const y = targetNode?.position?.y! + targetNode?.height! / 2;
+    const zoom = 1.85;
+    reactFlowInstance.setCenter(x, y, { zoom, duration: 1000 });
+  };
+
   return (
     <>
       <CustomHead title={"Редактирование главы " + chapter?.id} />
       <Box
         display="flex"
-        p={0}
+        p={1}
         gap={2}
         borderBottom="1px"
         alignItems="center"
@@ -784,20 +767,21 @@ export default function StageEditScreen({
         <Text>Глава {chapter?.id}</Text>
         <Spacer />
         {chapter && (
-          <ToStage setEditableStage={setEditableStage} chapter={chapter} />
+          <ToStage
+            setEditableStage={setEditableStage}
+            chapter={chapter}
+            focusOnTheNode={focusOnTheNode}
+          />
         )}
         <Button
           onClick={() => {
             onLayout("TB");
           }}
           fontWeight="normal"
-          borderRadius={0}
+          size="sm"
         >
           Сортировка
         </Button>
-        <Checkbox onChange={() => setShowFps(!showFps)} mr={1}>
-          Счётчик ФПС
-        </Checkbox>
       </Box>
       <Box h="calc(100vh - 83px)">
         {/* Штука для редактирования стадий */}
@@ -810,28 +794,31 @@ export default function StageEditScreen({
           updateTransitionFromMap={updateTransitionFromMap}
         />
         <Box ref={reactFlowWrapper} height="100%">
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgeClick={onEdgesClick}
-            onConnect={onConnect}
-            nodeTypes={nodeTypes}
-            onDrop={onDrop as () => void}
-            onDragOver={onDragOver}
-            onInit={setReactFlowInstance}
-            edgeTypes={edgeTypes}
-            fitView
-          >
-            <MiniMap zoomable pannable />
-            <Controls />
-            <Background
-              color={colorMode === "light" ? "#000000" : "#ffffff"}
-              style={{
-                backgroundColor: colorMode === "light" ? "#f5f5f5" : "#1e293b",
-              }}
-            />
-          </ReactFlow>
+          <ReactFlowProvider>
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgeClick={onEdgesClick}
+              onConnect={onConnect}
+              nodeTypes={nodeTypes}
+              onDrop={onDrop as () => void}
+              onDragOver={onDragOver}
+              onInit={setReactFlowInstance}
+              edgeTypes={edgeTypes}
+              fitView
+            >
+              <MiniMap zoomable pannable />
+              <Controls />
+              <Background
+                color={colorMode === "light" ? "#000000" : "#ffffff"}
+                style={{
+                  backgroundColor:
+                    colorMode === "light" ? "#f5f5f5" : "#1e293b",
+                }}
+              />
+            </ReactFlow>
+          </ReactFlowProvider>
         </Box>
 
         <CreateTransferModal

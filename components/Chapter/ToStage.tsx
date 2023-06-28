@@ -14,22 +14,23 @@ import {
 } from "@chakra-ui/react";
 import { chapterType, stageType } from "@/store/types/types";
 import { useDispatch } from "react-redux";
-import { setStageToStore } from "@/store/reduxStore/stageSlice";
+import { setStageToStore, setTransition } from "@/store/reduxStore/stageSlice";
 
 interface IProps {
   setEditableStage: (stage: stageType | undefined) => void;
   chapter: chapterType;
+  focusOnTheNode: (nodeId: string) => void;
 }
 
-const ToStage = ({ setEditableStage, chapter }: IProps) => {
+const ToStage = ({ setEditableStage, chapter, focusOnTheNode }: IProps) => {
   const [selectedStage, setSelectedStage] = useState<number>(0);
   const dispatch = useDispatch();
 
   return (
-    <Box px={2} display="flex" alignItems="center" gap={1}>
+    <Box display="flex" alignItems="center" gap={1}>
       <Popover>
         <PopoverTrigger>
-          <Button borderRadius={0} fontWeight={1}>
+          <Button size="sm" fontWeight="normal">
             Открыть стадию
           </Button>
         </PopoverTrigger>
@@ -51,6 +52,7 @@ const ToStage = ({ setEditableStage, chapter }: IProps) => {
                   fontWeight="normal"
                   onClick={() => {
                     dispatch(setStageToStore(null));
+                    dispatch(setTransition(null));
                     setEditableStage(undefined);
                     const stage = chapter.stages.find(
                       (stage: stageType) => stage.id === selectedStage
@@ -59,6 +61,7 @@ const ToStage = ({ setEditableStage, chapter }: IProps) => {
                       dispatch(setStageToStore(stage));
                       setEditableStage(stage || undefined);
                     }, 0);
+                    focusOnTheNode(`${stage?.id}`);
                   }}
                 >
                   Перейти к стадии

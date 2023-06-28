@@ -38,10 +38,11 @@ const EditStagePopover = ({
     <>
       {editableStage && (
         <Box
+          resize="horizontal"
           zIndex="1"
           p={5}
           w={450}
-          borderLeft="2px"
+          borderLeft="1px"
           borderColor="gray.200"
           backgroundColor="white"
           _dark={{

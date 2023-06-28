@@ -10,9 +10,10 @@ const ChangeThemeButton = ({ rounded }: Props) => {
 
   return (
     <Button
-      borderRadius={rounded ? "md" : 0}
       fontWeight="normal"
       onClick={() => toggleColorMode()}
+      size={rounded ? "md" : "sm"}
+      mr={rounded ? 0 : 1}
     >
       Сменить тему
     </Button>
