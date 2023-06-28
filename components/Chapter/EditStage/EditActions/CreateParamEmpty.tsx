@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import useFetching from "@/hooks/useFetching";
 import CodeMirror from "@uiw/react-codemirror";
 import { groupItem } from "@/store/utils/groupItem";
@@ -6,6 +6,13 @@ import { StreamLanguage } from "@codemirror/language";
 import { lua } from "@codemirror/legacy-modes/mode/lua";
 import { itemsContainerType, itemType } from "@/store/types/itemsType";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
+import { useAppSelector } from "@/store/reduxHooks";
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList,
+} from "@choc-ui/chakra-autocomplete";
 
 type Props = {
   indexAction: any;
@@ -20,14 +27,37 @@ function Empty({
   newParam,
   newParamInMethod,
 }: any) {
+  const parameters = useAppSelector((state) => state.stage.parameters);
+
   return (
     <Box display="flex" gap={1} mb={1}>
-      <Input
-        placeholder="Параметр..."
-        required={true}
-        defaultValue={""}
-        onChange={(event) => onChangeNewParam(event.target.value)}
-      />
+      <AutoComplete
+        openOnFocus
+        value={newParam}
+        onChange={(value) => {
+          onChangeNewParam(value);
+        }}
+      >
+        <AutoCompleteInput
+          placeholder="Параметер"
+          variant="outline"
+          value={newParam}
+          onChange={(event) => {
+            onChangeNewParam(event.target.value);
+          }}
+        />
+        <AutoCompleteList>
+          {parameters.map((parameter, index) => (
+            <AutoCompleteItem
+              key={index}
+              value={parameter}
+              textTransform="none"
+            >
+              {parameter}
+            </AutoCompleteItem>
+          ))}
+        </AutoCompleteList>
+      </AutoComplete>
       <Button
         fontWeight="normal"
         onClick={() => {

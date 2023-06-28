@@ -28,7 +28,7 @@ const StageScreen = ({
 }) => {
   console.log(path);
   return (
-    <Tabs position="relative">
+    <Tabs position="relative" isLazy>
       <TabList alignItems="center">
         <Button
           fontWeight="normal"

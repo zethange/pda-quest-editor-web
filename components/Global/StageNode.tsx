@@ -53,21 +53,25 @@ export function NodeStage({
           </Box>
         )}
         <Box display="grid" gap={1}>
-          {Object.entries(data.actions).map((action: any, index: number) => {
-            return (
-              action[0] === "add" && (
+          {Object.entries(data.actions).map(
+            (action: [string, unknown], index: number) => {
+              return (
                 <SimpleGrid
-                  columns={action[1].length > 1 ? 2 : 1}
+                  columns={(action[1] as string[]).length > 1 ? 2 : 1}
                   gap={1}
                   key={index}
                 >
-                  {action[1].map((param: string) => (
-                    <Badge colorScheme="green">{param}</Badge>
-                  ))}
+                  {(action[1] as string[]).map((param: string) => {
+                    if (action[0] === "add") {
+                      return <Badge colorScheme="green">{param}</Badge>;
+                    } else if (action[0] === "remove") {
+                      return <Badge colorScheme="red">{param}</Badge>;
+                    }
+                  })}
                 </SimpleGrid>
-              )
-            );
-          })}
+              );
+            }
+          )}
         </Box>
       </button>
       <Handle
