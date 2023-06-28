@@ -49,7 +49,7 @@ export default function EditStage() {
             url(${background})
           `}
         backgroundRepeat="no-repeat"
-        backgroundSize="408px"
+        backgroundSize="440px"
         backgroundPosition="center top"
         border={!storeStage?.background ? "1px solid" : "0 solid"}
         borderColor="gray.100"

@@ -38,9 +38,8 @@ const EditStagePopover = ({
     <>
       {editableStage && (
         <Box
-          resize="horizontal"
           zIndex="1"
-          p={5}
+          p={2}
           w={450}
           borderLeft="1px"
           borderColor="gray.200"
@@ -54,8 +53,13 @@ const EditStagePopover = ({
           right="0"
           bottom="0"
         >
-          {/* Панель редактирования */}
-          <Box h="calc(100vh - 171px)" overflowY="scroll">
+          <Box h="calc(100vh - 147px)" overflowY="scroll">
+            {stageTypes(storeStage?.type_stage) === "default" && (
+              <Text color="gray.500">
+                id: {storeStage.id}, {query.chapter![0]}:{query.chapter![1]}:
+                {storeStage.id}
+              </Text>
+            )}
             {transitionFromMap && <FromMapStage />}
             {stageTypes(storeStage?.type_stage) === "map" && (
               <MapStage data={storeStage?.data} />
@@ -66,12 +70,6 @@ const EditStagePopover = ({
                 actions={storeStage?.actions}
                 onChangeActions={editActions}
               />
-            )}
-            {stageTypes(storeStage?.type_stage) === "default" && (
-              <Text color="gray.500">
-                id: {storeStage.id}, {query.chapter![0]}:{query.chapter![1]}:
-                {storeStage.id}
-              </Text>
             )}
           </Box>
           <Flex>
