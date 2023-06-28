@@ -23,11 +23,13 @@ import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import {
   deleteSpawn,
   editActionsSpawn,
+  editDataSpawn,
   editSpawn,
 } from "@/store/reduxStore/mapSlice";
 import { groups, strength } from "@/store/utils/groupItem";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
+import SpawnParameters from "@/components/Map/Spawns/SpawnParameters";
 
 interface Props {
   showEditSpawn: boolean;
@@ -169,13 +171,20 @@ const EditSpawnModal: React.FC<Props> = ({
             />
           </FormControl>
           {map && (
-            <FormControl>
-              <FormLabel>Действия</FormLabel>
-              <EditActionsRefactor
-                actions={map.spawns![openSpawnIndex]?.actions!}
-                onChangeActions={editActionsSpawn}
-              />
-            </FormControl>
+            <>
+              <FormControl>
+                <EditActionsRefactor
+                  actions={map.spawns![openSpawnIndex]?.actions!}
+                  onChangeActions={editActionsSpawn}
+                />
+              </FormControl>
+              <FormControl>
+                <SpawnParameters
+                  spawnParameters={map.spawns![openSpawnIndex]?.data!}
+                  onChangeParameters={editDataSpawn}
+                />
+              </FormControl>
+            </>
           )}
           <ConditionListRefactor
             condition={map.spawns![openSpawnIndex]?.condition!}

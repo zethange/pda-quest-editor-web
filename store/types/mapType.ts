@@ -51,6 +51,9 @@ export type spawnType = {
   pos: string;
   title?: string;
   description?: string;
+  data?: {
+    [key: string]: string[];
+  };
   actions?: {
     [key: string]: string[];
   };
