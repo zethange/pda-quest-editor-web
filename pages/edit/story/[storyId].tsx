@@ -12,6 +12,7 @@ import {
   Card,
   Flex,
   Heading,
+  Icon,
   Input,
   Menu,
   MenuButton,
@@ -23,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { chapterType } from "@/store/types/types";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 export default function storyId() {
   const { query, isReady } = useRouter();
@@ -39,16 +41,11 @@ export default function storyId() {
   }, [isReady]);
 
   const createChapter = () => {
-    store.set(
-      `story_${storyId}_chapter_${chapters.length}`,
-      newChapter(chapters.length)
-    );
-    setChapters((chapters: any) => [...chapters, newChapter(chapters.length)]);
+    let newId =
+      Math.max(...chapters.map((chapter: chapterType) => +chapter.id)) + 1;
 
-    console.log(`Создание главы в истории ${storyId}`, [
-      ...chapters,
-      newChapter(chapters.length),
-    ]);
+    store.set(`story_${storyId}_chapter_${newId}`, newChapter(String(newId)));
+    setChapters((chapters: any) => [...chapters, newChapter(String(newId))]);
   };
 
   const deleteChapter = (id: number) => {
@@ -88,12 +85,8 @@ export default function storyId() {
 
   const updateTitleChapter = (chapterId: number, newTitle: string) => {
     const chapter = store.get(`story_${storyId}_chapter_${chapterId}`);
-    const index = chapters.indexOf(chapter);
     chapter.title = newTitle;
     store.set(`story_${storyId}_chapter_${chapterId}`, chapter);
-    const chaptersCopy = JSON.parse(JSON.stringify(chapters));
-    chaptersCopy.splice(index, 1, chapter);
-    setChapters(chaptersCopy);
   };
 
   return (
@@ -139,48 +132,52 @@ export default function storyId() {
                     </>
                   )) || (
                     <Heading _dark={{ color: "white" }} as="h4" size="md">
-                      Глава {chapter?.id}
+                      Глава {chapter.id}
                     </Heading>
                   )}
                   <Text _dark={{ color: "white" }}>
                     Количество стадий: {chapter?.stages?.length}
                   </Text>
-                  <Text>
+                  <Text _dark={{ color: "white" }}>
                     Количество точек:{" "}
                     {Object.values(chapter?.points!).flat().length}
                   </Text>
-                  <Text>
+                  <Text _dark={{ color: "white" }}>
                     Количество спавнов:{" "}
                     {Object.values(chapter?.spawns!).flat().length}
                   </Text>
                 </Link>
-                <Menu>
-                  <MenuButton as={Button}>...</MenuButton>
-                  <MenuList>
-                    <VStack px={2}>
-                      <Button
-                        onClick={() => downloadAsFile(chapter?.id)}
-                        w="100%"
-                      >
-                        Скачать
-                      </Button>
-                      <Button
-                        onClick={() => deleteChapter(chapter?.id)}
-                        colorScheme="red"
-                        w="100%"
-                      >
-                        Удалить
-                      </Button>
-                      <Input
-                        placeholder="Название главы..."
-                        onChange={(e) => {
-                          updateTitleChapter(chapter.id, e.target.value);
-                        }}
-                      />
-                    </VStack>
-                  </MenuList>
-                </Menu>
-                <Flex gap={2}></Flex>
+                <Flex>
+                  <Menu>
+                    <MenuButton as={Button}>
+                      <Icon as={BsThreeDotsVertical} mt={1} />
+                    </MenuButton>
+                    <MenuList>
+                      <VStack px={2}>
+                        <Button
+                          onClick={() => downloadAsFile(chapter?.id)}
+                          w="100%"
+                        >
+                          Скачать
+                        </Button>
+                        <Button
+                          onClick={() => deleteChapter(chapter?.id)}
+                          colorScheme="red"
+                          w="100%"
+                        >
+                          Удалить
+                        </Button>
+                        <Input
+                          placeholder="Название главы..."
+                          defaultValue={chapter.title}
+                          onChange={(e) => {
+                            updateTitleChapter(chapter.id, e.target.value);
+                          }}
+                        />
+                      </VStack>
+                    </MenuList>
+                  </Menu>
+                </Flex>
               </Card>
             ))}
           </SimpleGrid>
