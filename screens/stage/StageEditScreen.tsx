@@ -347,7 +347,13 @@ export default function StageEditScreen({
     });
     dispatch(setParameters(parameters));
     if (chapter?.mission) {
-      dispatch(setMissions(chapter.mission));
+      chapter.missions = chapter.mission;
+      delete chapter.mission;
+      updateChapter(chapter, true);
+    }
+
+    if (chapter?.missions) {
+      dispatch(setMissions(chapter.missions));
     }
 
     setNodes(initialNodes);

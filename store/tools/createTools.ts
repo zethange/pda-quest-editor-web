@@ -25,7 +25,7 @@ export function newChapter(id: string) {
     ],
     points: {},
     spawns: {},
-    mission: [],
+    missions: [],
   };
 }
 

@@ -7,6 +7,7 @@ export type chapterType = {
   stages: stageType[];
   points?: { [key: `${number}`]: pointType[] };
   spawns?: { [key: `${number}`]: spawnType[] };
+  missions?: missionType[];
   mission?: missionType[];
 };
 

@@ -21,7 +21,7 @@ const MissionScreen: React.FC<Props> = () => {
     const sourceChapter = store.get(key);
     store.set(key, {
       ...sourceChapter,
-      mission: storeRedux.getState().mission.missions,
+      missions: storeRedux.getState().mission.missions,
     });
   };
 
