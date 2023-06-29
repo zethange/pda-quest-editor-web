@@ -45,6 +45,7 @@ const EditActionsRefactor: FC<Props> = ({
   const actionsEntry: [string, string[]][] = Object.entries(actionsList);
 
   const onChange = () => {
+    console.log(actionsList);
     if (indexRequired) {
       dispatch(onChangeActions({ index, actions: actionsList }));
     } else {
@@ -96,6 +97,7 @@ const EditActionsRefactor: FC<Props> = ({
             <Box display="flex" gap={1}>
               <Select
                 size="md"
+                value={method}
                 onChange={(event) => setMethod(event.target.value)}
               >
                 {commands.map((command) => (
@@ -105,8 +107,9 @@ const EditActionsRefactor: FC<Props> = ({
               <Button
                 colorScheme="teal"
                 onClick={() => {
-                  actionsList[method] = ["новый_параметр"];
+                  actionsList[method] = [];
                   onChange();
+                  setMethod("add");
                   setShowCreateMethod(false);
                 }}
               >

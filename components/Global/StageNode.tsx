@@ -53,7 +53,7 @@ export function NodeStage({
         {data._comment && (
           <Box>
             <Badge fontSize="10px" colorScheme="gray">
-              {"# " + data._comment.substring(0, 10) + "..."}
+              {"# " + data._comment.substring(0, 30) + "..."}
             </Badge>
           </Box>
         )}
