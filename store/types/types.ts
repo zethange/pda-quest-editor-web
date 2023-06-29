@@ -3,6 +3,7 @@ import { missionType } from "@/store/types/missionType";
 
 export type chapterType = {
   id: number;
+  title?: string;
   music?: string[];
   stages: stageType[];
   points?: { [key: `${number}`]: pointType[] };
