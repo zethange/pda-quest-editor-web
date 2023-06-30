@@ -44,6 +44,10 @@ export default function storyId() {
     let newId =
       Math.max(...chapters.map((chapter: chapterType) => +chapter.id)) + 1;
 
+    if (newId === -Infinity) {
+      newId = 0;
+    }
+
     store.set(`story_${storyId}_chapter_${newId}`, newChapter(String(newId)));
     setChapters((chapters: any) => [...chapters, newChapter(String(newId))]);
   };
