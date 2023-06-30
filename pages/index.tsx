@@ -62,12 +62,13 @@ export default function Home() {
   const toast = useToast();
 
   useEffect(() => {
-    store.each((key: string, value: string) => {
-      if (key.includes("info")) {
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      const value = store.get(key);
+      if (key?.includes("info")) {
         setStories((stories: any) => [...stories, value]);
       }
-      if (key === "stopLoop") return false;
-    });
+    }
   }, []);
 
   function createStory(): void {
@@ -91,14 +92,16 @@ export default function Home() {
     };
 
     const arrChapters: any[] = [];
-    store.each((key: string, value: any) => {
-      if (key.includes(`story_${story_id}_chapter`)) {
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      const value = store.get(key);
+      if (key?.includes(`story_${story_id}_chapter`)) {
         arrChapters.push({
-          name: `chapter_${key.split("_")[3]}.json`,
+          name: `chapter_${key?.split("_")[3]}.json`,
           lastModified: new Date(),
           input: JSON.stringify(value, null, 2),
         });
-      } else if (key.includes(`story_${story_id}_map`)) {
+      } else if (key?.includes(`story_${story_id}_map`)) {
         arrChapters.push({
           name: `maps/${value.id}_${
             value?.tmx?.split(".")[0] || undefined
@@ -107,8 +110,7 @@ export default function Home() {
           input: JSON.stringify(value, null, 2),
         });
       }
-      if (key === "stopLoop") return false;
-    });
+    }
 
     const blob = await downloadZip([info, ...arrChapters]).blob();
     const link = document.createElement("a");
@@ -201,15 +203,17 @@ export default function Home() {
 
     let chapters: chapterType[] = [];
     let maps: mapType[] = [];
-    store.each(async (key: string, value: chapterType | mapType) => {
-      if (key.includes(`story_${storyId}_chapter`)) {
-        chapters.push(value as chapterType);
+
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      const value = localStorage.getItem(key!);
+      if (key?.includes(`story_${storyId}_chapter`)) {
+        chapters.push(value as unknown as chapterType);
       }
-      if (key.includes(`story_${storyId}_map`)) {
-        maps.push(value as mapType);
+      if (key?.includes(`story_${storyId}_map`)) {
+        maps.push(value as unknown as mapType);
       }
-      if (key === "stopLoop") return false;
-    });
+    }
 
     const data = {
       ...info,
