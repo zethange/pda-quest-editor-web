@@ -170,11 +170,14 @@ export default function Home() {
     setStories(storiesCopy);
     if (editStory.id !== openEditStoryId) {
       const requriedUpdate: [string, string][] = [];
-      store.each(async (key: string) => {
+
+      store.each((key: string) => {
+        console.log("key:", key);
         if (
           key.includes(`story_${openEditStoryId}_chapter`) ||
           key.includes(`story_${openEditStoryId}_map`)
         ) {
+          console.log("storyKey:", key);
           const keySplit = key.split("_");
           keySplit[1] = String(editStory.id);
           requriedUpdate.push([key, keySplit.join("_")]);
@@ -185,6 +188,7 @@ export default function Home() {
         }
         if (key === "stopLoop") return false;
       });
+      console.log(requriedUpdate);
       requriedUpdate.forEach((chapter) => {
         store.set(chapter[1], store.get(chapter[0]));
         store.remove(chapter[0]);
@@ -294,10 +298,15 @@ export default function Home() {
   };
 
   const deleteStory = (storyId: number) => {
+    const storyItems: string[] = [];
     store.each(async (key: string) => {
       if (key.includes(`story_${storyId}`)) {
-        store.remove(key);
+        storyItems.push(key);
       }
+    });
+
+    storyItems.forEach((storyKey) => {
+      store.remove(storyKey);
     });
     setStories(stories.filter((story) => story.id !== editStory.id));
   };
@@ -324,10 +333,14 @@ export default function Home() {
           <Button
             fontWeight="normal"
             onClick={() => {
+              const requiredStoryKey: string[] = [];
               store.each(async (key: string) => {
                 if (key.includes(`story`)) {
-                  store.remove(key);
+                  requiredStoryKey.push(key);
                 }
+              });
+              requiredStoryKey.forEach((key) => {
+                store.remove(key);
               });
               window.location.reload();
             }}
