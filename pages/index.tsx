@@ -171,24 +171,22 @@ export default function Home() {
     if (editStory.id !== openEditStoryId) {
       const requriedUpdate: [string, string][] = [];
 
-      store.each((key: string) => {
-        console.log("key:", key);
+      for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
         if (
-          key.includes(`story_${openEditStoryId}_chapter`) ||
-          key.includes(`story_${openEditStoryId}_map`)
+          key?.includes(`story_${openEditStoryId}_chapter`) ||
+          key?.includes(`story_${openEditStoryId}_map`)
         ) {
           console.log("storyKey:", key);
-          const keySplit = key.split("_");
+          const keySplit = key?.split("_");
           keySplit[1] = String(editStory.id);
-          requriedUpdate.push([key, keySplit.join("_")]);
+          requriedUpdate.push([key!, keySplit.join("_")]);
         }
         if (key === `story_${openEditStoryId}_info`) {
           store.set(`story_${editStory?.id}_info`, editStory);
           store.remove(`story_${openEditStoryId}_info`);
         }
-        if (key === "stopLoop") return false;
-      });
-      console.log(requriedUpdate);
+      }
       requriedUpdate.forEach((chapter) => {
         store.set(chapter[1], store.get(chapter[0]));
         store.remove(chapter[0]);
@@ -299,11 +297,12 @@ export default function Home() {
 
   const deleteStory = (storyId: number) => {
     const storyItems: string[] = [];
-    store.each(async (key: string) => {
-      if (key.includes(`story_${storyId}`)) {
-        storyItems.push(key);
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      if (key?.includes(`story_${storyId}`)) {
+        storyItems.push(key!);
       }
-    });
+    }
 
     storyItems.forEach((storyKey) => {
       store.remove(storyKey);
@@ -334,11 +333,12 @@ export default function Home() {
             fontWeight="normal"
             onClick={() => {
               const requiredStoryKey: string[] = [];
-              store.each(async (key: string) => {
-                if (key.includes(`story`)) {
-                  requiredStoryKey.push(key);
+              for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key?.includes(`story`)) {
+                  requiredStoryKey.push(key!);
                 }
-              });
+              }
               requiredStoryKey.forEach((key) => {
                 store.remove(key);
               });
