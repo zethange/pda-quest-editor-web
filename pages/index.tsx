@@ -48,6 +48,7 @@ export default function Home() {
   const [editStory, setEditStory] = useState<any>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openStoryId, setOpenStoryId] = useState<number>(0);
+  const [openEditStoryId, setOpenEditStoryId] = useState<number>(0);
   const {
     isOpen: modalIsOpen,
     onOpen: modalOnOpen,
@@ -73,7 +74,7 @@ export default function Home() {
     const infoJSON = {
       id: stories.length,
       title: `Новая история ${stories.length}`,
-      desc: "Новая история, новая... Да кароче...",
+      desc: "Описание",
       icon: `story/freeplay/screen/${Math.round(Math.random() * 40)}.jpg`,
       access: "USER",
     };
@@ -167,6 +168,29 @@ export default function Home() {
     );
     storiesCopy.splice(indexEditedStory, 1, editStory);
     setStories(storiesCopy);
+    if (editStory.id !== openEditStoryId) {
+      const requriedUpdate: [string, string][] = [];
+      store.each(async (key: string) => {
+        if (
+          key.includes(`story_${openEditStoryId}_chapter`) ||
+          key.includes(`story_${openEditStoryId}_map`)
+        ) {
+          const keySplit = key.split("_");
+          keySplit[1] = String(editStory.id);
+          requriedUpdate.push([key, keySplit.join("_")]);
+        }
+        if (key === `story_${openEditStoryId}_info`) {
+          store.set(`story_${editStory?.id}_info`, editStory);
+          store.remove(`story_${openEditStoryId}_info`);
+        }
+        if (key === "stopLoop") return false;
+      });
+      requriedUpdate.forEach((chapter) => {
+        store.set(chapter[1], store.get(chapter[0]));
+        store.remove(chapter[0]);
+      });
+      return;
+    }
     store.set(`story_${editStory?.id}_info`, editStory);
   };
 
@@ -175,7 +199,7 @@ export default function Home() {
 
     let chapters: chapterType[] = [];
     let maps: mapType[] = [];
-    await store.each(async (key: string, value: chapterType | mapType) => {
+    store.each(async (key: string, value: chapterType | mapType) => {
       if (key.includes(`story_${storyId}_chapter`)) {
         chapters.push(value as chapterType);
       }
@@ -208,13 +232,13 @@ export default function Home() {
     if (dataRes.code === 200) {
       toast({
         colorScheme: "green",
-        title: "Сервер сказал что всё чики-брики",
+        title: "История отправлена успешно, statusCode: 200",
         description: dataRes.description,
       });
     } else {
       toast({
         colorScheme: "red",
-        title: `Ну всё пипец, сервер послал ${dataRes.code} ответ`,
+        title: "Произошла ошибка, подробнее в devtools",
         description: dataRes.description,
       });
     }
@@ -269,6 +293,15 @@ export default function Home() {
     setStories([...stories, data]);
   };
 
+  const deleteStory = (storyId: number) => {
+    store.each(async (key: string) => {
+      if (key.includes(`story_${storyId}`)) {
+        store.remove(key);
+      }
+    });
+    setStories(stories.filter((story) => story.id !== editStory.id));
+  };
+
   return (
     <>
       <CustomHead title="Редактор историй" />
@@ -291,7 +324,11 @@ export default function Home() {
           <Button
             fontWeight="normal"
             onClick={() => {
-              localStorage.clear();
+              store.each(async (key: string) => {
+                if (key.includes(`story`)) {
+                  store.remove(key);
+                }
+              });
               window.location.reload();
             }}
           >
@@ -349,6 +386,7 @@ export default function Home() {
                   </Button>
                   <Button
                     onClick={() => {
+                      setOpenEditStoryId(story.id);
                       onOpen();
                       setEditStory(story);
                     }}
@@ -424,7 +462,6 @@ export default function Home() {
           <DrawerHeader borderBottomWidth="1px">
             Редактирование истории {editStory?.id}
           </DrawerHeader>
-
           <DrawerBody>
             <Box display="grid" gap={2}>
               <Box>
@@ -433,7 +470,14 @@ export default function Home() {
                   defaultValue={editStory?.id}
                   placeholder="ID истории..."
                   type="number"
-                  readOnly={true}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEditStory((story: storyType) => {
+                      return {
+                        ...story,
+                        id: +e.target.value,
+                      };
+                    })
+                  }
                 />
               </Box>
 
@@ -508,6 +552,16 @@ export default function Home() {
           </DrawerBody>
 
           <DrawerFooter borderTopWidth="1px">
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={() => {
+                onClose();
+                deleteStory(editStory?.id);
+              }}
+            >
+              Удалить
+            </Button>
             <Button variant="outline" mr={3} onClick={onClose}>
               Закрыть
             </Button>
