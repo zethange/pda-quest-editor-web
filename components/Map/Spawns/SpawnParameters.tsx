@@ -52,7 +52,14 @@ const SpawnParameters: React.FC<Props> = ({
   };
 
   return (
-    <Box p={2} backgroundColor="gray.100" borderRadius="10px">
+    <Box
+      p={2}
+      backgroundColor="gray.100"
+      _dark={{
+        backgroundColor: "gray.600",
+      }}
+      borderRadius="10px"
+    >
       <Flex>
         <Text>Параметры спавна</Text>
         <Spacer />
@@ -90,7 +97,7 @@ const SpawnParameters: React.FC<Props> = ({
           </Button>
         </Box>
       )}
-      <Box mt={1} display="grid" gap={1}>
+      <Box mt={spawnEntry.length === 0 ? 0 : 1} display="grid" gap={1}>
         {spawnEntry.map((parameter) => {
           return (
             <Flex gap={1}>

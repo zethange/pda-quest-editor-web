@@ -15,8 +15,9 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
       setShowAuthModal(true);
     } else {
       fetch("/api/check/auth", {
-        method: "POST",
-        body: localStorage.getItem("token"),
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("token")}`,
+        },
       }).then((res) => res.text());
     }
   }, [isLoading]);

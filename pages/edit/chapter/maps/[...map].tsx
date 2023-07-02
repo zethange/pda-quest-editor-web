@@ -72,7 +72,7 @@ const MapChapter = () => {
 
   // опции
   const [showQuestPoints, setShowQuestPoints] = useState(true);
-  const [showSpawns, setShowSpawns] = useState(false);
+  const [showSpawns, setShowSpawns] = useState(true);
 
   const [background, setBackground] = useState("");
 
