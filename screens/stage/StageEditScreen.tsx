@@ -613,7 +613,9 @@ export default function StageEditScreen({
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
     const indexStage = chapterFromLocalStorage?.stages?.indexOf(
-      chapterFromLocalStorage?.stages?.find((stage: any) => stage.id === id)
+      chapterFromLocalStorage?.stages?.find(
+        (stage: stageType) => stage.id === id
+      )
     );
 
     chapterFromLocalStorage?.stages?.splice(indexStage, 1);

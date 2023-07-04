@@ -30,7 +30,7 @@ export default function storyId() {
   const { query, isReady } = useRouter();
   const storyId = query.storyId as string;
 
-  const [chapters, setChapters] = useState<chapterType[] | any>([]);
+  const [chapters, setChapters] = useState<chapterType[]>([]);
 
   useEffect(() => {
     store.each((key, value) => {

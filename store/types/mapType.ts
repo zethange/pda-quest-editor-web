@@ -1,5 +1,3 @@
-import { conditionType } from "@/store/types/types";
-
 export type mapType = {
   id: string;
   title: string;
@@ -22,7 +20,9 @@ export type pointType = {
     chapter: string;
     stage: string;
   };
-  condition?: conditionType;
+  condition?: {
+    [key: string]: string[];
+  };
   editor?: {
     x?: number;
     y?: number;

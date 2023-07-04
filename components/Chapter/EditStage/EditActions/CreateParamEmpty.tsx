@@ -15,7 +15,7 @@ import {
 } from "@choc-ui/chakra-autocomplete";
 
 type Props = {
-  indexAction: any;
+  indexAction: number;
   type: string;
   newParamInMethod: (indexMethod: number, param: string) => void;
 };

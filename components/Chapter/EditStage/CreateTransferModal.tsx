@@ -50,16 +50,20 @@ const CreateTransferModal = ({
           <Textarea
             placeholder="Введите текст..."
             defaultValue={connectionInfo?.targetTransfer?.text}
-            onClick={(event: any) => {
-              event.target.style.height = "inherit";
-              event.target.style.height = `${event.target.scrollHeight}px`;
+            onClick={(event) => {
+              (event.target as HTMLTextAreaElement).style.height = "inherit";
+              (event.target as HTMLTextAreaElement).style.height = `${
+                (event.target as HTMLTextAreaElement).scrollHeight
+              }px`;
             }}
-            onInput={(event: any) => {
-              event.target.style.height = "inherit";
-              event.target.style.height = `${event.target.scrollHeight}px`;
+            onInput={(event) => {
+              (event.target as HTMLTextAreaElement).style.height = "inherit";
+              (event.target as HTMLTextAreaElement).style.height = `${
+                (event.target as HTMLTextAreaElement).scrollHeight
+              }px`;
               dispatch(
                 newTransferInStore({
-                  text: event.target.value,
+                  text: (event.target as HTMLTextAreaElement).value,
                   stage: connectionInfo?.target,
                   condition: {},
                 })

@@ -79,7 +79,7 @@ const mapSlice = createSlice({
     setOpenSpawn(state, action: PayloadAction<ISetOpenStage>) {
       state.openSpawn = action.payload;
     },
-    editSpawn(state, action: PayloadAction<pointType | any>) {
+    editSpawn(state, action: PayloadAction<spawnType>) {
       const updatedSpawn = {
         ...state.map.spawns![state.openSpawn.openSpawnIndex],
         ...action.payload,
@@ -87,7 +87,10 @@ const mapSlice = createSlice({
       console.log(updatedSpawn, action.payload);
       state.map.spawns?.splice(state.openSpawn.openSpawnIndex, 1, updatedSpawn);
     },
-    editActionsSpawn(state, action: PayloadAction<pointType | any>) {
+    editActionsSpawn(
+      state,
+      action: PayloadAction<{ [key: string]: string[] }>
+    ) {
       const updatedSpawn = {
         ...state.map.spawns![state.openSpawn.openSpawnIndex],
         actions: action.payload,

@@ -254,7 +254,10 @@ const stageSlice = createSlice({
       state.stage.texts![+index].condition = condition;
     },
     // CONDITION_POINT
-    editConditionInPoint(state, action) {
+    editConditionInPoint(
+      state,
+      action: PayloadAction<{ condition: { [key: string]: string[] } }>
+    ) {
       const { condition } = action.payload;
       state.transitionFromMap.point.condition = condition;
     },

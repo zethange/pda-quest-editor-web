@@ -13,7 +13,6 @@ import {
   editPosInTransition,
   editTransition,
 } from "@/store/reduxStore/stageSlice";
-import { useSelector } from "react-redux";
 import useFetching from "@/hooks/useFetching";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
 
@@ -27,9 +26,7 @@ export interface IFromMapStage {
 const FromMapStage = () => {
   const dispatch = useAppDispatch();
   const maps: mapType[] = useAppSelector((state) => state.maps.maps);
-  const stage: IFromMapStage = useSelector(
-    (state: any) => state.stage.transitionFromMap
-  );
+  const stage = useAppSelector((state) => state.stage.transitionFromMap);
   const map: mapType | undefined = maps.find((map: mapType) => {
     return +map.id === +stage?.mapId;
   });

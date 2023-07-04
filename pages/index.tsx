@@ -42,10 +42,19 @@ import { storyType } from "@/store/types/storyType";
 import { chapterType } from "@/store/types/types";
 import { mapType } from "@/store/types/mapType";
 
+interface StoryFromServer {
+  id: number;
+  title: string;
+  desc: string;
+  icon: string;
+}
+
 export default function Home() {
   const [stories, setStories] = useState<storyType[]>([]);
-  const [storiesFromServer, setStoriesFromServer] = useState<any>([]);
-  const [editStory, setEditStory] = useState<any>();
+  const [storiesFromServer, setStoriesFromServer] = useState<StoryFromServer[]>(
+    []
+  );
+  const [editStory, setEditStory] = useState<storyType>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openStoryId, setOpenStoryId] = useState<number>(0);
   const [openEditStoryId, setOpenEditStoryId] = useState<number>(0);
@@ -66,7 +75,7 @@ export default function Home() {
       let key = localStorage.key(i);
       const value = store.get(key);
       if (key?.includes("info")) {
-        setStories((stories: any) => [...stories, value]);
+        setStories([...stories, value]);
       }
     }
   }, []);
@@ -80,7 +89,7 @@ export default function Home() {
       access: "USER",
     };
 
-    setStories((stories: any) => [...stories, infoJSON]);
+    setStories([...stories, infoJSON]);
     store.set(`story_${stories.length}_info`, infoJSON);
   }
 
@@ -121,26 +130,24 @@ export default function Home() {
   }
 
   const uploadStoryFromFolder = async (e: ChangeEvent<HTMLInputElement>) => {
-    const files: any[] = [...(e.target.files as unknown as any[])];
+    const files: File[] = [...(e.target.files as unknown as File[])];
 
+    console.log(files);
     let idStory: number;
 
-    const infoFile: any = files.filter(
-      (file: any) => file.name === "info.json"
-    )[0];
+    const infoFile: File = files.find(
+      (file: File) => file.name === "info.json"
+    )!;
 
     const fileBase = new FileReader();
     fileBase.readAsText(infoFile);
     fileBase.onload = () => {
       idStory = Number(JSON.parse(fileBase.result as string).id);
-      setStories((stories: any) => [
-        ...stories,
-        JSON.parse(fileBase.result as string),
-      ]);
+      setStories([...stories, JSON.parse(fileBase.result as string)]);
       store.set(`story_${idStory}_info`, JSON.parse(fileBase.result as string));
     };
 
-    files.map((file: any) => {
+    files.map((file: File) => {
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.onload = () => {
@@ -166,11 +173,11 @@ export default function Home() {
   const saveUpdatedStory = () => {
     const storiesCopy = JSON.parse(JSON.stringify(stories));
     const indexEditedStory = storiesCopy.indexOf(
-      storiesCopy.find((story: storyType) => story.id === editStory.id)
+      storiesCopy.find((story: storyType) => story.id === editStory?.id)
     );
     storiesCopy.splice(indexEditedStory, 1, editStory);
     setStories(storiesCopy);
-    if (editStory.id !== openEditStoryId) {
+    if (editStory?.id !== openEditStoryId) {
       const requriedUpdate: [string, string][] = [];
 
       for (let i = 0; i < localStorage.length; i++) {
@@ -181,7 +188,7 @@ export default function Home() {
         ) {
           console.log("storyKey:", key);
           const keySplit = key?.split("_");
-          keySplit[1] = String(editStory.id);
+          keySplit[1] = String(editStory?.id);
           requriedUpdate.push([key!, keySplit.join("_")]);
         }
         if (key === `story_${openEditStoryId}_info`) {
@@ -311,7 +318,7 @@ export default function Home() {
     storyItems.forEach((storyKey) => {
       store.remove(storyKey);
     });
-    setStories(stories.filter((story) => story.id !== editStory.id));
+    setStories(stories.filter((story) => story.id !== editStory?.id));
   };
 
   return (
@@ -358,7 +365,7 @@ export default function Home() {
           backgroundColor="blackAlpha.50"
         >
           <SimpleGrid columns={5} spacing={2} p={2}>
-            {stories.map((story: any) => (
+            {stories.map((story: storyType) => (
               <Card
                 key={story?.id}
                 border="1px"
@@ -396,7 +403,6 @@ export default function Home() {
                     onClick={() => {
                       modalOnOpen();
                       setOpenStoryId(story.id);
-                      //uploadStoryToServer(story.id);
                     }}
                   >
                     <Icon as={BsCloudUpload} />
@@ -456,7 +462,7 @@ export default function Home() {
           <ModalCloseButton />
           <ModalBody>
             <VStack>
-              {storiesFromServer.map((story: any) => (
+              {storiesFromServer.map((story: StoryFromServer) => (
                 <Button
                   w="100%"
                   onClick={() => {
@@ -488,11 +494,9 @@ export default function Home() {
                   placeholder="ID истории..."
                   type="number"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEditStory((story: storyType) => {
-                      return {
-                        ...story,
-                        id: +e.target.value,
-                      };
+                    setEditStory({
+                      ...editStory!,
+                      id: +e.target.value,
                     })
                   }
                 />
@@ -504,11 +508,9 @@ export default function Home() {
                   defaultValue={editStory?.title}
                   placeholder="Название истории..."
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEditStory((story: storyType) => {
-                      return {
-                        ...story,
-                        title: e.target.value,
-                      };
+                    setEditStory({
+                      ...editStory!,
+                      title: e.target.value,
                     })
                   }
                 />
@@ -520,11 +522,9 @@ export default function Home() {
                   defaultValue={editStory?.desc}
                   placeholder="Описание истории..."
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    setEditStory((story: storyType) => {
-                      return {
-                        ...story,
-                        desc: e.target.value,
-                      };
+                    setEditStory({
+                      ...editStory!,
+                      desc: e.target.value,
                     })
                   }
                 />
@@ -536,11 +536,9 @@ export default function Home() {
                   placeholder="Иконка истории..."
                   defaultValue={editStory?.icon}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEditStory((story: storyType) => {
-                      return {
-                        ...story,
-                        icon: e.target.value,
-                      };
+                    setEditStory({
+                      ...editStory!,
+                      icon: e.target.value,
                     })
                   }
                 />
@@ -551,11 +549,9 @@ export default function Home() {
                 <Select
                   defaultValue={editStory?.access}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    setEditStory((story: storyType) => {
-                      return {
-                        ...story,
-                        access: e.target.value,
-                      };
+                    setEditStory({
+                      ...editStory!,
+                      access: e.target.value,
                     })
                   }
                 >
@@ -567,14 +563,13 @@ export default function Home() {
               </Box>
             </Box>
           </DrawerBody>
-
           <DrawerFooter borderTopWidth="1px">
             <Button
               colorScheme="red"
               mr={3}
               onClick={() => {
                 onClose();
-                deleteStory(editStory?.id);
+                deleteStory(editStory?.id as number);
               }}
             >
               Удалить

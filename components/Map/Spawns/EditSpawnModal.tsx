@@ -27,9 +27,12 @@ import {
   editSpawn,
 } from "@/store/reduxStore/mapSlice";
 import { groups, strength } from "@/store/utils/groupItem";
-import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
+import ConditionListRefactor, {
+  TypeOnChangeCondition,
+} from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 import SpawnParameters from "@/components/Map/Spawns/SpawnParameters";
+import { spawnType } from "@/store/types/mapType";
 
 interface Props {
   showEditSpawn: boolean;
@@ -67,7 +70,7 @@ const EditSpawnModal: React.FC<Props> = ({
                 dispatch(
                   editSpawn({
                     title: event.target.value,
-                  })
+                  } as spawnType)
                 );
               }}
             />
@@ -80,7 +83,7 @@ const EditSpawnModal: React.FC<Props> = ({
                 dispatch(
                   editSpawn({
                     description: event.target.value,
-                  })
+                  } as spawnType)
                 );
               }}
             />
@@ -93,7 +96,7 @@ const EditSpawnModal: React.FC<Props> = ({
                 dispatch(
                   editSpawn({
                     group: event.target.value,
-                  })
+                  } as spawnType)
                 );
               }}
             >
@@ -110,7 +113,7 @@ const EditSpawnModal: React.FC<Props> = ({
                 dispatch(
                   editSpawn({
                     strength: event.target.value,
-                  })
+                  } as spawnType)
                 );
               }}
             >
@@ -127,7 +130,7 @@ const EditSpawnModal: React.FC<Props> = ({
                 dispatch(
                   editSpawn({
                     n: String(value),
-                  })
+                  } as spawnType)
                 );
               }}
             >
@@ -146,7 +149,7 @@ const EditSpawnModal: React.FC<Props> = ({
                 dispatch(
                   editSpawn({
                     r: String(value),
-                  })
+                  } as spawnType)
                 );
               }}
             >
@@ -165,7 +168,7 @@ const EditSpawnModal: React.FC<Props> = ({
                 dispatch(
                   editSpawn({
                     pos: event.target.value,
-                  })
+                  } as spawnType)
                 );
               }}
             />
@@ -188,7 +191,7 @@ const EditSpawnModal: React.FC<Props> = ({
           )}
           <ConditionListRefactor
             condition={map.spawns![openSpawnIndex]?.condition!}
-            onChangeCondition={editSpawn}
+            onChangeCondition={editSpawn as unknown as TypeOnChangeCondition}
           />
         </ModalBody>
         <ModalFooter>

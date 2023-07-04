@@ -117,7 +117,7 @@ const missionSlice = createSlice({
     editConditionInCheckpoint(
       state,
       action: PayloadAction<{
-        index: number;
+        index?: number;
         condition: { [key: string]: string[] };
       }>
     ) {
@@ -125,7 +125,7 @@ const missionSlice = createSlice({
         JSON.stringify(state.targetMission.targetMission)
       );
       console.log(targetMission, action.payload);
-      targetMission.checkpoints[action.payload.index].condition =
+      targetMission.checkpoints[action.payload.index!].condition =
         action.payload.condition;
       state.missions[state.targetMission.targetMissionIndex] = targetMission;
       state.targetMission.targetMission = targetMission;

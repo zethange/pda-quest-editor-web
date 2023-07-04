@@ -30,14 +30,14 @@ const CreatePointModal = ({
 }: IProps) => {
   const dispatch = useAppDispatch();
   const initialPoint = useAppSelector((state) => state.map.newPoint);
-  const [newPoint, setNewPoint] = useState<pointType | any>({});
+  const [newPoint, setNewPoint] = useState<pointType>();
 
   useEffect(() => {
     setNewPoint(initialPoint);
   }, [showCreatePointModal]);
 
   const savePoint = () => {
-    console.log(dispatch(addPoint(newPoint)));
+    console.log(dispatch(addPoint(newPoint!)));
     console.log("point:", newPoint);
     updateMap();
   };
@@ -56,19 +56,19 @@ const CreatePointModal = ({
           <Box display="grid" gap={2}>
             <FormControl>
               <FormLabel>Тип точки:</FormLabel>
-              <Input required value={newPoint.type} readOnly />
+              <Input required value={newPoint?.type} readOnly />
             </FormControl>
             <FormControl>
               <FormLabel>Позиция:</FormLabel>
-              <Input required value={newPoint.pos} readOnly />
+              <Input required value={newPoint?.pos} readOnly />
             </FormControl>
             <FormControl>
               <FormLabel>Название точки:</FormLabel>
               <Input
                 required
-                value={newPoint.name}
+                value={newPoint?.name}
                 onChange={(e) =>
-                  setNewPoint({ ...newPoint, name: e.target.value })
+                  setNewPoint({ ...newPoint!, name: e.target.value })
                 }
               />
             </FormControl>
@@ -87,7 +87,7 @@ const CreatePointModal = ({
                   type="number"
                   onChange={(e) =>
                     setNewPoint({
-                      ...newPoint,
+                      ...newPoint!,
                       data: {
                         chapter: e.target.value,
                         stage: newPoint?.data?.stage || "",
@@ -104,7 +104,7 @@ const CreatePointModal = ({
                   type="number"
                   onChange={(e) =>
                     setNewPoint({
-                      ...newPoint,
+                      ...newPoint!,
                       data: {
                         chapter: newPoint?.data?.chapter || "",
                         stage: e.target.value,
