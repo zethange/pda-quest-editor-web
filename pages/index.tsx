@@ -41,6 +41,7 @@ import { BsCloudUpload } from "react-icons/bs";
 import { storyType } from "@/store/types/storyType";
 import { chapterType } from "@/store/types/types";
 import { mapType } from "@/store/types/mapType";
+import JSZip from "jszip";
 
 interface StoryFromServer {
   id: number;
@@ -321,6 +322,48 @@ export default function Home() {
     setStories(stories.filter((story) => story.id !== editStory?.id));
   };
 
+  const uploadStoryFromZip = (e: ChangeEvent<HTMLInputElement>) => {
+    const zipFile = e.target.files![0];
+    console.log(zipFile);
+    const zip = new JSZip();
+    let newStoryId = Math.max(...stories.map((story) => story.id)) + 1;
+    if (newStoryId === -Infinity) newStoryId = 0;
+
+    console.log(newStoryId);
+    zip
+      .loadAsync(zipFile)
+      .then(function (zip) {
+        zip.forEach(function (relativePath, zipEntry) {
+          if (!zipEntry.dir) {
+            zipEntry.async("string").then(function (fileData) {
+              const data = JSON.parse(fileData);
+              if (relativePath.includes("info")) {
+                const story = {
+                  ...data,
+                  id: newStoryId,
+                };
+                setStories([...stories, story]);
+                store.set(`story_${newStoryId}_info`, story);
+              } else if (relativePath.includes("chapter")) {
+                store.set(
+                  `story_${newStoryId}_chapter_${(data as chapterType).id}`,
+                  data
+                );
+              } else if (relativePath.includes("maps")) {
+                store.set(
+                  `story_${newStoryId}_maps_${(data as mapType).id}`,
+                  data
+                );
+              }
+            });
+          }
+        });
+      })
+      .catch(function (error) {
+        console.error("Ошибка при распаковке ZIP-файла:", error);
+      });
+  };
+
   return (
     <>
       <CustomHead title="Редактор историй" />
@@ -335,6 +378,12 @@ export default function Home() {
           <Button fontWeight="normal" onClick={() => createStory()}>
             Создать историю
           </Button>
+          <input
+            type="file"
+            id="input"
+            accept="application/zip"
+            onChange={(e) => uploadStoryFromZip(e)}
+          />
           <Spacer />
           <ChangeThemeButton rounded={true} />
           <Button fontWeight="normal" onClick={() => downloadStoryFromServer()}>
