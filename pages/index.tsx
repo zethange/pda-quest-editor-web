@@ -16,6 +16,8 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Icon,
@@ -59,6 +61,8 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openStoryId, setOpenStoryId] = useState<number>(0);
   const [openEditStoryId, setOpenEditStoryId] = useState<number>(0);
+
+  const [isErrorId, setIsErrorId] = useState(false);
   const {
     isOpen: modalIsOpen,
     onOpen: modalOnOpen,
@@ -72,18 +76,26 @@ export default function Home() {
   const toast = useToast();
 
   useEffect(() => {
+    let neededStories: storyType[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       let key = localStorage.key(i);
       const value = store.get(key);
       if (key?.includes("info")) {
-        setStories([...stories, value]);
+        console.log(key, value);
+        neededStories.push(value as storyType);
       }
     }
+    setStories(neededStories);
   }, []);
 
   function createStory(): void {
+    let newStoryId = Math.max(...stories.map((story) => story.id)) + 1;
+    if (newStoryId === -Infinity) {
+      newStoryId = 0;
+    }
+    console.log(newStoryId);
     const infoJSON = {
-      id: stories.length,
+      id: newStoryId,
       title: `Новая история ${stories.length}`,
       desc: "Описание",
       icon: `story/freeplay/screen/${Math.round(Math.random() * 40)}.jpg`,
@@ -91,7 +103,7 @@ export default function Home() {
     };
 
     setStories([...stories, infoJSON]);
-    store.set(`story_${stories.length}_info`, infoJSON);
+    store.set(`story_${newStoryId}_info`, infoJSON);
   }
 
   async function downloadStory(story_id: number) {
@@ -319,7 +331,7 @@ export default function Home() {
     storyItems.forEach((storyKey) => {
       store.remove(storyKey);
     });
-    setStories(stories.filter((story) => story.id !== editStory?.id));
+    setStories(stories.filter((story) => story.id !== openStoryId));
   };
 
   const uploadStoryFromZip = (e: ChangeEvent<HTMLInputElement>) => {
@@ -362,6 +374,17 @@ export default function Home() {
       .catch(function (error) {
         console.error("Ошибка при распаковке ZIP-файла:", error);
       });
+  };
+
+  const checkUniqueId = (storyId: number, openEditStoryId: number) => {
+    const allIds = stories.map((story) => story.id);
+    const exists = allIds.indexOf(storyId) !== -1;
+
+    if (exists && storyId === openEditStoryId) {
+      setIsErrorId(false);
+    } else {
+      setIsErrorId(exists);
+    }
   };
 
   return (
@@ -536,21 +559,24 @@ export default function Home() {
           </DrawerHeader>
           <DrawerBody>
             <Box display="grid" gap={2}>
-              <Box>
+              <FormControl isInvalid={isErrorId}>
                 <FormLabel>ID</FormLabel>
                 <Input
                   defaultValue={editStory?.id}
                   placeholder="ID истории..."
                   type="number"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    checkUniqueId(+e.target.value, openEditStoryId);
                     setEditStory({
                       ...editStory!,
                       id: +e.target.value,
-                    })
-                  }
+                    });
+                  }}
                 />
-              </Box>
-
+                <FormErrorMessage>
+                  История с таким ID уже существует
+                </FormErrorMessage>
+              </FormControl>
               <Box>
                 <FormLabel>Название</FormLabel>
                 <Input
@@ -564,7 +590,6 @@ export default function Home() {
                   }
                 />
               </Box>
-
               <Box>
                 <FormLabel>Описание</FormLabel>
                 <Textarea
@@ -578,7 +603,6 @@ export default function Home() {
                   }
                 />
               </Box>
-
               <Box>
                 <FormLabel>Иконка</FormLabel>
                 <Input
@@ -592,7 +616,6 @@ export default function Home() {
                   }
                 />
               </Box>
-
               <Box>
                 <FormLabel>Уровень доступа</FormLabel>
                 <Select
@@ -618,7 +641,7 @@ export default function Home() {
               mr={3}
               onClick={() => {
                 onClose();
-                deleteStory(editStory?.id as number);
+                deleteStory(openEditStoryId as number);
               }}
             >
               Удалить
@@ -629,8 +652,10 @@ export default function Home() {
             <Button
               colorScheme="teal"
               onClick={() => {
-                saveUpdatedStory();
-                onClose();
+                if (!isErrorId) {
+                  saveUpdatedStory();
+                  onClose();
+                }
               }}
             >
               Сохранить
