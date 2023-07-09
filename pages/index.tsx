@@ -225,13 +225,13 @@ export default function Home() {
     let maps: mapType[] = [];
 
     for (let i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
+      let key = localStorage.key(i) as string;
       const value = localStorage.getItem(key!);
       if (key?.includes(`story_${storyId}_chapter`)) {
-        chapters.push(value as unknown as chapterType);
+        chapters.push(JSON.parse(value as string) as unknown as chapterType);
       }
       if (key?.includes(`story_${storyId}_map`)) {
-        maps.push(value as unknown as mapType);
+        maps.push(JSON.parse(value as string) as unknown as mapType);
       }
     }
 
