@@ -101,7 +101,11 @@ const EditActionsRefactor: FC<Props> = ({
                 onChange={(event) => setMethod(event.target.value)}
               >
                 {commands.map((command) => (
-                  <option value={command[0]}>{command[1]}</option>
+                  <optgroup label={command.title}>
+                    {command.commands.map((command) => (
+                      <option value={command[0]}>{command[1]}</option>
+                    ))}
+                  </optgroup>
                 ))}
               </Select>
               <Button

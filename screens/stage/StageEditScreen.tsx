@@ -33,7 +33,7 @@ import TransferEdge from "@/components/Global/TransferEdge";
 import { stageName } from "@/store/utils/stageName";
 import ToStage from "@/components/Chapter/ToStage";
 import CreateStage from "@/components/Chapter/CreateStage";
-import CreateTransferModal from "@/components/Chapter/EditStage/CreateTransferModal";
+import CreateTransferModal from "@/components/Chapter/EditStage/CreateTransfer/CreateTransferModal";
 import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal";
 import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
 import { useStore } from "react-redux";
