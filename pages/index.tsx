@@ -331,7 +331,7 @@ export default function Home() {
     storyItems.forEach((storyKey) => {
       store.remove(storyKey);
     });
-    setStories(stories.filter((story) => story.id !== openStoryId));
+    location.reload();
   };
 
   const uploadStoryFromZip = (e: ChangeEvent<HTMLInputElement>) => {
