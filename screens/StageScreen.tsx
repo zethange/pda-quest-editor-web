@@ -26,9 +26,8 @@ const StageScreen = ({
   query: querystring.ParsedUrlQuery;
   isReady: boolean;
 }) => {
-  console.log(path);
   return (
-    <Tabs position="relative" isLazy>
+    <Tabs position="relative">
       <TabList alignItems="center">
         <Button
           fontWeight="normal"
