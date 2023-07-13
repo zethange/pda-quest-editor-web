@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Box, Select } from "@chakra-ui/react";
+import { Box, Input, Select } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import {
   mapApiType,
@@ -131,7 +131,14 @@ const FromMapStage = () => {
           <option value={type[0]}>{type[1]}</option>
         ))}
       </Select>
-      <p>Позиция: {stage?.point?.pos}</p>
+      <Box>
+        Позиция:{" "}
+        <Input
+          placeholder="Позиция..."
+          value={stage?.point?.pos}
+          onChange={(e) => dispatch(editPosInTransition(e.target.value))}
+        />
+      </Box>
       <ConditionListRefactor
         condition={stage.point.condition!}
         onChangeCondition={editConditionInPoint}

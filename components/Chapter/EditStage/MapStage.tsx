@@ -1,5 +1,5 @@
 import { memo, useRef, useState } from "react";
-import { Box, Select } from "@chakra-ui/react";
+import { Box, Input, Select } from "@chakra-ui/react";
 import { mapApiType, mapType } from "@/store/types/mapType";
 import { editMapInData, editPosInData } from "@/store/reduxStore/stageSlice";
 import { stageType } from "@/store/types/types";
@@ -45,7 +45,6 @@ const MapStage = memo(({ data }: IProps) => {
         e.target.naturalHeight - (e.clientY - parentMap.top) * diffHeight
       ),
     };
-    console.log(position);
     dispatch(editPosInData(`${position.x}:${position.y}`));
   };
 
@@ -66,7 +65,9 @@ const MapStage = memo(({ data }: IProps) => {
           onChange={(event) => dispatch(editMapInData(event.target.value))}
         >
           {maps.map((map: mapType) => (
-            <option value={`${map.id}`}>{map.title}</option>
+            <option key={map.id} value={`${map.id}`}>
+              {map.title}
+            </option>
           ))}
         </Select>
       </Box>
@@ -104,7 +105,14 @@ const MapStage = memo(({ data }: IProps) => {
           />
         </Box>
       </Box>
-      <p>Позиция: {data?.pos}</p>
+      <Box>
+        Позиция:{" "}
+        <Input
+          placeholder="Позиция..."
+          value={data?.pos}
+          onChange={(e) => dispatch(editPosInData(e.target.value))}
+        />
+      </Box>
     </Box>
   );
 });
