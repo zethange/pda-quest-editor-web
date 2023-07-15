@@ -38,7 +38,7 @@ const EditTextCondition: React.FC<Props> = ({
         <ModalBody>
           <ConditionListRefactor
             index={targetText.indexTargetText}
-            condition={storeStage.texts![targetText.indexTargetText].condition}
+            condition={storeStage.texts![targetText.indexTargetText]?.condition}
             onChangeCondition={editConditionInText}
           />
         </ModalBody>
