@@ -37,7 +37,7 @@ const EditTextCondition: React.FC<Props> = ({
         <ModalCloseButton />
         <ModalBody>
           <ConditionListRefactor
-            index={targetText.indexTargetText}
+            index={targetText?.indexTargetText}
             condition={storeStage.texts![targetText.indexTargetText]?.condition}
             onChangeCondition={editConditionInText}
           />

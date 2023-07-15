@@ -250,8 +250,9 @@ const stageSlice = createSlice({
     },
     // CONDITION_TEXT
     editConditionInText(state, action) {
-      const { index, condition } = action.payload;
-      state.stage.texts![+index].condition = condition;
+      const { condition } = action.payload;
+      state.stage.texts![+state.targetText.indexTargetText].condition =
+        condition;
     },
     // CONDITION_POINT
     editConditionInPoint(
