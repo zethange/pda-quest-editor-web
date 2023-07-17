@@ -66,8 +66,9 @@ const MapScreen = ({ path, isReady }: Props) => {
         }
         localStorage.setItem(key, JSON.stringify(value));
       }
-      location.reload();
     }
+    localStorage.removeItem(`story_${path[0]}_maps_${mapId}`);
+    location.reload();
   };
 
   return (

@@ -652,9 +652,13 @@ export default function StageEditScreen({
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-      const idLastStage = Math.max(
-        ...chapterFromLocalStorage?.stages.map((stage: stageType) => stage.id)
-      );
+      let idLastStage =
+        Math.max(
+          ...chapterFromLocalStorage?.stages.map((stage: stageType) => stage.id)
+        ) + 1;
+      if (idLastStage === -Infinity) {
+        idLastStage = 0;
+      }
 
       // @ts-ignore
       const position = reactFlowInstance.project({
@@ -701,7 +705,7 @@ export default function StageEditScreen({
             ...chapterFromLocalStorage?.stages,
             newStage(
               type as "default" | "exit" | "chapterEnd",
-              idLastStage + 1,
+              idLastStage,
               true,
               position,
               {
@@ -742,7 +746,7 @@ export default function StageEditScreen({
     }
   }, [isReady]);
 
-  useKeydown(["Delete"], () => {
+  useKeydown(["Ctrl", "Delete"], () => {
     if (storeRedux.getState().stage.stage) {
       deleteStage(storeRedux.getState().stage.stage.id);
     }
