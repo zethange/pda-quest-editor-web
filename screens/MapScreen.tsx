@@ -3,7 +3,7 @@ import {
   Box,
   Button,
   Card,
-  Image,
+  Flex,
   Menu,
   MenuButton,
   MenuItem,
@@ -33,16 +33,9 @@ const MapScreen = ({ path, isReady }: Props) => {
     if (!isLoading) {
       store.each((key, value: mapType) => {
         if (
-          key.includes(`story_${path[0]}_map`) &&
+          key.includes(`story_${path[0]}_maps`) &&
           !maps.find((map) => +map.id === +value.id)
         ) {
-          const background = data?.find(
-            (map) => +map.id === +value.id
-          )?.background;
-          if (!value.editor) {
-            value.editor = {};
-            value.editor.url = `/${background}`;
-          }
           setMaps((maps) => [...maps, value]);
         }
         if (key === "stopLoop") return false;
@@ -56,6 +49,24 @@ const MapScreen = ({ path, isReady }: Props) => {
       setMaps([...maps, newMap]);
       dispatch(setMapsRedux(newMap));
       store.set(`story_${path[0]}_maps_${newMap.id}`, newMap);
+    }
+  };
+
+  const deleteMap = (mapId: number) => {
+    setMaps(maps.filter((map) => +map.id !== mapId));
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i) as string;
+      if (key.includes(`story_${path[0]}_chapter`)) {
+        const value: any = JSON.parse(localStorage.getItem(key) as string);
+        if (value.points![mapId]) {
+          delete value.points[mapId];
+        }
+        if (value.spawns![mapId]) {
+          delete value.spawns[mapId];
+        }
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+      location.reload();
     }
   };
 
@@ -76,25 +87,30 @@ const MapScreen = ({ path, isReady }: Props) => {
       <Box>
         <SimpleGrid columns={4} spacing={5}>
           {maps.map((map: mapType) => (
-            <Link
-              href={`/edit/chapter/maps/${path[0]}/${path[1]}/${map.id}`}
+            <Card
               key={map.id}
+              border="1px"
+              borderColor="gray.200"
+              _dark={{
+                borderColor: "gray.600",
+                color: "white",
+              }}
+              shadow="none"
+              p={2}
             >
-              <Card
-                key={map.id}
-                border="1px"
-                borderColor="gray.200"
-                _dark={{
-                  borderColor: "gray.600",
-                  color: "white",
-                }}
-                shadow="none"
-                p={2}
-              >
-                {map?.title}
-                <Image src={`/static/maps${map?.editor?.url}`} />
-              </Card>
-            </Link>
+              {map?.title}
+              <Flex gap={2}>
+                <Link
+                  href={`/edit/chapter/maps/${path[0]}/${path[1]}/${map.id}`}
+                >
+                  <Button colorScheme="teal">Редактировать</Button>
+                </Link>
+                <Button colorScheme="red" onClick={() => deleteMap(+map.id)}>
+                  Удалить
+                </Button>
+              </Flex>
+              {/*<Image src={`/static/maps${map?.editor?.url}`} />*/}
+            </Card>
           ))}
         </SimpleGrid>
       </Box>
