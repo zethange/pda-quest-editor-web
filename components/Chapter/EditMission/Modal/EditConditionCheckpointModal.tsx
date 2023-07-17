@@ -9,7 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
+import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { useAppSelector } from "@/store/reduxHooks";
 import { editConditionInCheckpoint } from "@/store/reduxStore/missionSlice";
 

@@ -14,7 +14,7 @@ import {
   editTransition,
 } from "@/store/reduxStore/stageSlice";
 import useFetching from "@/hooks/useFetching";
-import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
+import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 
 export interface IFromMapStage {
   id: number;

@@ -516,11 +516,11 @@ export default function StageEditScreen({
         x:
           chapterFromLocalStorage.stages?.find(
             (stage: stageType) => +stage.id === +stageId
-          ).editor.x || 0,
+          )?.editor?.x || 0,
         y:
           chapterFromLocalStorage.stages?.find(
             (stage: stageType) => +stage.id === +stageId
-          ).editor.y || 0,
+          )?.editor?.y || 0,
       },
     };
 

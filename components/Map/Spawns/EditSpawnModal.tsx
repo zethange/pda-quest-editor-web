@@ -29,7 +29,7 @@ import {
 import { groups, strength } from "@/store/utils/groupItem";
 import ConditionListRefactor, {
   TypeOnChangeCondition,
-} from "@/components/Chapter/EditStage/CreateTransfer/ConditionListRefactor";
+} from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 import SpawnParameters from "@/components/Map/Spawns/SpawnParameters";
 import { spawnType } from "@/store/types/mapType";
