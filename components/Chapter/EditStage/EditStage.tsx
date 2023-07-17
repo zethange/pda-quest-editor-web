@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
   Icon,
   IconButton,
   Input,
+  Switch,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
@@ -216,21 +216,22 @@ export default function EditStage() {
         }}
         borderRadius="10px"
       >
-        <b>Сообщение:</b>
+        <b>Уведомление:</b>
         <Box>
-          Показывать сообщение:{" "}
-          <Checkbox
+          Показывать уведомление:{" "}
+          <Switch
             size="sm"
-            mt={2}
             onChange={() => {
               setCheckBoxMessage(!checkBoxMessage);
-              if (!checkBoxMessage)
+              if (!checkBoxMessage) {
                 dispatch(editMessageInStore("Новое уведомление"));
-              if (checkBoxMessage) dispatch(editMessageInStore(""));
+              } else {
+                dispatch(editMessageInStore(""));
+              }
             }}
             defaultChecked={!!storeStage?.message}
           />
-          {storeStage?.message && (
+          {checkBoxMessage && (
             <Textarea
               placeholder="Уведомление..."
               defaultValue={storeStage?.message}
