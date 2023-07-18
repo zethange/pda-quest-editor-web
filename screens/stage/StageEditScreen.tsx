@@ -746,12 +746,14 @@ export default function StageEditScreen({
     }
   }, [isReady]);
 
-  useKeydown(["Ctrl", "Delete"], () => {
-    if (storeRedux.getState().stage.stage) {
-      deleteStage(storeRedux.getState().stage.stage.id);
-    }
-    if (storeRedux.getState().stage.transitionFromMap) {
-      deletePoint();
+  useKeydown(["Delete"], (event) => {
+    if (event.ctrlKey) {
+      if (storeRedux.getState().stage.stage) {
+        deleteStage(storeRedux.getState().stage.stage.id);
+      }
+      if (storeRedux.getState().stage.transitionFromMap) {
+        deletePoint();
+      }
     }
   });
   useKeydown(["Escape"], () => {
