@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { stageTypes } from "@/store/utils/stageName";
 import MapStage from "@/components/Chapter/EditStage/MapStage";
 import EditStage from "@/components/Chapter/EditStage/EditStage";
@@ -10,6 +10,7 @@ import { editActions } from "@/store/reduxStore/stageSlice";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
 import { useAppSelector } from "@/store/reduxHooks";
 import { useRouter } from "next/router";
+import ConfirmationModal from "@/components/UI/ConfirmationModal";
 
 interface IProps {
   editableStage: stageType | undefined;
@@ -33,6 +34,7 @@ const EditStagePopover = ({
     (state) => state.stage.transitionFromMap
   );
   const { query } = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -105,16 +107,36 @@ const EditStagePopover = ({
               size="md"
               mt={2}
               onClick={() => {
-                if (!transitionFromMap) {
-                  deleteStage(storeStage?.id);
-                } else {
-                  deletePoint();
-                }
+                onOpen();
               }}
             >
               Удалить
             </Button>
           </Flex>
+          <ConfirmationModal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={transitionFromMap ? "Удаление перехода" : "Удаление стадии"}
+            description={
+              <Box>
+                А вы точно уверены?
+                <br />
+                <a
+                  style={{ color: "red" }}
+                  href="https://www.change.org/p/%D0%B4%D0%BE%D0%BB%D0%BE%D0%B9-%D0%BC%D0%BE%D0%B4%D0%B0%D0%BB%D0%BA%D0%B8-%D0%BF%D0%BE%D1%82%D0%B2%D0%B5%D1%80%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F-%D0%B2-%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%82%D0%BE%D1%80%D0%B5"
+                >
+                  Остановите этот хаос! Поддержите петицию!
+                </a>
+              </Box>
+            }
+            runOnClose={() => {
+              if (!transitionFromMap) {
+                deleteStage(storeStage?.id);
+              } else {
+                deletePoint();
+              }
+            }}
+          />
         </Box>
       )}
     </>
