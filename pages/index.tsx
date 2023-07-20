@@ -28,11 +28,16 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Radio,
+  RadioGroup,
   Select,
   SimpleGrid,
   Spacer,
+  Stack,
+  Switch,
   Text,
   Textarea,
+  Tooltip,
   useDisclosure,
   useToast,
   VStack,
@@ -52,6 +57,13 @@ interface StoryFromServer {
   icon: string;
 }
 
+interface IParametersUpload {
+  id: number;
+  type: "PUBLIC" | "PRIVATE" | "COMMUNITY";
+  toStore: boolean;
+  message: string;
+}
+
 export default function Home() {
   const [stories, setStories] = useState<storyType[]>([]);
   const [storiesFromServer, setStoriesFromServer] = useState<StoryFromServer[]>(
@@ -59,8 +71,21 @@ export default function Home() {
   );
   const [editStory, setEditStory] = useState<storyType>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [openStoryId, setOpenStoryId] = useState<number>(0);
   const [openEditStoryId, setOpenEditStoryId] = useState<number>(0);
+  const [parametersUpload, setParametersUpload] = useState<IParametersUpload>({
+    id: 0,
+    type: "PUBLIC",
+    toStore: false,
+    message: "",
+  });
+
+  const resetParametersUpload = () => {
+    setParametersUpload({
+      type: "PUBLIC",
+      toStore: false,
+      message: "",
+    });
+  };
 
   const [isErrorId, setIsErrorId] = useState(false);
   const {
@@ -218,7 +243,7 @@ export default function Home() {
     store.set(`story_${editStory?.id}_info`, editStory);
   };
 
-  const uploadStoryToServer = async (type: string, storyId: number) => {
+  const uploadStoryToServer = async (storyId: number) => {
     const info = await store.get(`story_${storyId}_info`);
 
     let chapters: chapterType[] = [];
@@ -241,24 +266,42 @@ export default function Home() {
       chapters,
       maps,
     };
-    console.log(data);
-    const res = await fetch(
-      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/upload/${type}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    console.log("data:", data, info);
+    if (!parametersUpload.toStore) {
+      var res = await fetch(
+        `https://dev.artux.net/pdanetwork/api/v1/admin/quest/set${
+          parametersUpload.type === "PUBLIC" ? "/public" : ""
+        }`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+    } else {
+      // грузим в хранилище
+      var res = await fetch(
+        `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/upload?message=${parametersUpload.message}&type=${parametersUpload.type}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+    }
+
     const dataRes = await res.json();
 
-    if (dataRes.code === 200) {
+    if (res.status === 200) {
       toast({
         colorScheme: "green",
-        title: "История отправлена успешно, statusCode: 200",
+        title: "История отправлена успешно",
         description: dataRes.description,
       });
     } else {
@@ -269,6 +312,7 @@ export default function Home() {
       });
     }
     console.log("Отправлено:", data, "\nОтвет:", dataRes);
+    resetParametersUpload();
   };
 
   const downloadStoryFromServer = async () => {
@@ -474,7 +518,10 @@ export default function Home() {
                   <Button
                     onClick={() => {
                       modalOnOpen();
-                      setOpenStoryId(story.id);
+                      setParametersUpload({
+                        ...parametersUpload,
+                        id: story?.id,
+                      });
                     }}
                   >
                     <Icon as={BsCloudUpload} />
@@ -494,35 +541,149 @@ export default function Home() {
           </SimpleGrid>
         </Box>
       </Box>
-      <Modal onClose={modalOnClose} isOpen={modalIsOpen} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Загрузка истории на сервер</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <VStack>
-              <Button
-                w="100%"
-                onClick={() => {
-                  uploadStoryToServer("private", openStoryId);
-                  modalOnClose();
-                }}
+      <Drawer
+        placement="right"
+        size="md"
+        onClose={modalOnClose}
+        isOpen={modalIsOpen}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth="1px">
+            Загрузка истории на сервер
+          </DrawerHeader>
+          <DrawerBody>
+            <VStack gap={2}>
+              <FormControl
+                background="gray.100"
+                _dark={{ background: "gray.600" }}
+                borderRadius={10}
+                p={2}
               >
-                Загрузить приватно
-              </Button>
-              <Button
-                w="100%"
-                onClick={() => {
-                  uploadStoryToServer("public", openStoryId);
-                  modalOnClose();
-                }}
+                <Text>Загрузить как:</Text>
+                <RadioGroup
+                  value={parametersUpload.type}
+                  onChange={(value) => {
+                    setParametersUpload({
+                      ...parametersUpload,
+                      type: value as any,
+                    });
+                  }}
+                >
+                  <Stack direction="row">
+                    <Radio value="PUBLIC">Публичную историю</Radio>
+                    <Radio value="PRIVATE">Пользовательскую историю</Radio>
+                    {parametersUpload.toStore && (
+                      <Radio value="COMMUNITY">Историю от коммьюнити</Radio>
+                    )}
+                  </Stack>
+                </RadioGroup>
+              </FormControl>
+              <FormControl
+                p={2}
+                background="gray.100"
+                _dark={{ background: "gray.600" }}
+                borderRadius={10}
               >
-                Загрузить публично
-              </Button>
+                <Stack direction="row">
+                  <Text>Загрузить в хранилище?</Text>
+                  <Switch
+                    pt={1}
+                    checked={parametersUpload.toStore}
+                    onChange={(e) => {
+                      setParametersUpload({
+                        ...parametersUpload,
+                        toStore: Boolean(e.target.checked),
+                      });
+                    }}
+                  />
+                </Stack>
+              </FormControl>
+              {parametersUpload.toStore && (
+                <>
+                  <FormControl
+                    p={2}
+                    background="gray.100"
+                    _dark={{ background: "gray.600" }}
+                    borderRadius={10}
+                  >
+                    <Tooltip
+                      label="Сам честно не понимаю зачем оно"
+                      placement="auto-start"
+                    >
+                      <Text>Сообщение:</Text>
+                    </Tooltip>
+                    <Input
+                      value={parametersUpload.message}
+                      background="white"
+                      _dark={{
+                        background: "gray.700",
+                      }}
+                      placeholder="Сообщение..."
+                      onChange={(e) => {
+                        setParametersUpload({
+                          ...parametersUpload,
+                          message: e.target.value,
+                        });
+                      }}
+                    />
+                  </FormControl>
+                </>
+              )}
             </VStack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+          </DrawerBody>
+          <DrawerFooter borderTopWidth="1px">
+            <Button
+              variant="outline"
+              mr={3}
+              onClick={() => {
+                modalOnClose();
+                resetParametersUpload();
+              }}
+            >
+              Закрыть
+            </Button>
+            <Button
+              colorScheme="teal"
+              onClick={() => {
+                modalOnClose();
+                uploadStoryToServer(parametersUpload.id);
+              }}
+            >
+              Загрузить
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+      {/*<Modal onClose={modalOnClose} isOpen={modalIsOpen} isCentered>*/}
+      {/*  <ModalOverlay />*/}
+      {/*  <ModalContent>*/}
+      {/*    <ModalHeader>Загрузка истории на сервер</ModalHeader>*/}
+      {/*    <ModalCloseButton />*/}
+      {/*    <ModalBody>*/}
+      {/*      <VStack>*/}
+      {/*        <Button*/}
+      {/*          w="100%"*/}
+      {/*          onClick={() => {*/}
+      {/*            uploadStoryToServer("private", openStoryId);*/}
+      {/*            modalOnClose();*/}
+      {/*          }}*/}
+      {/*        >*/}
+      {/*          Загрузить приватно*/}
+      {/*        </Button>*/}
+      {/*        <Button*/}
+      {/*          w="100%"*/}
+      {/*          onClick={() => {*/}
+      {/*            uploadStoryToServer("public", openStoryId);*/}
+      {/*            modalOnClose();*/}
+      {/*          }}*/}
+      {/*        >*/}
+      {/*          Загрузить публично*/}
+      {/*        </Button>*/}
+      {/*      </VStack>*/}
+      {/*    </ModalBody>*/}
+      {/*  </ModalContent>*/}
+      {/*</Modal>*/}
       <Modal
         onClose={downloadModalOnClose}
         isOpen={downloadModalIsOpen}

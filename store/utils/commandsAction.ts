@@ -55,7 +55,11 @@ export function commandLocalize(param: string): string {
   }
   const requiredCommand = allCommands.find((command) => command[0] === param);
 
-  return requiredCommand![1];
+  if (requiredCommand) {
+    return requiredCommand![1];
+  } else {
+    return param;
+  }
 }
 
 export function typeCommand(param: string) {
@@ -65,5 +69,9 @@ export function typeCommand(param: string) {
     allCommands.push(...commands[i].commands);
   }
   const requiredCommand = allCommands.find((command) => command[0] === param);
-  return requiredCommand![2] as "item" | "empty" | "null" | "codemirror";
+  if (requiredCommand) {
+    return requiredCommand![2] as "item" | "empty" | "null" | "codemirror";
+  } else {
+    return "empty";
+  }
 }

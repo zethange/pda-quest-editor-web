@@ -8,9 +8,14 @@ interface Props {
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { response, isLoading } = useFetching("/pdanetwork/api/v1/user/info");
+  const { data, response, isLoading } = useFetching<{ login: string }>(
+    "/pdanetwork/api/v1/user/info"
+  );
 
   useEffect(() => {
+    if (data?.login === "Redoks") {
+      alert("Гееерман, опять редактор ломаешь???");
+    }
     if (response?.status === 401) {
       setShowAuthModal(true);
     } else {
