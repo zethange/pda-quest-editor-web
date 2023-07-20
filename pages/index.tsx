@@ -81,6 +81,7 @@ export default function Home() {
 
   const resetParametersUpload = () => {
     setParametersUpload({
+      id: 0,
       type: "PUBLIC",
       toStore: false,
       message: "",
