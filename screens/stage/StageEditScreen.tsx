@@ -48,7 +48,7 @@ import {
 import { setMaps } from "@/store/reduxStore/chapterMapsSlice";
 import { Store } from "redux";
 import reduxStore, { RootState } from "@/store/reduxStore";
-import { mapType, pointType } from "@/store/types/mapType";
+import { mapType, pointType, typePoints } from "@/store/types/mapType";
 import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import { setMissions } from "@/store/reduxStore/missionSlice";
@@ -239,8 +239,8 @@ export default function StageEditScreen({
         type: "nodeStage",
         selected: stage.id === storeStage?.id,
         data: {
-          label: stageName(stage.type_stage)
-            ? stageName(stage.type_stage)
+          label: stageName(stage.type_stage, stage, maps)
+            ? stageName(stage.type_stage, stage, maps)
             : stage.title,
           onClick: () => {
             dispatch(setStageToRedux(null));
@@ -300,7 +300,15 @@ export default function StageEditScreen({
             type: "nodeStage",
             selected: false,
             data: {
-              label: "Переход с карты",
+              label:
+                "Переход с локации " +
+                '"' +
+                maps.find((map) => +map.id === +points[0])?.title +
+                '"',
+              text:
+                typePoints.find((type) => +type[0] === point.type)![1] +
+                ": " +
+                point.name,
               onClick: () => {
                 dispatch(setTransition(null));
                 dispatch(setStageToRedux(null));

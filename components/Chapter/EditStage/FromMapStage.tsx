@@ -15,6 +15,7 @@ import {
 } from "@/store/reduxStore/stageSlice";
 import useFetching from "@/hooks/useFetching";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
+import { imagePoint } from "@/store/utils/map/typePoint";
 
 export interface IFromMapStage {
   id: number;
@@ -112,7 +113,7 @@ const FromMapStage = () => {
             }}
             draggable={false}
             alt="Метка"
-            src="/quest.png"
+            src={`/static/tags/${imagePoint(stage?.point?.type)}`}
           />
         </Box>
       </Box>
@@ -137,6 +138,19 @@ const FromMapStage = () => {
           placeholder="Позиция..."
           value={stage?.point?.pos}
           onChange={(e) => dispatch(editPosInTransition(e.target.value))}
+        />
+      </Box>
+      <Box>
+        Название точки:
+        <Input
+          value={stage?.point?.name}
+          onChange={(e) =>
+            dispatch(
+              editTransition({
+                name: e.target.value,
+              })
+            )
+          }
         />
       </Box>
       <ConditionListRefactor

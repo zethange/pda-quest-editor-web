@@ -1,4 +1,11 @@
-export function stageName(type_stage: number) {
+import { stageType } from "@/store/types/types";
+import { mapType } from "@/store/types/mapType";
+
+export function stageName(
+  type_stage: number,
+  stage?: stageType,
+  maps?: mapType[]
+) {
   // legacy черт возьми
   switch (type_stage) {
     case 0:
@@ -10,7 +17,11 @@ export function stageName(type_stage: number) {
     case 3:
       return false;
     case 4:
-      return "Переход на карту";
+      return (
+        'Переход на локацию "' +
+        maps?.find((map) => +map.id === +stage?.data?.map!)?.title +
+        '"'
+      );
     case 5:
       return "Стадия с действиями";
     case 6:
