@@ -272,7 +272,7 @@ export default function Home() {
       var res = await fetch(
         `https://dev.artux.net/pdanetwork/api/v1/admin/quest/set${
           parametersUpload.type === "PUBLIC" ? "/public" : ""
-        }`,
+        }?message=${parametersUpload.message}`,
         {
           method: "POST",
           headers: {
@@ -600,8 +600,6 @@ export default function Home() {
                   />
                 </Stack>
               </FormControl>
-              {parametersUpload.toStore && (
-                <>
                   <FormControl
                     p={2}
                     background="gray.100"
@@ -629,8 +627,6 @@ export default function Home() {
                       }}
                     />
                   </FormControl>
-                </>
-              )}
             </VStack>
           </DrawerBody>
           <DrawerFooter borderTopWidth="1px">
