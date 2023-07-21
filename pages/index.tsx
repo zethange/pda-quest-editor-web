@@ -57,6 +57,35 @@ interface StoryFromServer {
   icon: string;
 }
 
+interface Author {
+  id: string;
+  login: string;
+  name: string;
+  nickname: string;
+  avatar: string;
+  pdaId: number;
+  xp: number;
+  achievements: number;
+  gang: string; // Замените "OTHER_GANG" на реальное имя другой банды, если таковая имеется.
+  registration: string;
+  lastLoginAt: string;
+}
+
+interface StoryFromServer {
+  storageId: string;
+  storyId: number;
+  title: string;
+  icon: string;
+  needs: number[];
+  access: string;
+  message: string;
+  archive: boolean;
+  type: string;
+  timestamp: string;
+  author: Author;
+  hashcode: number;
+}
+
 interface IParametersUpload {
   id: number;
   type: "PUBLIC" | "PRIVATE" | "COMMUNITY";
@@ -318,7 +347,7 @@ export default function Home() {
 
   const downloadStoryFromServer = async () => {
     const storiesRes = await fetch(
-      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/status`,
+      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp`,
       {
         headers: {
           Authorization: `Basic ${localStorage.getItem("token")}`,
@@ -327,14 +356,14 @@ export default function Home() {
       }
     );
 
-    const { stories } = await storiesRes.json();
-    setStoriesFromServer(stories);
+    const { content } = await storiesRes.json();
+    setStoriesFromServer(content);
     downloadModalOnOpen();
   };
 
-  const downloadStoryFromServerById = async (id: number) => {
+  const downloadStoryFromServerById = async (id: string) => {
     const res = await fetch(
-      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/${id}`,
+      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/${id}`,
       {
         headers: {
           Authorization: `Basic ${localStorage.getItem("token")}`,
@@ -700,11 +729,12 @@ export default function Home() {
                 <Button
                   w="100%"
                   onClick={() => {
-                    downloadStoryFromServerById(story.id);
+                    downloadStoryFromServerById(story.storageId);
                     downloadModalOnClose();
                   }}
                 >
                   {story.title}
+                  {story.archive && ", в архиве"}
                 </Button>
               ))}
             </VStack>
