@@ -1,5 +1,8 @@
 import AuthModal from "@/components/Global/AuthModal";
 import useFetching from "@/hooks/useFetching";
+import { useAppDispatch } from "@/store/reduxHooks";
+import { setUser } from "@/store/reduxStore/userSlice";
+import { IUser } from "@/store/types/userType";
 import React, { memo, useEffect, useState } from "react";
 
 interface Props {
@@ -8,14 +11,15 @@ interface Props {
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { data, response, isLoading } = useFetching<{ login: string }>(
+  const { data, response, isLoading } = useFetching<IUser>(
     "/pdanetwork/api/v1/user/info"
   );
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (data?.login === "Redoks") {
-      alert("Гееерман, опять редактор ломаешь???");
-    }
+    // if (data?.login === "Redoks") {
+    //   alert("Гееерман, опять редактор ломаешь???");
+    // }
     if (response?.status === 401) {
       setShowAuthModal(true);
     } else {
@@ -24,6 +28,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
           Authorization: `Basic ${localStorage.getItem("token")}`,
         },
       }).then((res) => res.text());
+      dispatch(setUser(data as IUser));
     }
   }, [isLoading]);
 

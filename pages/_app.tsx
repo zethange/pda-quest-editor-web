@@ -15,11 +15,11 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <ChakraProvider>
-        <AuthProvider>
-          <Provider store={store}>
+        <Provider store={store}>
+          <AuthProvider>
             <AnyComponent {...pageProps} />
-          </Provider>
-        </AuthProvider>
+          </AuthProvider>
+        </Provider>
       </ChakraProvider>
     </SessionProvider>
   );

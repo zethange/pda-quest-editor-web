@@ -2,7 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import mapReducer from "./mapSlice";
 import stageReducer from "./stageSlice";
 import mapsSlice from "./chapterMapsSlice";
-import missionSlice from "@/store/reduxStore/missionSlice";
+import missionSlice from "./missionSlice";
+import userSlice from "./userSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     maps: mapsSlice,
     stage: stageReducer,
     mission: missionSlice,
+    user: userSlice,
   },
 });
 

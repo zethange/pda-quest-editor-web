@@ -22,12 +22,6 @@ import {
   Heading,
   Icon,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Radio,
   RadioGroup,
   Select,
@@ -49,13 +43,8 @@ import { storyType } from "@/store/types/storyType";
 import { chapterType } from "@/store/types/types";
 import { mapType } from "@/store/types/mapType";
 import JSZip from "jszip";
-
-interface StoryFromServer {
-  id: number;
-  title: string;
-  desc: string;
-  icon: string;
-}
+import { useAppSelector } from "@/store/reduxHooks";
+import DownloadFromServerDrawer from "@/components/Story/DownloadFromServerDrawer";
 
 interface Author {
   id: string;
@@ -71,7 +60,7 @@ interface Author {
   lastLoginAt: string;
 }
 
-interface StoryFromServer {
+export interface StoryFromServer {
   storageId: string;
   storyId: number;
   title: string;
@@ -107,6 +96,16 @@ export default function Home() {
     toStore: false,
     message: "",
   });
+  // const [parametersDownload, setParametersDownload] = useState({
+  //   number: 0,
+  //   size: 0,
+  //   sortDirection: "DESC",
+  //   sortBy: "timestamp",
+  //   type: "PUBLIC",
+  //   archive: false,
+  //   storyId: null,
+  // });
+  const user = useAppSelector((state) => state.user.user);
 
   const resetParametersUpload = () => {
     setParametersUpload({
@@ -347,7 +346,9 @@ export default function Home() {
 
   const downloadStoryFromServer = async () => {
     const storiesRes = await fetch(
-      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp`,
+      user?.role === "ADMIN"
+        ? `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/all?sortDirection=DESC&sortBy=timestamp`
+        : `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp`,
       {
         headers: {
           Authorization: `Basic ${localStorage.getItem("token")}`,
@@ -629,33 +630,33 @@ export default function Home() {
                   />
                 </Stack>
               </FormControl>
-                  <FormControl
-                    p={2}
-                    background="gray.100"
-                    _dark={{ background: "gray.600" }}
-                    borderRadius={10}
-                  >
-                    <Tooltip
-                      label="Сам честно не понимаю зачем оно"
-                      placement="auto-start"
-                    >
-                      <Text>Сообщение:</Text>
-                    </Tooltip>
-                    <Input
-                      value={parametersUpload.message}
-                      background="white"
-                      _dark={{
-                        background: "gray.700",
-                      }}
-                      placeholder="Сообщение..."
-                      onChange={(e) => {
-                        setParametersUpload({
-                          ...parametersUpload,
-                          message: e.target.value,
-                        });
-                      }}
-                    />
-                  </FormControl>
+              <FormControl
+                p={2}
+                background="gray.100"
+                _dark={{ background: "gray.600" }}
+                borderRadius={10}
+              >
+                <Tooltip
+                  label="Сам честно не понимаю зачем оно"
+                  placement="auto-start"
+                >
+                  <Text>Сообщение:</Text>
+                </Tooltip>
+                <Input
+                  value={parametersUpload.message}
+                  background="white"
+                  _dark={{
+                    background: "gray.700",
+                  }}
+                  placeholder="Сообщение..."
+                  onChange={(e) => {
+                    setParametersUpload({
+                      ...parametersUpload,
+                      message: e.target.value,
+                    });
+                  }}
+                />
+              </FormControl>
             </VStack>
           </DrawerBody>
           <DrawerFooter borderTopWidth="1px">
@@ -681,62 +682,14 @@ export default function Home() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      {/*<Modal onClose={modalOnClose} isOpen={modalIsOpen} isCentered>*/}
-      {/*  <ModalOverlay />*/}
-      {/*  <ModalContent>*/}
-      {/*    <ModalHeader>Загрузка истории на сервер</ModalHeader>*/}
-      {/*    <ModalCloseButton />*/}
-      {/*    <ModalBody>*/}
-      {/*      <VStack>*/}
-      {/*        <Button*/}
-      {/*          w="100%"*/}
-      {/*          onClick={() => {*/}
-      {/*            uploadStoryToServer("private", openStoryId);*/}
-      {/*            modalOnClose();*/}
-      {/*          }}*/}
-      {/*        >*/}
-      {/*          Загрузить приватно*/}
-      {/*        </Button>*/}
-      {/*        <Button*/}
-      {/*          w="100%"*/}
-      {/*          onClick={() => {*/}
-      {/*            uploadStoryToServer("public", openStoryId);*/}
-      {/*            modalOnClose();*/}
-      {/*          }}*/}
-      {/*        >*/}
-      {/*          Загрузить публично*/}
-      {/*        </Button>*/}
-      {/*      </VStack>*/}
-      {/*    </ModalBody>*/}
-      {/*  </ModalContent>*/}
-      {/*</Modal>*/}
-      <Modal
-        onClose={downloadModalOnClose}
-        isOpen={downloadModalIsOpen}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Загрузка истории с сервера</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <VStack>
-              {storiesFromServer.map((story: StoryFromServer) => (
-                <Button
-                  w="100%"
-                  onClick={() => {
-                    downloadStoryFromServerById(story.storageId);
-                    downloadModalOnClose();
-                  }}
-                >
-                  {story.title}
-                  {story.archive && ", в архиве"}
-                </Button>
-              ))}
-            </VStack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+
+      <DownloadFromServerDrawer
+        downloadModalIsOpen={downloadModalIsOpen}
+        downloadModalOnClose={downloadModalOnClose}
+        setStories={setStories}
+        stories={stories}
+        storiesFromServer={storiesFromServer}
+      />
       {/* drawer */}
       <Drawer isOpen={isOpen} placement="right" size="md" onClose={onClose}>
         <DrawerOverlay />
