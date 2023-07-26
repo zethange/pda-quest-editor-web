@@ -96,15 +96,6 @@ export default function Home() {
     toStore: false,
     message: "",
   });
-  // const [parametersDownload, setParametersDownload] = useState({
-  //   number: 0,
-  //   size: 0,
-  //   sortDirection: "DESC",
-  //   sortBy: "timestamp",
-  //   type: "PUBLIC",
-  //   archive: false,
-  //   storyId: null,
-  // });
   const user = useAppSelector((state) => state.user.user);
 
   const resetParametersUpload = () => {

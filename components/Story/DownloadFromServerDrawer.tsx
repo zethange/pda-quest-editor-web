@@ -81,10 +81,10 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>Загрузка истории с сервера</DrawerHeader>
-
         <DrawerBody>
           Роль: {user?.role}
           <VStack>
+            {stories.length === 0 && "Историй нет, пусто"}
             {storiesFromServer.map((story: StoryFromServer) => (
               <Card key={story.storageId} w="100%" variant="outline">
                 <Heading size="md" pt={5} pl={5}>
