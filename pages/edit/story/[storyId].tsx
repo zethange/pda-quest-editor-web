@@ -174,14 +174,18 @@ export default function storyId() {
                 <Text _dark={{ color: "white" }}>
                   Количество стадий: {chapter?.stages?.length}
                 </Text>
-                <Text _dark={{ color: "white" }}>
-                  Количество точек:{" "}
-                  {Object.values(chapter?.points!).flat().length}
-                </Text>
-                <Text _dark={{ color: "white" }}>
-                  Количество спавнов:{" "}
-                  {Object.values(chapter?.spawns!).flat().length}
-                </Text>
+                {chapter?.points && (
+                  <Text _dark={{ color: "white" }}>
+                    Количество точек:{" "}
+                    {Object.values(chapter?.points!).flat().length}
+                  </Text>
+                )}
+                {chapter?.spawns && (
+                  <Text _dark={{ color: "white" }}>
+                    Количество спавнов:{" "}
+                    {Object.values(chapter?.spawns!).flat().length}
+                  </Text>
+                )}
               </Card>
             ))}
           </SimpleGrid>
