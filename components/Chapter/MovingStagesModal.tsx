@@ -94,6 +94,9 @@ const MovingStagesModal: FC<Props> = ({
     if (targetChapterJs?.points) {
       pointsCopy.map((point) => {
         const mapId: `${number}` = point.mapId as `${number}`;
+        point.data.chapter = String(targetChapterJs.id);
+        point.data.stage = map.get(+point.data.stage);
+
         if (targetChapterJs?.points![mapId]) {
           delete point.mapId;
           targetChapterJs?.points[mapId].push(point);
