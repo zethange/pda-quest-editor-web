@@ -35,6 +35,8 @@ const EditStagePopover = ({
   );
   const { query } = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  console.log("stage:", storeStage);
+  console.log("transitionFromMap:", transitionFromMap);
 
   return (
     <>

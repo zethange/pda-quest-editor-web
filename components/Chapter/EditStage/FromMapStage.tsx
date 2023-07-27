@@ -113,7 +113,7 @@ const FromMapStage = () => {
             }}
             draggable={false}
             alt="Метка"
-            src={`/static/tags/${imagePoint(stage?.point?.type)}`}
+            src={`/static/tags/${imagePoint(+stage?.point?.type)}`}
           />
         </Box>
       </Box>

@@ -207,15 +207,15 @@ export default function StageEditScreen({
       store.get(`story_${path[0]}_chapter_${path[1]}`) &&
       chapter?.points
     ) {
-      const chapter =
-        path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+      const chapter = store.get(
+        `story_${path[0]}_chapter_${path[1]}`
+      ) as chapterType;
 
       const points = chapter?.points;
-      // @ts-ignore
-      const pointsValues: any = Object.values(points);
+      const pointsValues = Object.values(points!);
 
-      pointsValues.map((pointsGroup: any) => {
-        pointsGroup.forEach((item: any) => {
+      pointsValues.map((pointsGroup) => {
+        pointsGroup.forEach((item) => {
           if (!item.id) {
             item.id = uuidv4();
           }
@@ -314,7 +314,7 @@ export default function StageEditScreen({
                 maps.find((map) => +map.id === +points[0])?.title +
                 '"',
               text:
-                typePoints.find((type) => +type[0] === point.type)![1] +
+                typePoints.find((type) => +type[0] === +point.type)![1] +
                 ": " +
                 point.name,
               onClick: () => {
