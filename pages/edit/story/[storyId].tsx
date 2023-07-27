@@ -126,32 +126,21 @@ export default function storyId() {
                 shadow="none"
                 p={2}
               >
-                <Link href={"/edit/chapter/" + storyId + "/" + chapter?.id}>
-                  {(chapter.title && (
-                    <>
+                <Flex justifyContent="space-between" alignItems="center">
+                  <Link href={"/edit/chapter/" + storyId + "/" + chapter?.id}>
+                    {(chapter.title && (
+                      <>
+                        <Heading _dark={{ color: "white" }} as="h4" size="md">
+                          {chapter?.title}
+                        </Heading>
+                        <Text color="gray.500">id: {chapter?.id}</Text>
+                      </>
+                    )) || (
                       <Heading _dark={{ color: "white" }} as="h4" size="md">
-                        {chapter?.title}
+                        Глава {chapter.id}
                       </Heading>
-                      <Text color="gray.500">id: {chapter?.id}</Text>
-                    </>
-                  )) || (
-                    <Heading _dark={{ color: "white" }} as="h4" size="md">
-                      Глава {chapter.id}
-                    </Heading>
-                  )}
-                  <Text _dark={{ color: "white" }}>
-                    Количество стадий: {chapter?.stages?.length}
-                  </Text>
-                  <Text _dark={{ color: "white" }}>
-                    Количество точек:{" "}
-                    {Object.values(chapter?.points!).flat().length}
-                  </Text>
-                  <Text _dark={{ color: "white" }}>
-                    Количество спавнов:{" "}
-                    {Object.values(chapter?.spawns!).flat().length}
-                  </Text>
-                </Link>
-                <Flex>
+                    )}
+                  </Link>
                   <Menu>
                     <MenuButton as={Button}>
                       <Icon as={BsThreeDotsVertical} mt={1} />
@@ -182,6 +171,17 @@ export default function storyId() {
                     </MenuList>
                   </Menu>
                 </Flex>
+                <Text _dark={{ color: "white" }}>
+                  Количество стадий: {chapter?.stages?.length}
+                </Text>
+                <Text _dark={{ color: "white" }}>
+                  Количество точек:{" "}
+                  {Object.values(chapter?.points!).flat().length}
+                </Text>
+                <Text _dark={{ color: "white" }}>
+                  Количество спавнов:{" "}
+                  {Object.values(chapter?.spawns!).flat().length}
+                </Text>
               </Card>
             ))}
           </SimpleGrid>

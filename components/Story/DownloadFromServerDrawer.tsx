@@ -21,8 +21,9 @@ import {
   Text,
   Box,
   Select,
+  Switch,
+  Flex,
 } from "@chakra-ui/react";
-import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import store from "store2";
 
@@ -42,17 +43,17 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
   const user = useAppSelector((state: any) => state.user.user);
   const [storiesFromServer, setStoriesFromServer] =
     useState<StoryFromServer[]>();
-  const [type, setType] = useState("PUBLIC");
+  const [config, setConfig] = useState({ type: "PUBLIC", archive: true });
 
   const { data: types } = useFetching<string[]>(
     "/pdanetwork/api/v1/admin/quest/storage/types"
   );
 
-  const downloadStoryFromServer = async (type: string) => {
+  const downloadStoryFromServer = async () => {
     const storiesRes = await fetch(
       user?.role === "ADMIN"
-        ? `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/all?sortDirection=DESC&sortBy=timestamp&type=${type}`
-        : `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp&type=${type}`,
+        ? `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/all?sortDirection=DESC&sortBy=timestamp&type=${config.type}&archive=${config.archive}`
+        : `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp&type=${config.type}&archive=${config.archive}`,
       {
         headers: {
           Authorization: `Basic ${localStorage.getItem("token")}`,
@@ -67,9 +68,9 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
 
   useEffect(() => {
     if (downloadModalIsOpen) {
-      downloadStoryFromServer(type);
+      downloadStoryFromServer();
     }
-  }, [downloadModalIsOpen, type]);
+  }, [downloadModalIsOpen, config]);
 
   const downloadStoryFromServerById = async (id: string) => {
     const res = await fetch(
@@ -115,15 +116,31 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
         <DrawerCloseButton />
         <DrawerHeader>Загрузка истории с сервера</DrawerHeader>
         <DrawerBody>
-          Роль: {user?.role}
-          <Box mb={2}>
-            <Select value={type} onChange={(e) => setType(e.target.value)}>
+          <Box mb={2}>Роль: {user?.role}</Box>
+          <Flex gap={2} alignItems="center" mb={2}>
+            Тип:
+            <Select
+              value={config.type}
+              onChange={(e) => setConfig({ ...config, type: e.target.value })}
+            >
               {types?.map((type) => (
                 <option value={type} key={type}>
                   {type}
                 </option>
               ))}
             </Select>
+          </Flex>
+          <Box mb={2}>
+            В архиве:
+            <Switch
+              pb="1px"
+              ml={2}
+              size="md"
+              checked={config.archive}
+              onChange={(e) =>
+                setConfig({ ...config, archive: e.target.checked })
+              }
+            />
           </Box>
           <VStack>
             {stories.length === 0 && "Историй нет, пусто"}

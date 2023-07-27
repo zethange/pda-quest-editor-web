@@ -16,6 +16,7 @@ export type pointType = {
   type: number;
   name: string;
   pos: string;
+  mapId?: string;
   data: {
     chapter: string;
     stage: string;

@@ -22,7 +22,14 @@ import ReactFlow, {
   ReactFlowProvider,
 } from "reactflow";
 
-import { Box, Button, Spacer, Text, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Spacer,
+  Text,
+  useColorMode,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 import "reactflow/dist/style.css";
 import { newStage } from "@/store/tools/createTools";
@@ -53,6 +60,7 @@ import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionMo
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import { setMissions } from "@/store/reduxStore/missionSlice";
 import { isArray } from "@chakra-ui/utils";
+import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
 
 export default function StageEditScreen({
   path,
@@ -221,15 +229,14 @@ export default function StageEditScreen({
     }
   }, [isReady]);
 
-  // отрисовка nodes и edges
-  useEffect(() => {
-    interface CustomNode extends Node {
-      position: {
-        x: number;
-        y: number;
-      };
-    }
+  interface CustomNode extends Node {
+    position: {
+      x: number;
+      y: number;
+    };
+  }
 
+  useEffect(() => {
     const initialNodes: CustomNode[] = [];
     const initialEdges: any[] = [];
 
@@ -262,10 +269,11 @@ export default function StageEditScreen({
       });
     });
 
+    // отрисовка переходов
     chapter?.stages?.map((stage: stageType): void => {
       stage?.transfers?.map((transfer: stageTransfer): void => {
         initialEdges.push({
-          id: `${stage.id}-${transfer.stage}`,
+          id: `${stage.id}@${transfer.stage}`,
           source: String(stage.id),
           target: String(transfer.stage),
           type: "custom",
@@ -328,7 +336,7 @@ export default function StageEditScreen({
           });
           if (point.data.stage !== "") {
             initialEdges.push({
-              id: `${point.id}-${point.data.stage}`,
+              id: `${point.id}@${point.data.stage}`,
               source: String(point.id),
               target: String(point.data.stage),
               type: "custom",
@@ -777,6 +785,64 @@ export default function StageEditScreen({
     reactFlowInstance.setCenter(x, y, { zoom, duration: 1000 });
   };
 
+  interface IStatisticSelected {
+    stages: stageType[];
+    points: pointType[];
+    show: boolean;
+  }
+  const [statisticSelected, setStatisticSelected] =
+    useState<IStatisticSelected>();
+
+  const {
+    onOpen: movingStagesOnOpen,
+    isOpen: movingStagesIsOpen,
+    onClose: movingStagesOnClose,
+  } = useDisclosure();
+
+  const onSelectionChange = ({
+    nodes,
+  }: {
+    nodes: CustomNode[];
+    edges: Edge[];
+  }) => {
+    const nodesId = nodes.map((node) => {
+      const nodeId = +node.id;
+      if (isNaN(nodeId)) {
+        return node.id;
+      }
+      return nodeId;
+    });
+    const chapterFromLocalStorage: chapterType =
+      path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+
+    const stages = chapterFromLocalStorage?.stages.filter((stage) => {
+      if (nodesId.includes(stage.id)) {
+        return stage;
+      }
+    });
+    const pointsEntries = Object.entries(chapterFromLocalStorage?.points ?? {});
+
+    const points: pointType[] = [];
+    pointsEntries.map((arrPoint) => {
+      arrPoint[1].map((point) => {
+        if (nodesId.includes(point.id as string)) {
+          points.push({ ...point, mapId: arrPoint[0] });
+        }
+      });
+    });
+
+    if (
+      statisticSelected?.points?.length !== points?.length! ||
+      statisticSelected?.stages?.length !== stages?.length!
+    ) {
+      setStatisticSelected({
+        points: points!,
+        stages: stages!,
+        show: points?.length! > 0 || stages?.length! > 0,
+      });
+    }
+  };
+
   return (
     <>
       <CustomHead title={"Редактирование главы " + chapter?.id} />
@@ -794,6 +860,22 @@ export default function StageEditScreen({
         <CreateStage onDragStart={onDragStart} />
         <Text>Глава {chapter?.id}</Text>
         <Spacer />
+        {!!statisticSelected?.stages?.length && (
+          <Box>{statisticSelected?.stages?.length} stage</Box>
+        )}
+        {!!statisticSelected?.points?.length && (
+          <Box>{statisticSelected?.points?.length} point</Box>
+        )}
+        {statisticSelected?.show && (
+          <Button
+            size="sm"
+            fontWeight="normal"
+            colorScheme="teal"
+            onClick={movingStagesOnOpen}
+          >
+            Перенос в другую главу
+          </Button>
+        )}
         {chapter && (
           <ToStage
             setEditableStage={setEditableStage}
@@ -834,6 +916,7 @@ export default function StageEditScreen({
               onDragOver={onDragOver}
               onInit={setReactFlowInstance}
               edgeTypes={edgeTypes}
+              onSelectionChange={(e) => onSelectionChange(e)}
               fitView
             >
               <MiniMap zoomable pannable />
@@ -848,6 +931,17 @@ export default function StageEditScreen({
             </ReactFlow>
           </ReactFlowProvider>
         </Box>
+
+        {!!path[0] && (
+          <MovingStagesModal
+            isOpen={movingStagesIsOpen}
+            onClose={movingStagesOnClose}
+            stages={statisticSelected?.stages}
+            points={statisticSelected?.points}
+            currentStory={path[0]}
+            currentChapter={path[1]}
+          />
+        )}
 
         <CreateTransferModal
           setIsOpenCreateTransfer={setIsOpenCreateTransfer}
