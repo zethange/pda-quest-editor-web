@@ -1,3 +1,4 @@
+import useFetching from "@/hooks/useFetching";
 import { StoryFromServer } from "@/pages";
 import { useAppSelector } from "@/store/reduxHooks";
 import { mapType } from "@/store/types/mapType";
@@ -18,14 +19,16 @@ import {
   Button,
   DrawerFooter,
   Text,
+  Box,
+  Select,
 } from "@chakra-ui/react";
-import React from "react";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 import store from "store2";
 
 interface Props {
   stories: storyType[];
   setStories: (newStories: storyType[]) => void;
-  storiesFromServer: StoryFromServer[];
   downloadModalIsOpen: boolean;
   downloadModalOnClose: () => void;
 }
@@ -33,11 +36,41 @@ interface Props {
 const DownloadFromServerDrawer: React.FC<Props> = ({
   stories,
   setStories,
-  storiesFromServer,
   downloadModalIsOpen,
   downloadModalOnClose,
 }) => {
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAppSelector((state: any) => state.user.user);
+  const [storiesFromServer, setStoriesFromServer] =
+    useState<StoryFromServer[]>();
+  const [type, setType] = useState("PUBLIC");
+
+  const { data: types } = useFetching<string[]>(
+    "/pdanetwork/api/v1/admin/quest/storage/types"
+  );
+
+  const downloadStoryFromServer = async (type: string) => {
+    const storiesRes = await fetch(
+      user?.role === "ADMIN"
+        ? `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/all?sortDirection=DESC&sortBy=timestamp&type=${type}`
+        : `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp&type=${type}`,
+      {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const { content } = await storiesRes.json();
+    setStoriesFromServer(content);
+  };
+
+  useEffect(() => {
+    if (downloadModalIsOpen) {
+      downloadStoryFromServer(type);
+    }
+  }, [downloadModalIsOpen, type]);
+
   const downloadStoryFromServerById = async (id: string) => {
     const res = await fetch(
       `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/${id}`,
@@ -83,9 +116,18 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
         <DrawerHeader>Загрузка истории с сервера</DrawerHeader>
         <DrawerBody>
           Роль: {user?.role}
+          <Box mb={2}>
+            <Select value={type} onChange={(e) => setType(e.target.value)}>
+              {types?.map((type) => (
+                <option value={type} key={type}>
+                  {type}
+                </option>
+              ))}
+            </Select>
+          </Box>
           <VStack>
             {stories.length === 0 && "Историй нет, пусто"}
-            {storiesFromServer.map((story: StoryFromServer) => (
+            {storiesFromServer?.map((story: StoryFromServer) => (
               <Card key={story.storageId} w="100%" variant="outline">
                 <Heading size="md" pt={5} pl={5}>
                   {story.title}{" "}

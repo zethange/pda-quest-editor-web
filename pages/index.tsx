@@ -84,9 +84,6 @@ interface IParametersUpload {
 
 export default function Home() {
   const [stories, setStories] = useState<storyType[]>([]);
-  const [storiesFromServer, setStoriesFromServer] = useState<StoryFromServer[]>(
-    []
-  );
   const [editStory, setEditStory] = useState<storyType>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openEditStoryId, setOpenEditStoryId] = useState<number>(0);
@@ -96,7 +93,6 @@ export default function Home() {
     toStore: false,
     message: "",
   });
-  const user = useAppSelector((state) => state.user.user);
 
   const resetParametersUpload = () => {
     setParametersUpload({
@@ -182,7 +178,15 @@ export default function Home() {
     const blob = await downloadZip([info, ...arrChapters]).blob();
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `story_${story_id}.zip`;
+
+    const dateString = new Date().toLocaleDateString();
+    const timeString =
+      new Date().getHours() +
+      "." +
+      new Date().getMinutes() +
+      "." +
+      new Date().getSeconds();
+    link.download = `story_${story_id}_${dateString}_${timeString}.zip`;
     link.click();
     link.remove();
   }
@@ -335,56 +339,6 @@ export default function Home() {
     resetParametersUpload();
   };
 
-  const downloadStoryFromServer = async () => {
-    const storiesRes = await fetch(
-      user?.role === "ADMIN"
-        ? `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/all?sortDirection=DESC&sortBy=timestamp`
-        : `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp`,
-      {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const { content } = await storiesRes.json();
-    setStoriesFromServer(content);
-    downloadModalOnOpen();
-  };
-
-  const downloadStoryFromServerById = async (id: string) => {
-    const res = await fetch(
-      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/${id}`,
-      {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await res.json();
-    store.set(
-      `story_${data.id}_info`,
-      {
-        id: data.id,
-        title: data.title,
-        desc: data.desc,
-        icon: data.icon,
-        needs: data.needs,
-        access: data.access,
-      },
-      true
-    );
-    data.chapters.map((chapter: chapterType) => {
-      store.set(`story_${data.id}_chapter_${chapter.id}`, chapter, true);
-    });
-    data.maps.map((map: mapType) => {
-      store.set(`story_${data.id}_maps_${map.id}`, map, true);
-    });
-    setStories([...stories, data]);
-  };
-
   const deleteStory = (storyId: number) => {
     const storyItems: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -475,7 +429,12 @@ export default function Home() {
           />
           <Spacer />
           <ChangeThemeButton rounded={true} />
-          <Button fontWeight="normal" onClick={() => downloadStoryFromServer()}>
+          <Button
+            fontWeight="normal"
+            onClick={() => {
+              downloadModalOnOpen();
+            }}
+          >
             Выкачать истории с сервера
           </Button>
           <Button
@@ -673,13 +632,11 @@ export default function Home() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-
       <DownloadFromServerDrawer
         downloadModalIsOpen={downloadModalIsOpen}
         downloadModalOnClose={downloadModalOnClose}
         setStories={setStories}
         stories={stories}
-        storiesFromServer={storiesFromServer}
       />
       {/* drawer */}
       <Drawer isOpen={isOpen} placement="right" size="md" onClose={onClose}>
