@@ -102,14 +102,14 @@ const FromMapStage = () => {
             style={{
               position: "absolute",
               left: `${
-                Number(stage?.point?.pos.split(":")[0]) / diffWidth - 10
+                Number(stage?.point?.pos.split(":")[0]) / diffWidth - 5
               }px`,
               bottom: `${
-                Number(stage?.point?.pos.split(":")[1]) / diffHeight - 10
+                Number(stage?.point?.pos.split(":")[1]) / diffHeight - 5
               }px`,
               color: "#fff",
               userSelect: "none",
-              width: "20px",
+              width: "10px",
             }}
             draggable={false}
             alt="Метка"

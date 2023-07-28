@@ -390,18 +390,20 @@ export default function StageEditScreen({
 
       if (changes[0].position) {
         if (uuidValidate(changes[0].id)) {
-          // @ts-ignore
-          const points = JSON.parse(JSON.stringify(chapter?.points));
-          const pointsValues: pointType[][] = Object.values(points);
-          pointsValues.map((points) => {
-            points.forEach((point) => {
-              if (point.id === changes[0].id) {
-                point.editor = {
-                  x: changes[0].position.x,
-                  y: changes[0].position.y,
-                };
-              }
-            });
+          const points: {
+            [key: `${number}`]: pointType[];
+          } = chapter?.points as {
+            [key: `${number}`]: pointType[];
+          };
+
+          const pointsValues: pointType[] = Object.values(points).flat();
+          pointsValues.forEach((point) => {
+            if (point && point.id === changes[0].id) {
+              point.editor = {
+                x: changes[0].position.x,
+                y: changes[0].position.y,
+              };
+            }
           });
           const updatedChapter = {
             ...chapter,
@@ -897,14 +899,15 @@ export default function StageEditScreen({
       </Box>
       <Box h="calc(100vh - 83px)">
         {/* Штука для редактирования стадий */}
-        <EditStagePopover
-          editableStage={editableStage}
-          updateStage={updateStage}
-          deleteStage={deleteStage}
-          deletePoint={deletePoint}
-          setEditableStage={setEditableStage}
-          updateTransitionFromMap={updateTransitionFromMap}
-        />
+        {editableStage && (
+          <EditStagePopover
+            updateStage={updateStage}
+            deleteStage={deleteStage}
+            deletePoint={deletePoint}
+            setEditableStage={setEditableStage}
+            updateTransitionFromMap={updateTransitionFromMap}
+          />
+        )}
         <Box ref={reactFlowWrapper} height="100%">
           <ReactFlowProvider>
             <ReactFlow

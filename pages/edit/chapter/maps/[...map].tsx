@@ -208,13 +208,13 @@ const MapChapter = () => {
                   }
                 >
                   <Image
-                    w="20px"
+                    w="18px"
                     draggable={false}
                     userSelect="none"
                     src={`/static/tags/${imagePoint(point.type)}`}
                     position="absolute"
-                    left={`${+point.pos.split(":")[0] / diffWidth}px`}
-                    bottom={`${+point.pos.split(":")[1] / diffHeight}px`}
+                    left={`${+point.pos.split(":")[0] / diffWidth - 9}px`}
+                    bottom={`${+point.pos.split(":")[1] / diffHeight - 9}px`}
                     alt={point.name}
                     transform={selectedPoint === point.name ? "scale(2)" : ""}
                     transition="all 0.3s ease-out"

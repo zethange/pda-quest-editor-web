@@ -71,7 +71,7 @@ const MapStage = memo(({ data }: IProps) => {
           ))}
         </Select>
       </Box>
-      <Box position="relative">
+      <Box position="relative" border="1px solid #000">
         <Box ref={parentMapRef}>
           <img
             src={"/static/maps/" + backgroundSelectedMap}
@@ -90,14 +90,14 @@ const MapStage = memo(({ data }: IProps) => {
             style={{
               position: "absolute",
               left: `${
-                Number(stage?.data?.pos.split(":")[0]) / diffWidth - 10
+                Number(stage?.data?.pos.split(":")[0]) / diffWidth - 5
               }px`,
               bottom: `${
-                Number(stage?.data?.pos.split(":")[1]) / diffHeight - 10
+                Number(stage?.data?.pos.split(":")[1]) / diffHeight - 5
               }px`,
               color: "#fff",
               userSelect: "none",
-              width: "20px",
+              width: "10px",
             }}
             draggable={false}
             alt="Метка"

@@ -27,7 +27,6 @@ import EditTextCondition from "@/components/Chapter/EditStage/EditTextCondition"
 import { useAppSelector } from "@/store/reduxHooks";
 
 export default function EditStage() {
-  const [checkBoxMessage, setCheckBoxMessage] = useState<boolean>(false);
   const [openCondition, setOpenCondition] = useState<boolean>(false);
   const storeStage = useAppSelector((state) => state.stage.stage);
   const dispatch = useDispatch();
@@ -218,38 +217,23 @@ export default function EditStage() {
       >
         <b>Уведомление:</b>
         <Box>
-          Показывать уведомление:{" "}
-          <Switch
-            size="sm"
-            onChange={() => {
-              setCheckBoxMessage(!checkBoxMessage);
-              if (!checkBoxMessage) {
-                dispatch(editMessageInStore("Новое уведомление"));
-              } else {
-                dispatch(editMessageInStore(""));
-              }
+          <Textarea
+            placeholder="Уведомление... (если пусто, показыватся не будет)"
+            defaultValue={storeStage?.message}
+            backgroundColor="white"
+            _dark={{
+              backgroundColor: "gray.900",
             }}
-            defaultChecked={!!storeStage?.message}
+            onClick={(event: any) => {
+              event.target.style.height = "inherit";
+              event.target.style.height = `${event.target.scrollHeight}px`;
+            }}
+            onChange={(event) => {
+              event.target.style.height = "inherit";
+              event.target.style.height = `${event.target.scrollHeight}px`;
+              dispatch(editMessageInStore(event.target.value));
+            }}
           />
-          {checkBoxMessage && (
-            <Textarea
-              placeholder="Уведомление..."
-              defaultValue={storeStage?.message}
-              backgroundColor="white"
-              _dark={{
-                backgroundColor: "gray.900",
-              }}
-              onClick={(event: any) => {
-                event.target.style.height = "inherit";
-                event.target.style.height = `${event.target.scrollHeight}px`;
-              }}
-              onChange={(event) => {
-                event.target.style.height = "inherit";
-                event.target.style.height = `${event.target.scrollHeight}px`;
-                dispatch(editMessageInStore(event.target.value));
-              }}
-            />
-          )}
         </Box>
       </Box>
     </>

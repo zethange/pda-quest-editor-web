@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
 import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/react";
+import { LGBTFlagColors } from "@/store/constants";
 
 type data = {
   label: string;
@@ -68,9 +69,29 @@ export function NodeStage({
                 >
                   {(action[1] as string[]).map((param: string) => {
                     if (action[0] === "add") {
-                      return <Badge colorScheme="green">{param}</Badge>;
+                      return (
+                        <Badge colorScheme="green" key={param}>
+                          {param}
+                        </Badge>
+                      );
                     } else if (action[0] === "remove") {
-                      return <Badge colorScheme="red">{param}</Badge>;
+                      return (
+                        <Badge colorScheme="red" key={param}>
+                          {param}
+                        </Badge>
+                      );
+                    } else if (action[0] === "money") {
+                      return (
+                        <Badge
+                          background={`linear-gradient(to bottom, ${LGBTFlagColors.join(
+                            ", "
+                          )})`}
+                          color="white"
+                          key={param}
+                        >
+                          ₽: {param}
+                        </Badge>
+                      );
                     }
                   })}
                 </SimpleGrid>

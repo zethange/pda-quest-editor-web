@@ -167,6 +167,13 @@ export default function storyId() {
                             updateTitleChapter(chapter.id, e.target.value);
                           }}
                         />
+                        <Button
+                          colorScheme="teal"
+                          onClick={() => window.location.reload()}
+                          w="100%"
+                        >
+                          Сохранить
+                        </Button>
                       </VStack>
                     </MenuList>
                   </Menu>
