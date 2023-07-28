@@ -109,6 +109,7 @@ const MapChapter = () => {
   const [selectedPoint, setSelectedPoint] = useState("");
 
   const onLoadImage = (target: any) => {
+    console.log(target.target.naturalHeight / target.target.clientHeight);
     setDiffHeight(target.target.naturalHeight / target.target.clientHeight);
     setDiffWidth(target.target.naturalWidth / target.target.clientWidth);
   };
@@ -208,13 +209,16 @@ const MapChapter = () => {
                   }
                 >
                   <Image
-                    w="18px"
+                    w="15px"
+                    h="15px"
                     draggable={false}
                     userSelect="none"
                     src={`/static/tags/${imagePoint(point.type)}`}
                     position="absolute"
-                    left={`${+point.pos.split(":")[0] / diffWidth - 9}px`}
-                    bottom={`${+point.pos.split(":")[1] / diffHeight - 9}px`}
+                    left={`${+point.pos.split(":")[0] / +diffWidth - 7.5}px`}
+                    bottom={`${
+                      +point.pos.split(":")[1] / +diffHeight - (15 + 7.5)
+                    }px`}
                     alt={point.name}
                     transform={selectedPoint === point.name ? "scale(2)" : ""}
                     transition="all 0.3s ease-out"

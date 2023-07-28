@@ -105,7 +105,7 @@ const FromMapStage = () => {
                 Number(stage?.point?.pos.split(":")[0]) / diffWidth - 5
               }px`,
               bottom: `${
-                Number(stage?.point?.pos.split(":")[1]) / diffHeight - 5
+                Number(stage?.point?.pos.split(":")[1]) / diffHeight - (10 + 5)
               }px`,
               color: "#fff",
               userSelect: "none",

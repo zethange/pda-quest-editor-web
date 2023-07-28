@@ -93,7 +93,7 @@ const MapStage = memo(({ data }: IProps) => {
                 Number(stage?.data?.pos.split(":")[0]) / diffWidth - 5
               }px`,
               bottom: `${
-                Number(stage?.data?.pos.split(":")[1]) / diffHeight - 5
+                Number(stage?.data?.pos.split(":")[1]) / diffHeight - (10 + 5)
               }px`,
               color: "#fff",
               userSelect: "none",
