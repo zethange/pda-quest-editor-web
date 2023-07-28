@@ -107,7 +107,7 @@ const mapSlice = createSlice({
     deleteSpawn(state, action: PayloadAction<number>) {
       state.map.spawns?.splice(action.payload, 1);
     },
-    onPointCreate(state, action) {
+    onPointCreate(state, action: PayloadAction<pointType>) {
       state.newPoint = action.payload;
     },
     addPoint(state, action: PayloadAction<pointType>) {

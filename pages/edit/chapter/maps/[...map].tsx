@@ -38,6 +38,7 @@ import CreatePointButtons from "@/components/Map/Points/CreatePointButtons";
 import CreatePointModal from "@/components/Map/Points/CreatePointModal";
 import UpdatePointModal from "@/components/Map/Points/UpdatePointModal";
 import EditSpawnModal from "@/components/Map/Spawns/EditSpawnModal";
+import { v4 as uuidv4 } from "uuid";
 
 // /edit/chapter/maps/{storyId}/{chapterId}/{mapId}
 const MapChapter = () => {
@@ -149,6 +150,12 @@ const MapChapter = () => {
           pos: `${position.x}:${position.y}`,
           name: "",
           data: { chapter: "", stage: "" },
+          condition: {},
+          id: uuidv4(),
+          editor: {
+            x: 0,
+            y: 0,
+          },
         })
       );
       setShowCreatePointModal(true);
@@ -220,7 +227,10 @@ const MapChapter = () => {
               ))}
             {showSpawns &&
               map?.spawns?.map((spawn: spawnType, index: number) => (
-                <Tooltip label={JSON.stringify(spawn, null, 2)}>
+                <Tooltip
+                  label={JSON.stringify(spawn, null, 2)}
+                  key={spawn.title}
+                >
                   <Box
                     w={`${spawn.r}px`}
                     h={`${spawn.r}px`}
