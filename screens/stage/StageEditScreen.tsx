@@ -19,6 +19,7 @@ import ReactFlow, {
   MarkerType,
   MiniMap,
   Node,
+  ReactFlowInstance,
   ReactFlowProvider,
 } from "reactflow";
 
@@ -93,7 +94,8 @@ export default function StageEditScreen({
 
   // для dnd
   const reactFlowWrapper: any = useRef(null);
-  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const [reactFlowInstance, setReactFlowInstance] =
+    useState<ReactFlowInstance>();
   const storeRedux: Store<RootState> = useStore();
 
   // вытаскивание карт
@@ -334,7 +336,7 @@ export default function StageEditScreen({
               ? { x: point.editor.x as number, y: point.editor.y as number }
               : { x: 0, y: 0 },
           });
-          if (point.data.stage !== "") {
+          if (point.data.stage !== "" && +point.data.chapter === +path[1]) {
             initialEdges.push({
               id: `${point.id}@${point.data.stage}`,
               source: String(point.id),
@@ -782,7 +784,7 @@ export default function StageEditScreen({
     const x = targetNode?.position?.x! + targetNode?.width! / 2;
     const y = targetNode?.position?.y! + targetNode?.height! / 2;
     const zoom = 1.85;
-    reactFlowInstance.setCenter(x, y, { zoom, duration: 1000 });
+    reactFlowInstance?.setCenter(x, y, { zoom, duration: 1000 });
   };
 
   interface IStatisticSelected {
