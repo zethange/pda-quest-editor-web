@@ -78,8 +78,8 @@ const MapScreen = ({ path, isReady }: Props) => {
           <MenuButton as={Button}>Создать карту</MenuButton>
           <MenuList>
             {data?.map((map) => (
-              <MenuItem onClick={() => handleCreateMap(map)} key={map.id}>
-                {map.title}
+              <MenuItem onClick={() => handleCreateMap(map)} key={map?.id}>
+                {map?.title}
               </MenuItem>
             ))}
           </MenuList>

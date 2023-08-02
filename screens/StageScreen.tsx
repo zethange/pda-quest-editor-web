@@ -16,6 +16,8 @@ import StageEditScreen from "@/screens/stage/StageEditScreen";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import MapScreen from "./MapScreen";
 import MissionScreen from "@/screens/MissionScreen";
+import { FallbackRender } from "@/components/Global/ErrorHandler";
+import { ErrorBoundary } from "react-error-boundary";
 
 const StageScreen = ({
   path,
@@ -46,10 +48,14 @@ const StageScreen = ({
       <TabIndicator mt="-1.5px" height="1px" bg="blue.500" borderRadius="1px" />
       <TabPanels>
         <TabPanel p={0}>
-          <StageEditScreen path={path} query={query} isReady={isReady} />
+          <ErrorBoundary FallbackComponent={FallbackRender}>
+            <StageEditScreen path={path} query={query} isReady={isReady} />
+          </ErrorBoundary>
         </TabPanel>
         <TabPanel>
-          <MapScreen path={path} isReady={isReady} />
+          <ErrorBoundary FallbackComponent={FallbackRender}>
+            <MapScreen path={path} isReady={isReady} />
+          </ErrorBoundary>
         </TabPanel>
         <TabPanel>
           <MissionScreen />

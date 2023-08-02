@@ -6,7 +6,6 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 import store from "@/store/reduxStore";
 import AuthProvider from "@/components/Providers/AuthProvider";
-import { AxiomWebVitals } from "next-axiom";
 
 export default function App({
   Component,
@@ -19,7 +18,6 @@ export default function App({
         <Provider store={store}>
           <AuthProvider>
             <AnyComponent {...pageProps} />
-            <AxiomWebVitals />
           </AuthProvider>
         </Provider>
       </ChakraProvider>
