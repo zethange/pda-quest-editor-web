@@ -43,12 +43,14 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
   const user = useAppSelector((state: any) => state.user.user);
   const [storiesFromServer, setStoriesFromServer] =
     useState<StoryFromServer[]>();
-  const [config, setConfig] = useState({ type: "PUBLIC", archive: false });
+  const [config, setConfig] = useState({
+    type: "PUBLIC",
+    archive: false,
+  });
 
   const { data: types } = useFetching<string[]>(
     "/pdanetwork/api/v1/admin/quest/storage/types"
   );
-
   const downloadStoryFromServer = async () => {
     const storiesRes = await fetch(
       user?.role === "ADMIN"
@@ -121,7 +123,12 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
             Тип:
             <Select
               value={config.type}
-              onChange={(e) => setConfig({ ...config, type: e.target.value })}
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  type: e.target.value,
+                })
+              }
             >
               {types?.map((type) => (
                 <option value={type} key={type}>
@@ -138,7 +145,10 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
               size="md"
               checked={config.archive}
               onChange={(e) =>
-                setConfig({ ...config, archive: e.target.checked })
+                setConfig({
+                  ...config,
+                  archive: e.target.checked,
+                })
               }
             />
           </Box>

@@ -6,6 +6,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 import store from "@/store/reduxStore";
 import AuthProvider from "@/components/Providers/AuthProvider";
+import { ErrorBoundary } from "react-error-boundary";
+import { FallbackRender } from "@/components/Global/ErrorHandler";
 
 export default function App({
   Component,
@@ -17,7 +19,9 @@ export default function App({
       <ChakraProvider>
         <Provider store={store}>
           <AuthProvider>
-            <AnyComponent {...pageProps} />
+            <ErrorBoundary FallbackComponent={FallbackRender}>
+              <AnyComponent {...pageProps} />
+            </ErrorBoundary>
           </AuthProvider>
         </Provider>
       </ChakraProvider>
