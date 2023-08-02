@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  ChangeEvent,
-  useRef,
-  MutableRefObject,
-} from "react";
+import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import Link from "next/link";
 import store from "store2";
 import { downloadZip } from "client-zip";
@@ -443,10 +437,7 @@ export default function Home() {
             hidden
             onChange={(e) => uploadStoryFromZip(e)}
           />
-          <Button
-            fontWeight="normal"
-            onClick={() => folderRef?.current?.click()}
-          >
+          <Button fontWeight="normal" onClick={() => zipRef?.current?.click()}>
             Загрузить из .zip
           </Button>
           <Spacer />
