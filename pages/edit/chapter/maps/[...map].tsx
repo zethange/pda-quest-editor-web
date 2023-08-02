@@ -236,8 +236,8 @@ const MapChapter = () => {
                   key={spawn.title}
                 >
                   <Box
-                    w={`${spawn.r}px`}
-                    h={`${spawn.r}px`}
+                    w={+spawn.r + "px"}
+                    h={+spawn.r + "px"}
                     background="#808080"
                     borderRadius="50%"
                     border="1px solid #000000"

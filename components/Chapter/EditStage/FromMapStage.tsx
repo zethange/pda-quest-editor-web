@@ -44,9 +44,11 @@ const FromMapStage = () => {
   const handleClick = (e: any) => {
     const parentMap = parentMapRef.current.getBoundingClientRect();
     const position = {
-      x: Math.round((e.clientX - parentMap.left) * diffHeight),
+      x: Math.round((e.clientX - parentMap.left) * diffWidth),
       y: Math.round(
-        e.target.naturalHeight - (e.clientY - parentMap.top) * diffHeight
+        e.target.naturalHeight -
+          (e.clientY - parentMap.top) * diffHeight -
+          diffHeight
       ),
     };
     dispatch(editPosInTransition(`${position.x}:${position.y}`));

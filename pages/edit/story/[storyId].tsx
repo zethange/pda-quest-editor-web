@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import store from "store2";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -92,6 +92,7 @@ export default function storyId() {
     chapter.title = newTitle;
     store.set(`story_${storyId}_chapter_${chapterId}`, chapter);
   };
+  const jsonRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -104,7 +105,16 @@ export default function storyId() {
           <Button fontWeight="normal" onClick={() => createChapter()}>
             Создать главу
           </Button>
-          <input type="file" onChange={(e) => uploadChapter(e)} />
+          <input
+            type="file"
+            ref={jsonRef}
+            accept="application/json"
+            hidden
+            onChange={(e) => uploadChapter(e)}
+          />
+          <Button fontWeight="normal" onClick={() => jsonRef?.current?.click()}>
+            Загрузить главу из .json
+          </Button>
           <Spacer />
           <ChangeThemeButton rounded={true} />
         </NavBar>

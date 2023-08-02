@@ -43,7 +43,7 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
   const user = useAppSelector((state: any) => state.user.user);
   const [storiesFromServer, setStoriesFromServer] =
     useState<StoryFromServer[]>();
-  const [config, setConfig] = useState({ type: "PUBLIC", archive: true });
+  const [config, setConfig] = useState({ type: "PUBLIC", archive: false });
 
   const { data: types } = useFetching<string[]>(
     "/pdanetwork/api/v1/admin/quest/storage/types"

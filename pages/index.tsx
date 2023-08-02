@@ -1,4 +1,10 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  ChangeEvent,
+  useRef,
+  MutableRefObject,
+} from "react";
 import Link from "next/link";
 import store from "store2";
 import { downloadZip } from "client-zip";
@@ -43,7 +49,6 @@ import { storyType } from "@/store/types/storyType";
 import { chapterType } from "@/store/types/types";
 import { mapType } from "@/store/types/mapType";
 import JSZip from "jszip";
-import { useAppSelector } from "@/store/reduxHooks";
 import DownloadFromServerDrawer from "@/components/Story/DownloadFromServerDrawer";
 
 interface Author {
@@ -406,27 +411,44 @@ export default function Home() {
       setIsErrorId(exists);
     }
   };
+  const folderRef = useRef<HTMLInputElement>(null);
+  const zipRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
       <CustomHead title="Редактор историй" />
       <Box w="100vw">
         <NavBar>
-          <input
-            type="file"
-            {...{ directory: "", webkitdirectory: "" }}
-            id="input"
-            onChange={(e) => uploadStoryFromFolder(e)}
-          />
           <Button fontWeight="normal" onClick={() => createStory()}>
             Создать историю
           </Button>
           <input
             type="file"
+            hidden
+            ref={folderRef}
+            {...{ directory: "", webkitdirectory: "" }}
+            onChange={(e) => uploadStoryFromFolder(e)}
+          />
+          <Button
+            fontWeight="normal"
+            onClick={() => folderRef?.current?.click()}
+          >
+            Загрузить из папки
+          </Button>
+          <input
+            type="file"
             id="input"
             accept="application/zip"
+            ref={zipRef}
+            hidden
             onChange={(e) => uploadStoryFromZip(e)}
           />
+          <Button
+            fontWeight="normal"
+            onClick={() => folderRef?.current?.click()}
+          >
+            Загрузить из .zip
+          </Button>
           <Spacer />
           <ChangeThemeButton rounded={true} />
           <Button

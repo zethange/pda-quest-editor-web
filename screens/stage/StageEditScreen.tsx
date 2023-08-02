@@ -862,7 +862,11 @@ export default function StageEditScreen({
         }}
       >
         <CreateStage onDragStart={onDragStart} />
-        <Text>Глава {chapter?.id}</Text>
+        <Text>
+          {chapter?.title
+            ? chapter?.title + " -- ID: " + chapter?.id
+            : `Глава ${chapter?.id}`}
+        </Text>
         <Spacer />
         {!!statisticSelected?.stages?.length && (
           <Box>{statisticSelected?.stages?.length} stage</Box>
@@ -898,7 +902,6 @@ export default function StageEditScreen({
         </Button>
       </Box>
       <Box h="calc(100vh - 83px)">
-        {/* Штука для редактирования стадий */}
         {editableStage && (
           <EditStagePopover
             updateStage={updateStage}
