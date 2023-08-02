@@ -179,9 +179,6 @@ export default function StageEditScreen({
         );
         const point = points.find((point) => point.id === node.id);
         if (stage) {
-          if (+stage.id !== +node.id) {
-            console.log(stage.id, node.id);
-          }
           stage.editor = {
             x: node.position.x,
             y: node.position.y,
@@ -385,51 +382,53 @@ export default function StageEditScreen({
 
   // передвижение node
   const onNodesChange = useCallback(
-    (changes: any): void => {
+    (changes: any[]): void => {
       setNodes((nds: any) => applyNodeChanges(changes, nds));
 
-      if (changes[0].position) {
-        if (uuidValidate(changes[0].id)) {
-          const points: {
-            [key: `${number}`]: pointType[];
-          } = chapter?.points as {
-            [key: `${number}`]: pointType[];
-          };
+      changes.forEach((change: any) => {
+        if (change.position) {
+          if (uuidValidate(change.id)) {
+            const points: {
+              [key: `${number}`]: pointType[];
+            } = chapter?.points as {
+              [key: `${number}`]: pointType[];
+            };
 
-          const pointsValues: pointType[] = Object.values(points).flat();
-          pointsValues.forEach((point) => {
-            if (point && point.id === changes[0].id) {
-              point.editor = {
-                x: changes[0].position.x,
-                y: changes[0].position.y,
-              };
-            }
-          });
-          const updatedChapter = {
-            ...chapter,
-            points,
-          };
-          updateChapter(updatedChapter, false);
-        } else {
-          const idStage = chapter?.stages?.indexOf(
-            chapter?.stages?.filter((stage) => +stage.id === +changes[0].id)[0]
-          ) as number;
-          const updatedStageWithPosition = {
-            ...chapter?.stages[idStage],
-            editor: {
-              x: changes[0].position.x,
-              y: changes[0].position.y,
-            },
-          };
+            const pointsValues: pointType[] = Object.values(points).flat();
+            pointsValues.forEach((point) => {
+              if (point && point.id === change.id) {
+                point.editor = {
+                  x: change.position.x,
+                  y: change.position.y,
+                };
+              }
+            });
+            const updatedChapter = {
+              ...chapter,
+              points,
+            };
+            updateChapter(updatedChapter, false);
+          } else {
+            const idStage = chapter?.stages?.indexOf(
+              chapter?.stages?.filter((stage) => +stage.id === +change.id)[0]
+            ) as number;
+            const updatedStageWithPosition = {
+              ...chapter?.stages[idStage],
+              editor: {
+                x: change.position.x,
+                y: change.position.y,
+              },
+            };
 
-          const initialChapter =
-            path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+            const initialChapter =
+              path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-          initialChapter.stages?.splice(idStage, 1, updatedStageWithPosition);
+            initialChapter.stages?.splice(idStage, 1, updatedStageWithPosition);
 
-          updateChapter(initialChapter, false);
+            updateChapter(initialChapter, false);
+          }
         }
-      }
+      });
     },
     [chapter]
   );
@@ -556,15 +555,16 @@ export default function StageEditScreen({
   const deletePoint = () => {
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
-    const points =
-      chapterFromLocalStorage.points[
-        storeRedux.getState().stage.transitionFromMap.mapId
-      ];
+    const points = chapterFromLocalStorage.points[
+      storeRedux.getState().stage.transitionFromMap.mapId
+    ] as pointType[];
 
-    const pointIndex = points.indexOf(
-      storeRedux.getState().stage.transitionFromMap.originalPoint
-    );
-    console.log(points, pointIndex);
+    const pointIndex = points.findIndex((point) => {
+      return (
+        point.id ===
+        storeRedux.getState().stage.transitionFromMap.originalPoint.point.id
+      );
+    });
 
     points.splice(pointIndex, 1);
     updateChapter(chapterFromLocalStorage, true);
@@ -632,10 +632,8 @@ export default function StageEditScreen({
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
-    const indexStage = chapterFromLocalStorage?.stages?.indexOf(
-      chapterFromLocalStorage?.stages?.find(
-        (stage: stageType) => stage.id === id
-      )
+    const indexStage = chapterFromLocalStorage?.stages?.findIndex(
+      (stage: stageType) => stage.id === id
     );
 
     chapterFromLocalStorage?.stages?.splice(indexStage, 1);
@@ -821,7 +819,7 @@ export default function StageEditScreen({
 
     const stages = chapterFromLocalStorage?.stages.filter((stage) => {
       if (nodesId.includes(stage.id)) {
-        return stage;
+        return true;
       }
     });
     const pointsEntries = Object.entries(chapterFromLocalStorage?.points ?? {});

@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     } catch (e) {
       return res.status(400).send(JSON.stringify(e));
     }
-    if (body.name && body.message && body.stack) {
+    if (body.name && body.message && body.stack && body.router) {
       log.error("Error occurred", body);
     }
     return res.status(200).send(200);
