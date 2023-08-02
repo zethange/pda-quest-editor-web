@@ -1,5 +1,6 @@
+const { withAxiom } = require("next-axiom");
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withAxiom({
   images: {
     remotePatterns: [
       {
@@ -43,6 +44,6 @@ const nextConfig = {
     ];
   },
   reactStrictMode: false,
-};
+});
 
 module.exports = nextConfig;

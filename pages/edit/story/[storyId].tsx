@@ -138,7 +138,7 @@ export default function storyId() {
               >
                 <Flex justifyContent="space-between" alignItems="center">
                   <Link href={"/edit/chapter/" + storyId + "/" + chapter?.id}>
-                    {(chapter.title && (
+                    {(chapter?.title && (
                       <>
                         <Heading _dark={{ color: "white" }} as="h4" size="md">
                           {chapter?.title}
@@ -147,7 +147,7 @@ export default function storyId() {
                       </>
                     )) || (
                       <Heading _dark={{ color: "white" }} as="h4" size="md">
-                        Глава {chapter.id}
+                        Глава {chapter?.id}
                       </Heading>
                     )}
                   </Link>
@@ -172,9 +172,9 @@ export default function storyId() {
                         </Button>
                         <Input
                           placeholder="Название главы..."
-                          defaultValue={chapter.title}
+                          defaultValue={chapter?.title}
                           onChange={(e) => {
-                            updateTitleChapter(chapter.id, e.target.value);
+                            updateTitleChapter(chapter?.id, e.target.value);
                           }}
                         />
                         <Button

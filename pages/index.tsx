@@ -46,6 +46,8 @@ import { chapterType } from "@/store/types/types";
 import { mapType } from "@/store/types/mapType";
 import JSZip from "jszip";
 import DownloadFromServerDrawer from "@/components/Story/DownloadFromServerDrawer";
+import { FallbackRender } from "@/components/Global/ErrorHandler";
+import { ErrorBoundary } from "react-error-boundary";
 
 interface Author {
   id: string;
@@ -490,48 +492,50 @@ export default function Home() {
                 display="grid"
                 p={2}
               >
-                <Link href={"/edit/story/" + story?.id}>
-                  <Heading _dark={{ color: "white" }} as="h4" size="md">
-                    {story?.title}
-                  </Heading>
-                  <Box>
-                    <Text _dark={{ color: "white" }}>
-                      {story?.desc.substring(0, 30)}...
-                    </Text>
-                    <Text _dark={{ color: "white" }}>
-                      Уровень доступа: {story?.access}
-                    </Text>
+                <ErrorBoundary FallbackComponent={FallbackRender}>
+                  <Link href={"/edit/story/" + story?.id}>
+                    <Heading _dark={{ color: "white" }} as="h4" size="md">
+                      {story?.title}
+                    </Heading>
+                    <Box>
+                      <Text _dark={{ color: "white" }}>
+                        {story?.desc?.substring(0, 30)}...
+                      </Text>
+                      <Text _dark={{ color: "white" }}>
+                        Уровень доступа: {story?.access}
+                      </Text>
+                    </Box>
+                  </Link>
+                  <Box display="flex" gap={1}>
+                    <Button
+                      fontWeight="normal"
+                      w="100%"
+                      onClick={() => downloadStory(story?.id)}
+                    >
+                      Скачать
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        modalOnOpen();
+                        setParametersUpload({
+                          ...parametersUpload,
+                          id: story?.id,
+                        });
+                      }}
+                    >
+                      <Icon as={BsCloudUpload} />
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setOpenEditStoryId(story.id);
+                        onOpen();
+                        setEditStory(story);
+                      }}
+                    >
+                      <Icon as={BiEdit} />
+                    </Button>
                   </Box>
-                </Link>
-                <Box display="flex" gap={1}>
-                  <Button
-                    fontWeight="normal"
-                    w="100%"
-                    onClick={() => downloadStory(story?.id)}
-                  >
-                    Скачать
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      modalOnOpen();
-                      setParametersUpload({
-                        ...parametersUpload,
-                        id: story?.id,
-                      });
-                    }}
-                  >
-                    <Icon as={BsCloudUpload} />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setOpenEditStoryId(story.id);
-                      onOpen();
-                      setEditStory(story);
-                    }}
-                  >
-                    <Icon as={BiEdit} />
-                  </Button>
-                </Box>
+                </ErrorBoundary>
               </Card>
             ))}
           </SimpleGrid>
@@ -647,12 +651,14 @@ export default function Home() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <DownloadFromServerDrawer
-        downloadModalIsOpen={downloadModalIsOpen}
-        downloadModalOnClose={downloadModalOnClose}
-        setStories={setStories}
-        stories={stories}
-      />
+      <ErrorBoundary FallbackComponent={FallbackRender}>
+        <DownloadFromServerDrawer
+          downloadModalIsOpen={downloadModalIsOpen}
+          downloadModalOnClose={downloadModalOnClose}
+          setStories={setStories}
+          stories={stories}
+        />
+      </ErrorBoundary>
       {/* drawer */}
       <Drawer isOpen={isOpen} placement="right" size="md" onClose={onClose}>
         <DrawerOverlay />
