@@ -1,6 +1,8 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
+export const runtime = "edge";
+
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(

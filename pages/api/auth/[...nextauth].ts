@@ -3,6 +3,7 @@ import GithubProvider from "next-auth/providers/github";
 
 const clientId = process.env.GITHUB_ID as string;
 const clientSecret = process.env.GITHUB_SECRET as string;
+export const runtime = "edge";
 
 export const authOptions = {
   providers: [
