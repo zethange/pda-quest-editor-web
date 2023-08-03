@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
 import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/react";
 import { LGBTFlagColors } from "@/store/constants";
+import { useAppSelector } from "@/store/reduxHooks";
 
 type data = {
   label: string;
@@ -26,19 +27,28 @@ export function NodeStage({
   selected: boolean;
 }) {
   const words = useMemo(() => data?.text, [data]);
+  const settings = useAppSelector((state) => state.user.settings);
+  const options = settings.danyaMod
+    ? {
+        background: `linear-gradient(to bottom, ${LGBTFlagColors.join(", ")})`,
+        color: "white",
+      }
+    : {
+        backgroundColor: selected ? "teal.200" : "white",
+        color: "black",
+        _dark: {
+          color: "white",
+          backgroundColor: selected ? "teal.500" : "gray.900",
+        },
+      };
 
   return (
     <Box
       p="8px"
       borderRadius={5}
-      backgroundColor={selected ? "teal.200" : "white"}
-      _dark={{
-        color: "white",
-        backgroundColor: selected ? "teal.500" : "gray.900",
-      }}
+      {...options}
       border={"1px solid"}
       borderColor="gray.800"
-      color="black"
     >
       <Handle
         type="target"
@@ -82,13 +92,7 @@ export function NodeStage({
                       );
                     } else if (action[0] === "money") {
                       return (
-                        <Badge
-                          background={`linear-gradient(to bottom, ${LGBTFlagColors.join(
-                            ", "
-                          )})`}
-                          color="white"
-                          key={param}
-                        >
+                        <Badge colorScheme="blue" key={param}>
                           ₽: {param}
                         </Badge>
                       );

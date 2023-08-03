@@ -237,8 +237,8 @@ export default function Home() {
 
   const saveUpdatedStory = () => {
     const storiesCopy = JSON.parse(JSON.stringify(stories));
-    const indexEditedStory = storiesCopy.indexOf(
-      storiesCopy.find((story: storyType) => story.id === editStory?.id)
+    const indexEditedStory = storiesCopy.findIndex(
+      (story: storyType) => story.id === editStory?.id
     );
     storiesCopy.splice(indexEditedStory, 1, editStory);
     setStories(storiesCopy);

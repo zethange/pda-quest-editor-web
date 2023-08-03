@@ -1,8 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IUser } from "../types/userType";
 
+export interface ISettings {
+  danyaMod?: boolean;
+  showMiniMap?: boolean;
+  onlyRenderVisibleElements?: boolean;
+}
+
 interface IInitialState {
   user: IUser;
+  settings: ISettings;
 }
 
 const initialState: IInitialState = {
@@ -20,6 +27,11 @@ const initialState: IInitialState = {
     role: "",
     xp: 0,
   },
+  settings: {
+    danyaMod: false,
+    showMiniMap: true,
+    onlyRenderVisibleElements: false,
+  },
 };
 
 const userSlice = createSlice({
@@ -29,9 +41,15 @@ const userSlice = createSlice({
     setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
+    setSettings: (state, action: PayloadAction<ISettings>) => {
+      state.settings = {
+        ...state.settings,
+        ...action.payload,
+      };
+    },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, setSettings } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -158,12 +158,10 @@ const stageSlice = createSlice({
         storeStage.transfers.push(transfer);
         state.stage.transfers = storeStage.transfers;
       } else {
-        const index = storeStage.transfers.indexOf(
-          storeStage.transfers.find(
-            (findTransfer: stageTransfer) =>
-              findTransfer.stage === transfer.stage
-          )
+        const index = storeStage.transfers.findIndex(
+          (findTransfer: stageTransfer) => findTransfer.stage === transfer.stage
         );
+
         storeStage.transfers.splice(index, 1, transfer);
         state.stage.transfers = storeStage.transfers;
       }

@@ -98,6 +98,8 @@ export default function StageEditScreen({
     useState<ReactFlowInstance>();
   const storeRedux: Store<RootState> = useStore();
 
+  const settings = useAppSelector((state) => state.user.settings);
+
   // вытаскивание карт
   useEffect(() => {
     store.each((key, value) => {
@@ -141,7 +143,10 @@ export default function StageEditScreen({
     dagreGraph.setGraph({ rankdir: direction });
 
     nodes.forEach((node: any) => {
-      dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+      dagreGraph.setNode(node.id, {
+        width: nodeWidth,
+        height: nodeHeight,
+      });
     });
 
     edges.forEach((edge: any) => {
@@ -163,7 +168,10 @@ export default function StageEditScreen({
       return node;
     });
 
-    return { nodes, edges };
+    return {
+      nodes,
+      edges,
+    };
   };
 
   const onLayout = useCallback(
@@ -263,8 +271,14 @@ export default function StageEditScreen({
           _comment: stage._comment,
         },
         position: stage.editor
-          ? { x: stage.editor.x as number, y: stage.editor.y as number }
-          : { x: 0, y: 0 },
+          ? {
+              x: stage.editor.x as number,
+              y: stage.editor.y as number,
+            }
+          : {
+              x: 0,
+              y: 0,
+            },
       });
     });
 
@@ -296,7 +310,10 @@ export default function StageEditScreen({
             id: point.id,
             mapId: points[0],
             type_stage: 777,
-            originalPoint: { point, mapId: points[0] },
+            originalPoint: {
+              point,
+              mapId: points[0],
+            },
             point: {
               id: point.id,
               ...point,
@@ -330,8 +347,14 @@ export default function StageEditScreen({
               condition: point.condition,
             },
             position: point.editor
-              ? { x: point.editor.x as number, y: point.editor.y as number }
-              : { x: 0, y: 0 },
+              ? {
+                  x: point.editor.x as number,
+                  y: point.editor.y as number,
+                }
+              : {
+                  x: 0,
+                  y: 0,
+                },
           });
           if (point.data.stage !== "" && +point.data.chapter === +path[1]) {
             initialEdges.push({
@@ -409,8 +432,8 @@ export default function StageEditScreen({
             };
             updateChapter(updatedChapter, false);
           } else {
-            const idStage = chapter?.stages?.indexOf(
-              chapter?.stages?.filter((stage) => +stage.id === +change.id)[0]
+            const idStage = chapter?.stages?.findIndex(
+              (stage) => +stage.id === +change.id
             ) as number;
             const updatedStageWithPosition = {
               ...chapter?.stages[idStage],
@@ -454,7 +477,12 @@ export default function StageEditScreen({
             return +stage.id === +edge.target;
           }
         );
-        dispatch(setTransitionToStore({ point: targetPoint, targetStage }));
+        dispatch(
+          setTransitionToStore({
+            point: targetPoint,
+            targetStage,
+          })
+        );
         setShowModalEditTransition(true);
       } else {
         const stage = chapterFromLocalStorage.stages.find(
@@ -467,7 +495,12 @@ export default function StageEditScreen({
 
         const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
         setShowModalEditTransfer(true);
-        dispatch(setTargetTransfer({ targetTransfer, indexTargetTransfer }));
+        dispatch(
+          setTargetTransfer({
+            targetTransfer,
+            indexTargetTransfer,
+          })
+        );
         dispatch(setStageToRedux({ ...stage }));
       }
     },
@@ -475,40 +508,42 @@ export default function StageEditScreen({
   );
 
   const updateTransitionFromMap = () => {
-    const chapterFromLocalStorage =
+    let chapterFromLocalStorage: chapterType =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 
     const transitionFromMap = storeRedux.getState().stage.transitionFromMap;
-    if (!chapterFromLocalStorage.points[transitionFromMap.mapId]) {
+
+    // если нужной карты нет в главе создаем
+    if (
+      chapterFromLocalStorage.points &&
+      !chapterFromLocalStorage?.points![transitionFromMap.mapId]
+    ) {
       chapterFromLocalStorage.points[transitionFromMap.mapId] = [];
     }
+    // если поменялся id карты то делаем
     if (transitionFromMap.mapId !== transitionFromMap.originalPoint.mapId) {
-      const transitionIndex = chapterFromLocalStorage.points[
-        transitionFromMap.originalPoint.mapId
-      ].indexOf(
-        chapterFromLocalStorage.points[
-          transitionFromMap.originalPoint.mapId
-        ].find(
-          (point: pointType) =>
-            point.id === transitionFromMap.originalPoint.point.id
-        )
+      const originalMapPoints =
+        chapterFromLocalStorage.points![transitionFromMap.originalPoint.mapId];
+
+      const transitionIndex = originalMapPoints.findIndex(
+        (point: pointType) =>
+          point.id === transitionFromMap.originalPoint.point.id
       );
-      chapterFromLocalStorage.points[
-        transitionFromMap.originalPoint.mapId
-      ].splice(transitionIndex, 1);
-      chapterFromLocalStorage.points[transitionFromMap.mapId].push(
+
+      originalMapPoints.splice(transitionIndex, 1);
+      chapterFromLocalStorage.points![transitionFromMap.mapId].push(
         transitionFromMap.point
       );
     } else {
-      const transitionIndex = chapterFromLocalStorage.points[
-        transitionFromMap.mapId
-      ].indexOf(
-        chapterFromLocalStorage.points[transitionFromMap.mapId].find(
-          (point: pointType) =>
-            point.id === transitionFromMap.originalPoint.point.id
-        )
+      const transitionFromMapPoint =
+        chapterFromLocalStorage?.points![transitionFromMap.mapId];
+      const transitionIndex = transitionFromMapPoint.findIndex(
+        (point: pointType) => {
+          return point.id === transitionFromMap.originalPoint.point.id;
+        }
       );
-      chapterFromLocalStorage.points[transitionFromMap.mapId].splice(
+
+      transitionFromMapPoint.splice(
         transitionIndex,
         1,
         transitionFromMap.point
@@ -662,10 +697,7 @@ export default function StageEditScreen({
 
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event?.dataTransfer?.getData("application/reactflow");
-
-      if (typeof type === "undefined" || !type) {
-        return;
-      }
+      if (!type) return;
 
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
@@ -674,6 +706,7 @@ export default function StageEditScreen({
         Math.max(
           ...chapterFromLocalStorage?.stages.map((stage: stageType) => stage.id)
         ) + 1;
+
       if (idLastStage === -Infinity) {
         idLastStage = 0;
       }
@@ -683,7 +716,11 @@ export default function StageEditScreen({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
+
       if (type === "transition") {
+        let mapId = maps[0].id;
+        if (!mapId) mapId = "0";
+
         const newPoint = {
           id: uuidv4(),
           type: 0,
@@ -698,13 +735,14 @@ export default function StageEditScreen({
             ...position,
           },
         };
+
         if (
           !chapterFromLocalStorage.points ||
-          !chapterFromLocalStorage.points["0"]
+          !chapterFromLocalStorage.points[mapId]
         ) {
           chapterFromLocalStorage.points = {
             ...chapterFromLocalStorage.points!,
-            "0": [],
+            [mapId]: [],
           };
         }
 
@@ -712,7 +750,7 @@ export default function StageEditScreen({
           ...chapterFromLocalStorage,
           points: {
             ...chapterFromLocalStorage.points,
-            "0": [...chapterFromLocalStorage.points["0"], newPoint],
+            [mapId]: [...chapterFromLocalStorage.points[mapId], newPoint],
           },
         };
         updateChapter(updatedChapter, true);
@@ -784,7 +822,10 @@ export default function StageEditScreen({
     const x = targetNode?.position?.x! + targetNode?.width! / 2;
     const y = targetNode?.position?.y! + targetNode?.height! / 2;
     const zoom = 1.85;
-    reactFlowInstance?.setCenter(x, y, { zoom, duration: 1000 });
+    reactFlowInstance?.setCenter(x, y, {
+      zoom,
+      duration: 1000,
+    });
   };
 
   interface IStatisticSelected {
@@ -792,6 +833,7 @@ export default function StageEditScreen({
     points: pointType[];
     show: boolean;
   }
+
   const [statisticSelected, setStatisticSelected] =
     useState<IStatisticSelected>();
 
@@ -828,7 +870,10 @@ export default function StageEditScreen({
     pointsEntries.map((arrPoint) => {
       arrPoint[1].map((point) => {
         if (nodesId.includes(point.id as string)) {
-          points.push({ ...point, mapId: arrPoint[0] });
+          points.push({
+            ...point,
+            mapId: arrPoint[0],
+          });
         }
       });
     });
@@ -922,10 +967,11 @@ export default function StageEditScreen({
               onDragOver={onDragOver}
               onInit={setReactFlowInstance}
               edgeTypes={edgeTypes}
+              onlyRenderVisibleElements={settings.onlyRenderVisibleElements}
               onSelectionChange={(e) => onSelectionChange(e)}
               fitView
             >
-              <MiniMap zoomable pannable />
+              {settings.showMiniMap && <MiniMap zoomable pannable />}
               <Controls />
               <Background
                 color={colorMode === "light" ? "#000000" : "#ffffff"}
