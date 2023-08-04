@@ -9,6 +9,8 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
+  Input,
+  Spacer,
   Switch,
   Tooltip,
   VStack,
@@ -21,22 +23,52 @@ interface Props {
   onClose: () => void;
 }
 
-const settingsArray = [
+interface ISettingSettings {
+  title: string;
+  description: string;
+  field: any;
+  disabled?: boolean;
+  type: "boolean" | "string";
+}
+
+const settingsArray: ISettingSettings[] = [
   {
     title: "Не нажимать (я не шучу):",
     description: "Реально не стоит...",
     field: "danyaMod",
+    type: "boolean",
   },
   {
     title: "Показывать миникарту:",
     description: "Возможно увеличение фпс",
     field: "showMiniMap",
+    type: "boolean",
   },
   {
-    title: "Рендеринг только видимых node:",
+    title: "Рендеринг только видимых нод:",
     description:
       "Рендерятся только те ноды которые видны в данный момент на экране",
     field: "onlyRenderVisibleElements",
+    type: "boolean",
+  },
+  {
+    title: "Использовать альтернативный сортировщик:",
+    description: "Использовать ELK вместо Dagree при сортировке стадий",
+    field: "useAlternativeDagre",
+    type: "boolean",
+    disabled: true,
+  },
+  {
+    title: "Ширина ноды для сортировки",
+    description: "Нужно для сортировки",
+    type: "string",
+    field: "nodeWidth",
+  },
+  {
+    title: "Высота ноды для сортировки",
+    description: "Нужно для сортировки",
+    type: "string",
+    field: "nodeHeight",
   },
 ];
 
@@ -52,7 +84,7 @@ const SettingsDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
     }
   }, []);
 
-  const onChange = (settingsChange: ISettings) => {
+  const onChange = (settingsChange: any) => {
     dispatch(setSettings(settingsChange));
     const updatedSettings = {
       ...settings,
@@ -69,17 +101,32 @@ const SettingsDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
         <DrawerBody>
           <VStack mt={1} gap={1} alignItems="left">
             {settingsArray.map((setting) => (
-              <Flex gap={1} key={setting.field}>
+              <Flex gap={1} key={setting.field} alignItems="center">
                 <Box>
                   <Tooltip label={setting.description}>{setting.title}</Tooltip>
                 </Box>
-                <Switch
-                  mt={1}
-                  isChecked={(settings as any)[setting.field]}
-                  onChange={(e) => {
-                    onChange({ [setting.field]: e.target.checked });
-                  }}
-                />
+                <Spacer />
+                {setting.type === "boolean" && (
+                  <Switch
+                    mt={1}
+                    isChecked={(settings as any)[setting.field]}
+                    onChange={(e) => {
+                      onChange({ [setting.field]: e.target.checked });
+                    }}
+                    disabled={setting.disabled ?? false}
+                  />
+                )}
+                {setting.type === "string" && (
+                  <Input
+                    mt={1}
+                    w={150}
+                    value={(settings as any)[setting.field]}
+                    onChange={(e) => {
+                      onChange({ [setting.field]: e.target.value });
+                    }}
+                    disabled={setting.disabled ?? false}
+                  />
+                )}
               </Flex>
             ))}
           </VStack>

@@ -129,10 +129,11 @@ export default function StageEditScreen({
     }
   };
 
+  // dagreeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
-  const nodeWidth = 300;
-  const nodeHeight = 100;
+  const nodeWidth = +settings.nodeWidth;
+  const nodeHeight = +settings.nodeHeight;
 
   const getLayoutedElements = (
     nodes: any[],

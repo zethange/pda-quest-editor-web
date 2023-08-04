@@ -13,23 +13,21 @@ import {
   Flex,
   Heading,
   Icon,
-  Input,
-  Menu,
-  MenuButton,
-  MenuList,
   SimpleGrid,
   Spacer,
   Text,
-  VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { chapterType } from "@/store/types/types";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import EditChapterDrawer from "@/components/Chapter/EditChapterDrawer";
 
 export default function storyId() {
   const { query, isReady } = useRouter();
   const storyId = query.storyId as string;
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [openChapter, setOpenChapter] = useState<chapterType>();
   const [chapters, setChapters] = useState<chapterType[]>([]);
 
   useEffect(() => {
@@ -55,18 +53,6 @@ export default function storyId() {
   const deleteChapter = (id: number) => {
     store.remove(`story_${storyId}_chapter_${id}`);
     setChapters(chapters.filter((chapter: chapterType) => id !== chapter.id));
-    console.log("Удаление главы", `story_${storyId}_chapter_${id}`);
-  };
-
-  const downloadAsFile = (chapterId: number) => {
-    const chapter = store.get(`story_${storyId}_chapter_${chapterId}`);
-    let a = document.createElement("a");
-    let file = new Blob([JSON.stringify(chapter, null, 2)], {
-      type: "application/json",
-    });
-    a.href = URL.createObjectURL(file);
-    a.download = `chapter_${chapterId}.json`;
-    a.click();
   };
 
   const uploadChapter = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,12 +73,15 @@ export default function storyId() {
     };
   };
 
-  const updateTitleChapter = (chapterId: number, newTitle: string) => {
-    const chapter = store.get(`story_${storyId}_chapter_${chapterId}`);
-    chapter.title = newTitle;
-    store.set(`story_${storyId}_chapter_${chapterId}`, chapter);
-  };
   const jsonRef = useRef<HTMLInputElement>(null);
+
+  const onUpdate = () => {
+    localStorage.setItem(
+      `story_${storyId}_chapter_${openChapter?.id}`,
+      JSON.stringify(openChapter)
+    );
+    window.location.reload();
+  };
 
   return (
     <>
@@ -151,42 +140,14 @@ export default function storyId() {
                       </Heading>
                     )}
                   </Link>
-                  <Menu>
-                    <MenuButton as={Button}>
-                      <Icon as={BsThreeDotsVertical} mt={1} />
-                    </MenuButton>
-                    <MenuList>
-                      <VStack px={2}>
-                        <Button
-                          onClick={() => downloadAsFile(chapter?.id)}
-                          w="100%"
-                        >
-                          Скачать
-                        </Button>
-                        <Button
-                          onClick={() => deleteChapter(chapter?.id)}
-                          colorScheme="red"
-                          w="100%"
-                        >
-                          Удалить
-                        </Button>
-                        <Input
-                          placeholder="Название главы..."
-                          defaultValue={chapter?.title}
-                          onChange={(e) => {
-                            updateTitleChapter(chapter?.id, e.target.value);
-                          }}
-                        />
-                        <Button
-                          colorScheme="teal"
-                          onClick={() => window.location.reload()}
-                          w="100%"
-                        >
-                          Сохранить
-                        </Button>
-                      </VStack>
-                    </MenuList>
-                  </Menu>
+                  <Button
+                    onClick={() => {
+                      setOpenChapter(chapter);
+                      onOpen();
+                    }}
+                  >
+                    <Icon as={BsThreeDotsVertical} mt={1} />
+                  </Button>
                 </Flex>
                 <Text _dark={{ color: "white" }}>
                   Количество стадий: {chapter?.stages?.length}
@@ -207,6 +168,15 @@ export default function storyId() {
             ))}
           </SimpleGrid>
         </Box>
+        <EditChapterDrawer
+          isOpen={isOpen}
+          onClose={onClose}
+          storyId={+storyId!}
+          chapter={openChapter!}
+          setChapter={setOpenChapter as any}
+          onUpdate={onUpdate}
+          deleteChapter={deleteChapter}
+        />
       </main>
     </>
   );

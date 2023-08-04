@@ -240,6 +240,7 @@ export default function Home() {
     const indexEditedStory = storiesCopy.findIndex(
       (story: storyType) => story.id === editStory?.id
     );
+
     storiesCopy.splice(indexEditedStory, 1, editStory);
     setStories(storiesCopy);
     if (editStory?.id !== openEditStoryId) {

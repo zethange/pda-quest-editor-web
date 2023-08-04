@@ -5,6 +5,9 @@ export interface ISettings {
   danyaMod?: boolean;
   showMiniMap?: boolean;
   onlyRenderVisibleElements?: boolean;
+  useAlternativeDagre?: boolean;
+  nodeWidth: string;
+  nodeHeight: string;
 }
 
 interface IInitialState {
@@ -31,6 +34,9 @@ const initialState: IInitialState = {
     danyaMod: false,
     showMiniMap: true,
     onlyRenderVisibleElements: false,
+    useAlternativeDagre: false,
+    nodeWidth: "300",
+    nodeHeight: "100",
   },
 };
 

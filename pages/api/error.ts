@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { log } from "next-axiom";
 
-export const runtime = "edge";
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {

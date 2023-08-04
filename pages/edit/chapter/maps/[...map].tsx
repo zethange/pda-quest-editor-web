@@ -170,7 +170,13 @@ const MapChapter = () => {
       <>
         <CustomHead title={`Редактирование карты ${map?.title}`} />
         <NavBar>
-          <Button fontWeight="normal" onClick={() => history.go(-1)}>
+          <Button
+            fontWeight="normal"
+            onClick={() => {
+              history.go(-1);
+              window.location.reload();
+            }}
+          >
             Назад
           </Button>
           <Heading fontSize={25}>{map?.title}</Heading>
