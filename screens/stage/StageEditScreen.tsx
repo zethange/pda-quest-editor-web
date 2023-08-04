@@ -19,6 +19,7 @@ import ReactFlow, {
   MarkerType,
   MiniMap,
   Node,
+  Position,
   ReactFlowInstance,
   ReactFlowProvider,
 } from "reactflow";
@@ -62,6 +63,7 @@ import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import { setMissions } from "@/store/reduxStore/missionSlice";
 import { isArray } from "@chakra-ui/utils";
 import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
+import ValidatorDrawer from "@/components/Chapter/ValidatorDrawer";
 
 export default function StageEditScreen({
   path,
@@ -98,6 +100,11 @@ export default function StageEditScreen({
     useState<ReactFlowInstance>();
   const storeRedux: Store<RootState> = useStore();
 
+  const {
+    onOpen: onOpenLogs,
+    isOpen: isOpenLogs,
+    onClose: onCloseLogs,
+  } = useDisclosure();
   const settings = useAppSelector((state) => state.user.settings);
 
   // вытаскивание карт
@@ -129,41 +136,41 @@ export default function StageEditScreen({
     }
   };
 
-  // dagreeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
-  const nodeWidth = +settings.nodeWidth;
-  const nodeHeight = +settings.nodeHeight;
-
   const getLayoutedElements = (
-    nodes: any[],
-    edges: any[],
+    nodes: Node[],
+    edges: Edge[],
     direction = "TB"
   ) => {
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
+    const nodeWidth = +settings.nodeWidth;
+    const nodeHeight = +settings.nodeHeight;
+
     const isHorizontal = direction === "LR";
     dagreGraph.setGraph({ rankdir: direction });
 
-    nodes.forEach((node: any) => {
+    nodes.forEach((node: Node) => {
       dagreGraph.setNode(node.id, {
         width: nodeWidth,
         height: nodeHeight,
       });
     });
 
-    edges.forEach((edge: any) => {
+    edges.forEach((edge: Edge) => {
       dagreGraph.setEdge(edge.source, edge.target);
     });
 
     dagre.layout(dagreGraph);
 
-    nodes.forEach((node: any) => {
+    nodes.forEach((node: Node) => {
+      console.log(node.id, node);
       const nodeWithPosition = dagreGraph.node(node.id);
-      node.targetPosition = isHorizontal ? "left" : "top";
-      node.sourcePosition = isHorizontal ? "right" : "bottom";
+      node.targetPosition = isHorizontal ? Position.Left : Position.Top;
+      node.sourcePosition = isHorizontal ? Position.Right : Position.Bottom;
 
       node.position = {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
+        x: nodeWithPosition.x,
+        y: nodeWithPosition.y,
       };
 
       return node;
@@ -201,9 +208,9 @@ export default function StageEditScreen({
         }
       });
 
-      setNodes([...layoutedNodes]);
-      setEdges([...layoutedEdges]);
-      updateChapter(copyChapter, true);
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
+      updateChapter(copyChapter, false);
     },
     [nodes, edges]
   );
@@ -935,6 +942,17 @@ export default function StageEditScreen({
             focusOnTheNode={focusOnTheNode}
           />
         )}
+        {settings.enableLinter && (
+          <Button
+            onClick={() => {
+              onOpenLogs();
+            }}
+            fontWeight="normal"
+            size="sm"
+          >
+            Линтер
+          </Button>
+        )}
         <Button
           onClick={() => {
             onLayout("TB");
@@ -1010,6 +1028,12 @@ export default function StageEditScreen({
         <EditTransitionModal
           setShowModalEditTransition={setShowModalEditTransition}
           showModalEditTransition={showModalEditTransition}
+        />
+        <ValidatorDrawer
+          chapter={chapter!}
+          openStage={focusOnTheNode}
+          onClose={onCloseLogs}
+          isOpen={isOpenLogs}
         />
       </Box>
     </>

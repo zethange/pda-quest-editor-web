@@ -59,13 +59,19 @@ const settingsArray: ISettingSettings[] = [
     disabled: true,
   },
   {
-    title: "Ширина ноды для сортировки",
+    title: "Включить линтер (beta):",
+    description: "Показывает кнопку линтера - анализера главы",
+    field: "enableLinter",
+    type: "boolean",
+  },
+  {
+    title: "Ширина ноды для сортировки:",
     description: "Нужно для сортировки",
     type: "string",
     field: "nodeWidth",
   },
   {
-    title: "Высота ноды для сортировки",
+    title: "Высота ноды для сортировки:",
     description: "Нужно для сортировки",
     type: "string",
     field: "nodeHeight",

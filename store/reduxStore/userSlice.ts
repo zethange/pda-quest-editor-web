@@ -6,6 +6,7 @@ export interface ISettings {
   showMiniMap?: boolean;
   onlyRenderVisibleElements?: boolean;
   useAlternativeDagre?: boolean;
+  enableLinter?: boolean;
   nodeWidth: string;
   nodeHeight: string;
 }
@@ -35,6 +36,7 @@ const initialState: IInitialState = {
     showMiniMap: true,
     onlyRenderVisibleElements: false,
     useAlternativeDagre: false,
+    enableLinter: false,
     nodeWidth: "300",
     nodeHeight: "100",
   },

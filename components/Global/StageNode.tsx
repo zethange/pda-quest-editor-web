@@ -113,8 +113,12 @@ export function NodeStage({
                     gap={1}
                     key={index}
                   >
-                    {(condition[1] as string[]).map((param: string) => {
-                      return <Badge colorScheme="messenger">{param}</Badge>;
+                    {(condition[1] as string[]).map((param: string, index) => {
+                      return (
+                        <Badge colorScheme="messenger" key={index}>
+                          {param}
+                        </Badge>
+                      );
                     })}
                   </SimpleGrid>
                 );
