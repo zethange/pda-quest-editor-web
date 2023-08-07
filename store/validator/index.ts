@@ -28,7 +28,7 @@ export class Validator {
       stage.texts?.forEach((text) => {
         let last = text.text.charAt(text.text.length - 1);
         // @ts-ignore
-        if (last !== "." || last !== "!" || last !== "?") {
+        if (last !== "." && last !== "?" && last !== "!") {
           this.log({
             type: "info",
             message: `Текст в стадии ${stage.id} не заканчивается знаком препинания`,

@@ -59,9 +59,9 @@ const settingsArray: ISettingSettings[] = [
     disabled: true,
   },
   {
-    title: "Включить линтер (beta):",
-    description: "Показывает кнопку линтера - анализера главы",
-    field: "enableLinter",
+    title: "Включить утилиты (beta):",
+    description: "Показывает кнопку с утилитами",
+    field: "enableUtilities",
     type: "boolean",
   },
   {

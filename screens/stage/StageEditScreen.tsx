@@ -63,7 +63,7 @@ import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import { setMissions } from "@/store/reduxStore/missionSlice";
 import { isArray } from "@chakra-ui/utils";
 import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
-import ValidatorDrawer from "@/components/Chapter/ValidatorDrawer";
+import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";
 
 export default function StageEditScreen({
   path,
@@ -942,7 +942,7 @@ export default function StageEditScreen({
             focusOnTheNode={focusOnTheNode}
           />
         )}
-        {settings.enableLinter && (
+        {settings.enableUtilities && (
           <Button
             onClick={() => {
               onOpenLogs();
@@ -950,7 +950,7 @@ export default function StageEditScreen({
             fontWeight="normal"
             size="sm"
           >
-            Линтер
+            Утилиты
           </Button>
         )}
         <Button
@@ -1029,7 +1029,7 @@ export default function StageEditScreen({
           setShowModalEditTransition={setShowModalEditTransition}
           showModalEditTransition={showModalEditTransition}
         />
-        <ValidatorDrawer
+        <UtilitiesDrawer
           chapter={chapter!}
           openStage={focusOnTheNode}
           onClose={onCloseLogs}
