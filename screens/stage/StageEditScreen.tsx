@@ -997,7 +997,7 @@ export default function StageEditScreen({
             fontWeight="normal"
             size="sm"
           >
-            Линтер
+            Утилиты
           </Button>
         )}
         <Button

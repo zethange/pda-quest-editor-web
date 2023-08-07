@@ -36,7 +36,7 @@ import { useAppSelector } from "@/store/reduxHooks";
 import { FindParameter } from "@/store/utils/findParameter";
 
 interface Props {
-  chapter: chapterType;
+  chapter?: chapterType;
   openStage: (stageId: string) => void;
   onClose: () => void;
   isOpen: boolean;
@@ -56,10 +56,7 @@ const Logs: React.FC<PropsLog> = ({ logs, nonInfo, onClose, openStage }) => {
         "Пусто, кажется все хорошо, или вы не нажимали на кнопку старт?"}
       {logs
         .filter((log) => {
-          if (nonInfo && log.type === "info") {
-            return false;
-          }
-          return true;
+          return !(nonInfo && log.type === "info");
         })
         .map((log) => {
           let background;
@@ -130,13 +127,22 @@ const UtilitiesDrawer: FC<Props> = ({
   const startValidate = () => {
     setLogs([]);
 
-    const validator = new Validator(chapter, setLogs);
-    validator.run();
+    if (chapter) {
+      const validator = new Validator(chapter, setLogs);
+      validator.run();
+    }
   };
 
   const startCheck = () => {
-    const find = new FindParameter(chapter, selectedParameter, setLogsFind);
-    find.search();
+    if (chapter && parameters.length) {
+      console.log("start search usage parameter, chapteR:", chapter);
+      const find = new FindParameter(
+        chapter,
+        selectedParameter || parameters[0],
+        setLogsFind
+      );
+      find.search();
+    }
   };
 
   useEffect(() => {

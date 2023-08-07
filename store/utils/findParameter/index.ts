@@ -12,6 +12,7 @@ export class FindParameter {
   }
 
   public search() {
+    console.log("run check", this.chapter, this.parameter);
     this.chapter.stages.forEach((stage) => {
       // проверка на добавления параметра
       if (
@@ -33,6 +34,7 @@ export class FindParameter {
             text.condition &&
             Object.values(text.condition).flat().includes(this.parameter)
           ) {
+            console.log("find usage in text");
             this.logs.push({
               type: "warning",
               message: `Проверка параметра в тексте ${index} стадии ${stage.id}`,
@@ -49,6 +51,7 @@ export class FindParameter {
             transfer.condition &&
             Object.values(transfer.condition).flat().includes(this.parameter)
           ) {
+            console.log("find usage in transfer");
             this.logs.push({
               type: "warning",
               message: `Проверка параметра в переходе со стадии ${stage.id} на ${transfer.stage}`,
