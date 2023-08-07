@@ -26,6 +26,13 @@ export class Validator {
   private validateStages() {
     this.chapter.stages.forEach((stage) => {
       stage.texts?.forEach((text) => {
+        if (stage.texts?.length! === 1 && !text.text) {
+          this.log({
+            type: "error",
+            message: `В стадии ${stage.id} обнаружен текст без текста -.-`,
+            nodeId: String(stage.id),
+          });
+        }
         let last = text.text.charAt(text.text.length - 1);
         // @ts-ignore
         if (last !== "." && last !== "?" && last !== "!") {
@@ -36,6 +43,14 @@ export class Validator {
           });
         }
       });
+      if (stage.transfers && !stage.transfers.length) {
+        this.log({
+          type: "error",
+          message: `В стадии ${stage.id} не обнаружено переходов`,
+          nodeId: String(stage.id),
+        });
+      }
+
       stage.transfers?.forEach((transfer) => {
         let last = transfer.text.charAt(transfer.text.length - 1);
         if (last === ".") {

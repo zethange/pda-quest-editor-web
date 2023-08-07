@@ -174,7 +174,9 @@ const MapChapter = () => {
             fontWeight="normal"
             onClick={() => {
               history.go(-1);
-              window.location.reload();
+              setTimeout(() => {
+                window.location.reload();
+              }, 300);
             }}
           >
             Назад
