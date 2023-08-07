@@ -898,6 +898,44 @@ export default function StageEditScreen({
     }
   };
 
+  const forceSyncPosition = () => {
+    console.log("start sync");
+
+    const chapterFromLocalStorage: chapterType =
+      path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+
+    const pointsEntries = Object.entries(chapterFromLocalStorage?.points ?? {});
+
+    nodes?.forEach((node) => {
+      if (uuidValidate(node.id)) {
+        // если нода это точка
+        pointsEntries.map((arrPoint) => {
+          arrPoint[1].map((point) => {
+            if (String(point.id) === String(node.id)) {
+              point.editor = {
+                x: node.position.x,
+                y: node.position.y,
+              };
+            }
+          });
+        });
+      } else {
+        // если нода это стадия
+        const findNode = chapterFromLocalStorage.stages.find(
+          (stage) => String(stage.id) === String(node.id)
+        );
+        if (findNode) {
+          findNode.editor = {
+            x: node.position.x,
+            y: node.position.y,
+          };
+        }
+      }
+    });
+
+    store.set(`story_${path[0]}_chapter_${path[1]}`, chapterFromLocalStorage);
+  };
+
   return (
     <>
       <CustomHead title={"Редактирование главы " + chapter?.id} />
@@ -944,13 +982,22 @@ export default function StageEditScreen({
         )}
         {settings.enableUtilities && (
           <Button
+            fontWeight="normal"
+            size="sm"
+            onClick={() => forceSyncPosition()}
+          >
+            Синхронизация
+          </Button>
+        )}
+        {settings.enableUtilities && (
+          <Button
             onClick={() => {
               onOpenLogs();
             }}
             fontWeight="normal"
             size="sm"
           >
-            Утилиты
+            Линтер
           </Button>
         )}
         <Button

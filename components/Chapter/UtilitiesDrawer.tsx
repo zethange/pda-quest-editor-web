@@ -40,11 +40,16 @@ interface Props {
   openStage: (stageId: string) => void;
   onClose: () => void;
   isOpen: boolean;
-  logs: Log[];
-  nonInfo: boolean;
 }
 
-const Logs: React.FC<Props> = ({ logs, nonInfo, onClose, openStage }) => {
+interface PropsLog {
+  logs: Log[];
+  nonInfo: boolean;
+  openStage: (stageId: string) => void;
+  onClose: () => void;
+}
+
+const Logs: React.FC<PropsLog> = ({ logs, nonInfo, onClose, openStage }) => {
   return (
     <VStack mt={2} gap={2} alignItems="left">
       {!logs.length &&
@@ -169,10 +174,8 @@ const UtilitiesDrawer: FC<Props> = ({
                   </Flex>
                 </Flex>
                 <Logs
-                  chapter={chapter}
                   openStage={openStage}
                   onClose={onClose}
-                  isOpen={isOpen}
                   logs={logs}
                   nonInfo={nonInfo}
                 />
@@ -204,10 +207,8 @@ const UtilitiesDrawer: FC<Props> = ({
                       </Select>
                     </Flex>
                     <Logs
-                      chapter={chapter}
                       openStage={openStage}
                       onClose={onClose}
-                      isOpen={isOpen}
                       logs={logsFind}
                       nonInfo={false}
                     />
