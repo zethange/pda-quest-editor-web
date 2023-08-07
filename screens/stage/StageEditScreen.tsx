@@ -163,7 +163,6 @@ export default function StageEditScreen({
     dagre.layout(dagreGraph);
 
     nodes.forEach((node: Node) => {
-      console.log(node.id, node);
       const nodeWithPosition = dagreGraph.node(node.id);
       node.targetPosition = isHorizontal ? Position.Left : Position.Top;
       node.sourcePosition = isHorizontal ? Position.Right : Position.Bottom;
@@ -184,12 +183,16 @@ export default function StageEditScreen({
 
   const onLayout = useCallback(
     (direction: "TB" | "LR") => {
-      const { nodes: layoutedNodes, edges: layoutedEdges } =
-        getLayoutedElements(nodes as any[], edges as any[], direction);
+      const { nodes: layoutedNodes } = getLayoutedElements(
+        nodes!,
+        edges!,
+        direction
+      );
+      console.log({ nodes, edges });
 
       const copyChapter = store.get(`story_${path[0]}_chapter_${path[1]}`);
       const points = Object.values(copyChapter?.points!).flat() as pointType[];
-      layoutedNodes.map((node) => {
+      layoutedNodes.forEach((node) => {
         const stage = copyChapter.stages.find(
           (stage: stageType) => stage.id === +node.id
         );
@@ -208,9 +211,9 @@ export default function StageEditScreen({
         }
       });
 
-      setNodes(layoutedNodes);
-      setEdges(layoutedEdges);
-      updateChapter(copyChapter, false);
+      // setNodes(layoutedNodes);
+      // setEdges(layoutedEdges);
+      updateChapter(copyChapter, true);
     },
     [nodes, edges]
   );
