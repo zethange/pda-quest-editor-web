@@ -299,7 +299,7 @@ const MapChapter = () => {
             </Box>
             <Box>
               Метки:
-              <Box display="grid" gap={2} h="200px" overflowY="auto">
+              <Box display="grid" gap={2} h="550px" overflowY="auto">
                 {map?.points?.map((point: pointType) => (
                   <Button
                     p={1}

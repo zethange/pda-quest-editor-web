@@ -276,6 +276,7 @@ export default function StageEditScreen({
               setEditableStage(stage);
             }, 0);
           },
+          notification: !!stage.message,
           text: stage.texts && stage.texts[0].text,
           id: stage.id,
           actions: stage.actions || {},
@@ -390,7 +391,8 @@ export default function StageEditScreen({
       if (stage.actions && stage.actions.add) {
         stage.actions.add.forEach((item) => {
           if (isNaN(Number(item.split(":")[0]))) {
-            parameters.push(item);
+            if (parameters.findIndex((parameter) => parameter === item) === -1)
+              parameters.push(item);
           }
         });
       }

@@ -135,6 +135,16 @@ const SettingsDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
                 )}
               </Flex>
             ))}
+            <Button
+              colorScheme="red"
+              onClick={() => {
+                localStorage.removeItem("token");
+                window.location.replace("/");
+                window.location.reload();
+              }}
+            >
+              Выйти из учетной записи
+            </Button>
           </VStack>
         </DrawerBody>
         <DrawerFooter>

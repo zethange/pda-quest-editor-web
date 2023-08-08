@@ -1,8 +1,9 @@
 import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
-import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/react";
+import { Badge, Box, Icon, SimpleGrid } from "@chakra-ui/react";
 import { LGBTFlagColors } from "@/store/constants";
 import { useAppSelector } from "@/store/reduxHooks";
+import { GrNotification } from "react-icons/gr";
 
 type data = {
   label: string;
@@ -15,6 +16,7 @@ type data = {
     [key: string]: string[];
   };
   _comment?: string;
+  notification?: boolean;
 };
 
 export function NodeStage({
@@ -56,7 +58,10 @@ export function NodeStage({
         isConnectable={isConnectable}
       />
       <button onClick={() => data.onClick()}>
-        <Text align="center">{data.label || "Стадия без названия"}</Text>
+        <Box textAlign="center">
+          {data.label || "Стадия без названия"}{" "}
+          {data.notification && <Icon pt="5px" as={GrNotification} />}
+        </Box>
         <small>
           {words?.substring(0, 30)}
           {words?.length > 30 && "..."}
