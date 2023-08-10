@@ -13,7 +13,10 @@ import {
 import { nodeCreateType } from "@/store/types/nodeCreateType";
 
 interface IProps {
-  onDragStart: (event: DragEvent, type: nodeCreateType) => void;
+  onDragStart: (
+    event: React.DragEvent<HTMLButtonElement>,
+    type: nodeCreateType
+  ) => void;
 }
 
 const CreateStage = ({ onDragStart }: IProps) => {

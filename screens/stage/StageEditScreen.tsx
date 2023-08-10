@@ -957,7 +957,7 @@ export default function StageEditScreen({
           borderBottom: "1px solid #171923",
         }}
       >
-        <CreateStage onDragStart={onDragStart} />
+        <CreateStage onDragStart={onDragStart as any} />
         <Text>
           {chapter?.title
             ? chapter?.title + " -- ID: " + chapter?.id
