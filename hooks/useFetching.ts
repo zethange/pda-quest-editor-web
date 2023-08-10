@@ -22,8 +22,8 @@ function useFetching<T = unknown>(
         const json = await response.json();
 
         setData(json);
-      } catch (error: any) {
-        setError(error);
+      } catch (error: unknown) {
+        if (error instanceof Error) setError(error as Error);
       } finally {
         setIsLoading(false);
       }

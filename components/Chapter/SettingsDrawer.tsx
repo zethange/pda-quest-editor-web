@@ -26,7 +26,7 @@ interface Props {
 interface ISettingSettings {
   title: string;
   description: string;
-  field: any;
+  field: string;
   disabled?: boolean;
   type: "boolean" | "string";
 }

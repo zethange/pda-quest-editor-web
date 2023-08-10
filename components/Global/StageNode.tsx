@@ -19,13 +19,13 @@ type data = {
   notification?: boolean;
 };
 
-export function NodeStage({
+function NodeStage({
   data,
   isConnectable,
   selected,
 }: {
   data: data;
-  isConnectable: any;
+  isConnectable: boolean;
   selected: boolean;
 }) {
   const words = useMemo(() => data?.text, [data]);
@@ -111,17 +111,17 @@ export function NodeStage({
         {data.condition && (
           <Box display="grid" gap={1}>
             {Object.entries(data.condition).map(
-              (condition: [string, unknown], index: number) => {
+              (condition: [string, string[]], index: number) => {
                 return (
                   <SimpleGrid
                     columns={(condition[1] as string[]).length > 1 ? 2 : 1}
                     gap={1}
                     key={index}
                   >
-                    {(condition[1] as string[]).map((param: string, index) => {
+                    {condition[1].map((param: string, index) => {
                       return (
-                        <Badge colorScheme="messenger" key={index}>
-                          {param}
+                        <Badge colorScheme="orange" key={index}>
+                          {condition[0]} {param}
                         </Badge>
                       );
                     })}
@@ -140,3 +140,5 @@ export function NodeStage({
     </Box>
   );
 }
+
+export default NodeStage;

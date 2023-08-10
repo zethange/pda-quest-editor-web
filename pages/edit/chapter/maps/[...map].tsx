@@ -109,9 +109,35 @@ const MapChapter = () => {
   const [selectedPoint, setSelectedPoint] = useState("");
 
   const onLoadImage = (target: any) => {
-    console.log(target.target.naturalHeight / target.target.clientHeight);
-    setDiffHeight(target.target.naturalHeight / target.target.clientHeight);
-    setDiffWidth(target.target.naturalWidth / target.target.clientWidth);
+    if (map) {
+      const getData = async () => {
+        try {
+          const res = await fetch("https://pda-assets.pages.dev/" + map.tmx);
+          const data = await res.text();
+
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(data, "text/xml");
+          const width = +(
+            xmlDoc.getElementsByTagName("layer")[0].attributes as any
+          ).width.nodeValue;
+          const height = +(
+            xmlDoc.getElementsByTagName("layer")[0].attributes as any
+          ).height.nodeValue;
+
+          const diffHeight = (height * 8) / target.target.clientHeight;
+          const diffWidth = (width * 8) / target.target.clientWidth;
+
+          setDiffHeight(diffHeight);
+          setDiffWidth(diffWidth);
+
+          console.log("Diff width: " + diffWidth);
+          console.log("Diff height: " + diffHeight);
+        } catch (e) {
+          console.error(e);
+        }
+      };
+      getData();
+    }
   };
 
   const onDragStart = (e: React.DragEvent, type: string) => {

@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
+  DragEventHandler,
 } from "react";
 import store from "store2";
 import querystring from "querystring";
@@ -36,7 +37,7 @@ import {
 import "reactflow/dist/style.css";
 import { newStage } from "@/store/tools/createTools";
 import CustomHead from "@/components/Global/CustomHead";
-import { NodeStage } from "@/components/Global/StageNode";
+import NodeStage from "@/components/Global/StageNode";
 import { chapterType, stageTransfer, stageType } from "@/store/types/types";
 import TransferEdge from "@/components/Global/TransferEdge";
 import { stageName } from "@/store/utils/stageName";
@@ -64,6 +65,7 @@ import { setMissions } from "@/store/reduxStore/missionSlice";
 import { isArray } from "@chakra-ui/utils";
 import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
 import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";
+import { nodeCreateType } from "@/store/types/nodeCreateType";
 
 export default function StageEditScreen({
   path,
@@ -95,7 +97,7 @@ export default function StageEditScreen({
     useState<boolean>(false);
 
   // для dnd
-  const reactFlowWrapper: any = useRef(null);
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>();
   const storeRedux: Store<RootState> = useStore();
@@ -694,21 +696,21 @@ export default function StageEditScreen({
   const nodeTypes = useMemo(() => ({ nodeStage: NodeStage }), []);
   const edgeTypes = useMemo(() => ({ custom: TransferEdge }), []);
 
-  const onDragStart = (event: any, nodeType: any) => {
-    event.dataTransfer.setData("application/reactflow", nodeType);
-    event.dataTransfer.effectAllowed = "move";
+  const onDragStart = (event: DragEvent, nodeType: nodeCreateType) => {
+    event.dataTransfer!.setData("application/reactflow", nodeType);
+    event.dataTransfer!.effectAllowed = "move";
   };
 
-  const onDragOver = useCallback((event: any) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+  const onDragOver = useCallback((event: DragEventHandler<HTMLDivElement>) => {
+    (event as unknown as DragEvent).preventDefault();
+    (event as unknown as DragEvent).dataTransfer!.dropEffect = "move";
   }, []);
 
   const onDrop = useCallback(
     (event: DragEvent) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
       const type = event?.dataTransfer?.getData("application/reactflow");
       if (!type) return;
 
@@ -726,8 +728,8 @@ export default function StageEditScreen({
 
       // @ts-ignore
       const position = reactFlowInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
+        x: event.clientX - reactFlowBounds?.left!,
+        y: event.clientY - reactFlowBounds?.top!,
       });
 
       if (type === "transition") {
@@ -1035,7 +1037,7 @@ export default function StageEditScreen({
               onConnect={onConnect}
               nodeTypes={nodeTypes}
               onDrop={onDrop as () => void}
-              onDragOver={onDragOver}
+              onDragOver={onDragOver as any}
               onInit={setReactFlowInstance}
               edgeTypes={edgeTypes}
               onlyRenderVisibleElements={settings.onlyRenderVisibleElements}

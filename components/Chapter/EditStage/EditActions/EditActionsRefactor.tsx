@@ -158,7 +158,7 @@ const EditActionsRefactor: FC<Props> = ({
                   newParamInMethod={newParamInMethod}
                 />
                 <Box display="grid" gap={1}>
-                  {action[1].map((key: any, indexParam: number) => (
+                  {action[1].map((key: string, indexParam: number) => (
                     <Box
                       display={action[0] === "script" ? "grid" : "flex"}
                       gap={1}

@@ -10,12 +10,10 @@ import {
   Portal,
   SimpleGrid,
 } from "@chakra-ui/react";
+import { nodeCreateType } from "@/store/types/nodeCreateType";
 
 interface IProps {
-  onDragStart: (
-    event: React.DragEvent,
-    type: "default" | "exit" | "transition" | "chapterEnd"
-  ) => void;
+  onDragStart: (event: DragEvent, type: nodeCreateType) => void;
 }
 
 const CreateStage = ({ onDragStart }: IProps) => {

@@ -567,7 +567,7 @@ export default function Home() {
                   onChange={(value) => {
                     setParametersUpload({
                       ...parametersUpload,
-                      type: value as any,
+                      type: value as "PUBLIC" | "PRIVATE" | "COMMUNITY",
                     });
                   }}
                 >
