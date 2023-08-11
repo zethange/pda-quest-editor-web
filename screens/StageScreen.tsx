@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from "react";
 import * as querystring from "querystring";
 
@@ -20,7 +18,7 @@ import MapScreen from "./MapScreen";
 import MissionScreen from "@/screens/MissionScreen";
 import { FallbackRender } from "@/components/Global/ErrorHandler";
 import { ErrorBoundary } from "react-error-boundary";
-
+import { useSearchParams } from "next/navigation";
 import SettingsDrawer from "@/components/Chapter/SettingsDrawer";
 
 const StageScreen = ({
@@ -32,8 +30,17 @@ const StageScreen = ({
   query: querystring.ParsedUrlQuery;
   isReady: boolean;
 }) => {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<number>(0);
   const { onClose, isOpen, onOpen } = useDisclosure();
+
+  useEffect(() => {
+    const _tab = searchParams.get("_tab");
+    if (_tab) {
+      console.log(Array.from(searchParams), _tab);
+      setActiveTab(+_tab);
+    }
+  }, [searchParams]);
 
   return (
     <>
