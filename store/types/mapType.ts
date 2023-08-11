@@ -28,7 +28,7 @@ export type pointType = {
     x?: number;
     y?: number;
   };
-  action?: {
+  actions?: {
     [key: string]: string[];
   }
 };
