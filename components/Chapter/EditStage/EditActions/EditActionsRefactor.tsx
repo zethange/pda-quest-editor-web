@@ -17,9 +17,12 @@ interface Props {
     [key: string]: string[];
   };
   onChangeActions: (actions: any) => any;
+  
   indexRequired?: boolean;
   index?: number;
   customOnChange?: () => void;
+  noDispatch?: boolean;
+  withField?: boolean;
 }
 
 const EditActionsRefactor: FC<Props> = ({
@@ -28,6 +31,8 @@ const EditActionsRefactor: FC<Props> = ({
   index,
   indexRequired,
   customOnChange,
+  noDispatch = false,
+  withField = false
 }) => {
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -46,6 +51,13 @@ const EditActionsRefactor: FC<Props> = ({
 
   const onChange = () => {
     console.log(actionsList);
+    if (noDispatch) {
+      onChangeActions(actionsList)
+      return;
+    }
+    if (withField) {
+      dispatch(onChangeActions({ actions: actionsList }));
+    }
     if (indexRequired) {
       dispatch(onChangeActions({ index, actions: actionsList }));
     } else {

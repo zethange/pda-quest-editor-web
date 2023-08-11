@@ -28,6 +28,9 @@ export type pointType = {
     x?: number;
     y?: number;
   };
+  action?: {
+    [key: string]: string[];
+  }
 };
 
 export type spawnType = {

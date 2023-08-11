@@ -16,6 +16,7 @@ import {
 import useFetching from "@/hooks/useFetching";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { imagePoint } from "@/store/utils/map/typePoint";
+import EditActionsRefactor from "./EditActions/EditActionsRefactor";
 
 export interface IFromMapStage {
   id: number;
@@ -180,6 +181,7 @@ const FromMapStage = () => {
         condition={stage.point.condition!}
         onChangeCondition={editConditionInPoint}
       />
+      <EditActionsRefactor actions={stage?.point?.actions!} onChangeActions={editTransition} withField  />
     </Box>
   );
 };

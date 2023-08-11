@@ -133,6 +133,23 @@ const mapSlice = createSlice({
 
       state.map.points?.splice(index, 1, action.payload);
     },
+    editActionsPoint(
+      state,
+      action: PayloadAction<{ [key: string]: string[] }>
+    ) {
+      const copyState = JSON.parse(JSON.stringify(state.map));
+      const openPoint = JSON.parse(JSON.stringify(state.openPoint));
+      const index = copyState.points.findIndex(
+        (point: pointType) =>
+          JSON.stringify(point) === JSON.stringify(openPoint)
+      );
+
+      const updatedPoint = {
+        ...state.map.points![index],
+        actions: action.payload,
+      };
+      state.map.points?.splice(index, 1, updatedPoint);
+    },
   },
 });
 
@@ -149,6 +166,7 @@ export const {
   deletePoint,
   editDataSpawn,
   editActionsSpawn,
+  editActionsPoint,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;
