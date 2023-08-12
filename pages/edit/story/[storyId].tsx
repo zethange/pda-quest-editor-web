@@ -31,12 +31,21 @@ export default function storyId() {
   const [chapters, setChapters] = useState<chapterType[]>([]);
 
   useEffect(() => {
+    const chapters: chapterType[] = [];
     store.each((key, value) => {
       key.includes(`story_${storyId}_chapter`) &&
-        setChapters((chapters: any) => [...chapters, value]);
+        chapters.push(value as chapterType);
       if (key === "stopLoop") return false;
     });
+    chapters.sort((a, b) => a.id - b.id);
+    setChapters(chapters);
   }, [isReady]);
+
+  // useEffect(() => {
+  //   const copyChapters = JSON.parse(JSON.stringify(chapters)) as chapterType[];
+  //   copyChapters.sort((chapter) => chapter.id);
+  //   setChapters(copyChapters);
+  // }, [chapters]);
 
   const createChapter = () => {
     let newId =

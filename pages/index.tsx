@@ -129,6 +129,7 @@ export default function Home() {
         neededStories.push(value as storyType);
       }
     }
+    neededStories.sort((a, b) => a.id - b.id);
     setStories(neededStories);
   }, []);
 
@@ -575,7 +576,7 @@ export default function Home() {
                     <Radio value="PUBLIC">Публичную историю</Radio>
                     <Radio value="PRIVATE">Пользовательскую историю</Radio>
                     {parametersUpload.toStore && (
-                      <Radio value="COMMUNITY">Историю от коммьюнити</Radio>
+                      <Radio value="COMMUNITY">Историю от комьюнити</Radio>
                     )}
                   </Stack>
                 </RadioGroup>
