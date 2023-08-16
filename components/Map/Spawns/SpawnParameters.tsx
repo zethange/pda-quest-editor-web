@@ -9,6 +9,7 @@ import {
   Spacer,
   Text,
 } from "@chakra-ui/react";
+import { logger } from "@/store/utils/logger";
 
 export const parameters: [string, string][] = [
   ["immortal", "Бессмертие НПС спавна"],
@@ -47,7 +48,7 @@ const SpawnParameters: React.FC<Props> = ({
   const spawnEntry: [string, string[]][] = Object.entries(spawnList);
 
   const onChange = () => {
-    console.log(spawnList);
+    logger.info(spawnList);
     dispatch(onChangeParameters(spawnList));
   };
 

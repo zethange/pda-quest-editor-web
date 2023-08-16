@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { mapType, pointType, spawnType } from "@/store/types/mapType";
+import { logger } from "@/store/utils/logger";
 
 type initialStateType = {
   openPoint: pointType;
@@ -84,7 +85,7 @@ const mapSlice = createSlice({
         ...state.map.spawns![state.openSpawn.openSpawnIndex],
         ...action.payload,
       };
-      console.log(updatedSpawn, action.payload);
+      logger.info(updatedSpawn, action.payload);
       state.map.spawns?.splice(state.openSpawn.openSpawnIndex, 1, updatedSpawn);
     },
     editActionsSpawn(

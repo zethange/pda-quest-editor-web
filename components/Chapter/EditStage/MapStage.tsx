@@ -5,6 +5,7 @@ import { editMapInData, editPosInData } from "@/store/reduxStore/stageSlice";
 import { stageType } from "@/store/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import useFetching from "@/hooks/useFetching";
+import { logger } from "@/store/utils/logger";
 
 interface IProps {
   data:
@@ -31,7 +32,7 @@ const MapStage = memo(({ data }: IProps) => {
   if (dataMaps) {
     var backgroundSelectedMap = dataMaps.find((map: mapApiType) => {
       if (stage?.data?.map) {
-        if (+map.id === +stage.data.map) console.log(stage, map);
+        if (+map.id === +stage.data.map) logger.info(stage, map);
         return +map.id === +stage?.data?.map;
       }
     })?.background;
@@ -73,10 +74,10 @@ const MapStage = memo(({ data }: IProps) => {
           setDiffHeight(diffHeight);
           setDiffWidth(diffWidth);
 
-          console.log("Diff width: " + diffWidth);
-          console.log("Diff height: " + diffHeight);
+          logger.info("Diff width: " + diffWidth);
+          logger.info("Diff height: " + diffHeight);
         } catch (e) {
-          console.error(e);
+          logger.error(e);
         }
       };
       getData();

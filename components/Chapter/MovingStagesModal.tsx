@@ -13,6 +13,7 @@ import {
   Box,
   Select,
 } from "@chakra-ui/react";
+import { logger } from "@/store/utils/logger";
 
 interface Props {
   isOpen: boolean;
@@ -121,8 +122,8 @@ const MovingStagesModal: FC<Props> = ({
       ].filter((pointFilter) => pointFilter.id !== point.id);
     });
 
-    console.log("targetChapter:", targetChapterJs);
-    console.log("initChapter:", currentChapterJs);
+    logger.info("targetChapter:", targetChapterJs);
+    logger.info("initChapter:", currentChapterJs);
 
     localStorage.setItem(keyCurrentChapterJs, JSON.stringify(currentChapterJs));
     localStorage.setItem(keyTargetChapterJs, JSON.stringify(targetChapterJs));
@@ -163,7 +164,7 @@ const MovingStagesModal: FC<Props> = ({
         <ModalFooter>
           <Button
             onClick={() => {
-              console.log(targetChapter);
+              logger.info(targetChapter);
               onClose();
             }}
           >

@@ -11,6 +11,7 @@ import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
 import { useAppSelector } from "@/store/reduxHooks";
 import { useRouter } from "next/router";
 import ConfirmationModal from "@/components/UI/ConfirmationModal";
+import { logger } from "@/store/utils/logger";
 
 interface IProps {
   updateStage: (stageId: number) => void;
@@ -34,8 +35,8 @@ const EditStagePopover = ({
   const settings = useAppSelector((state) => state.user.settings);
   const { query } = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log("stage:", storeStage);
-  console.log("transitionFromMap:", transitionFromMap);
+  logger.info("stage:", storeStage);
+  logger.info("transitionFromMap:", transitionFromMap);
 
   return (
     <>

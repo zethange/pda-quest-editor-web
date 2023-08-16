@@ -11,13 +11,14 @@ import CodeMirror from "@uiw/react-codemirror";
 import { StreamLanguage } from "@codemirror/language";
 import { lua } from "@codemirror/legacy-modes/mode/lua";
 import { useAppDispatch } from "@/store/reduxHooks";
+import { logger } from "@/store/utils/logger";
 
 interface Props {
   actions?: {
     [key: string]: string[];
   };
   onChangeActions: (actions: any) => any;
-  
+
   indexRequired?: boolean;
   index?: number;
   customOnChange?: () => void;
@@ -32,7 +33,7 @@ const EditActionsRefactor: FC<Props> = ({
   indexRequired,
   customOnChange,
   noDispatch = false,
-  withField = false
+  withField = false,
 }) => {
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -50,9 +51,9 @@ const EditActionsRefactor: FC<Props> = ({
   const actionsEntry: [string, string[]][] = Object.entries(actionsList);
 
   const onChange = () => {
-    console.log(actionsList);
+    logger.info(actionsList);
     if (noDispatch) {
-      onChangeActions(actionsList)
+      onChangeActions(actionsList);
       return;
     }
     if (withField) {

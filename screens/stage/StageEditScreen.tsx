@@ -66,6 +66,7 @@ import { isArray } from "@chakra-ui/utils";
 import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
 import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";
 import { nodeCreateType } from "@/store/types/nodeCreateType";
+import { logger } from "@/store/utils/logger";
 
 export default function StageEditScreen({
   path,
@@ -190,7 +191,7 @@ export default function StageEditScreen({
         edges!,
         direction
       );
-      console.log({ nodes, edges });
+      logger.info({ nodes, edges });
 
       const copyChapter = store.get(`story_${path[0]}_chapter_${path[1]}`);
       const points = Object.values(copyChapter?.points!).flat() as pointType[];
@@ -906,7 +907,7 @@ export default function StageEditScreen({
   };
 
   const forceSyncPosition = () => {
-    console.log("start sync");
+    logger.info("Start sync");
 
     const chapterFromLocalStorage: chapterType =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);

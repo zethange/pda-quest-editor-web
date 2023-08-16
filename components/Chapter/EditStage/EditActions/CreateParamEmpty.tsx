@@ -13,6 +13,7 @@ import {
   AutoCompleteItem,
   AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
+import { logger } from "@/store/utils/logger";
 
 type Props = {
   indexAction: number;
@@ -80,7 +81,7 @@ function WithItems({ indexAction, setShowCreateParam, newParamInMethod }: any) {
   const onChangeNewParam = (message: string, type: "item" | "count") => {
     if (type === "item") arrParam[0] = message;
     if (type === "count") arrParam[1] = message;
-    console.log(arrParam.join(":"));
+    logger.info(arrParam.join(":"));
   };
 
   return (

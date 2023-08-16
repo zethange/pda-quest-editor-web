@@ -39,6 +39,7 @@ import CreatePointModal from "@/components/Map/Points/CreatePointModal";
 import UpdatePointModal from "@/components/Map/Points/UpdatePointModal";
 import EditSpawnModal from "@/components/Map/Spawns/EditSpawnModal";
 import { v4 as uuidv4 } from "uuid";
+import { logger } from "@/store/utils/logger";
 
 // /edit/chapter/maps/{storyId}/{chapterId}/{mapId}
 const MapChapter = () => {
@@ -90,7 +91,7 @@ const MapChapter = () => {
     const back = dataMaps?.find((mapApi) => {
       return +mapApi?.id === +storeRedux.getState().map.map.id;
     });
-    console.log(back);
+    logger.info(back);
     setBackground(back?.background as string);
   }, [isLoading]);
 
@@ -99,7 +100,7 @@ const MapChapter = () => {
     const copyChapter = JSON.parse(JSON.stringify(chapter));
     copyChapter.points[`${query.map![2]}`] = map.points;
     copyChapter.spawns[`${query.map![2]}`] = map.spawns;
-    console.log(copyChapter);
+    logger.info(copyChapter);
     store.set(`story_${query.map![0]}_chapter_${query.map![1]}`, copyChapter);
   };
 
@@ -130,10 +131,10 @@ const MapChapter = () => {
           setDiffHeight(diffHeight);
           setDiffWidth(diffWidth);
 
-          console.log("Diff width: " + diffWidth);
-          console.log("Diff height: " + diffHeight);
+          logger.info("Diff width: " + diffWidth);
+          logger.info("Diff height: " + diffHeight);
         } catch (e) {
-          console.error(e);
+          logger.error(e);
         }
       };
       getData();

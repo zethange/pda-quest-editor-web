@@ -22,6 +22,7 @@ import { chapterType } from "@/store/types/types";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import EditChapterDrawer from "@/components/Chapter/EditChapterDrawer";
+import { logger } from "@/store/utils/logger";
 
 export default function storyId() {
   const { query, isReady } = useRouter();
@@ -73,7 +74,7 @@ export default function storyId() {
     const fileBase = new FileReader();
     fileBase.readAsText(e.target.files![0]);
     fileBase.onload = () => {
-      console.log(fileBase.result);
+      logger.info(fileBase.result);
       const chapter: chapterType = JSON.parse(fileBase.result as string);
       chapter.id = newId;
 

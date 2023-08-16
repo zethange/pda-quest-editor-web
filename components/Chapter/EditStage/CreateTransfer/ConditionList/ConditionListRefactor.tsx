@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/store/reduxHooks";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import ConditionHas from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionHas";
 import ConditionElse from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionElse";
+import { logger } from "@/store/utils/logger";
 
 export type TypeOnChangeCondition = ActionCreatorWithPayload<
   {
@@ -58,7 +59,7 @@ const ConditionListRefactor: React.FC<Props> = ({
   const conditionEntry: [string, string[]][] = Object.entries(conditionList);
 
   const onChange = (conditionListCustom?: { [key: string]: string[] }) => {
-    console.log("list:", conditionList);
+    logger.info("list:", conditionList);
     if (isPoint) {
       dispatch(
         onChangeCondition({

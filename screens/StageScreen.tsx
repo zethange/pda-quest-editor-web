@@ -20,6 +20,7 @@ import { FallbackRender } from "@/components/Global/ErrorHandler";
 import { ErrorBoundary } from "react-error-boundary";
 import { useSearchParams } from "next/navigation";
 import SettingsDrawer from "@/components/Chapter/SettingsDrawer";
+import { logger } from "@/store/utils/logger";
 
 const StageScreen = ({
   path,
@@ -37,7 +38,7 @@ const StageScreen = ({
   useEffect(() => {
     const _tab = searchParams.get("_tab");
     if (_tab) {
-      console.log(Array.from(searchParams), _tab);
+      logger.info(Array.from(searchParams), _tab);
       setActiveTab(+_tab);
     }
   }, [searchParams]);

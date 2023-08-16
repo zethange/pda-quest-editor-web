@@ -15,6 +15,7 @@ import {
   setConnection,
 } from "@/store/reduxStore/stageSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { logger } from "@/store/utils/logger";
 
 interface IProps {
   setIsOpenCreateTransfer: (value: boolean) => void;
@@ -76,7 +77,7 @@ const CreateTransferModal = ({
           <Button
             colorScheme="teal"
             onClick={() => {
-              console.log("storeStage, createTransfer", storeStage);
+              logger.info("storeStage, createTransfer", storeStage);
               updateStage(+storeStage.id);
               dispatch(setConnection(null));
               setIsOpenCreateTransfer(false);

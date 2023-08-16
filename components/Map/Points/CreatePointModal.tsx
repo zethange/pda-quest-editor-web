@@ -16,6 +16,7 @@ import {
 import { pointType } from "@/store/types/mapType";
 import { addPoint } from "@/store/reduxStore/mapSlice";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { logger } from "@/store/utils/logger";
 
 interface IProps {
   showCreatePointModal: boolean;
@@ -37,8 +38,8 @@ const CreatePointModal = ({
   }, [showCreatePointModal]);
 
   const savePoint = () => {
-    console.log(dispatch(addPoint(newPoint!)));
-    console.log("point:", newPoint);
+    dispatch(addPoint(newPoint!));
+    logger.info("point:", newPoint);
     updateMap();
   };
 

@@ -8,10 +8,13 @@ import {
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "@/store/reduxHooks";
 import { conditionMethods } from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
+import { logger } from "@/store/utils/logger";
 
 interface Props {
   condition: [string, string[]];
-  conditionList: { [key: string]: string[] };
+  conditionList: {
+    [key: string]: string[];
+  };
   conditionEntry: [string, string[]][];
   onChange: (conditionList?: { [key: string]: string[] }) => void;
   conditionIndex: number;
@@ -38,7 +41,7 @@ const ConditionElse: React.FC<Props> = ({
   }, [condition]);
 
   useEffect(() => {
-    console.log(method);
+    logger.info(method);
   }, [method]);
 
   return (

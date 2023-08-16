@@ -17,6 +17,7 @@ import useFetching from "@/hooks/useFetching";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { imagePoint } from "@/store/utils/map/typePoint";
 import EditActionsRefactor from "./EditActions/EditActionsRefactor";
+import { logger } from "@/store/utils/logger";
 
 export interface IFromMapStage {
   id: number;
@@ -80,10 +81,10 @@ const FromMapStage = () => {
           setDiffHeight(diffHeight);
           setDiffWidth(diffWidth);
 
-          console.log("Diff width: " + diffWidth);
-          console.log("Diff height: " + diffHeight);
+          logger.info("Diff width: " + diffWidth);
+          logger.info("Diff height: " + diffHeight);
         } catch (e) {
-          console.error(e);
+          logger.error(e);
         }
       };
       getData();
@@ -181,7 +182,11 @@ const FromMapStage = () => {
         condition={stage.point.condition!}
         onChangeCondition={editConditionInPoint}
       />
-      <EditActionsRefactor actions={stage?.point?.actions!} onChangeActions={editTransition} withField  />
+      <EditActionsRefactor
+        actions={stage?.point?.actions!}
+        onChangeActions={editTransition}
+        withField
+      />
     </Box>
   );
 };

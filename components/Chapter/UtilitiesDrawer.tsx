@@ -34,6 +34,7 @@ import {
 } from "@chakra-ui/accordion";
 import { useAppSelector } from "@/store/reduxHooks";
 import { FindParameter } from "@/store/utils/findParameter";
+import { logger } from "@/store/utils/logger";
 
 interface Props {
   chapter?: chapterType;
@@ -135,7 +136,7 @@ const UtilitiesDrawer: FC<Props> = ({
 
   const startCheck = () => {
     if (chapter && parameters.length) {
-      console.log("start search usage parameter, chapteR:", chapter);
+      logger.info("start search usage parameter, chapteR:", chapter);
       const find = new FindParameter(
         chapter,
         selectedParameter || parameters[0],

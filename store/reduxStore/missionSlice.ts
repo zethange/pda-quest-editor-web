@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { checkpointType, missionType } from "@/store/types/missionType";
+import { logger } from "@/store/utils/logger";
 
 type initialStateType = {
   missions: missionType[];
@@ -124,7 +125,7 @@ const missionSlice = createSlice({
       const targetMission = JSON.parse(
         JSON.stringify(state.targetMission.targetMission)
       );
-      console.log(targetMission, action.payload);
+      logger.info(targetMission, action.payload);
       targetMission.checkpoints[action.payload.index!].condition =
         action.payload.condition;
       state.missions[state.targetMission.targetMissionIndex] = targetMission;
@@ -140,7 +141,7 @@ const missionSlice = createSlice({
       const targetMission = JSON.parse(
         JSON.stringify(state.targetMission.targetMission)
       );
-      console.log(targetMission, action.payload);
+      logger.info(targetMission, action.payload);
       targetMission.checkpoints[action.payload.index].actions =
         action.payload.actions;
       state.missions[state.targetMission.targetMissionIndex] = targetMission;

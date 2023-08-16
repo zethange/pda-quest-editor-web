@@ -48,6 +48,7 @@ import JSZip from "jszip";
 import DownloadFromServerDrawer from "@/components/Story/DownloadFromServerDrawer";
 import { FallbackRender } from "@/components/Global/ErrorHandler";
 import { ErrorBoundary } from "react-error-boundary";
+import { logger } from "@/store/utils/logger";
 
 interface Author {
   id: string;
@@ -120,16 +121,34 @@ export default function Home() {
   const toast = useToast();
 
   useEffect(() => {
+    const logo = `
+██████╗░██████╗░░█████╗░  ░██████╗░██╗░░░██╗███████╗░██████╗████████╗
+██╔══██╗██╔══██╗██╔══██╗  ██╔═══██╗██║░░░██║██╔════╝██╔════╝╚══██╔══╝
+██████╔╝██║░░██║███████║  ██║██╗██║██║░░░██║█████╗░░╚█████╗░░░░██║░░░
+██╔═══╝░██║░░██║██╔══██║  ╚██████╔╝██║░░░██║██╔══╝░░░╚═══██╗░░░██║░░░
+██║░░░░░██████╔╝██║░░██║  ░╚═██╔═╝░╚██████╔╝███████╗██████╔╝░░░██║░░░
+╚═╝░░░░░╚═════╝░╚═╝░░╚═╝  ░░░╚═╝░░░░╚═════╝░╚══════╝╚═════╝░░░░╚═╝░░░
+
+███████╗██████╗░██╗████████╗░█████╗░██████╗░
+██╔════╝██╔══██╗██║╚══██╔══╝██╔══██╗██╔══██╗
+█████╗░░██║░░██║██║░░░██║░░░██║░░██║██████╔╝
+██╔══╝░░██║░░██║██║░░░██║░░░██║░░██║██╔══██╗
+███████╗██████╔╝██║░░░██║░░░╚█████╔╝██║░░██║
+╚══════╝╚═════╝░╚═╝░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝`;
+    console.log(logo);
+
+    logger.info("Editor started");
+
     let neededStories: storyType[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       let key = localStorage.key(i);
       const value = store.get(key);
       if (key?.includes("info")) {
-        console.log(key, value);
         neededStories.push(value as storyType);
       }
     }
     neededStories.sort((a, b) => a.id - b.id);
+    logger.success("Get stories from localStorage", neededStories);
     setStories(neededStories);
   }, []);
 
@@ -138,7 +157,6 @@ export default function Home() {
     if (newStoryId === -Infinity) {
       newStoryId = 0;
     }
-    console.log(newStoryId);
     const infoJSON = {
       id: newStoryId,
       title: `Новая история ${stories.length}`,
@@ -147,6 +165,7 @@ export default function Home() {
       access: "USER",
     };
 
+    logger.info("Create story with id " + newStoryId);
     setStories([...stories, infoJSON]);
     store.set(`story_${newStoryId}_info`, infoJSON);
   }
@@ -157,6 +176,7 @@ export default function Home() {
       lastModified: new Date(),
       input: JSON.stringify(store.get(`story_${story_id}_info`), null, 2),
     };
+    logger.info(`Start download story with id ${story_id}`);
 
     const arrChapters: any[] = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -178,6 +198,7 @@ export default function Home() {
         });
       }
     }
+    logger.info(`Getted chapters:`, arrChapters);
 
     const blob = await downloadZip([info, ...arrChapters]).blob();
     const link = document.createElement("a");
@@ -197,8 +218,7 @@ export default function Home() {
 
   const uploadStoryFromFolder = async (e: ChangeEvent<HTMLInputElement>) => {
     const files: File[] = [...(e.target.files as unknown as File[])];
-
-    console.log(files);
+    logger.info("Start upload story from folder, files:", files);
     let idStory: number;
 
     const infoFile: File = files.find(
@@ -253,7 +273,6 @@ export default function Home() {
           key?.includes(`story_${openEditStoryId}_chapter`) ||
           key?.includes(`story_${openEditStoryId}_map`)
         ) {
-          console.log("storyKey:", key);
           const keySplit = key?.split("_");
           keySplit[1] = String(editStory?.id);
           requriedUpdate.push([key!, keySplit.join("_")]);
@@ -274,6 +293,7 @@ export default function Home() {
 
   const uploadStoryToServer = async (storyId: number) => {
     const info = await store.get(`story_${storyId}_info`);
+    logger.info("Started upload to server, info:", info);
 
     let chapters: chapterType[] = [];
     let maps: mapType[] = [];
@@ -295,7 +315,7 @@ export default function Home() {
       chapters,
       maps,
     };
-    console.log("data:", data, info);
+    logger.info("History is formed", data);
     if (!parametersUpload.toStore) {
       var res = await fetch(
         `https://dev.artux.net/pdanetwork/api/v1/admin/quest/set${
@@ -340,7 +360,7 @@ export default function Home() {
         description: dataRes.description,
       });
     }
-    console.log("Отправлено:", data, "\nОтвет:", dataRes);
+    logger.success("Ответ:", dataRes);
     resetParametersUpload();
   };
 
@@ -361,12 +381,11 @@ export default function Home() {
 
   const uploadStoryFromZip = (e: ChangeEvent<HTMLInputElement>) => {
     const zipFile = e.target.files![0];
-    console.log(zipFile);
+    logger.info("Start zip file uploading:", zipFile);
     const zip = new JSZip();
     let newStoryId = Math.max(...stories.map((story) => story.id)) + 1;
     if (newStoryId === -Infinity) newStoryId = 0;
-
-    console.log(newStoryId);
+    logger.info("Story id", newStoryId);
     zip
       .loadAsync(zipFile)
       .then(function (zip) {
@@ -397,7 +416,7 @@ export default function Home() {
         });
       })
       .catch(function (error) {
-        console.error("Ошибка при распаковке ZIP-файла:", error);
+        logger.error("Ошибка при распаковке ZIP-файла:", error);
       });
   };
 
