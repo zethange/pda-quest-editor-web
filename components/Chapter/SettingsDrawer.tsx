@@ -76,6 +76,12 @@ const settingsArray: ISettingSettings[] = [
     type: "string",
     field: "nodeHeight",
   },
+  {
+    title: "Ширина окна редактирования стадии:",
+    description: "Да, чего бубнить, в пикселях",
+    type: "string",
+    field: "drawerEditStageWidth",
+  },
 ];
 
 const SettingsDrawer: React.FC<Props> = ({ isOpen, onClose }) => {

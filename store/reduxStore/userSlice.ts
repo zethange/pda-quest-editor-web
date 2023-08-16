@@ -7,6 +7,7 @@ export interface ISettings {
   onlyRenderVisibleElements?: boolean;
   useAlternativeDagre?: boolean;
   enableUtilities?: boolean;
+  drawerEditStageWidth?: string;
   nodeWidth: string;
   nodeHeight: string;
 }
@@ -37,6 +38,7 @@ const initialState: IInitialState = {
     onlyRenderVisibleElements: false,
     useAlternativeDagre: false,
     enableUtilities: false,
+    drawerEditStageWidth: "450",
     nodeWidth: "300",
     nodeHeight: "100",
   },

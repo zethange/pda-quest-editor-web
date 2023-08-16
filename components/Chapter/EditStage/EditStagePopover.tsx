@@ -31,6 +31,7 @@ const EditStagePopover = ({
   const transitionFromMap = useAppSelector(
     (state) => state.stage.transitionFromMap
   );
+  const settings = useAppSelector((state) => state.user.settings);
   const { query } = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   console.log("stage:", storeStage);
@@ -41,7 +42,7 @@ const EditStagePopover = ({
       <Box
         zIndex="1"
         p={2}
-        w={450}
+        w={settings.drawerEditStageWidth + "px" || "450px"}
         borderLeft="1px"
         borderColor="gray.200"
         backgroundColor="white"
