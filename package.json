@@ -33,6 +33,7 @@
     "react-error-boundary": "^4.0.10",
     "react-icons": "^4.8.0",
     "react-konva": "^18.2.10",
+    "react-nanny": "^2.15.0",
     "react-redux": "^8.0.5",
     "reactflow": "11.8.2",
     "store2": "^2.14.2",
