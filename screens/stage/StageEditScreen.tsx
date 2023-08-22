@@ -435,7 +435,10 @@ export default function StageEditScreen({
 
             const pointsValues: pointType[] = Object.values(points).flat();
             pointsValues.forEach((point) => {
-              if (point && point.id === change.id) {
+              if (
+                (point && point.id === change.id,
+                Object.getOwnPropertyDescriptor(point, "point")?.writable)
+              ) {
                 point.editor = {
                   x: change.position.x,
                   y: change.position.y,

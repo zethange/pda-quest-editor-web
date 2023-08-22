@@ -1,11 +1,27 @@
-import { memo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Box, Input, Select } from "@chakra-ui/react";
 import { mapApiType, mapType } from "@/store/types/mapType";
 import { editMapInData, editPosInData } from "@/store/reduxStore/stageSlice";
 import { stageType } from "@/store/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import useFetching from "@/hooks/useFetching";
+import dynamic from "next/dynamic";
+
+const Stage = dynamic(() => import("../../Global/Konva/Stage"), {
+  ssr: false,
+});
+const KonvaMap = dynamic(() => import("../../Global/Konva/KonvaMap"), {
+  ssr: false,
+});
+
 import { logger } from "@/store/utils/logger";
+
+const KonvaImage = dynamic(
+  () => import("@/components/Global/Konva/KonvaImage"),
+  {
+    ssr: false,
+  }
+);
 
 interface IProps {
   data:
@@ -22,21 +38,23 @@ const MapStage = memo(({ data }: IProps) => {
   const maps: mapType[] = useAppSelector((state) => state.maps.maps);
   const map = maps.find((map: mapType) => map.id === data?.map);
   const stage: stageType = useAppSelector((state) => state.stage.stage);
+  const settings = useAppSelector((state) => state.user.settings);
 
   const parentMapRef: any = useRef();
+
+  const [mapBackground, setMapBackground] = useState("");
 
   const { data: dataMaps } = useFetching<mapApiType[]>(
     "/pdanetwork/api/v1/admin/quest/maps/all"
   );
 
-  if (dataMaps) {
-    var backgroundSelectedMap = dataMaps.find((map: mapApiType) => {
-      if (stage?.data?.map) {
-        if (+map.id === +stage.data.map) logger.info(stage, map);
-        return +map.id === +stage?.data?.map;
-      }
-    })?.background;
-  }
+  useEffect(() => {
+    setMapBackground(
+      dataMaps?.find((map) => {
+        return +map.id === +stage?.data?.map!;
+      })?.background as string
+    );
+  }, [dataMaps]);
 
   const handleClick = (e: any) => {
     const parentMap = parentMapRef.current.getBoundingClientRect();
@@ -84,6 +102,9 @@ const MapStage = memo(({ data }: IProps) => {
     }
   };
 
+  //
+  const [size, setSize] = useState({ height: 0, width: 0 });
+
   return (
     <Box>
       Переход на локацию:
@@ -100,38 +121,61 @@ const MapStage = memo(({ data }: IProps) => {
         </Select>
       </Box>
       <Box position="relative" border="1px solid #000">
-        <Box ref={parentMapRef}>
-          <img
-            src={"/static/maps/" + backgroundSelectedMap}
-            draggable={false}
-            onLoad={(target: any) => onLoadImage(target)}
-            onClick={(e) => handleClick(e)}
-            style={{
-              borderRadius: "5px",
-              marginTop: "5px",
-              width: "450px",
-              userSelect: "none",
-            }}
-            alt={map?.title}
-          />
-          <img
-            style={{
-              position: "absolute",
-              left: `${
-                Number(stage?.data?.pos.split(":")[0]) / diffWidth - 5
-              }px`,
-              bottom: `${
-                Number(stage?.data?.pos.split(":")[1]) / diffHeight - (10 + 5)
-              }px`,
-              color: "#fff",
-              userSelect: "none",
-              width: "10px",
-            }}
-            draggable={false}
-            alt="Метка"
-            src="/quest.png"
-          />
-        </Box>
+        {(settings.alternativeMapViewer && !!mapBackground && (
+          <>
+            <Stage width={430} height={500}>
+              <KonvaMap
+                props={{
+                  src: "/static/maps/" + mapBackground,
+                }}
+                onClick={(e) => {
+                  dispatch(editPosInData(`${e.x}:${e.y}`));
+                }}
+                set={setSize}
+              />
+              <KonvaImage
+                width={30}
+                height={30}
+                x={Number(stage?.data?.pos.split(":")[0]) - 15}
+                y={size.height - Number(stage?.data?.pos.split(":")[1]) - 15}
+                src="/quest.png"
+              />
+            </Stage>
+          </>
+        )) || (
+          <Box ref={parentMapRef}>
+            <img
+              src={"/static/maps/" + mapBackground}
+              draggable={false}
+              onLoad={(target: any) => onLoadImage(target)}
+              onClick={(e) => handleClick(e)}
+              style={{
+                borderRadius: "5px",
+                marginTop: "5px",
+                width: "450px",
+                userSelect: "none",
+              }}
+              alt={map?.title}
+            />
+            <img
+              style={{
+                position: "absolute",
+                left: `${
+                  Number(stage?.data?.pos.split(":")[0]) / diffWidth - 5
+                }px`,
+                bottom: `${
+                  Number(stage?.data?.pos.split(":")[1]) / diffHeight - (10 + 5)
+                }px`,
+                color: "#fff",
+                userSelect: "none",
+                width: "10px",
+              }}
+              draggable={false}
+              alt="Метка"
+              src="/quest.png"
+            />
+          </Box>
+        )}
       </Box>
       <Box>
         Позиция:{" "}

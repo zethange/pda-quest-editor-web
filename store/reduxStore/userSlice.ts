@@ -8,6 +8,7 @@ export interface ISettings {
   useAlternativeDagre?: boolean;
   enableUtilities?: boolean;
   drawerEditStageWidth?: string;
+  alternativeMapViewer?: boolean;
   nodeWidth: string;
   nodeHeight: string;
 }
@@ -39,6 +40,7 @@ const initialState: IInitialState = {
     useAlternativeDagre: false,
     enableUtilities: false,
     drawerEditStageWidth: "450",
+    alternativeMapViewer: false,
     nodeWidth: "300",
     nodeHeight: "100",
   },

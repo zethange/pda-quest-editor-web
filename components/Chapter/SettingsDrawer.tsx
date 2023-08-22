@@ -65,6 +65,12 @@ const settingsArray: ISettingSettings[] = [
     type: "boolean",
   },
   {
+    title: "Использовать альтернативный просмоторщик карт:",
+    description: "Написан на canvas, нестабильно вообще нестабильно",
+    field: "alternativeMapViewer",
+    type: "boolean",
+  },
+  {
     title: "Ширина ноды для сортировки:",
     description: "Нужно для сортировки",
     type: "string",
