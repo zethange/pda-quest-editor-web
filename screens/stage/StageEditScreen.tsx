@@ -279,11 +279,8 @@ export default function StageEditScreen({
               setEditableStage(stage);
             }, 0);
           },
-          notification: !!stage.message,
           text: stage.texts && stage.texts[0].text,
-          id: stage.id,
-          actions: stage.actions || {},
-          _comment: stage._comment,
+          stage: stage,
         },
         position: stage.editor
           ? {
@@ -357,9 +354,7 @@ export default function StageEditScreen({
                   setEditableStage(stage as unknown as stageType);
                 }, 0);
               },
-              id: point.id,
-              actions: {},
-              condition: point.condition,
+              point,
             },
             position: point.editor
               ? {

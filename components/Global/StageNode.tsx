@@ -1,23 +1,24 @@
 import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
-import { Badge, Box, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Badge, Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { LGBTFlagColors } from "@/store/constants";
 import { useAppSelector } from "@/store/reduxHooks";
 import { GrNotification } from "react-icons/gr";
+import { stageType } from "@/store/types/types";
+import { pointType } from "@/store/types/mapType";
+import {
+  AiOutlineArrowDown,
+  AiOutlineArrowUp,
+  AiOutlineWarning,
+} from "react-icons/ai";
 
-type data = {
+interface data {
   label: string;
-  onClick: () => void;
   text: string;
-  actions: {
-    [key: string]: string[];
-  };
-  condition?: {
-    [key: string]: string[];
-  };
-  _comment?: string;
-  notification?: boolean;
-};
+  onClick: () => void;
+  stage?: stageType;
+  point?: pointType;
+}
 
 function NodeStage({
   data,
@@ -44,6 +45,8 @@ function NodeStage({
         },
       };
 
+  const actions = data.stage?.actions || data.point?.actions;
+
   return (
     <Box
       p="8px"
@@ -58,59 +61,76 @@ function NodeStage({
         isConnectable={isConnectable}
       />
       <button onClick={() => data.onClick()}>
-        <Box textAlign="center">
+        <Flex alignItems="center" justifyContent="center" gap={1}>
+          {!data.stage?.background &&
+            !data.point &&
+            data.stage?.type_stage !== 4 && (
+              <Icon fill="orange" as={AiOutlineWarning} />
+            )}
           {data.label || "Стадия без названия"}{" "}
-          {data.notification && <Icon pt="5px" as={GrNotification} />}
-        </Box>
+          {!!data.stage?.message && <Icon pt="5px" as={GrNotification} />}
+          {!!actions &&
+            Object.entries(actions).map((action) => {
+              if (action[0] === "+")
+                return action[1].map(() => (
+                  <Icon fill="green" as={AiOutlineArrowUp} />
+                ));
+              if (action[0] === "-")
+                return action[1].map(() => (
+                  <Icon fill="red" as={AiOutlineArrowDown} />
+                ));
+            })}
+        </Flex>
         <small>
           {words?.substring(0, 30)}
           {words?.length > 30 && "..."}
         </small>
-        {data._comment && (
+        {data.stage?._comment && (
           <Box>
             <Badge fontSize="10px" colorScheme="gray">
-              {"# " + data._comment.substring(0, 30) + "..."}
+              {"# " + data.stage?._comment.substring(0, 30) + "..."}
             </Badge>
           </Box>
         )}
         <Box display="grid" gap={1}>
-          {Object.entries(data.actions).map(
-            (action: [string, unknown], index: number) => {
-              return (
-                <SimpleGrid
-                  columns={(action[1] as string[]).length > 1 ? 2 : 1}
-                  gap={1}
-                  key={index}
-                >
-                  {(action[1] as string[]).map((param: string) => {
-                    if (action[0] === "add") {
-                      return (
-                        <Badge colorScheme="green" key={param}>
-                          {param}
-                        </Badge>
-                      );
-                    } else if (action[0] === "remove") {
-                      return (
-                        <Badge colorScheme="red" key={param}>
-                          {param}
-                        </Badge>
-                      );
-                    } else if (action[0] === "money") {
-                      return (
-                        <Badge colorScheme="blue" key={param}>
-                          ₽: {param}
-                        </Badge>
-                      );
-                    }
-                  })}
-                </SimpleGrid>
-              );
-            }
-          )}
+          {!!actions &&
+            Object.entries(actions).map(
+              (action: [string, unknown], index: number) => {
+                return (
+                  <SimpleGrid
+                    columns={(action[1] as string[]).length > 1 ? 2 : 1}
+                    gap={1}
+                    key={index}
+                  >
+                    {(action[1] as string[]).map((param: string) => {
+                      if (action[0] === "add") {
+                        return (
+                          <Badge colorScheme="green" key={param}>
+                            {param}
+                          </Badge>
+                        );
+                      } else if (action[0] === "remove") {
+                        return (
+                          <Badge colorScheme="red" key={param}>
+                            {param}
+                          </Badge>
+                        );
+                      } else if (action[0] === "money") {
+                        return (
+                          <Badge colorScheme="blue" key={param}>
+                            ₽: {param}
+                          </Badge>
+                        );
+                      }
+                    })}
+                  </SimpleGrid>
+                );
+              }
+            )}
         </Box>
-        {data.condition && (
+        {!!data.point && data.point.condition && (
           <Box display="grid" gap={1}>
-            {Object.entries(data.condition).map(
+            {Object.entries(data.point.condition).map(
               (condition: [string, string[]], index: number) => {
                 return (
                   <SimpleGrid
