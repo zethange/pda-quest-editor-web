@@ -230,7 +230,7 @@ const UtilitiesDrawer: FC<Props> = ({
             <SearchText
               openStage={openStage}
               onClose={onClose}
-              chapter={chapter}
+              chapter={chapter as chapterType}
             />
           </Accordion>
         </DrawerBody>
