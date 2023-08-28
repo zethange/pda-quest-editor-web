@@ -1041,6 +1041,7 @@ export default function StageEditScreen({
               edgeTypes={edgeTypes}
               onlyRenderVisibleElements={settings.onlyRenderVisibleElements}
               onSelectionChange={(e) => onSelectionChange(e)}
+              minZoom={0.01}
               fitView
             >
               {settings.showMiniMap && <MiniMap zoomable pannable />}

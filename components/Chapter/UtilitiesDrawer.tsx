@@ -33,8 +33,9 @@ import {
   AccordionPanel,
 } from "@chakra-ui/accordion";
 import { useAppSelector } from "@/store/reduxHooks";
-import { FindParameter } from "@/store/utils/findParameter";
+import { FindParameter } from "@/store/utils/chapterUtils/FindParameter";
 import { logger } from "@/store/utils/logger";
+import SearchText from "@/components/Chapter/Utilities/SearchText";
 
 interface Props {
   chapter?: chapterType;
@@ -110,6 +111,7 @@ const Logs: React.FC<PropsLog> = ({ logs, nonInfo, onClose, openStage }) => {
     </VStack>
   );
 };
+export { Logs };
 
 const UtilitiesDrawer: FC<Props> = ({
   openStage,
@@ -225,6 +227,11 @@ const UtilitiesDrawer: FC<Props> = ({
                 )}
               </AccordionPanel>
             </AccordionItem>
+            <SearchText
+              openStage={openStage}
+              onClose={onClose}
+              chapter={chapter}
+            />
           </Accordion>
         </DrawerBody>
       </DrawerContent>
