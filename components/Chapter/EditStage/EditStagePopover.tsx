@@ -68,13 +68,12 @@ const EditStagePopover = ({
             <MapStage data={storeStage?.data} />
           )}
           {stageTypes(storeStage?.type_stage) === "default" && <EditStage />}
-          {stageTypes(storeStage?.type_stage) === "default" ||
-            (stageTypes(storeStage?.type_stage) === "chapterEnd" && (
-              <EditActionsRefactor
-                actions={storeStage?.actions}
-                onChangeActions={editActions}
-              />
-            ))}
+          {stageTypes(storeStage?.type_stage) === "default" && (
+            <EditActionsRefactor
+              actions={storeStage?.actions}
+              onChangeActions={editActions}
+            />
+          )}
         </Box>
         <Flex>
           <Button
