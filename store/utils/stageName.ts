@@ -47,7 +47,6 @@ export function stageTypes(type_stage: number) {
       return "map";
     case 5:
       return "default";
-    // return "default";
     case 6:
       return "seller";
     case 7:
