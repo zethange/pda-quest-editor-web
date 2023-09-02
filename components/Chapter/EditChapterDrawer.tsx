@@ -9,6 +9,7 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Input,
+  Textarea,
   VStack,
 } from "@chakra-ui/react";
 import { chapterType } from "@/store/types/types";
@@ -65,7 +66,7 @@ const EditChapterDrawer: React.FC<Props> = ({
                 });
               }}
             />
-            <Input
+            <Textarea
               value={chapter?._comment!}
               placeholder="Комментарий..."
               onChange={(e) => {
