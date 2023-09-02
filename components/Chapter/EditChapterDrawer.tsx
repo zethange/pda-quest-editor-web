@@ -52,14 +52,27 @@ const EditChapterDrawer: React.FC<Props> = ({
         <DrawerHeader>Редактирование главы</DrawerHeader>
 
         <DrawerBody>
-          <VStack mt={1}>
+          <VStack mt={1} gap={1}>
             <Input
               value={chapter?.title!}
+              placeholder="Название главы..."
               onChange={(e) => {
                 setChapter((chapter) => {
                   return {
                     ...chapter,
                     title: e.target.value,
+                  };
+                });
+              }}
+            />
+            <Input
+              value={chapter?._comment!}
+              placeholder="Комментарий..."
+              onChange={(e) => {
+                setChapter((chapter) => {
+                  return {
+                    ...chapter,
+                    _comment: e.target.value,
                   };
                 });
               }}

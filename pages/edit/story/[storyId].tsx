@@ -12,7 +12,7 @@ import {
   Card,
   Flex,
   Heading,
-  Icon,
+  IconButton,
   SimpleGrid,
   Spacer,
   Text,
@@ -41,12 +41,6 @@ export default function storyId() {
     chapters.sort((a, b) => a.id - b.id);
     setChapters(chapters);
   }, [isReady]);
-
-  // useEffect(() => {
-  //   const copyChapters = JSON.parse(JSON.stringify(chapters)) as chapterType[];
-  //   copyChapters.sort((chapter) => chapter.id);
-  //   setChapters(copyChapters);
-  // }, [chapters]);
 
   const createChapter = () => {
     let newId =
@@ -150,15 +144,28 @@ export default function storyId() {
                       </Heading>
                     )}
                   </Link>
-                  <Button
+                  <IconButton
                     onClick={() => {
                       setOpenChapter(chapter);
                       onOpen();
                     }}
-                  >
-                    <Icon as={BsThreeDotsVertical} mt={1} />
-                  </Button>
+                    icon={<BsThreeDotsVertical />}
+                    aria-label="Настройки"
+                  />
                 </Flex>
+                {chapter?._comment && (
+                  <Text
+                    p={1}
+                    fontSize="13px"
+                    backgroundColor="gray.200"
+                    borderRadius="5px"
+                    mt={1}
+                    width="100%"
+                    wordBreak="break-all"
+                  >
+                    # {chapter?._comment}
+                  </Text>
+                )}
                 <Text _dark={{ color: "white" }}>
                   Количество стадий: {chapter?.stages?.length}
                 </Text>

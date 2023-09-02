@@ -5,6 +5,7 @@ export type chapterType = {
   id: number;
   title?: string;
   music?: string[];
+  _comment?: string;
   stages: stageType[];
   points?: { [key: `${number}`]: pointType[] };
   spawns?: { [key: `${number}`]: spawnType[] };
