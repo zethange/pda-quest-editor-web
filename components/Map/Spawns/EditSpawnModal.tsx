@@ -106,7 +106,7 @@ const EditSpawnModal: React.FC<Props> = ({
             </Select>
           </FormControl>
           <FormControl>
-            <FormLabel>Мощность отряда</FormLabel>
+            <FormLabel>Тип отряда</FormLabel>
             <Select
               defaultValue={openSpawn.strength}
               onChange={(event) => {
@@ -118,7 +118,9 @@ const EditSpawnModal: React.FC<Props> = ({
               }}
             >
               {strength.map((strength) => (
-                <option value={strength[0]}>{strength[1]}</option>
+                <option value={strength[0]} key={strength[0]}>
+                  {strength[1]}
+                </option>
               ))}
             </Select>
           </FormControl>

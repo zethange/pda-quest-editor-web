@@ -30,7 +30,7 @@ export type pointType = {
   };
   actions?: {
     [key: string]: string[];
-  }
+  };
 };
 
 export type spawnType = {
@@ -46,7 +46,7 @@ export type spawnType = {
     | "SCIENTISTS"
     | "CLEARSKY";
   // крутизна отряда
-  strength: "WEAK" | "MIDDLE" | "STRONG";
+  strength: "WEAK" | "STALKER" | "MIDDLE" | "MASTER" | "STRONG";
   // кол-во нпс на точке
   n: string;
   // радиус спавна
