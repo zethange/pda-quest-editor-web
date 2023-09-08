@@ -6,7 +6,7 @@ import {
   Icon,
   IconButton,
   Input,
-  Switch,
+  Select,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
@@ -205,6 +205,34 @@ export default function EditStage() {
             );
           }}
         />
+      </Box>
+      <Box
+        p={2}
+        my={2}
+        backgroundColor="gray.100"
+        _dark={{
+          backgroundColor: "gray.700",
+        }}
+        borderRadius="10px"
+      >
+        <b>Тип уведомления:</b>
+        <Select
+          value={String(storeStage?.type_message)}
+          backgroundColor="white"
+          _dark={{
+            backgroundColor: "gray.900",
+          }}
+          onChange={(e) => {
+            dispatch(
+              editStageInStore({
+                type_message: +e.target.value,
+              })
+            );
+          }}
+        >
+          <option value="0">Обычное уведомления</option>
+          <option value="1">Уведомление от НПС</option>
+        </Select>
       </Box>
       <Box
         p={2}

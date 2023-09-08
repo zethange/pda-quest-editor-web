@@ -948,7 +948,7 @@ export default function StageEditScreen({
       <Box
         display="flex"
         p={1}
-        gap={2}
+        gap={1}
         borderBottom="1px"
         alignItems="center"
         borderBottomColor="gray.200"
