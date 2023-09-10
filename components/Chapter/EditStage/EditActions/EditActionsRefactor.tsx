@@ -1,17 +1,25 @@
-import { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 
-import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
-import CreateParamEmpty from "@/components/Chapter/EditStage/EditActions/CreateParamEmpty";
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  Select,
+  Spacer,
+  Tooltip,
+} from "@chakra-ui/react";
 import {
   commandLocalize,
   commands,
   typeCommand,
 } from "@/store/utils/commandsAction";
-import CodeMirror from "@uiw/react-codemirror";
-import { StreamLanguage } from "@codemirror/language";
-import { lua } from "@codemirror/legacy-modes/mode/lua";
 import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
 import { logger } from "@/store/utils/logger";
+import Item from "@/components/Chapter/EditStage/EditActions/Item/Item";
+import { itemsContainerType } from "@/store/types/itemsType";
+import InputItem from "@/components/Chapter/EditStage/EditActions/Item/InputItem";
+import CodeMirrorItem from "@/components/Chapter/EditStage/EditActions/Item/CodeMirrorItem";
 
 interface Props {
   actions?: {
@@ -43,6 +51,17 @@ const EditActionsRefactor: FC<Props> = ({
   if (!actions) {
     actions = {};
   }
+
+  const [data, setData] = useState<itemsContainerType | undefined>(undefined);
+  useEffect(() => {
+    fetch("/pdanetwork/api/v1/items/all", {
+      headers: {
+        Authorization: `Basic ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
 
   let actionsList: { [key: string]: string[] } = JSON.parse(
     JSON.stringify(actions)
@@ -113,10 +132,12 @@ const EditActionsRefactor: FC<Props> = ({
                 value={method}
                 onChange={(event) => setMethod(event.target.value)}
               >
-                {commands.map((command) => (
-                  <optgroup label={command.title}>
+                {commands.map((command, index) => (
+                  <optgroup key={index} label={command.title}>
                     {command.commands.map((command) => (
-                      <option value={command[0]}>{command[1]}</option>
+                      <option value={command[0]} key={command[0]}>
+                        {command[1]}
+                      </option>
                     ))}
                   </optgroup>
                 ))}
@@ -136,81 +157,138 @@ const EditActionsRefactor: FC<Props> = ({
           </Box>
         )}
         <Box display="grid">
-          {Object.entries(actions).map((action: any, indexMethod: number) => (
-            <Box
-              mt={1}
-              p={2}
-              backgroundColor="white"
-              _dark={{
-                backgroundColor: "gray.600",
-              }}
-              borderRadius="10px"
-              key={JSON.stringify(action)}
-            >
-              <Box display="flex" gap={1} mb={1}>
-                Команда:
-                <Spacer />
-                <Button
-                  size="xs"
-                  onClick={() => {
-                    delete actionsList[action[0]];
-                    onChange();
-                  }}
-                >
-                  -
-                </Button>
-              </Box>
-              <Input
-                readOnly={true}
-                defaultValue={commandLocalize(action[0])}
-              />
-              <Box>
-                <CreateParamEmpty
-                  indexAction={indexMethod}
-                  type={typeCommand(action[0])}
-                  newParamInMethod={newParamInMethod}
+          {Object.entries(actions).map(
+            (action: [string, string[]], indexMethod: number) => (
+              <Box
+                mt={1}
+                p={2}
+                backgroundColor="white"
+                _dark={{
+                  backgroundColor: "gray.600",
+                }}
+                borderRadius="10px"
+                key={JSON.stringify(action)}
+              >
+                <Box display="flex" gap={1} mb={1}>
+                  Команда:
+                  <Spacer />
+                  <Button
+                    size="xs"
+                    onClick={() => {
+                      delete actionsList[action[0]];
+                      onChange();
+                    }}
+                  >
+                    -
+                  </Button>
+                </Box>
+                <Input
+                  readOnly={true}
+                  defaultValue={commandLocalize(action[0])}
                 />
-                <Box display="grid" gap={1}>
-                  {action[1].map((key: string, indexParam: number) => (
+                {typeCommand(action[0]) !== "null" && (
+                  <Box mt={1}>
+                    <Box display="flex">
+                      Значения:
+                      <Spacer />
+                      <Flex gap={1}>
+                        <Tooltip label="Создать параметр">
+                          <Button
+                            size="xs"
+                            py={1}
+                            onClick={() => {
+                              newParamInMethod(indexMethod, "");
+                            }}
+                          >
+                            +
+                          </Button>
+                        </Tooltip>
+                        {typeCommand(action[0]) === "item" && (
+                          <Tooltip label="Создать предмет">
+                            <Button
+                              size="xs"
+                              py={1}
+                              onClick={() => {
+                                newParamInMethod(indexMethod, "1:1");
+                              }}
+                            >
+                              +
+                            </Button>
+                          </Tooltip>
+                        )}
+                      </Flex>
+                    </Box>
                     <Box
-                      display={action[0] === "script" ? "grid" : "flex"}
+                      display="grid"
+                      mt={action[1].length === 0 ? 0 : 1}
                       gap={1}
                     >
-                      {action[0] === "script" ? (
-                        <CodeMirror
-                          value={key}
-                          height="200px"
-                          extensions={[StreamLanguage.define(lua)]}
-                          onBlur={(event) => {
-                            actionsEntry[+indexMethod][1][+indexParam] =
-                              event.target.innerText;
-                            onChange();
-                          }}
-                        />
-                      ) : (
-                        <Input
-                          defaultValue={key}
-                          onBlur={(e) => {
-                            actionsEntry[+indexMethod][1][+indexParam] =
-                              e.target.value;
-                            onChange();
-                          }}
-                        />
-                      )}
-                      <Button
-                        onClick={() => {
-                          actionsEntry[+indexMethod][1].splice(+indexParam, 1);
-                          onChange();
-                        }}
-                      >
-                        -
-                      </Button>
+                      {action[1].map((key: string, indexParam: number) => (
+                        <Box
+                          display={action[0] === "script" ? "grid" : "flex"}
+                          gap={1}
+                          key={key}
+                        >
+                          {typeCommand(action[0]) === "codemirror" && (
+                            <CodeMirrorItem
+                              value={key}
+                              onChange={(e) => {
+                                actionsEntry[+indexMethod][1][+indexParam] = e;
+                                onChange();
+                              }}
+                            />
+                          )}
+                          {typeCommand(action[0]) === "item" &&
+                            key.includes(":") && (
+                              <Item
+                                value={key}
+                                data={data}
+                                onChange={(e) => {
+                                  actionsEntry[+indexMethod][1][+indexParam] =
+                                    e;
+                                  onChange();
+                                }}
+                              />
+                            )}
+                          {typeCommand(action[0]) === "item" &&
+                            !key.includes(":") && (
+                              <InputItem
+                                value={key}
+                                onChange={(e) => {
+                                  actionsEntry[+indexMethod][1][+indexParam] =
+                                    e;
+                                  onChange();
+                                }}
+                              />
+                            )}
+                          {typeCommand(action[0]) === "empty" && (
+                            <InputItem
+                              value={key}
+                              onChange={(e) => {
+                                actionsEntry[+indexMethod][1][+indexParam] = e;
+                                onChange();
+                              }}
+                            />
+                          )}
+                          <Button
+                            onClick={() => {
+                              actionsEntry[+indexMethod][1].splice(
+                                +indexParam,
+                                1
+                              );
+                              onChange();
+                            }}
+                          >
+                            -
+                          </Button>
+                        </Box>
+                      ))}
                     </Box>
-                  ))}
-                </Box>
+                  </Box>
+                )}
               </Box>
-            </Box>
-          ))}
+            )
+          )}
         </Box>
       </Box>
     </>
