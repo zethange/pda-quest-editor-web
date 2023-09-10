@@ -34,7 +34,9 @@ const Item: FC<Props> = ({ value, onChange, data }) => {
             (category: [string, itemType[]]) => (
               <optgroup key={category[0]} label={groupItem(category[0])}>
                 {category[1].map((item: itemType) => (
-                  <option value={String(item.baseId)}>{item.title}</option>
+                  <option key={item.baseId} value={String(item.baseId)}>
+                    {item.title}
+                  </option>
                 ))}
               </optgroup>
             )

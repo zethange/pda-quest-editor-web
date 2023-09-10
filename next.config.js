@@ -9,6 +9,12 @@ const nextConfig = withAxiom({
         port: "",
         pathname: "/static/**",
       },
+      {
+        protocol: "https",
+        hostname: "dev.artux.net",
+        port: "",
+        pathname: "**",
+      },
     ],
   },
   httpAgentOptions: {

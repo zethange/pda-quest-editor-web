@@ -145,7 +145,7 @@ const stageSlice = createSlice({
         state.stage.texts.push({ text: "Новый текст", condition: {} });
       }
     },
-    deleteTextInStore(state, action) {
+    deleteTextInStore(state, action: PayloadAction<number>) {
       state.stage.texts?.splice(action.payload, 1);
     },
     newTransferInStore(state, action) {
@@ -184,7 +184,7 @@ const stageSlice = createSlice({
     editMessageInStore(state, action) {
       state.stage.message = action.payload;
     },
-    editStageInStore(state, action) {
+    editStageInStore(state, action: PayloadAction<Partial<stageType>>) {
       state.stage = {
         ...state.stage,
         ...action.payload,
@@ -245,18 +245,15 @@ const stageSlice = createSlice({
     setTargetText(state, action) {
       state.targetText = action.payload;
     },
-    // CONDITION_TRANSFER
     editConditionInTransfer(state, action) {
       const { index, condition } = action.payload;
       state.stage.transfers![+index].condition = condition;
     },
-    // CONDITION_TEXT
     editConditionInText(state, action) {
       const { condition } = action.payload;
       state.stage.texts![+state.targetText.indexTargetText].condition =
         condition;
     },
-    // CONDITION_POINT
     editConditionInPoint(
       state,
       action: PayloadAction<{ condition: { [key: string]: string[] } }>
@@ -264,7 +261,6 @@ const stageSlice = createSlice({
       const { condition } = action.payload;
       state.transitionFromMap.point.condition = condition;
     },
-    // ACTIONS
     editActions(state, action) {
       state.stage.actions = action.payload;
     },

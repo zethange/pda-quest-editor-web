@@ -70,7 +70,7 @@ const MapChapter = () => {
         chapter.spawns![String(query.map![2]) as `${number}`]! || [];
       dispatch(setMap({ ...map, points, spawns }));
     }
-  }, [isReady]);
+  }, [isReady, dispatch, query.map]);
 
   // опции
   const [showQuestPoints, setShowQuestPoints] = useState(true);
@@ -87,13 +87,14 @@ const MapChapter = () => {
   const { data: dataMaps, isLoading } = useFetching<mapApiType[]>(
     "/pdanetwork/api/v1/admin/quest/maps/all"
   );
+
   useEffect(() => {
     const back = dataMaps?.find((mapApi) => {
       return +mapApi?.id === +storeRedux.getState().map.map.id;
     });
     logger.info(back);
     setBackground(back?.background as string);
-  }, [isLoading]);
+  }, [isLoading, dataMaps, storeRedux]);
 
   const updateMap = () => {
     const map = storeRedux.getState().map.map;
@@ -231,6 +232,7 @@ const MapChapter = () => {
               onDragLeave={(e) => handleDragLeave(e)}
               draggable={false}
               userSelect="none"
+              alt="map"
               h="calc(100vh - (80px + 57px))"
               src={`/static/maps/${background}`}
               onLoad={(target: any) => onLoadImage(target)}

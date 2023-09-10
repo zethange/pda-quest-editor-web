@@ -16,11 +16,8 @@ import { stageText } from "@/store/types/story/chapterType";
 import { useDispatch } from "react-redux";
 import {
   deleteTextInStore,
-  editBackgroundInStore,
-  editMessageInStore,
   editStageInStore,
   editTextInStore,
-  editTitleInStore,
   newTextInStore,
   setTargetText,
 } from "@/store/reduxStore/slices/stageSlice";
@@ -76,14 +73,16 @@ export default function EditStage() {
               opacity: "0.75",
             }}
             defaultValue={storeStage?.title}
-            onChange={(event) => dispatch(editTitleInStore(event.target.value))}
+            onChange={(event) =>
+              dispatch(editStageInStore({ title: event.target.value }))
+            }
           />
           <InputGroup>
             <Input
               placeholder="Ссылка на фон..."
               backgroundColor="white"
               opacity="0.75"
-              defaultValue={storeStage?.background}
+              value={storeStage?.background}
               mt={2}
               ref={ref}
               _dark={{
@@ -91,7 +90,7 @@ export default function EditStage() {
                 opacity: "0.75",
               }}
               onChange={(event) => {
-                dispatch(editBackgroundInStore(event.target.value));
+                dispatch(editStageInStore({ background: event.target.value }));
               }}
             />
             <InputRightElement>
@@ -270,7 +269,7 @@ export default function EditStage() {
             onChange={(event) => {
               event.target.style.height = "inherit";
               event.target.style.height = `${event.target.scrollHeight}px`;
-              dispatch(editMessageInStore(event.target.value));
+              dispatch(editStageInStore({ message: event.target.value }));
             }}
           />
         </Box>

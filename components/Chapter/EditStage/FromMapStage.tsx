@@ -64,7 +64,7 @@ const FromMapStage = () => {
         return +map.id === +stage?.mapId;
       })?.background as string
     );
-  }, [data]);
+  }, [data, stage?.mapId]);
 
   const parentMapRef: any = useRef();
 
@@ -207,7 +207,9 @@ const FromMapStage = () => {
         }}
       >
         {typePoints.map((type) => (
-          <option value={type[0]}>{type[1]}</option>
+          <option key={type[0]} value={type[0]}>
+            {type[1]}
+          </option>
         ))}
       </Select>
       <Box>

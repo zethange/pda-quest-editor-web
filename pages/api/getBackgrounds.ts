@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const GET = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = await fetch("https://cdn.artux.net/file_index.json");
   const data: string[] = await response.json();
 
@@ -23,3 +23,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     })
   );
 };
+
+export default GET;

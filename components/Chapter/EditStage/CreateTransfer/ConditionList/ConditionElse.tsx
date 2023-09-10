@@ -91,7 +91,11 @@ const ConditionElse: React.FC<Props> = ({
             >
               {conditionMethods.map((method) => {
                 if (method![2] === undefined) {
-                  return <option value={method[0]}>{method[0]}</option>;
+                  return (
+                    <option key={method[0]} value={method[0]}>
+                      {method[0]}
+                    </option>
+                  );
                 }
               })}
             </Select>

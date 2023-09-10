@@ -6,13 +6,15 @@ const KonvaImage: FC<Partial<HTMLImageElement>> = (props) => {
 
   useEffect(() => {
     const img = new window.Image();
-    img.src = props?.src!;
+    if (props.src) {
+      img.src = props.src;
+    }
     img.onload = () => {
       setImage(img);
     };
-  }, []);
+  }, [props.src]);
 
-  return <Image image={image} {...props} />;
+  return <Image alt={props.alt} image={image} {...props} />;
 };
 
 export default KonvaImage;

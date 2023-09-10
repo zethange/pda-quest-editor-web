@@ -81,7 +81,9 @@ const SpawnParameters: React.FC<Props> = ({
             onChange={(e) => setNewParameter(e.target.value)}
           >
             {parameters.map((parameter) => (
-              <option value={parameter[0]}>{parameter[1]}</option>
+              <option key={parameter[0]} value={parameter[0]}>
+                {parameter[1]}
+              </option>
             ))}
           </Select>
           <Button
@@ -101,7 +103,7 @@ const SpawnParameters: React.FC<Props> = ({
       <Box mt={spawnEntry.length === 0 ? 0 : 1} display="grid" gap={1}>
         {spawnEntry.map((parameter) => {
           return (
-            <Flex gap={1}>
+            <Flex gap={1} key={parameter[0]}>
               <Input readOnly value={getParameterName(parameter[0])} />
               <Button
                 fontWeight="normal"

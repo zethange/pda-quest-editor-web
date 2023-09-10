@@ -21,7 +21,7 @@ const FallbackRender: React.FC<PropsFallback> = ({ error }) => {
         router: { query: router.query, pathname: router.pathname },
       }),
     });
-  }, []);
+  }, [error]);
 
   toast({
     title: "Произошла ошибка",

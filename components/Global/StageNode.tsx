@@ -72,12 +72,12 @@ function NodeStage({
           {!!actions &&
             Object.entries(actions).map((action) => {
               if (action[0] === "+")
-                return action[1].map(() => (
-                  <Icon fill="green" as={AiOutlineArrowUp} />
+                return action[1].map((key) => (
+                  <Icon key={key} fill="green" as={AiOutlineArrowUp} />
                 ));
               if (action[0] === "-")
-                return action[1].map(() => (
-                  <Icon fill="red" as={AiOutlineArrowDown} />
+                return action[1].map((key) => (
+                  <Icon key={key} fill="red" as={AiOutlineArrowDown} />
                 ));
             })}
         </Flex>

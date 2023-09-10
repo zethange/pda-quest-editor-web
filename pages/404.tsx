@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CustomHead from "@/components/Global/CustomHead";
 import Link from "next/link";
+import Image from "next/image";
 
 const Page404 = () => {
   const [date, setDate] = useState("blue");
@@ -21,8 +22,10 @@ const Page404 = () => {
         }}
       >
         <div>
-          <img
+          <Image
             src="https://dev.artux.net/pdanetwork/images/poster.png"
+            width={300}
+            height={300}
             alt="PDA LOGO"
           />
           <h2>404 - страница не найдена.</h2>

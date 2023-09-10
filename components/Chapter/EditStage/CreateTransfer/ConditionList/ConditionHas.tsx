@@ -53,7 +53,7 @@ const ConditionHas: React.FC<Props> = ({
       </Box>
       <Box display="grid" gap="4px">
         {condition[1].map((conditionValue: any, valueIndex: number) => (
-          <Box display="flex" gap={1}>
+          <Box display="flex" gap={1} key={valueIndex}>
             <AutoComplete
               openOnFocus
               value={conditionValue}

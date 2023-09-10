@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { log } from "next-axiom";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const POST = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
       var body = JSON.parse(req.body);
@@ -14,3 +14,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).send(200);
   }
 };
+
+export default POST;

@@ -1,8 +1,9 @@
 import { NextApiResponse } from "next";
 
-export default async (res: NextApiResponse) => {
+const GET = async (res: NextApiResponse) => {
   res.status(200).json({
-    error: "Понимаешь что такое API?",
-    body: "Пиши в Discord!",
+    error: "Что ты делаешь в моём холодильнике?",
   });
 };
+
+export default GET;

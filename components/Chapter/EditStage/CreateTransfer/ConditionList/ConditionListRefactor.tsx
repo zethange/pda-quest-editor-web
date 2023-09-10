@@ -145,6 +145,7 @@ const ConditionListRefactor: React.FC<Props> = ({
               if (condition[0] === "has" || condition[0] === "!has") {
                 return (
                   <ConditionHas
+                    key={conditionIndex}
                     condition={condition}
                     conditionList={conditionList}
                     conditionEntry={conditionEntry}
@@ -155,6 +156,7 @@ const ConditionListRefactor: React.FC<Props> = ({
               } else {
                 return (
                   <ConditionElse
+                    key={conditionIndex}
                     condition={condition}
                     conditionList={conditionList}
                     conditionEntry={conditionEntry}

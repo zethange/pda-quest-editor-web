@@ -24,7 +24,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import EditChapterDrawer from "@/components/Chapter/EditChapterDrawer";
 import { logger } from "@/store/utils/logger";
 
-export default function storyId() {
+export default function StoryId() {
   const { query, isReady } = useRouter();
   const storyId = query.storyId as string;
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,7 +40,7 @@ export default function storyId() {
     });
     chapters.sort((a, b) => a.id - b.id);
     setChapters(chapters);
-  }, [isReady]);
+  }, [isReady, storyId]);
 
   const createChapter = () => {
     let newId =

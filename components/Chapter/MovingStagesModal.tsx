@@ -36,6 +36,7 @@ const MovingStagesModal: FC<Props> = ({
   const [targetChapter, setTargetChapter] = useState<number>(0);
 
   useEffect(() => {
+    const gotChapters: chapterType[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       let key: string = localStorage.key(i) as string;
       if (key.includes(`story_${currentStory}_chapter`)) {
@@ -43,11 +44,15 @@ const MovingStagesModal: FC<Props> = ({
           localStorage.getItem(key) as string
         ) as chapterType;
 
-        if (value.id !== Number(currentChapter))
-          setChapters((prevChapters) => [...prevChapters, value]);
+        if (value.id !== Number(currentChapter)) {
+          gotChapters.push(value);
+        }
       }
     }
-  }, []);
+    gotChapters.sort((a, b) => a.id - b.id);
+
+    setChapters(gotChapters);
+  }, [currentStory, currentChapter]);
 
   useEffect(() => {
     setTargetChapter(chapters![0]?.id);

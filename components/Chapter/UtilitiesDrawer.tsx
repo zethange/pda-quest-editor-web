@@ -150,7 +150,7 @@ const UtilitiesDrawer: FC<Props> = ({
 
   useEffect(() => {
     startCheck();
-  }, [selectedParameter, isOpen]);
+  }, [selectedParameter, isOpen, startCheck]);
 
   return (
     <Drawer size="md" onClose={onClose} isOpen={isOpen}>

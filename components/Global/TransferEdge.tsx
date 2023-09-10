@@ -53,7 +53,9 @@ const TransferEdge: FC<EdgeProps> = ({
                         (condition: [string, unknown]) => {
                           return (condition[1] as string[]).map(
                             (condition: string) => (
-                              <Badge colorScheme="messenger">{condition}</Badge>
+                              <Badge key={condition} colorScheme="messenger">
+                                {condition}
+                              </Badge>
                             )
                           );
                         }

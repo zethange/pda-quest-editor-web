@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Input, Select } from "@chakra-ui/react";
 import { mapApiType, mapType } from "@/store/types/story/mapType";
 import {
@@ -9,6 +9,7 @@ import { stageType } from "@/store/types/story/chapterType";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import useFetching from "@/hooks/useFetching";
 import dynamic from "next/dynamic";
+import { logger } from "@/store/utils/logger";
 
 const Stage = dynamic(() => import("../../Global/Konva/Stage"), {
   ssr: false,
@@ -16,8 +17,6 @@ const Stage = dynamic(() => import("../../Global/Konva/Stage"), {
 const KonvaMap = dynamic(() => import("../../Global/Konva/KonvaMap"), {
   ssr: false,
 });
-
-import { logger } from "@/store/utils/logger";
 
 const KonvaImage = dynamic(
   () => import("@/components/Global/Konva/KonvaImage"),
@@ -35,7 +34,7 @@ interface IProps {
     | undefined;
 }
 
-const MapStage = memo(({ data }: IProps) => {
+const MapStage = ({ data }: IProps) => {
   const dispatch = useAppDispatch();
 
   const maps: mapType[] = useAppSelector((state) => state.maps.maps);
@@ -57,7 +56,7 @@ const MapStage = memo(({ data }: IProps) => {
         return +map.id === +stage?.data?.map!;
       })?.background as string
     );
-  }, [dataMaps]);
+  }, [dataMaps, stage?.data?.map]);
 
   const handleClick = (e: any) => {
     const parentMap = parentMapRef.current.getBoundingClientRect();
@@ -190,6 +189,6 @@ const MapStage = memo(({ data }: IProps) => {
       </Box>
     </Box>
   );
-});
+};
 
 export default MapStage;

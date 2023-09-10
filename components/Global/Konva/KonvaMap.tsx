@@ -34,7 +34,9 @@ const KonvaMap: FC<Props> = ({ props, onClick, set }) => {
 
   useEffect(() => {
     const img = new window.Image();
-    img.src = props!.src!;
+    if (props.src) {
+      img.src = props.src;
+    }
     img.onload = () => {
       setImage(img);
       set({ height: img.height, width: img.width });

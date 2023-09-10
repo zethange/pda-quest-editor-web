@@ -12,7 +12,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import useFetching from "@/hooks/useFetching";
-import { editBackgroundInStore } from "@/store/reduxStore/slices/stageSlice";
+import { editStageInStore } from "@/store/reduxStore/slices/stageSlice";
 import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
 
 interface Props {
@@ -42,7 +42,9 @@ const OverviewBackgroundModal: FC<Props> = ({ show, onClose }) => {
                   onClick={() => {
                     const dataEdit = data.split("/");
                     dataEdit.splice(0, 1);
-                    dispatch(editBackgroundInStore(dataEdit.join("/")));
+                    dispatch(
+                      editStageInStore({ background: dataEdit.join("/") })
+                    );
                     onClose();
                   }}
                   src={"https://cdn.artux.net/" + data}

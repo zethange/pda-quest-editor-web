@@ -12,7 +12,7 @@ const OverviewBackgroundButton: FC<Props> = ({}) => {
       <Button
         size="xs"
         fontWeight="normal"
-        colorScheme="whiteAlpha"
+        colorScheme="blackAlpha"
         mt={4}
         onClick={() => setShowModal(true)}
       >

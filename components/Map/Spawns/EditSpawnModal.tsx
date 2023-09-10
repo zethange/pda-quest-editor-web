@@ -101,7 +101,9 @@ const EditSpawnModal: React.FC<Props> = ({
               }}
             >
               {groups.map((group) => (
-                <option value={group[0]}>{group[1]}</option>
+                <option key={group[0]} value={group[0]}>
+                  {group[1]}
+                </option>
               ))}
             </Select>
           </FormControl>
