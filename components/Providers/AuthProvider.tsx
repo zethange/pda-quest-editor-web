@@ -1,7 +1,7 @@
 import AuthModal from "@/components/Global/AuthModal";
 import useFetching from "@/hooks/useFetching";
-import { useAppDispatch } from "@/store/reduxHooks";
-import { setUser } from "@/store/reduxStore/userSlice";
+import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
+import { setUser } from "@/store/reduxStore/slices/userSlice";
 import { IUser } from "@/store/types/userType";
 import React, { memo, useEffect, useState } from "react";
 

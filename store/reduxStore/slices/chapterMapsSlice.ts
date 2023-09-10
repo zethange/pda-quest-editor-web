@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { mapType } from "@/store/types/mapType";
+import { mapType } from "@/store/types/story/mapType";
 
 const mapsSlice = createSlice({
   name: "maps",

@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import {
   Box,
   Button,
@@ -14,15 +14,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { generateSlug } from "@/store/tools/slugGenerator";
+import { generateSlug } from "@/store/tools/generateSlug";
 import {
   deleteCheckpoint,
   editCheckpoint,
   editMission,
   newCheckpoint,
   setTargetCheckpointIndex,
-} from "@/store/reduxStore/missionSlice";
-import { checkpointType } from "@/store/types/missionType";
+} from "@/store/reduxStore/slices/missionSlice";
+import { checkpointType } from "@/store/types/story/missionType";
 import {
   AutoComplete,
   AutoCompleteInput,

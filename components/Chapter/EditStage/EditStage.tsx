@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -6,11 +6,13 @@ import {
   Icon,
   IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Select,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { stageText } from "@/store/types/types";
+import { stageText } from "@/store/types/story/chapterType";
 import { useDispatch } from "react-redux";
 import {
   deleteTextInStore,
@@ -21,10 +23,11 @@ import {
   editTitleInStore,
   newTextInStore,
   setTargetText,
-} from "@/store/reduxStore/stageSlice";
+} from "@/store/reduxStore/slices/stageSlice";
 import { MdDelete, MdLockOutline } from "react-icons/md";
 import EditTextCondition from "@/components/Chapter/EditStage/EditTextCondition";
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import OverviewBackgroundButton from "@/components/Chapter/EditStage/OverviewBackground/OverviewBackgroundButton";
 
 export default function EditStage() {
   const [openCondition, setOpenCondition] = useState<boolean>(false);
@@ -39,6 +42,8 @@ export default function EditStage() {
   } else {
     background = `https://cdn.artux.net/static/${storeStage.background}`;
   }
+
+  const ref = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -73,20 +78,26 @@ export default function EditStage() {
             defaultValue={storeStage?.title}
             onChange={(event) => dispatch(editTitleInStore(event.target.value))}
           />
-          <Input
-            placeholder="Ссылка на фон..."
-            backgroundColor="white"
-            opacity="0.75"
-            defaultValue={storeStage?.background}
-            mt={2}
-            _dark={{
-              backgroundColor: "black",
-              opacity: "0.75",
-            }}
-            onChange={(event) => {
-              dispatch(editBackgroundInStore(event.target.value));
-            }}
-          />
+          <InputGroup>
+            <Input
+              placeholder="Ссылка на фон..."
+              backgroundColor="white"
+              opacity="0.75"
+              defaultValue={storeStage?.background}
+              mt={2}
+              ref={ref}
+              _dark={{
+                backgroundColor: "black",
+                opacity: "0.75",
+              }}
+              onChange={(event) => {
+                dispatch(editBackgroundInStore(event.target.value));
+              }}
+            />
+            <InputRightElement>
+              <OverviewBackgroundButton />
+            </InputRightElement>
+          </InputGroup>
         </Box>
       </Box>
       <Box

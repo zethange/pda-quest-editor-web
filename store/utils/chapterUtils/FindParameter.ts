@@ -1,4 +1,4 @@
-import { chapterType } from "@/store/types/types";
+import { chapterType } from "@/store/types/story/chapterType";
 import { Log } from "@/store/validator";
 import { logger } from "@/store/utils/logger";
 

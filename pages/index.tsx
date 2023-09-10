@@ -41,9 +41,9 @@ import {
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import { BiEdit } from "react-icons/bi";
 import { BsCloudUpload } from "react-icons/bs";
-import { storyType } from "@/store/types/storyType";
-import { chapterType } from "@/store/types/types";
-import { mapType } from "@/store/types/mapType";
+import { storyType } from "@/store/types/story/storyType";
+import { chapterType } from "@/store/types/story/chapterType";
+import { mapType } from "@/store/types/story/mapType";
 import JSZip from "jszip";
 import DownloadFromServerDrawer from "@/components/Story/DownloadFromServerDrawer";
 import { FallbackRender } from "@/components/Global/ErrorHandler";

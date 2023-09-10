@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { chapterType } from "@/store/types/types";
+import { chapterType } from "@/store/types/story/chapterType";
 import {
   Button,
   Card,
@@ -32,7 +32,7 @@ import {
   AccordionItem,
   AccordionPanel,
 } from "@chakra-ui/accordion";
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { FindParameter } from "@/store/utils/chapterUtils/FindParameter";
 import { logger } from "@/store/utils/logger";
 import SearchText from "@/components/Chapter/Utilities/SearchText";

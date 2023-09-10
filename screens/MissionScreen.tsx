@@ -7,7 +7,7 @@ import { RootState } from "@/store/reduxStore";
 import { useStore } from "react-redux";
 import store from "store2";
 import EditMission from "@/components/Chapter/EditMission/EditMission";
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 
 interface Props {}
 

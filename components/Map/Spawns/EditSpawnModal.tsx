@@ -19,20 +19,20 @@ import {
   Select,
   Textarea,
 } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import {
   deleteSpawn,
   editActionsSpawn,
   editDataSpawn,
   editSpawn,
-} from "@/store/reduxStore/mapSlice";
+} from "@/store/reduxStore/slices/mapSlice";
 import { groups, strength } from "@/store/utils/groupItem";
 import ConditionListRefactor, {
   TypeOnChangeCondition,
 } from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 import SpawnParameters from "@/components/Map/Spawns/SpawnParameters";
-import { spawnType } from "@/store/types/mapType";
+import { spawnType } from "@/store/types/story/mapType";
 
 interface Props {
   showEditSpawn: boolean;

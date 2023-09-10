@@ -5,7 +5,7 @@ const nextConfig = withAxiom({
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "files.artux.net",
+        hostname: "cdn.artux.net",
         port: "",
         pathname: "/static/**",
       },

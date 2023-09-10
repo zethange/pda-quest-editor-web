@@ -6,7 +6,7 @@ import {
   AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
 import React from "react";
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 
 interface Props {
   condition: [string, string[]];

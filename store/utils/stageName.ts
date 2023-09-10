@@ -1,5 +1,5 @@
-import { stageType } from "@/store/types/types";
-import { mapType } from "@/store/types/mapType";
+import { stageType } from "@/store/types/story/chapterType";
+import { mapType } from "@/store/types/story/mapType";
 
 export function stageName(
   type_stage: number,

@@ -9,7 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 
 interface Props {
   showModalEditTransition: boolean;

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Text, Box, Button, Flex, Spacer, IconButton } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import CreateMissionModal from "@/components/Chapter/EditMission/Modal/CreateMissionModal";
 import { IoMdTrash } from "react-icons/io";
 import {
   deleteMission,
   setTargetMission,
-} from "@/store/reduxStore/missionSlice";
+} from "@/store/reduxStore/slices/missionSlice";
 
 interface Props {
   handleUpdate: () => void;

@@ -10,8 +10,8 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
-import { useAppSelector } from "@/store/reduxHooks";
-import { editConditionInCheckpoint } from "@/store/reduxStore/missionSlice";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { editConditionInCheckpoint } from "@/store/reduxStore/slices/missionSlice";
 
 interface Props {
   showEditCondition: boolean;

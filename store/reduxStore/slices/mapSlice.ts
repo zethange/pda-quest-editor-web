@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { mapType, pointType, spawnType } from "@/store/types/mapType";
+import { mapType, pointType, spawnType } from "@/store/types/story/mapType";
 import { logger } from "@/store/utils/logger";
 
 type initialStateType = {

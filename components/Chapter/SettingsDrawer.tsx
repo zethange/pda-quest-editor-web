@@ -15,8 +15,8 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
-import { ISettings, setSettings } from "@/store/reduxStore/userSlice";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { ISettings, setSettings } from "@/store/reduxStore/slices/userSlice";
 
 interface Props {
   isOpen: boolean;

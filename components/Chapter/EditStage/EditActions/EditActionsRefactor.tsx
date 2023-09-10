@@ -10,7 +10,7 @@ import {
 import CodeMirror from "@uiw/react-codemirror";
 import { StreamLanguage } from "@codemirror/language";
 import { lua } from "@codemirror/legacy-modes/mode/lua";
-import { useAppDispatch } from "@/store/reduxHooks";
+import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
 import { logger } from "@/store/utils/logger";
 
 interface Props {

@@ -2,19 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Box, Input, Select } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import {
   mapApiType,
   mapType,
   pointType,
   typePoints,
-} from "@/store/types/mapType";
+} from "@/store/types/story/mapType";
 import {
   editConditionInPoint,
   editMapIdInTransition,
   editPosInTransition,
   editTransition,
-} from "@/store/reduxStore/stageSlice";
+} from "@/store/reduxStore/slices/stageSlice";
 import useFetching from "@/hooks/useFetching";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { imagePoint } from "@/store/utils/map/typePoint";

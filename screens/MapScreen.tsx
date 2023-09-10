@@ -11,12 +11,12 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import store from "store2";
-import { mapApiType, mapType } from "@/store/types/mapType";
+import { mapApiType, mapType } from "@/store/types/story/mapType";
 import Link from "next/link";
-import { createMap } from "@/store/tools/mapTools";
+import { createMap } from "@/store/tools/createMap";
 import useFetching from "@/hooks/useFetching";
-import { useAppDispatch } from "@/store/reduxHooks";
-import { setMaps as setMapsRedux } from "@/store/reduxStore/chapterMapsSlice";
+import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
+import { setMaps as setMapsRedux } from "@/store/reduxStore/slices/chapterMapsSlice";
 
 interface Props {
   path: string[];

@@ -1,4 +1,4 @@
-import { mapApiType, mapType } from "@/store/types/mapType";
+import { mapApiType, mapType } from "@/store/types/story/mapType";
 
 export function createMap(map: mapApiType): mapType {
   return {

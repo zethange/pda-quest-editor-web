@@ -13,10 +13,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { pointType } from "@/store/types/mapType";
-import { deletePoint, editActionsPoint, editPoint } from "@/store/reduxStore/mapSlice";
+import { pointType } from "@/store/types/story/mapType";
+import { deletePoint, editPoint } from "@/store/reduxStore/slices/mapSlice";
 import Link from "next/link";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 
 interface IProps {
@@ -132,9 +132,9 @@ const UpdatePointModal = ({
                 actions={updatedPoint?.actions!}
                 noDispatch
                 onChangeActions={(e: any) => {
-                  const copyPoint = JSON.parse(JSON.stringify(updatedPoint))
+                  const copyPoint = JSON.parse(JSON.stringify(updatedPoint));
                   copyPoint.actions = e;
-                  setUpdatedPoint(copyPoint)
+                  setUpdatedPoint(copyPoint);
                 }}
               />
             </FormControl>

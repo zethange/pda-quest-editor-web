@@ -1,7 +1,7 @@
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
-import { editConditionInTransfer } from "@/store/reduxStore/stageSlice";
+import { editConditionInTransfer } from "@/store/reduxStore/slices/stageSlice";
 
 export default function CreateTransfer({
   transferIndex,

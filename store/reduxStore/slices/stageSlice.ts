@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { stageText, stageTransfer, stageType } from "@/store/types/types";
-import { pointType } from "@/store/types/mapType";
+import {
+  stageText,
+  stageTransfer,
+  stageType,
+} from "@/store/types/story/chapterType";
+import { pointType } from "@/store/types/story/mapType";
 
 interface IOriginalPoint {
   point: pointType;

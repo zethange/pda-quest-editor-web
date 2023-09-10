@@ -1,5 +1,5 @@
-import { pointType, spawnType } from "@/store/types/mapType";
-import { missionType } from "@/store/types/missionType";
+import { pointType, spawnType } from "@/store/types/story/mapType";
+import { missionType } from "@/store/types/story/missionType";
 
 export type chapterType = {
   id: number;

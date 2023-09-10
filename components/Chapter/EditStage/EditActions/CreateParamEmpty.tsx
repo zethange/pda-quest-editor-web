@@ -6,7 +6,7 @@ import { StreamLanguage } from "@codemirror/language";
 import { lua } from "@codemirror/legacy-modes/mode/lua";
 import { itemsContainerType, itemType } from "@/store/types/itemsType";
 import { Box, Button, Input, Select, Spacer } from "@chakra-ui/react";
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import {
   AutoComplete,
   AutoCompleteInput,

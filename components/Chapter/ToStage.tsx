@@ -12,9 +12,12 @@ import {
   Portal,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { chapterType, stageType } from "@/store/types/types";
+import { chapterType, stageType } from "@/store/types/story/chapterType";
 import { useDispatch } from "react-redux";
-import { setStageToStore, setTransition } from "@/store/reduxStore/stageSlice";
+import {
+  setStageToStore,
+  setTransition,
+} from "@/store/reduxStore/slices/stageSlice";
 
 interface IProps {
   setEditableStage: (stage: stageType | undefined) => void;

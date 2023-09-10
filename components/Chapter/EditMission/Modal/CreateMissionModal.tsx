@@ -12,9 +12,9 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { generateSlug } from "@/store/tools/slugGenerator";
-import { useAppDispatch } from "@/store/reduxHooks";
-import { newMission } from "@/store/reduxStore/missionSlice";
+import { generateSlug } from "@/store/tools/generateSlug";
+import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
+import { newMission } from "@/store/reduxStore/slices/missionSlice";
 
 interface Props {
   showCreateMissionModal: boolean;

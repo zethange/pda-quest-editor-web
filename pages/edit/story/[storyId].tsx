@@ -18,7 +18,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { chapterType } from "@/store/types/types";
+import { chapterType } from "@/store/types/story/chapterType";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import EditChapterDrawer from "@/components/Chapter/EditChapterDrawer";

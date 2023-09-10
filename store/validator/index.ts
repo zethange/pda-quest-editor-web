@@ -1,4 +1,4 @@
-import { chapterType } from "@/store/types/types";
+import { chapterType } from "@/store/types/story/chapterType";
 import { Dispatch, SetStateAction } from "react";
 
 export type Log = {

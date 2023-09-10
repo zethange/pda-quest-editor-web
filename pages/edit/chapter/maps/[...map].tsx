@@ -1,21 +1,21 @@
 import React, { createRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import store from "store2";
-import { chapterType } from "@/store/types/types";
+import { chapterType } from "@/store/types/story/chapterType";
 import {
   mapApiType,
   mapType,
   pointType,
   spawnType,
-} from "@/store/types/mapType";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+} from "@/store/types/story/mapType";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import {
   addSpawn,
   onPointCreate,
   setMap,
   setOpenPoint,
   setOpenSpawn,
-} from "@/store/reduxStore/mapSlice";
+} from "@/store/reduxStore/slices/mapSlice";
 import { Store } from "redux";
 import { RootState } from "@/store/reduxStore";
 import { useStore } from "react-redux";

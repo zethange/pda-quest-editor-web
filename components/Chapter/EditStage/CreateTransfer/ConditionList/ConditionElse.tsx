@@ -6,7 +6,7 @@ import {
   AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { conditionMethods } from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { logger } from "@/store/utils/logger";
 

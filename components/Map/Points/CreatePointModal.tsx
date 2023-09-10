@@ -13,9 +13,9 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { pointType } from "@/store/types/mapType";
-import { addPoint } from "@/store/reduxStore/mapSlice";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { pointType } from "@/store/types/story/mapType";
+import { addPoint } from "@/store/reduxStore/slices/mapSlice";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { logger } from "@/store/utils/logger";
 
 interface IProps {

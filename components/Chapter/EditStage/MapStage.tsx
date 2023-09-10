@@ -1,9 +1,12 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { Box, Input, Select } from "@chakra-ui/react";
-import { mapApiType, mapType } from "@/store/types/mapType";
-import { editMapInData, editPosInData } from "@/store/reduxStore/stageSlice";
-import { stageType } from "@/store/types/types";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import { mapApiType, mapType } from "@/store/types/story/mapType";
+import {
+  editMapInData,
+  editPosInData,
+} from "@/store/reduxStore/slices/stageSlice";
+import { stageType } from "@/store/types/story/chapterType";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import useFetching from "@/hooks/useFetching";
 import dynamic from "next/dynamic";
 

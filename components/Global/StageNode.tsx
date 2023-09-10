@@ -2,10 +2,10 @@ import React, { useMemo } from "react";
 import { Handle, Position } from "reactflow";
 import { Badge, Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { LGBTFlagColors } from "@/store/constants";
-import { useAppSelector } from "@/store/reduxHooks";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { GrNotification } from "react-icons/gr";
-import { stageType } from "@/store/types/types";
-import { pointType } from "@/store/types/mapType";
+import { stageType } from "@/store/types/story/chapterType";
+import { pointType } from "@/store/types/story/mapType";
 import {
   AiOutlineArrowDown,
   AiOutlineArrowUp,

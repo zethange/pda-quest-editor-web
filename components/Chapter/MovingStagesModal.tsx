@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { pointType } from "@/store/types/mapType";
-import { chapterType, stageType } from "@/store/types/types";
+import { pointType } from "@/store/types/story/mapType";
+import { chapterType, stageType } from "@/store/types/story/chapterType";
 import {
   Modal,
   ModalOverlay,

@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IUser } from "../types/userType";
+import { IUser } from "../../types/userType";
 
 export interface ISettings {
   danyaMod?: boolean;

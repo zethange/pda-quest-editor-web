@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, Select, Spacer } from "@chakra-ui/react";
 
-import { useAppDispatch } from "@/store/reduxHooks";
+import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import ConditionHas from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionHas";
 import ConditionElse from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionElse";

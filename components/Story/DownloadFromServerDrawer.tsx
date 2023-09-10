@@ -1,9 +1,9 @@
 import useFetching from "@/hooks/useFetching";
 import { StoryFromServer } from "@/pages";
-import { useAppSelector } from "@/store/reduxHooks";
-import { mapType } from "@/store/types/mapType";
-import { storyType } from "@/store/types/storyType";
-import { chapterType } from "@/store/types/types";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { mapType } from "@/store/types/story/mapType";
+import { storyType } from "@/store/types/story/storyType";
+import { chapterType } from "@/store/types/story/chapterType";
 import {
   Drawer,
   DrawerOverlay,

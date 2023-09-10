@@ -9,8 +9,8 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useAppSelector } from "@/store/reduxHooks";
-import { editConditionInText } from "@/store/reduxStore/stageSlice";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { editConditionInText } from "@/store/reduxStore/slices/stageSlice";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 
 interface Props {

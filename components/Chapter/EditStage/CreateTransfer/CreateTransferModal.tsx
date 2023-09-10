@@ -13,7 +13,7 @@ import {
 import {
   newTransferInStore,
   setConnection,
-} from "@/store/reduxStore/stageSlice";
+} from "@/store/reduxStore/slices/stageSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { logger } from "@/store/utils/logger";
 

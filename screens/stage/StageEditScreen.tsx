@@ -38,7 +38,11 @@ import "reactflow/dist/style.css";
 import { newStage } from "@/store/tools/createTools";
 import CustomHead from "@/components/Global/CustomHead";
 import NodeStage from "@/components/Global/StageNode";
-import { chapterType, stageTransfer, stageType } from "@/store/types/types";
+import {
+  chapterType,
+  stageTransfer,
+  stageType,
+} from "@/store/types/story/chapterType";
 import TransferEdge from "@/components/Global/TransferEdge";
 import { stageName } from "@/store/utils/stageName";
 import ToStage from "@/components/Chapter/ToStage";
@@ -54,14 +58,14 @@ import {
   setTargetTransfer,
   setTransition,
   setTransitionToStore,
-} from "@/store/reduxStore/stageSlice";
-import { setMaps } from "@/store/reduxStore/chapterMapsSlice";
+} from "@/store/reduxStore/slices/stageSlice";
+import { setMaps } from "@/store/reduxStore/slices/chapterMapsSlice";
 import { Store } from "redux";
 import reduxStore, { RootState } from "@/store/reduxStore";
-import { mapType, pointType, typePoints } from "@/store/types/mapType";
+import { mapType, pointType, typePoints } from "@/store/types/story/mapType";
 import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
-import { setMissions } from "@/store/reduxStore/missionSlice";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { setMissions } from "@/store/reduxStore/slices/missionSlice";
 import { isArray } from "@chakra-ui/utils";
 import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
 import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";

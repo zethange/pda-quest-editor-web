@@ -14,8 +14,8 @@ import CreateTransfer from "@/components/Chapter/EditStage/CreateTransfer/Create
 import {
   deleteTransferInStore,
   editTransferInStore,
-} from "@/store/reduxStore/stageSlice";
-import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+} from "@/store/reduxStore/slices/stageSlice";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 
 interface IProps {
   setShowModalEditTransfer: (value: boolean) => void;

@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 
 function useFetching<T = unknown>(
   url: string,
-  options?: RequestInit
+  options?: RequestInit,
+  customUrl?: boolean
 ): { data?: T; error?: Error; response?: Response; isLoading: boolean } {
   const [data, setData] = useState<T>();
   const [response, setResponse] = useState<Response>();
@@ -14,10 +15,15 @@ function useFetching<T = unknown>(
       setIsLoading(true);
 
       try {
-        const response = await fetch("https://dev.artux.net" + url, {
-          ...options,
-          headers: { Authorization: `Basic ${localStorage.getItem("token")}` },
-        });
+        const response = await fetch(
+          customUrl ? "https://dev.artux.net" : "" + url,
+          {
+            ...options,
+            headers: {
+              Authorization: `Basic ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         setResponse(response);
         const json = await response.json();
 
@@ -30,7 +36,7 @@ function useFetching<T = unknown>(
     };
 
     fetchData();
-  }, [url, options]);
+  }, []);
 
   return { data, error, response, isLoading };
 }

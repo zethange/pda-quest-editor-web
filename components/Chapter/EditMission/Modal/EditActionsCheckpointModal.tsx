@@ -10,8 +10,8 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
-import { useAppSelector } from "@/store/reduxHooks";
-import { editActionsInCheckpoint } from "@/store/reduxStore/missionSlice";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { editActionsInCheckpoint } from "@/store/reduxStore/slices/missionSlice";
 
 interface Props {
   showEditActions: boolean;
