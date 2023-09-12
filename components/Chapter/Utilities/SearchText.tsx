@@ -25,7 +25,7 @@ const SearchText: FC<Props> = ({ openStage, chapter, onClose }) => {
   useEffect(() => {
     setLogsFindText([]);
     search.run(text, chapter);
-  }, [text, chapter, search]);
+  }, [text]);
 
   return (
     <AccordionItem>
