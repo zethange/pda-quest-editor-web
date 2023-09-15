@@ -1,46 +1,61 @@
-export type commandsLetterType = "item" | "empty" | "null" | "codemirror";
+export type commandsLetterType =
+  | "item"
+  | "empty"
+  | "null"
+  | "codemirror"
+  | "relation"
+  | "notification";
 
 type commandsType = {
   title: string;
-  commands: [string, string, commandsLetterType][];
+  commands: [
+    // command
+    string,
+    // перевод
+    string,
+    // тип
+    commandsLetterType,
+    // начальное значение
+    string?
+  ][];
 };
 
 export const commands: commandsType[] = [
   {
     title: "Операции с предметами",
     commands: [
-      ["add", "Добавить", "item"],
-      ["remove", "Удалить", "item"],
+      ["add", "Добавить", "item", "parameter"],
+      ["remove", "Удалить", "item", "parameter"],
     ],
   },
   {
     title: "Операции с отношениями",
     commands: [
-      ["+", "Увеличить отношения", "empty"],
-      ["-", "Уменьшить отношения", "empty"],
+      ["+", "Увеличить отношения", "relation", "relation_0:1"],
+      ["-", "Уменьшить отношения", "relation", "relation_0:1"],
     ],
   },
   {
     title: "Всё остальное",
     commands: [
-      ["xp", "Добавить/удалить опыт", "empty"],
-      ["money", "Добавить/удалить деньги", "empty"],
-      ["openNotification", "Показать уведомления", "empty"],
-      ["note", "Заметка", "empty"],
-      ["reset", "Сбросить", "empty"],
+      ["xp", "Добавить/удалить опыт", "empty", "-1"],
+      ["money", "Добавить/удалить деньги", "empty", "-500"],
+      ["openNotification", "Показать уведомление", "empty"],
+      ["note", "Заметка", "empty", "Название:Содержимое"],
+      ["reset", "Сбросить", "empty", "relation_0"],
       ["syncNow", "Синхронизация с сервером", "null"],
       ["openStage", "Открыть стадию", "empty"],
-      ["openSeller", "Открыть торговца", "empty"],
+      ["openSeller", "Открыть торговца", "empty", "1"],
       ["exitStory", "Закрыть историю", "null"],
       ["finishStory", "Закончить историю", "null"],
-      ["script", "Кастомный скрипт", "codemirror"],
+      ["script", "Кастомный скрипт", "codemirror", 'print("LUA IS AWESOME")'],
     ],
   },
   {
     title: "Музыка",
     commands: [
-      ["playMusic", "Проиграть музыку", "empty"],
-      ["playSound", "Проиграть звук", "empty"],
+      ["playMusic", "Проиграть музыку", "empty", "link"],
+      ["playSound", "Проиграть звук", "empty", "link"],
       ["pauseSound", "Поставить звук на паузу...", "empty"],
       ["stopMusic", "Остановить музыку", "null"],
       ["loopMusic", "Зациклить музыку", "empty"],
@@ -51,11 +66,11 @@ export const commands: commandsType[] = [
 ];
 
 export function commandLocalize(param: string): string {
-  let allCommands: string[][] = [];
+  let allCommands: [string, string, commandsLetterType, string?][] = [];
 
-  for (let i = 0; i < commands.length; i++) {
-    allCommands.push(...commands[i].commands);
-  }
+  commands.forEach((item) => {
+    allCommands.push(...item.commands);
+  });
   const requiredCommand = allCommands.find((command) => command[0] === param);
 
   if (requiredCommand) {
@@ -66,15 +81,24 @@ export function commandLocalize(param: string): string {
 }
 
 export function typeCommand(param: string) {
-  let allCommands: string[][] = [];
+  let allCommands: [string, string, commandsLetterType, string?][] = [];
 
-  for (let i = 0; i < commands.length; i++) {
-    allCommands.push(...commands[i].commands);
-  }
+  commands.forEach((item) => {
+    allCommands.push(...item.commands);
+  });
   const requiredCommand = allCommands.find((command) => command[0] === param);
   if (requiredCommand) {
     return requiredCommand![2] as commandsLetterType;
   } else {
     return "empty";
   }
+}
+
+export function getCommandById(id: string) {
+  let allCommands: [string, string, commandsLetterType, string?][] = [];
+
+  commands.forEach((item) => {
+    allCommands.push(...item.commands);
+  });
+  return allCommands.find((command) => command[0] === id);
 }

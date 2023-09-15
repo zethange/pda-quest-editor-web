@@ -12,6 +12,7 @@ import {
 import {
   commandLocalize,
   commands,
+  getCommandById,
   typeCommand,
 } from "@/store/utils/commandsAction";
 import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
@@ -20,6 +21,7 @@ import Item from "@/components/Chapter/EditStage/EditActions/Item/Item";
 import { itemsContainerType } from "@/store/types/itemsType";
 import InputItem from "@/components/Chapter/EditStage/EditActions/Item/InputItem";
 import CodeMirrorItem from "@/components/Chapter/EditStage/EditActions/Item/CodeMirrorItem";
+import RelationItem from "@/components/Chapter/EditStage/EditActions/Item/RelationItem";
 
 interface Props {
   actions?: {
@@ -145,7 +147,13 @@ const EditActionsRefactor: FC<Props> = ({
               <Button
                 colorScheme="teal"
                 onClick={() => {
-                  actionsList[method] = [];
+                  const value = getCommandById(method)![3] || "";
+
+                  if (value) {
+                    actionsList[method] = [value];
+                  } else {
+                    actionsList[method] = [];
+                  }
                   onChange();
                   setMethod("add");
                   setShowCreateMethod(false);
@@ -231,6 +239,15 @@ const EditActionsRefactor: FC<Props> = ({
                         >
                           {typeCommand(action[0]) === "codemirror" && (
                             <CodeMirrorItem
+                              value={key}
+                              onChange={(e) => {
+                                actionsEntry[+indexMethod][1][+indexParam] = e;
+                                onChange();
+                              }}
+                            />
+                          )}
+                          {typeCommand(action[0]) === "relation" && (
+                            <RelationItem
                               value={key}
                               onChange={(e) => {
                                 actionsEntry[+indexMethod][1][+indexParam] = e;
