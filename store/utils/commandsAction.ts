@@ -1,6 +1,8 @@
+export type commandsLetterType = "item" | "empty" | "null" | "codemirror";
+
 type commandsType = {
   title: string;
-  commands: [string, string, "item" | "empty" | "null" | "codemirror"][];
+  commands: [string, string, commandsLetterType][];
 };
 
 export const commands: commandsType[] = [
@@ -23,6 +25,7 @@ export const commands: commandsType[] = [
     commands: [
       ["xp", "Добавить/удалить опыт", "empty"],
       ["money", "Добавить/удалить деньги", "empty"],
+      ["openNotification", "Показать уведомления", "empty"],
       ["note", "Заметка", "empty"],
       ["reset", "Сбросить", "empty"],
       ["syncNow", "Синхронизация с сервером", "null"],
@@ -70,7 +73,7 @@ export function typeCommand(param: string) {
   }
   const requiredCommand = allCommands.find((command) => command[0] === param);
   if (requiredCommand) {
-    return requiredCommand![2] as "item" | "empty" | "null" | "codemirror";
+    return requiredCommand![2] as commandsLetterType;
   } else {
     return "empty";
   }
