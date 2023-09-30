@@ -1,18 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import store from "store2";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 import CustomHead from "@/components/Global/CustomHead";
 import NavBar from "@/components/UI/NavBar/NavBar";
 import { newChapter } from "@/store/tools/createTools";
 import {
+  Badge,
   Box,
   Button,
-  Card,
-  Flex,
-  Heading,
-  IconButton,
+  Grid,
+  GridItem,
   SimpleGrid,
   Spacer,
   Text,
@@ -20,18 +18,29 @@ import {
 } from "@chakra-ui/react";
 import { chapterType } from "@/store/types/story/chapterType";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import EditChapterDrawer from "@/components/Chapter/EditChapterDrawer";
 import { logger } from "@/store/utils/logger";
+import {
+  buildBinaryTree,
+  TreeNode,
+} from "@/store/utils/storyUtils/buildBinaryTree";
+import StorySidebar from "@/components/Story/StorySidebar";
+import { createNodeFolder, getNode } from "@/components/Story/node/node";
+import ChapterCard from "@/components/Story/ChapterCard/ChapterCard";
 
 export default function StoryId() {
-  const { query, isReady } = useRouter();
-  const storyId = query.storyId as string;
+  const { query, isReady, push, asPath } = useRouter();
+  const { storyId, path } = query;
+
+  const [chapters, setChapters] = useState<chapterType[]>([]);
+  const [folders, setFolders] = useState<TreeNode | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<chapterType[]>([]);
+  const [position, setPosition] = useState<string>("");
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openChapter, setOpenChapter] = useState<chapterType>();
-  const [chapters, setChapters] = useState<chapterType[]>([]);
 
-  useEffect(() => {
+  const initialSetup = (storyId: string, path: string) => {
     const chapters: chapterType[] = [];
     store.each((key, value) => {
       key.includes(`story_${storyId}_chapter`) &&
@@ -39,40 +48,80 @@ export default function StoryId() {
       if (key === "stopLoop") return false;
     });
     chapters.sort((a, b) => a.id - b.id);
+    const binary = buildBinaryTree(chapters);
+    return { binary, chapters };
+  };
+
+  useEffect(() => {
+    if (!storyId) return;
+    const { binary, chapters } = initialSetup(storyId as string, "");
+    logger.success("binary tree:", binary);
+
+    setFolders(binary);
+
+    const nodes = getNode(
+      query.path ? (query.path as string) : "",
+      binary
+    ).chapters;
+
+    setSelectedFolder(nodes);
     setChapters(chapters);
+    setPosition(query.path as string);
   }, [isReady, storyId]);
+
+  useEffect(() => {
+    const path = query.path as string;
+    if (folders) {
+      const node = getNode(path, folders);
+      setPosition(path);
+      setSelectedFolder(node.chapters || []);
+    }
+  }, [query]);
+
+  const createFolder = (path: string) => {
+    const trees = createNodeFolder(path, folders as TreeNode);
+    logger.info(
+      "create folder, trees:",
+      trees,
+      "path:",
+      path,
+      "folders:",
+      folders
+    );
+
+    setFolders((folders) => trees || folders);
+  };
 
   const createChapter = () => {
     let newId =
       Math.max(...chapters.map((chapter: chapterType) => +chapter.id)) + 1;
+    if (newId === -Infinity) newId = 0;
 
-    if (newId === -Infinity) {
-      newId = 0;
-    }
+    const chapter = newChapter(String(newId), position);
 
-    store.set(`story_${storyId}_chapter_${newId}`, newChapter(String(newId)));
-    setChapters((chapters: any) => [...chapters, newChapter(String(newId))]);
+    store.set(`story_${storyId}_chapter_${newId}`, chapter);
+    setChapters((chapters) => [...chapters, chapter]);
   };
 
   const deleteChapter = (id: number) => {
     store.remove(`story_${storyId}_chapter_${id}`);
-    setChapters(chapters.filter((chapter: chapterType) => id !== chapter.id));
+    setChapters(chapters.filter((chapter) => id !== chapter.id));
   };
 
   const uploadChapter = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newId =
-      Math.max(...chapters.map((chapter: chapterType) => +chapter.id)) + 1;
-    if (newId === -Infinity) {
-      newId = 0;
-    }
+    let newId = Math.max(...chapters.map((chapter) => +chapter.id)) + 1;
+
+    if (newId === -Infinity) newId = 0;
     const fileBase = new FileReader();
+
     fileBase.readAsText(e.target.files![0]);
     fileBase.onload = () => {
       logger.info(fileBase.result);
       const chapter: chapterType = JSON.parse(fileBase.result as string);
       chapter.id = newId;
+      chapter.catalog = position;
 
-      setChapters([...chapters, chapter]);
+      setChapters((chapters) => [...chapters, chapter]);
       store.set(`story_${storyId}_chapter_${newId}`, chapter);
     };
   };
@@ -92,7 +141,7 @@ export default function StoryId() {
       <CustomHead title="Редактирование карт" />
       <main className="main">
         <NavBar>
-          <Button fontWeight="normal" onClick={() => history.go(-1)}>
+          <Button fontWeight="normal" onClick={() => push("/")}>
             Назад
           </Button>
           <Button fontWeight="normal" onClick={() => createChapter()}>
@@ -111,80 +160,41 @@ export default function StoryId() {
           <Spacer />
           <ChangeThemeButton rounded={true} />
         </NavBar>
-        <Box
-          h="calc(100vh - 57px)"
-          overflowY="auto"
-          backgroundColor="blackAlpha.50"
-        >
-          <SimpleGrid columns={5} spacing={2} p={2}>
-            {chapters.map((chapter: chapterType) => (
-              <Card
-                key={chapter?.id}
-                border="1px"
-                borderColor="gray.200"
-                _dark={{
-                  borderColor: "gray.600",
-                  color: "white",
-                }}
-                shadow="none"
-                p={2}
-              >
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Link href={"/edit/chapter/" + storyId + "/" + chapter?.id}>
-                    {(chapter?.title && (
-                      <>
-                        <Heading _dark={{ color: "white" }} as="h4" size="md">
-                          {chapter?.title}
-                        </Heading>
-                        <Text color="gray.500">id: {chapter?.id}</Text>
-                      </>
-                    )) || (
-                      <Heading _dark={{ color: "white" }} as="h4" size="md">
-                        Глава {chapter?.id}
-                      </Heading>
-                    )}
-                  </Link>
-                  <IconButton
-                    onClick={() => {
-                      setOpenChapter(chapter);
-                      onOpen();
-                    }}
-                    icon={<BsThreeDotsVertical />}
-                    aria-label="Настройки"
-                  />
-                </Flex>
-                {chapter?._comment && (
-                  <Text
-                    p={1}
-                    fontSize="13px"
-                    backgroundColor="gray.200"
-                    borderRadius="5px"
-                    mt={1}
-                    width="100%"
-                    wordBreak="break-all"
-                  >
-                    # {chapter?._comment}
-                  </Text>
-                )}
-                <Text _dark={{ color: "white" }}>
-                  Количество стадий: {chapter?.stages?.length}
+        <Grid templateColumns="repeat(6, 1fr)" gap={2} p={2}>
+          <GridItem rowSpan={1}>
+            <StorySidebar
+              createFolder={createFolder}
+              folders={folders!}
+              storyId={(storyId as string) || "1"}
+            />
+          </GridItem>
+          <GridItem rowSpan={1} colSpan={5}>
+            <Box h="calc(100vh - 73px)" overflowY="auto">
+              <Box overflowY="auto">
+                <Text my={2}>
+                  {`Глава ${storyId}`}
+                  {position && " / " + position.split("/").join(" / ")}
                 </Text>
-                {chapter?.points && (
-                  <Text _dark={{ color: "white" }}>
-                    Количество точек:{" "}
-                    {Object.values(chapter?.points!).flat().length}
-                  </Text>
+                {!selectedFolder?.length && (
+                  <Badge colorScheme="red">
+                    Кажется в этой папке нет глав, какая жалость
+                  </Badge>
                 )}
-                {chapter?.spawns && (
-                  <Text _dark={{ color: "white" }}>
-                    Количество спавнов:{" "}
-                    {Object.values(chapter?.spawns!).flat().length}
-                  </Text>
-                )}
-              </Card>
-            ))}
-          </SimpleGrid>
-        </Box>
+                <SimpleGrid columns={5} spacing={2}>
+                  {selectedFolder?.map((chapter: chapterType) => (
+                    <ChapterCard
+                      storyId={storyId as string}
+                      chapter={chapter}
+                      setOpenChapter={setOpenChapter}
+                      onOpen={onOpen}
+                      key={chapter.id}
+                    />
+                  ))}
+                </SimpleGrid>
+              </Box>
+            </Box>
+          </GridItem>
+        </Grid>
         <EditChapterDrawer
           isOpen={isOpen}
           onClose={onClose}

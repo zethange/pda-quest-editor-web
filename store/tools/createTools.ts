@@ -1,6 +1,9 @@
-export function newChapter(id: string) {
+import { chapterType } from "@/store/types/story/chapterType";
+
+export function newChapter(id: string, catalog: string): chapterType {
   return {
     id: Number(id),
+    catalog,
     stages: [
       {
         id: 0,

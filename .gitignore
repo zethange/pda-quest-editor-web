@@ -19,7 +19,6 @@
 /build
 .env
 package-lock.json
-pnpm-lock.yaml
 yarn-error.log
 yarn.lock
 
