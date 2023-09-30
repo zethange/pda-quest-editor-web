@@ -66,7 +66,6 @@ import { mapType, pointType, typePoints } from "@/store/types/story/mapType";
 import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { setMissions } from "@/store/reduxStore/slices/missionSlice";
-import { isArray } from "@chakra-ui/utils";
 import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
 import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";
 import { nodeCreateType } from "@/store/types/nodeCreateType";
@@ -401,7 +400,7 @@ export default function StageEditScreen({
     });
     dispatch(setParameters(parameters));
     if (chapter?.mission) {
-      if (!isArray(chapter.mission)) {
+      if (!Array.isArray(chapter.mission)) {
         chapter.missions = [];
       } else {
         chapter.missions = chapter.mission;

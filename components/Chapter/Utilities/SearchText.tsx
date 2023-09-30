@@ -5,7 +5,7 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-} from "@chakra-ui/accordion";
+} from "@chakra-ui/react";
 import { Box, Flex, Input } from "@chakra-ui/react";
 import { Logs } from "@/components/Chapter/UtilitiesDrawer";
 import { chapterType } from "@/store/types/story/chapterType";

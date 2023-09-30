@@ -36,6 +36,7 @@
     "react-nanny": "^2.15.0",
     "react-redux": "^8.1.2",
     "reactflow": "11.9.2",
+    "redux": "^4.2.1",
     "store2": "^2.14.2",
     "typescript": "5.2.2",
     "uuid": "^9.0.1"

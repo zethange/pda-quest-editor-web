@@ -31,7 +31,7 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-} from "@chakra-ui/accordion";
+} from "@chakra-ui/react";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { FindParameter } from "@/store/utils/chapterUtils/FindParameter";
 import { logger } from "@/store/utils/logger";

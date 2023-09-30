@@ -80,6 +80,9 @@ dependencies:
   reactflow:
     specifier: 11.9.2
     version: 11.9.2(@types/react@18.2.23)(react-dom@18.2.0)(react@18.2.0)
+  redux:
+    specifier: ^4.2.1
+    version: 4.2.1
   store2:
     specifier: ^2.14.2
     version: 2.14.2
