@@ -29,7 +29,7 @@ interface Props {
   actions?: {
     [key: string]: string[];
   };
-  onChangeActions: typeof editActions;
+  onChangeActions: (actions: any) => any;
 
   indexRequired?: boolean;
   index?: number;
