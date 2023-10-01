@@ -46,7 +46,7 @@ const Item: FC<Props> = ({ value, onChange, data }) => {
         flex={1}
         defaultValue={quantity}
         placeholder="Количество..."
-        onChange={(e) => onChangeQuantity(e.target.value)}
+        onBlur={(e) => onChangeQuantity(e.target.value)}
       />
     </Box>
   );
