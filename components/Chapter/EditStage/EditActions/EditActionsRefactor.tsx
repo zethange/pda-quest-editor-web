@@ -22,12 +22,14 @@ import { itemsContainerType } from "@/store/types/itemsType";
 import InputItem from "@/components/Chapter/EditStage/EditActions/Item/InputItem";
 import CodeMirrorItem from "@/components/Chapter/EditStage/EditActions/Item/CodeMirrorItem";
 import RelationItem from "@/components/Chapter/EditStage/EditActions/Item/RelationItem";
+import { editActions } from "@/store/reduxStore/slices/stageSlice";
+import SelectItem from "@/components/Chapter/EditStage/EditActions/Item/SelectItem";
 
 interface Props {
   actions?: {
     [key: string]: string[];
   };
-  onChangeActions: (actions: any) => any;
+  onChangeActions: typeof editActions;
 
   indexRequired?: boolean;
   index?: number;
@@ -269,7 +271,7 @@ const EditActionsRefactor: FC<Props> = ({
                             )}
                           {typeCommand(action[0]) === "item" &&
                             !key.includes(":") && (
-                              <InputItem
+                              <SelectItem
                                 value={key}
                                 onChange={(e) => {
                                   actionsEntry[+indexMethod][1][+indexParam] =
