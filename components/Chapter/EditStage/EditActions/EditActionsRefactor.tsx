@@ -22,7 +22,6 @@ import { itemsContainerType } from "@/store/types/itemsType";
 import InputItem from "@/components/Chapter/EditStage/EditActions/Item/InputItem";
 import CodeMirrorItem from "@/components/Chapter/EditStage/EditActions/Item/CodeMirrorItem";
 import RelationItem from "@/components/Chapter/EditStage/EditActions/Item/RelationItem";
-import { editActions } from "@/store/reduxStore/slices/stageSlice";
 import SelectItem from "@/components/Chapter/EditStage/EditActions/Item/SelectItem";
 
 interface Props {
