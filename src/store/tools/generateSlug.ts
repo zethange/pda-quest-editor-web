@@ -51,7 +51,6 @@ export function generateSlug(text: string) {
     .replace(/[^\w-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-  const encoded = encodeURIComponent(transliterated); // Кодируем специальные символы
-
-  return encoded;
+  // Кодируем специальные символы
+  return encodeURIComponent(transliterated);
 }

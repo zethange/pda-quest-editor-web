@@ -1,5 +1,4 @@
 import { chapterType } from "@/store/types/story/chapterType";
-import { logger } from "@/store/utils/logger";
 
 export interface TreeNode {
   path: string;
