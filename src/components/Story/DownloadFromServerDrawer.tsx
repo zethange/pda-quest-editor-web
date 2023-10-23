@@ -1,5 +1,5 @@
 import useFetching from "@/hooks/useFetching";
-import { StoryFromServer } from "@/pages";
+import { StoryFromServer } from "../../../pages";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { mapType } from "@/store/types/story/mapType";
 import { storyType } from "@/store/types/story/storyType";
