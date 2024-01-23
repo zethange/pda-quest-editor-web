@@ -17,6 +17,7 @@ import { createMap } from "@/store/tools/createMap";
 import useFetching from "@/hooks/useFetching";
 import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
 import { setMaps as setMapsRedux } from "@/store/reduxStore/slices/chapterMapsSlice";
+import { API_URL } from "@/shared/config";
 
 interface Props {
   path: string[];
@@ -26,7 +27,7 @@ interface Props {
 const MapScreen = ({ path, isReady }: Props) => {
   const [maps, setMaps] = useState<mapType[]>([]);
   const { data, isLoading } = useFetching<mapApiType[]>(
-    "/pdanetwork/api/v1/admin/quest/maps/all"
+    API_URL + "/api/v1/admin/quest/maps/all"
   );
   const dispatch = useAppDispatch();
   useEffect(() => {

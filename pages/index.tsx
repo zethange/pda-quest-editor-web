@@ -49,6 +49,7 @@ import DownloadFromServerDrawer from "@/components/Story/DownloadFromServerDrawe
 import { FallbackRender } from "@/components/Global/ErrorHandler";
 import { ErrorBoundary } from "react-error-boundary";
 import { logger } from "@/store/utils/logger";
+import { API_URL } from "@/shared/config";
 
 interface Author {
   id: string;
@@ -318,9 +319,10 @@ export default function Home() {
     logger.info("History is formed", data);
     if (!parametersUpload.toStore) {
       var res = await fetch(
-        `https://dev.artux.net/pdanetwork/api/v1/admin/quest/set${
-          parametersUpload.type === "PUBLIC" ? "/public" : ""
-        }?message=${parametersUpload.message}`,
+        API_URL +
+          `/api/v1/admin/quest/set${
+            parametersUpload.type === "PUBLIC" ? "/public" : ""
+          }?message=${parametersUpload.message}`,
         {
           method: "POST",
           headers: {
@@ -333,7 +335,8 @@ export default function Home() {
     } else {
       // грузим в хранилище
       var res = await fetch(
-        `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/upload?message=${parametersUpload.message}&type=${parametersUpload.type}`,
+        API_URL +
+          `/api/v1/admin/quest/storage/upload?message=${parametersUpload.message}&type=${parametersUpload.type}`,
         {
           method: "POST",
           headers: {

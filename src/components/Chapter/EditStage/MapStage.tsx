@@ -8,22 +8,13 @@ import {
 import { stageType } from "@/store/types/story/chapterType";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import useFetching from "@/hooks/useFetching";
-import dynamic from "next/dynamic";
 import { logger } from "@/store/utils/logger";
 
-const Stage = dynamic(() => import("../../Global/Konva/Stage"), {
-  ssr: false,
-});
-const KonvaMap = dynamic(() => import("../../Global/Konva/KonvaMap"), {
-  ssr: false,
-});
+import Stage from "../../Global/Konva/Stage";
+import KonvaMap from "../../Global/Konva/KonvaMap";
 
-const KonvaImage = dynamic(
-  () => import("@/components/Global/Konva/KonvaImage"),
-  {
-    ssr: false,
-  }
-);
+import KonvaImage from "@/components/Global/Konva/KonvaImage";
+import { API_URL } from "@/shared/config";
 
 interface IProps {
   data:
@@ -47,7 +38,7 @@ const MapStage = ({ data }: IProps) => {
   const [mapBackground, setMapBackground] = useState("");
 
   const { data: dataMaps } = useFetching<mapApiType[]>(
-    "/pdanetwork/api/v1/admin/quest/maps/all"
+    API_URL + "/api/v1/admin/quest/maps/all"
   );
 
   useEffect(() => {

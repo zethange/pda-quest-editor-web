@@ -1,27 +1,13 @@
-import React, { useEffect } from "react";
 import { useToast } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { FC } from "react";
 
-interface PropsFallback {
+export interface FallbackRenderProps {
   error: Error;
   resetErrorBoundary: () => void;
 }
 
-const FallbackRender: React.FC<PropsFallback> = ({ error }) => {
+const FallbackRender: FC<FallbackRenderProps> = ({ error }) => {
   const toast = useToast();
-  const router = useRouter();
-
-  useEffect(() => {
-    fetch("/api/error", {
-      method: "POST",
-      body: JSON.stringify({
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-        router: { query: router.query, pathname: router.pathname },
-      }),
-    });
-  }, [error]);
 
   toast({
     title: "Произошла ошибка",
@@ -32,7 +18,7 @@ const FallbackRender: React.FC<PropsFallback> = ({ error }) => {
     position: "bottom-right",
   });
 
-  return <div></div>;
+  return <></>;
 };
 
 export { FallbackRender };

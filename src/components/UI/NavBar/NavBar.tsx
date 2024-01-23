@@ -1,7 +1,11 @@
-import React, { memo } from "react";
 import { Box } from "@chakra-ui/react";
+import { FC, ReactNode, memo } from "react";
 
-const NavBar = ({ children }: { children: React.ReactNode }) => {
+export interface NavBarProps {
+  children: ReactNode;
+}
+
+const NavBar: FC<NavBarProps> = ({ children }) => {
   return (
     <Box
       display="flex"

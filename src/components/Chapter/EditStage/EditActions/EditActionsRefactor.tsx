@@ -23,6 +23,7 @@ import InputItem from "@/components/Chapter/EditStage/EditActions/Item/InputItem
 import CodeMirrorItem from "@/components/Chapter/EditStage/EditActions/Item/CodeMirrorItem";
 import RelationItem from "@/components/Chapter/EditStage/EditActions/Item/RelationItem";
 import SelectItem from "@/components/Chapter/EditStage/EditActions/Item/SelectItem";
+import { API_URL } from "@/shared/config";
 
 interface Props {
   actions?: {
@@ -57,7 +58,7 @@ const EditActionsRefactor: FC<Props> = ({
 
   const [data, setData] = useState<itemsContainerType | undefined>(undefined);
   useEffect(() => {
-    fetch("/pdanetwork/api/v1/items/all", {
+    fetch(API_URL + "/api/v1/items/all", {
       headers: {
         Authorization: `Basic ${localStorage.getItem("token")}`,
       },

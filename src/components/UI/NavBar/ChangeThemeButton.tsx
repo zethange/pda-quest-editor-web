@@ -1,11 +1,11 @@
-import React from "react";
 import { Button, useColorMode } from "@chakra-ui/react";
+import { FC } from "react";
 
-interface Props {
+export interface ChangeThemeButtonProps {
   rounded: boolean;
 }
 
-const ChangeThemeButton = ({ rounded }: Props) => {
+const ChangeThemeButton: FC<ChangeThemeButtonProps> = ({ rounded }) => {
   const { toggleColorMode } = useColorMode();
 
   return (

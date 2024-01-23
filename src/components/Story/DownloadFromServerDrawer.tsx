@@ -24,23 +24,24 @@ import {
   Switch,
   Flex,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import store from "store2";
+import { API_URL } from "@/shared/config";
 
-interface Props {
+export interface DownloadFromServerDrawerProps {
   stories: storyType[];
   setStories: (newStories: storyType[]) => void;
   downloadModalIsOpen: boolean;
   downloadModalOnClose: () => void;
 }
 
-const DownloadFromServerDrawer: React.FC<Props> = ({
+const DownloadFromServerDrawer: FC<DownloadFromServerDrawerProps> = ({
   stories,
   setStories,
   downloadModalIsOpen,
   downloadModalOnClose,
 }) => {
-  const user = useAppSelector((state: any) => state.user.user);
+  const user = useAppSelector((state) => state.user.user);
   const [storiesFromServer, setStoriesFromServer] =
     useState<StoryFromServer[]>();
   const [config, setConfig] = useState({
@@ -49,13 +50,15 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
   });
 
   const { data: types } = useFetching<string[]>(
-    "/pdanetwork/api/v1/admin/quest/storage/types"
+    API_URL + "/api/v1/admin/quest/storage/types"
   );
   const downloadStoryFromServer = async () => {
     const storiesRes = await fetch(
       user?.role === "ADMIN"
-        ? `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/all?sortDirection=DESC&sortBy=timestamp&type=${config.type}&archive=${config.archive}`
-        : `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp&type=${config.type}&archive=${config.archive}`,
+        ? API_URL +
+            `/api/v1/admin/quest/storage/all?sortDirection=DESC&sortBy=timestamp&type=${config.type}&archive=${config.archive}`
+        : API_URL +
+            `/api/v1/admin/quest/storage?sortDirection=DESC&sortBy=timestamp&type=${config.type}&archive=${config.archive}`,
       {
         headers: {
           Authorization: `Basic ${localStorage.getItem("token")}`,
@@ -75,15 +78,12 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
   }, [downloadModalIsOpen, config]);
 
   const downloadStoryFromServerById = async (id: string) => {
-    const res = await fetch(
-      `https://dev.artux.net/pdanetwork/api/v1/admin/quest/storage/${id}`,
-      {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(API_URL + `/api/v1/admin/quest/storage/${id}`, {
+      headers: {
+        Authorization: `Basic ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
     const data = await res.json();
     store.set(
       `story_${data.id}_info`,
@@ -153,7 +153,7 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
             />
           </Box>
           <VStack>
-            {stories.length === 0 && "Историй нет, пусто"}
+            {!stories.length && "Историй нет, пусто"}
             {storiesFromServer?.map((story: StoryFromServer) => (
               <Card key={story.storageId} w="100%" variant="outline">
                 <Heading size="md" pt={5} pl={5}>

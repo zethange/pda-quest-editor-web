@@ -1,3 +1,4 @@
+import { API_URL } from "@/shared/config";
 import {
   Modal,
   ModalOverlay,
@@ -27,14 +28,11 @@ const AuthModal: React.FC<Props> = ({ isOpen, onClose }) => {
     e.preventDefault();
     const token = btoa(login + ":" + password);
 
-    const response = await fetch(
-      "https://dev.artux.net/pdanetwork/api/v1/user/info",
-      {
-        headers: {
-          Authorization: `Basic ${token}`,
-        },
-      }
-    );
+    const response = await fetch(API_URL + "/api/v1/user/info", {
+      headers: {
+        Authorization: `Basic ${token}`,
+      },
+    });
 
     if (response.status === 401) {
       toast({

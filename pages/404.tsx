@@ -23,7 +23,7 @@ const Page404 = () => {
       >
         <div>
           <Image
-            src="https://dev.artux.net/pdanetwork/images/poster.png"
+            src={API_URL + "/images/poster.png"}
             width={300}
             height={300}
             alt="PDA LOGO"

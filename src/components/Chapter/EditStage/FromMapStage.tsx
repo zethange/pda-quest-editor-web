@@ -19,23 +19,14 @@ import useFetching from "@/hooks/useFetching";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { imagePoint } from "@/store/utils/map/typePoint";
 import EditActionsRefactor from "./EditActions/EditActionsRefactor";
-import dynamic from "next/dynamic";
 
-const Stage = dynamic(() => import("../../Global/Konva/Stage"), {
-  ssr: false,
-});
-const KonvaMap = dynamic(() => import("../../Global/Konva/KonvaMap"), {
-  ssr: false,
-});
+import Stage from "../../Global/Konva/Stage";
+import KonvaMap from "../../Global/Konva/KonvaMap";
 
 import { logger } from "@/store/utils/logger";
+import { API_URL } from "@/shared/config";
 
-const KonvaImage = dynamic(
-  () => import("@/components/Global/Konva/KonvaImage"),
-  {
-    ssr: false,
-  }
-);
+import KonvaImage from "@/components/Global/Konva/KonvaImage";
 
 export interface IFromMapStage {
   id: number;
@@ -55,7 +46,7 @@ const FromMapStage = () => {
   const [mapBackground, setMapBackground] = useState("");
 
   const { data } = useFetching<mapApiType[]>(
-    "/pdanetwork/api/v1/admin/quest/maps/all"
+    API_URL + "/api/v1/admin/quest/maps/all"
   );
 
   useEffect(() => {

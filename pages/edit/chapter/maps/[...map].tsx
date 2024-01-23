@@ -85,7 +85,7 @@ const MapChapter = () => {
   const parentMapRef: React.RefObject<any> = createRef();
 
   const { data: dataMaps, isLoading } = useFetching<mapApiType[]>(
-    "/pdanetwork/api/v1/admin/quest/maps/all"
+    API_URL + "/api/v1/admin/quest/maps/all"
   );
 
   useEffect(() => {
