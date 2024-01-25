@@ -1,5 +1,5 @@
-import Home from "@/pages/home";
-import Story from "@/pages/story";
+import Home from "@/pages/story";
+import Story from "@/pages/chapter";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([

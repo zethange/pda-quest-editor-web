@@ -20,7 +20,7 @@ const ImportFromZipButton = () => {
 
     let newStoryId = Math.max(...stories.map((story) => story.id)) + 1;
     if (newStoryId === -Infinity) newStoryId = 0;
-    logger.info("Story id", newStoryId);
+    logger.info("storyid:", newStoryId);
 
     const file = zip.loadAsync(zipFile);
 

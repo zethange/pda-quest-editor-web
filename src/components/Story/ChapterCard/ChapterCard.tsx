@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Card, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { chapterType } from "@/store/types/story/chapterType";
 
@@ -33,7 +33,7 @@ const ChapterCard: FC<Props> = ({
       p={2}
     >
       <Flex justifyContent="space-between" alignItems="center">
-        <Link href={"/edit/chapter/" + storyId + "/" + chapter?.id}>
+        <Link to={"/edit/chapter/" + storyId + "/" + chapter?.id}>
           {(chapter?.title && (
             <>
               <Heading _dark={{ color: "white" }} as="h4" size="md">

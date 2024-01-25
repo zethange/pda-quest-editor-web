@@ -13,7 +13,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { generateSlug } from "@/store/tools/generateSlug";
 import {
   deleteCheckpoint,
@@ -129,7 +129,7 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
                 <AutoComplete
                   openOnFocus
                   value={checkpoint.parameter}
-                  onChange={(value) => {
+                  onChange={(value: string) => {
                     dispatch(
                       editCheckpoint({
                         index,
@@ -145,7 +145,7 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
                     placeholder="Параметер"
                     variant="outline"
                     value={checkpoint.parameter}
-                    onChange={(event) => {
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       dispatch(
                         editCheckpoint({
                           index,

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, ChangeEvent, useRef } from "react";
-import Link from "next/link";
 import store from "store2";
 import { downloadZip } from "client-zip";
 
@@ -517,19 +516,17 @@ export default function Home() {
                 p={2}
               >
                 <ErrorBoundary FallbackComponent={FallbackRender}>
-                  <Link href={"/edit/story/" + story?.id}>
-                    <Heading _dark={{ color: "white" }} as="h4" size="md">
-                      {story?.title}
-                    </Heading>
-                    <Box>
-                      <Text _dark={{ color: "white" }}>
-                        {story?.desc?.substring(0, 30)}...
-                      </Text>
-                      <Text _dark={{ color: "white" }}>
-                        Уровень доступа: {story?.access}
-                      </Text>
-                    </Box>
-                  </Link>
+                  <Heading _dark={{ color: "white" }} as="h4" size="md">
+                    {story?.title}
+                  </Heading>
+                  <Box>
+                    <Text _dark={{ color: "white" }}>
+                      {story?.desc?.substring(0, 30)}...
+                    </Text>
+                    <Text _dark={{ color: "white" }}>
+                      Уровень доступа: {story?.access}
+                    </Text>
+                  </Box>
                   <Box display="flex" gap={1}>
                     <Button
                       fontWeight="normal"
