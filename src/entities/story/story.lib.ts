@@ -1,4 +1,4 @@
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import { downloadZip } from "client-zip";
 import store from "store2";
 

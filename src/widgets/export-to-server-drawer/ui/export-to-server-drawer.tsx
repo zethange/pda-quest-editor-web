@@ -2,7 +2,7 @@ import { IConfigExport, useStoryStore } from "@/entities/story";
 import { API_URL } from "@/shared/config";
 import { chapterType } from "@/store/types/story/chapterType";
 import { mapType } from "@/store/types/story/mapType";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import {
   Button,
   Drawer,

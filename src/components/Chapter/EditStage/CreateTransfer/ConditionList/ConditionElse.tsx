@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { conditionMethods } from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 interface Props {
   condition: [string, string[]];

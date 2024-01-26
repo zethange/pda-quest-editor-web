@@ -1,6 +1,6 @@
 import { chapterType } from "@/store/types/story/chapterType";
 import { Log } from "@/store/validator";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 export class FindParameter {
   private logs: Log[];

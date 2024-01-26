@@ -20,7 +20,7 @@ import { FallbackRender } from "@/components/Global/ErrorHandler";
 import { ErrorBoundary } from "react-error-boundary";
 import { useSearchParams } from "next/navigation";
 import SettingsDrawer from "@/components/Chapter/SettingsDrawer";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 const StageScreen = ({
   path,

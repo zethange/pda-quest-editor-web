@@ -39,7 +39,7 @@ import CreatePointModal from "@/components/Map/Points/CreatePointModal";
 import UpdatePointModal from "@/components/Map/Points/UpdatePointModal";
 import EditSpawnModal from "@/components/Map/Spawns/EditSpawnModal";
 import { v4 as uuidv4 } from "uuid";
-import { logger } from "@/store/utils/logger";
+import { logger } from "../../../../src/shared/lib/logger";
 
 // /edit/chapter/maps/{storyId}/{chapterId}/{mapId}
 const MapChapter = () => {

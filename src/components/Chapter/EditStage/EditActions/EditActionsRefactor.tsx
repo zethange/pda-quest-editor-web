@@ -16,7 +16,7 @@ import {
   typeCommand,
 } from "@/store/utils/commandsAction";
 import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import Item from "@/components/Chapter/EditStage/EditActions/Item/Item";
 import { itemsContainerType } from "@/store/types/itemsType";
 import InputItem from "@/components/Chapter/EditStage/EditActions/Item/InputItem";

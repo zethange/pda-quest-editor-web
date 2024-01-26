@@ -47,7 +47,7 @@ import JSZip from "jszip";
 import DownloadFromServerDrawer from "@/components/Story/DownloadFromServerDrawer";
 import { FallbackRender } from "@/components/Global/ErrorHandler";
 import { ErrorBoundary } from "react-error-boundary";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import { API_URL } from "@/shared/config";
 
 interface Author {

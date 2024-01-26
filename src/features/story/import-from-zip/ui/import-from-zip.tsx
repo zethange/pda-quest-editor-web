@@ -1,7 +1,7 @@
 import { useStoryStore } from "@/entities/story";
 import { chapterType } from "@/store/types/story/chapterType";
 import { mapType } from "@/store/types/story/mapType";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import { Button } from "@chakra-ui/react";
 import JSZip from "jszip";
 import { ChangeEvent, useRef } from "react";
@@ -75,4 +75,4 @@ const ImportFromZipButton = () => {
   );
 };
 
-export default ImportFromZipButton;
+export { ImportFromZipButton };

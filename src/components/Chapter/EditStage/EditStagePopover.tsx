@@ -11,7 +11,7 @@ import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { useRouter } from "next/router";
 import ConfirmationModal from "@/components/UI/ConfirmationModal";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 interface IProps {
   updateStage: (stageId: number) => void;

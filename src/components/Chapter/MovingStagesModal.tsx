@@ -13,7 +13,7 @@ import {
   Box,
   Select,
 } from "@chakra-ui/react";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 interface Props {
   isOpen: boolean;

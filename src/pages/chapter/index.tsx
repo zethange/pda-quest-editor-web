@@ -1,11 +1,11 @@
 import CustomHead from "@/components/Global/CustomHead";
-import ChapterCard from "@/components/Story/ChapterCard/ChapterCard";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import NavBar from "@/components/UI/NavBar/NavBar";
 import { useChapterStore } from "@/entities/chapter";
-import { ImportFromJsonButton, CreateChapterButton } from "@/features/chapter";
+import { CreateChapterButton, ImportFromJsonButton } from "@/features/chapter";
 import { ChapterType } from "@/shared/lib/type/chapter.type";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
+import { ChapterCard } from "@/widgets/chapter-card";
 import { Box, Button, SimpleGrid, Spacer, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -51,11 +51,9 @@ const Story = () => {
             <SimpleGrid columns={5} spacing={2}>
               {chapters.map((chapter: ChapterType) => (
                 <ChapterCard
-                  storyId={id as string}
-                  chapter={chapter}
-                  setOpenChapter={() => {}}
-                  onOpen={() => {}}
                   key={chapter.id}
+                  chapter={chapter}
+                  storyId={storyId}
                 />
               ))}
             </SimpleGrid>

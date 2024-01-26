@@ -1,5 +1,5 @@
 import { useStoryStore } from "@/entities/story";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import { Button } from "@chakra-ui/react";
 import store from "store2";
 

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { mapType, pointType, spawnType } from "@/store/types/story/mapType";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 type initialStateType = {
   openPoint: pointType;

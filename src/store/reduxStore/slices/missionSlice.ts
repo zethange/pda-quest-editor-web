@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { checkpointType, missionType } from "@/store/types/story/missionType";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 type initialStateType = {
   missions: missionType[];

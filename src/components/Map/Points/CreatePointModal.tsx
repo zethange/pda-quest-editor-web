@@ -16,7 +16,7 @@ import {
 import { pointType } from "@/store/types/story/mapType";
 import { addPoint } from "@/store/reduxStore/slices/mapSlice";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 interface IProps {
   showCreatePointModal: boolean;

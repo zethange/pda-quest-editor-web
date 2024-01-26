@@ -9,7 +9,7 @@ import {
   Spacer,
   Text,
 } from "@chakra-ui/react";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 export const parameters: [string, string][] = [
   ["immortal", "Бессмертие НПС спавна"],

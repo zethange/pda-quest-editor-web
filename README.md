@@ -1,23 +1,17 @@
 # PDA Quest Editor
-The quest editor for [Stalker PDA](https://pda.artux.net), written in Next.js and TypeScript
+The quest editor for [Stalker PDA](https://pda.artux.net), written in Vite.js and TypeScript
 
 To run the project, you need to install dependencies:
 ```shell
 npm install
-# or using yarn
-yarn
 ```
 Launching a server for development:
 ```shell
 npm run dev
-# or using yarn 
-yarn run dev
 ```
 Production build:
 ```shell
-npm run build && npm run start
-# for yarn
-yarn run build && yarn run start 
+npm run build && npm run start 
 ```
 
 TODO:
@@ -27,3 +21,4 @@ TODO:
 - [x] Basic stage editing
 - [x] Drug and drop creating stage
 - [x] Integrate with dagre.js 
+- [ ] Rewrite to Vite.js

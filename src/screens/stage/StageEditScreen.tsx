@@ -69,7 +69,7 @@ import { setMissions } from "@/store/reduxStore/slices/missionSlice";
 import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
 import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";
 import { nodeCreateType } from "@/store/types/nodeCreateType";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 export default function StageEditScreen({
   path,

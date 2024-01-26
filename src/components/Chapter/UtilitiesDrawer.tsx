@@ -34,7 +34,7 @@ import {
 } from "@chakra-ui/react";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { FindParameter } from "@/store/utils/chapterUtils/FindParameter";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import SearchText from "@/components/Chapter/Utilities/SearchText";
 
 interface Props {

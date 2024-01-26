@@ -209,4 +209,4 @@ const EditStoryDrawer: FC<EditStoryDrawerProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default EditStoryDrawer;
+export { EditStoryDrawer };

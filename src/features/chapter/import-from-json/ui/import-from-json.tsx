@@ -1,6 +1,6 @@
 import { useChapterStore } from "@/entities/chapter";
 import { ChapterType } from "@/shared/lib/type/chapter.type";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import {
   Alert,
   AlertIcon,

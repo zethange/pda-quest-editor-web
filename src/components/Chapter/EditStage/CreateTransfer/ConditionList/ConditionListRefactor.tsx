@@ -5,7 +5,7 @@ import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import ConditionHas from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionHas";
 import ConditionElse from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionElse";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 export type TypeOnChangeCondition = ActionCreatorWithPayload<
   {

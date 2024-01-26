@@ -15,7 +15,7 @@ import {
   setConnection,
 } from "@/store/reduxStore/slices/stageSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 interface IProps {
   setIsOpenCreateTransfer: (value: boolean) => void;

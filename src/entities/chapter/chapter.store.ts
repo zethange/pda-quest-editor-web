@@ -6,6 +6,8 @@ export interface IChapterStore {
   setStoryId: (id: number) => void;
   chapters: ChapterType[];
   setChapters: (chapters: ChapterType[]) => void;
+  editChapter: ChapterType | undefined;
+  setEditChapter: (chapter: Partial<ChapterType> | undefined) => void;
 }
 
 export const useChapterStore = create<IChapterStore>((set) => ({
@@ -13,4 +15,14 @@ export const useChapterStore = create<IChapterStore>((set) => ({
   chapters: [],
   setStoryId: (id) => set(() => ({ storyId: id })),
   setChapters: (chapters) => set(() => ({ chapters })),
+  editChapter: undefined,
+  setEditChapter: (chapter) => {
+    if (!chapter) {
+      return set(() => ({ editChapter: undefined }));
+    }
+
+    return set((state) => ({
+      editChapter: { ...state.editChapter, ...(chapter as ChapterType) },
+    }));
+  },
 }));

@@ -19,7 +19,7 @@ import {
 import { chapterType } from "@/store/types/story/chapterType";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import EditChapterDrawer from "@/components/Chapter/EditChapterDrawer";
-import { logger } from "@/store/utils/logger";
+import { logger } from "../../../src/shared/lib/logger";
 import {
   buildBinaryTree,
   TreeNode,

@@ -23,7 +23,7 @@ import EditActionsRefactor from "./EditActions/EditActionsRefactor";
 import Stage from "../../Global/Konva/Stage";
 import KonvaMap from "../../Global/Konva/KonvaMap";
 
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import { API_URL } from "@/shared/config";
 
 import KonvaImage from "@/components/Global/Konva/KonvaImage";

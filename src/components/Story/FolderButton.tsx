@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import { AiOutlineArrowDown, AiOutlineArrowRight } from "react-icons/ai";
 import { TreeNode } from "@/store/utils/storyUtils/buildBinaryTree";
 import { VscDebugBreakpointLog } from "react-icons/vsc";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import { chapterType } from "@/store/types/story/chapterType";
 
 interface Props {

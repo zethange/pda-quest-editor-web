@@ -1,19 +1,19 @@
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 import { useEffect } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { Link } from "react-router-dom";
 import store from "store2";
 
 import CustomHead from "@/components/Global/CustomHead";
-import { FallbackRender } from "@/components/Global/ErrorHandler";
-import DownloadFromServerDrawer from "@/components/Story/DownloadFromServerDrawer";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import NavBar from "@/components/UI/NavBar/NavBar";
 import { useStoryService, useStoryStore } from "@/entities/story";
-import { CreateStoryButton } from "@/features/story/create";
-import EditStoryDrawer from "@/features/story/edit/ui/edit-story";
-import { ImportFromFolderButton } from "@/features/story/import-from-folder";
-import ImportFromZipButton from "@/features/story/import-from-zip/ui/import-from-zip";
+import {
+  ImportFromServerButton,
+  CreateStoryButton,
+  EditStoryDrawer,
+  ImportFromFolderButton,
+  ImportFromZipButton,
+} from "@/features/story";
 import { StoryType } from "@/shared/lib/type/story.type";
 import { storyType } from "@/store/types/story/storyType";
 import ExportToServerDrawer from "@/widgets/export-to-server-drawer/ui/export-to-server-drawer";
@@ -75,11 +75,6 @@ const Home = () => {
     onOpen: exportDrawerOnOpen,
     onClose: exportDrawerOnClose,
   } = useDisclosure();
-  const {
-    isOpen: downloadModalIsOpen,
-    onOpen: downloadModalOnOpen,
-    onClose: downloadModalOnClose,
-  } = useDisclosure();
 
   useEffect(() => {
     logger.info("Editor loaded");
@@ -107,14 +102,7 @@ const Home = () => {
           <ImportFromZipButton />
           <Spacer />
           <ChangeThemeButton rounded={true} />
-          <Button
-            fontWeight="normal"
-            onClick={() => {
-              downloadModalOnOpen();
-            }}
-          >
-            Выкачать истории с сервера
-          </Button>
+          <ImportFromServerButton />
           <Button
             fontWeight="normal"
             onClick={() => {
@@ -206,14 +194,6 @@ const Home = () => {
         isOpen={exportDrawerIsOpen}
       />
       <EditStoryDrawer isOpen={editDrawerIsOpen} onClose={editDrawerOnClose} />
-      <ErrorBoundary FallbackComponent={FallbackRender}>
-        <DownloadFromServerDrawer
-          downloadModalIsOpen={downloadModalIsOpen}
-          downloadModalOnClose={downloadModalOnClose}
-          setStories={setStories}
-          stories={stories}
-        />
-      </ErrorBoundary>
     </>
   );
 };

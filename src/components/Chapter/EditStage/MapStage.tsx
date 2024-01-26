@@ -8,7 +8,7 @@ import {
 import { stageType } from "@/store/types/story/chapterType";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import useFetching from "@/hooks/useFetching";
-import { logger } from "@/store/utils/logger";
+import { logger } from "@/shared/lib/logger.ts";
 
 import Stage from "../../Global/Konva/Stage";
 import KonvaMap from "../../Global/Konva/KonvaMap";
