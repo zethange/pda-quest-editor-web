@@ -3,17 +3,17 @@ import { FC } from "react";
 
 export interface ChangeThemeButtonProps {
   rounded: boolean;
+  size?: string;
 }
 
-const ChangeThemeButton: FC<ChangeThemeButtonProps> = ({ rounded }) => {
+const ChangeThemeButton: FC<ChangeThemeButtonProps> = ({ rounded, size }) => {
   const { toggleColorMode } = useColorMode();
 
   return (
     <Button
       fontWeight="normal"
       onClick={() => toggleColorMode()}
-      size={rounded ? "md" : "sm"}
-      mr={rounded ? 0 : 1}
+      size={size || "md"}
     >
       Сменить тему
     </Button>

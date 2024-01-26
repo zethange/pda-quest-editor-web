@@ -42,6 +42,7 @@ export type ConditionType = {
 };
 
 export type StageTextType = {
+  _id?: string;
   text: string;
   condition: ConditionType;
 };
