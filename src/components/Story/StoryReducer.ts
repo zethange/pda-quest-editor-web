@@ -1,6 +1,4 @@
-import { storyType } from "@/store/types/story/storyType";
-
-export function storiesReducer(stories: storyType, action: { type: string }) {
+export function storiesReducer() {
   // switch (action.type) {
   //   case "added": {
   //     return [

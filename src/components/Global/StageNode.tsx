@@ -1,16 +1,16 @@
-import React, { useMemo } from "react";
-import { Handle, Position } from "reactflow";
-import { Badge, Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { LGBTFlagColors } from "@/store/constants";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { GrNotification } from "react-icons/gr";
 import { stageType } from "@/store/types/story/chapterType";
 import { pointType } from "@/store/types/story/mapType";
+import { Badge, Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
+import { useMemo } from "react";
 import {
   AiOutlineArrowDown,
   AiOutlineArrowUp,
   AiOutlineWarning,
 } from "react-icons/ai";
+import { GrNotification } from "react-icons/gr";
+import { Handle, Position } from "reactflow";
 
 interface data {
   label: string;

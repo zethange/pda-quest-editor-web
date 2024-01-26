@@ -6,7 +6,10 @@ export interface ChangeThemeButtonProps {
   size?: string;
 }
 
-const ChangeThemeButton: FC<ChangeThemeButtonProps> = ({ rounded, size }) => {
+const ChangeThemeButton: FC<ChangeThemeButtonProps> = ({
+  rounded: _,
+  size,
+}) => {
   const { toggleColorMode } = useColorMode();
 
   return (

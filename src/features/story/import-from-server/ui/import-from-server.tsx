@@ -1,4 +1,3 @@
-import { StoryType } from "@/shared/lib/type/story.type";
 import {
   Box,
   Button,

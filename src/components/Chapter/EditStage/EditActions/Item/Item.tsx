@@ -1,7 +1,7 @@
-import React, { FC } from "react";
-import { Box, Input, Select } from "@chakra-ui/react";
-import { itemsContainerType, itemType } from "@/store/types/itemsType";
+import { itemType, itemsContainerType } from "@/store/types/itemsType";
 import { groupItem } from "@/store/utils/groupItem";
+import { Box, Input, Select } from "@chakra-ui/react";
+import { FC } from "react";
 
 interface Props {
   value: string;

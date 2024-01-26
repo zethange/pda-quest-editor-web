@@ -52,7 +52,7 @@ const ConditionElse: React.FC<Props> = ({
             <AutoComplete
               openOnFocus
               value={method![0]}
-              onChange={(value) => {
+              onChange={(value: any) => {
                 conditionEntry[+conditionIndex][0] = value + method[1];
                 conditionList = Object.fromEntries(conditionEntry);
                 onChange(conditionList);
@@ -62,7 +62,7 @@ const ConditionElse: React.FC<Props> = ({
                 placeholder="Параметер"
                 variant="outline"
                 value={method![0]}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   conditionEntry[+conditionIndex][0] =
                     e.target.value + method[1];
                   conditionList = Object.fromEntries(conditionEntry);

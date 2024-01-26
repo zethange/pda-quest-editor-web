@@ -1,5 +1,5 @@
-import React, { FC } from "react";
 import { Input } from "@chakra-ui/react";
+import { FC } from "react";
 
 interface Props {
   value: string;

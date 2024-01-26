@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { logger } from "@/shared/lib/logger.ts";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { addPoint } from "@/store/reduxStore/slices/mapSlice";
+import { pointType } from "@/store/types/story/mapType";
 import {
   Box,
   Button,
@@ -13,10 +16,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { pointType } from "@/store/types/story/mapType";
-import { addPoint } from "@/store/reduxStore/slices/mapSlice";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { logger } from "@/shared/lib/logger.ts";
+import { useEffect, useState } from "react";
 
 interface IProps {
   showCreatePointModal: boolean;

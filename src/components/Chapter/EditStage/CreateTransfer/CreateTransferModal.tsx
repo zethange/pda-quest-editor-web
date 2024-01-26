@@ -1,4 +1,8 @@
-import React from "react";
+import { logger } from "@/shared/lib/logger.ts";
+import {
+  newTransferInStore,
+  setConnection,
+} from "@/store/reduxStore/slices/stageSlice";
 import {
   Button,
   Modal,
@@ -10,12 +14,7 @@ import {
   ModalOverlay,
   Textarea,
 } from "@chakra-ui/react";
-import {
-  newTransferInStore,
-  setConnection,
-} from "@/store/reduxStore/slices/stageSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { logger } from "@/shared/lib/logger.ts";
 
 interface IProps {
   setIsOpenCreateTransfer: (value: boolean) => void;

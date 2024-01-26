@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from "react";
+import useFetching from "@/hooks/useFetching";
+import { API_URL } from "@/shared/config";
+import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
+import { setMaps as setMapsRedux } from "@/store/reduxStore/slices/chapterMapsSlice";
+import { createMap } from "@/store/tools/createMap";
+import { mapApiType, mapType } from "@/store/types/story/mapType";
 import {
   Box,
   Button,
@@ -10,14 +15,9 @@ import {
   MenuList,
   SimpleGrid,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import store from "store2";
-import { mapApiType, mapType } from "@/store/types/story/mapType";
-import Link from "next/link";
-import { createMap } from "@/store/tools/createMap";
-import useFetching from "@/hooks/useFetching";
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
-import { setMaps as setMapsRedux } from "@/store/reduxStore/slices/chapterMapsSlice";
-import { API_URL } from "@/shared/config";
 
 interface Props {
   path: string[];
@@ -102,9 +102,7 @@ const MapScreen = ({ path, isReady }: Props) => {
             >
               {map?.title}
               <Flex gap={2}>
-                <Link
-                  href={`/edit/chapter/maps/${path[0]}/${path[1]}/${map.id}`}
-                >
+                <Link to={`/edit/chapter/maps/${path[0]}/${path[1]}/${map.id}`}>
                   <Button colorScheme="teal">Редактировать</Button>
                 </Link>
                 <Button colorScheme="red" onClick={() => deleteMap(+map.id)}>

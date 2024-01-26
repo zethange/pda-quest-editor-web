@@ -1,16 +1,17 @@
-import React, {
-  useEffect,
-  useState,
+import useKeydown from "@buildinams/use-keydown";
+import dagre from "dagre";
+import querystring from "querystring";
+import {
+  DragEventHandler,
+  MouseEvent,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
-  DragEventHandler,
+  useState,
 } from "react";
 import store from "store2";
-import querystring from "querystring";
-import dagre from "dagre";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
-import useKeydown from "@buildinams/use-keydown";
 
 import ReactFlow, {
   applyNodeChanges,
@@ -34,42 +35,42 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import "reactflow/dist/style.css";
-import { newStage } from "@/store/tools/createTools";
-import CustomHead from "@/components/Global/CustomHead";
-import NodeStage from "@/components/Global/StageNode";
-import {
-  chapterType,
-  stageTransfer,
-  stageType,
-} from "@/store/types/story/chapterType";
-import TransferEdge from "@/components/Global/TransferEdge";
-import { stageName } from "@/store/utils/stageName";
-import ToStage from "@/components/Chapter/ToStage";
 import CreateStage from "@/components/Chapter/CreateStage";
 import CreateTransferModal from "@/components/Chapter/EditStage/CreateTransfer/CreateTransferModal";
-import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal";
 import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
-import { useStore } from "react-redux";
+import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal";
+import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
+import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
+import ToStage from "@/components/Chapter/ToStage";
+import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";
+import CustomHead from "@/components/Global/CustomHead";
+import NodeStage from "@/components/Global/StageNode";
+import TransferEdge from "@/components/Global/TransferEdge";
+import { logger } from "@/shared/lib/logger.ts";
+import reduxStore, { RootState } from "@/store/reduxStore";
+import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { setMaps } from "@/store/reduxStore/slices/chapterMapsSlice";
+import { setMissions } from "@/store/reduxStore/slices/missionSlice";
 import {
-  setParameters,
   setConnection,
+  setParameters,
   setStageToStore as setStageToRedux,
   setTargetTransfer,
   setTransition,
   setTransitionToStore,
 } from "@/store/reduxStore/slices/stageSlice";
-import { setMaps } from "@/store/reduxStore/slices/chapterMapsSlice";
-import { Store } from "redux";
-import reduxStore, { RootState } from "@/store/reduxStore";
-import { mapType, pointType, typePoints } from "@/store/types/story/mapType";
-import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { setMissions } from "@/store/reduxStore/slices/missionSlice";
-import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
-import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";
+import { newStage } from "@/store/tools/createTools";
 import { nodeCreateType } from "@/store/types/nodeCreateType";
-import { logger } from "@/shared/lib/logger.ts";
+import {
+  chapterType,
+  stageTransfer,
+  stageType,
+} from "@/store/types/story/chapterType";
+import { mapType, pointType, typePoints } from "@/store/types/story/mapType";
+import { stageName } from "@/store/utils/stageName";
+import { useStore } from "react-redux";
+import "reactflow/dist/style.css";
+import { Store } from "redux";
 
 export default function StageEditScreen({
   path,
@@ -475,7 +476,7 @@ export default function StageEditScreen({
 
   // нажатие на edge
   const onEdgesClick = useCallback(
-    (event: React.MouseEvent, edge: Edge) => {
+    (_: MouseEvent, edge: Edge) => {
       const chapterFromLocalStorage =
         path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
 

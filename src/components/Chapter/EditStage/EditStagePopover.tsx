@@ -1,17 +1,14 @@
-import React from "react";
-
-import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
-import { stageTypes } from "@/store/utils/stageName";
-import MapStage from "@/components/Chapter/EditStage/MapStage";
-import EditStage from "@/components/Chapter/EditStage/EditStage";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
-import { stageType } from "@/store/types/story/chapterType";
-import { editActions } from "@/store/reduxStore/slices/stageSlice";
+import EditStage from "@/components/Chapter/EditStage/EditStage";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { useRouter } from "next/router";
+import MapStage from "@/components/Chapter/EditStage/MapStage";
 import ConfirmationModal from "@/components/UI/ConfirmationModal";
 import { logger } from "@/shared/lib/logger.ts";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { editActions } from "@/store/reduxStore/slices/stageSlice";
+import { stageType } from "@/store/types/story/chapterType";
+import { stageTypes } from "@/store/utils/stageName";
+import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 
 interface IProps {
   updateStage: (stageId: number) => void;
@@ -33,7 +30,6 @@ const EditStagePopover = ({
     (state) => state.stage.transitionFromMap
   );
   const settings = useAppSelector((state) => state.user.settings);
-  const { query } = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   logger.info("stage:", storeStage);
   logger.info("transitionFromMap:", transitionFromMap);
@@ -59,7 +55,7 @@ const EditStagePopover = ({
         <Box h="calc(100vh - 147px)" overflowY="scroll">
           {stageTypes(storeStage?.type_stage) === "default" && (
             <Text color="gray.500">
-              id: {storeStage.id}, {query.chapter![0]}:{query.chapter![1]}:
+              {/* id: {storeStage.id}, {query.chapter![0]}:{query.chapter![1]}: */}
               {storeStage.id}
             </Text>
           )}

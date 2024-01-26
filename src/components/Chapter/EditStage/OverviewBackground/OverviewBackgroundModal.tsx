@@ -1,5 +1,6 @@
-import { FC } from "react";
-import Image from "next/image";
+import useFetching from "@/hooks/useFetching";
+import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
+import { editStageInStore } from "@/store/reduxStore/slices/stageSlice";
 import {
   Button,
   Modal,
@@ -10,10 +11,9 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Image,
 } from "@chakra-ui/react";
-import useFetching from "@/hooks/useFetching";
-import { editStageInStore } from "@/store/reduxStore/slices/stageSlice";
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
+import { FC } from "react";
 
 interface Props {
   show: boolean;

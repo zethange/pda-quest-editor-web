@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import * as querystring from "querystring";
+import { useState } from "react";
 
 import {
   Button,
@@ -12,15 +12,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import StageEditScreen from "@/screens/stage/StageEditScreen";
-import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
-import MapScreen from "./MapScreen";
-import MissionScreen from "@/screens/MissionScreen";
-import { FallbackRender } from "@/components/Global/ErrorHandler";
-import { ErrorBoundary } from "react-error-boundary";
-import { useSearchParams } from "next/navigation";
 import SettingsDrawer from "@/components/Chapter/SettingsDrawer";
-import { logger } from "@/shared/lib/logger.ts";
+import { FallbackRender } from "@/components/Global/ErrorHandler";
+import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
+import MissionScreen from "@/screens/MissionScreen";
+import StageEditScreen from "@/screens/stage/StageEditScreen";
+import { ErrorBoundary } from "react-error-boundary";
+import MapScreen from "./MapScreen";
 
 const StageScreen = ({
   path,
@@ -31,17 +29,17 @@ const StageScreen = ({
   query: querystring.ParsedUrlQuery;
   isReady: boolean;
 }) => {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<number>(0);
   const { onClose, isOpen, onOpen } = useDisclosure();
 
-  useEffect(() => {
-    const _tab = searchParams.get("_tab");
-    if (_tab) {
-      logger.info(Array.from(searchParams), _tab);
-      setActiveTab(+_tab);
-    }
-  }, [searchParams]);
+  // useEffect(() => {
+  //   const _tab = searchParams.get("_tab");
+  //   if (_tab) {
+  //     logger.info(Array.from(searchParams), _tab);
+  //     setActiveTab(+_tab);
+  //   }
+  // }, [searchParams]);
 
   return (
     <>

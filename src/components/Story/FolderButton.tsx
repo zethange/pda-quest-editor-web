@@ -1,4 +1,6 @@
-import { FC, ReactNode, useState } from "react";
+import { logger } from "@/shared/lib/logger.ts";
+import { chapterType } from "@/store/types/story/chapterType";
+import { TreeNode } from "@/store/utils/storyUtils/buildBinaryTree";
 import {
   Box,
   Flex,
@@ -9,13 +11,10 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { BiFolder, BiSolidFolderPlus } from "react-icons/bi";
-import { useRouter } from "next/router";
+import { FC, ReactNode, useState } from "react";
 import { AiOutlineArrowDown, AiOutlineArrowRight } from "react-icons/ai";
-import { TreeNode } from "@/store/utils/storyUtils/buildBinaryTree";
+import { BiFolder } from "react-icons/bi";
 import { VscDebugBreakpointLog } from "react-icons/vsc";
-import { logger } from "@/shared/lib/logger.ts";
-import { chapterType } from "@/store/types/story/chapterType";
 
 interface Props {
   node: TreeNode;
@@ -35,7 +34,6 @@ export const FolderButton: FC<Props> = ({
   createFolder,
 }) => {
   const [isOpenState, setIsOpenState] = useState(isOpen);
-  const { push, asPath } = useRouter();
 
   return (
     <Box
@@ -79,7 +77,7 @@ export const FolderButton: FC<Props> = ({
           alignItems="center"
           cursor="pointer"
           onClick={() => {
-            push(asPath.split("?")[0] + "?path=" + node.path);
+            // push(asPath.split("?")[0] + "?path=" + node.path);
             setIsOpenState(!isOpenState);
           }}
         >

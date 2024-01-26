@@ -3,9 +3,9 @@ import { chapterType } from "@/store/types/story/chapterType";
 import { Dispatch, SetStateAction } from "react";
 
 export class FindStageByText {
-  private logs: Log[];
+  // private logs: Log[];
   constructor(private readonly setLogs: Dispatch<SetStateAction<Log[]>>) {
-    this.logs = [];
+    // this.logs = [];
   }
 
   private log(log: Log) {

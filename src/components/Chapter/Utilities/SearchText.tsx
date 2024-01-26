@@ -1,15 +1,17 @@
-import React, { FC, useEffect, useState } from "react";
+import { Logs } from "@/components/Chapter/UtilitiesDrawer";
+import { chapterType } from "@/store/types/story/chapterType";
+import { FindStageByText } from "@/store/utils/chapterUtils/FindStageByText";
 import { Log } from "@/store/validator";
 import {
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Box,
+  Flex,
+  Input,
 } from "@chakra-ui/react";
-import { Box, Flex, Input } from "@chakra-ui/react";
-import { Logs } from "@/components/Chapter/UtilitiesDrawer";
-import { chapterType } from "@/store/types/story/chapterType";
-import { FindStageByText } from "@/store/utils/chapterUtils/FindStageByText";
+import { FC, useEffect, useState } from "react";
 
 interface Props {
   chapter: chapterType;

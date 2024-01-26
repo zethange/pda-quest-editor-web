@@ -5,7 +5,7 @@ import {
   AutoCompleteItem,
   AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 
 interface Props {
@@ -57,7 +57,7 @@ const ConditionHas: React.FC<Props> = ({
             <AutoComplete
               openOnFocus
               value={conditionValue}
-              onChange={(value) => {
+              onChange={(value: string) => {
                 conditionEntry[+conditionIndex][1][+valueIndex] = value;
                 onChange();
               }}
@@ -66,7 +66,7 @@ const ConditionHas: React.FC<Props> = ({
                 placeholder="Параметер"
                 variant="outline"
                 value={conditionValue}
-                onChange={(event) => {
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   conditionEntry[+conditionIndex][1][+valueIndex] =
                     event.target.value;
                   onChange();

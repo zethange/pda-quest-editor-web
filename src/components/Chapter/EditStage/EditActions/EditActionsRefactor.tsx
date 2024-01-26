@@ -1,5 +1,20 @@
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
+import CodeMirrorItem from "@/components/Chapter/EditStage/EditActions/Item/CodeMirrorItem";
+import InputItem from "@/components/Chapter/EditStage/EditActions/Item/InputItem";
+import Item from "@/components/Chapter/EditStage/EditActions/Item/Item";
+import RelationItem from "@/components/Chapter/EditStage/EditActions/Item/RelationItem";
+import SelectItem from "@/components/Chapter/EditStage/EditActions/Item/SelectItem";
+import { API_URL } from "@/shared/config";
+import { logger } from "@/shared/lib/logger.ts";
+import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
+import { itemsContainerType } from "@/store/types/itemsType";
+import {
+  commandLocalize,
+  commands,
+  getCommandById,
+  typeCommand,
+} from "@/store/utils/commandsAction";
 import {
   Box,
   Button,
@@ -9,21 +24,6 @@ import {
   Spacer,
   Tooltip,
 } from "@chakra-ui/react";
-import {
-  commandLocalize,
-  commands,
-  getCommandById,
-  typeCommand,
-} from "@/store/utils/commandsAction";
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
-import { logger } from "@/shared/lib/logger.ts";
-import Item from "@/components/Chapter/EditStage/EditActions/Item/Item";
-import { itemsContainerType } from "@/store/types/itemsType";
-import InputItem from "@/components/Chapter/EditStage/EditActions/Item/InputItem";
-import CodeMirrorItem from "@/components/Chapter/EditStage/EditActions/Item/CodeMirrorItem";
-import RelationItem from "@/components/Chapter/EditStage/EditActions/Item/RelationItem";
-import SelectItem from "@/components/Chapter/EditStage/EditActions/Item/SelectItem";
-import { API_URL } from "@/shared/config";
 
 interface Props {
   actions?: {

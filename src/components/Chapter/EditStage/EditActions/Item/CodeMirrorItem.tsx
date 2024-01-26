@@ -1,7 +1,7 @@
-import React, { FC } from "react";
 import { StreamLanguage } from "@codemirror/language";
 import { lua } from "@codemirror/legacy-modes/mode/lua";
 import CodeMirror from "@uiw/react-codemirror";
+import { FC } from "react";
 
 interface Props {
   value: string;

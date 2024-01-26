@@ -1,6 +1,6 @@
-import React, { FC, memo } from "react";
-import { EdgeProps, getBezierPath, EdgeLabelRenderer } from "reactflow";
 import { Badge, Box } from "@chakra-ui/react";
+import { FC, memo } from "react";
+import { EdgeLabelRenderer, EdgeProps, getBezierPath } from "reactflow";
 
 const TransferEdge: FC<EdgeProps> = ({
   id,

@@ -1,4 +1,14 @@
-import React, { useRef, useState } from "react";
+import EditTextCondition from "@/components/Chapter/EditStage/EditTextCondition";
+import OverviewBackgroundButton from "@/components/Chapter/EditStage/OverviewBackground/OverviewBackgroundButton";
+import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import {
+  deleteTextInStore,
+  editStageInStore,
+  editTextInStore,
+  newTextInStore,
+  setTargetText,
+} from "@/store/reduxStore/slices/stageSlice";
+import { stageText } from "@/store/types/story/chapterType";
 import {
   Box,
   Button,
@@ -12,19 +22,9 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { stageText } from "@/store/types/story/chapterType";
-import { useDispatch } from "react-redux";
-import {
-  deleteTextInStore,
-  editStageInStore,
-  editTextInStore,
-  newTextInStore,
-  setTargetText,
-} from "@/store/reduxStore/slices/stageSlice";
+import { useRef, useState } from "react";
 import { MdDelete, MdLockOutline } from "react-icons/md";
-import EditTextCondition from "@/components/Chapter/EditStage/EditTextCondition";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
-import OverviewBackgroundButton from "@/components/Chapter/EditStage/OverviewBackground/OverviewBackgroundButton";
+import { useDispatch } from "react-redux";
 
 export default function EditStage() {
   const [openCondition, setOpenCondition] = useState<boolean>(false);

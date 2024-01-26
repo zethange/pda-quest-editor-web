@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import {
+  setStageToStore,
+  setTransition,
+} from "@/store/reduxStore/slices/stageSlice";
+import { chapterType, stageType } from "@/store/types/story/chapterType";
 import {
   Box,
   Button,
@@ -12,12 +16,8 @@ import {
   Portal,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { chapterType, stageType } from "@/store/types/story/chapterType";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  setStageToStore,
-  setTransition,
-} from "@/store/reduxStore/slices/stageSlice";
 
 interface IProps {
   setEditableStage: (stage: stageType | undefined) => void;

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import {
   AutoComplete,
   AutoCompleteInput,
@@ -20,7 +20,7 @@ const SelectItem: FC<Props> = ({ value: importValue, onChange }) => {
     <AutoComplete
       openOnFocus
       value={value}
-      onChange={(value) => {
+      onChange={(value: string) => {
         setValue(value);
         onChange(value);
       }}
@@ -29,10 +29,10 @@ const SelectItem: FC<Props> = ({ value: importValue, onChange }) => {
         placeholder="Параметер..."
         variant="outline"
         value={value}
-        onChange={(e) => {
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
           setValue(e.target.value);
         }}
-        onBlur={(e) => {
+        onBlur={(e: ChangeEvent<HTMLInputElement>) => {
           onChange(e.target.value);
         }}
       />
