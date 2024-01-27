@@ -9,6 +9,7 @@ import { ServerWebSocket, WebSocketHandler } from "bun";
 import { v4 } from "uuid";
 import { IResponse } from "./type/response";
 import { getSharedStories } from "./handler/get-shared-stories";
+import { answerRequest } from "./handler/answer-request";
 
 export interface IUserOnline {
   login: string;
@@ -22,9 +23,15 @@ export interface ISharedStory {
   owner: IUserOnline;
   editors: IUserOnline[];
 }
+export interface IGrantRequest {
+  id: string;
+  storyId: string;
+  userId: string;
+}
 
-export let userOnlineList: IUserOnline[] = [];
-export const sharedStoryList: ISharedStory[] = [];
+export let users: IUserOnline[] = [];
+export let stories: ISharedStory[] = [];
+export let requests: IGrantRequest[] = [];
 
 export const registerWs = (): WebSocketHandler<unknown> => {
   return {
@@ -32,7 +39,7 @@ export const registerWs = (): WebSocketHandler<unknown> => {
       const msg = JSON.parse(message as string) as IMessage;
       let resp: object;
 
-      if (!userOnlineList.some((user) => user.id === msg.id)) {
+      if (!users.some((user) => user.id === msg.id)) {
         ws.send(
           JSON.stringify({
             type: "ERROR",
@@ -58,6 +65,8 @@ export const registerWs = (): WebSocketHandler<unknown> => {
         case "GET_SHARED_STORIES":
           resp = getSharedStories(msg, ws);
           break;
+        case "ANSWER_REQUEST":
+          resp = answerRequest(msg, ws);
         default:
           resp = {
             type: "ERROR",
@@ -69,7 +78,7 @@ export const registerWs = (): WebSocketHandler<unknown> => {
     },
     open(ws) {
       const id = v4();
-      userOnlineList.push({
+      users.push({
         login: "",
         id,
         session: ws,
@@ -85,7 +94,12 @@ export const registerWs = (): WebSocketHandler<unknown> => {
       );
     },
     close(ws, code, message) {
-      userOnlineList = userOnlineList.filter((user) => user.session !== ws);
+      const user = users.find((user) => user.session === ws);
+      console.log(`User ${user?.login} disconnected`);
+
+      stories = stories.filter((story) => story.owner !== user);
+
+      users = users.filter((user) => user.session !== ws);
     },
     drain(ws) {}, // the socket is ready to receive more data
   };

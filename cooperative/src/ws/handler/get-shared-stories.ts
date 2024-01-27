@@ -1,7 +1,7 @@
 import { ServerWebSocket } from "bun";
 import { IMessage } from "../type/request";
 import { IResponse } from "../type/response";
-import { sharedStoryList } from "..";
+import { stories } from "..";
 
 export const getSharedStories = (
   message: IMessage,
@@ -9,7 +9,7 @@ export const getSharedStories = (
 ): IResponse => {
   return {
     type: "SHARED_STORIES",
-    sharedStories: sharedStoryList.map((story) => ({
+    sharedStories: stories.map((story) => ({
       id: story.id,
       story: story.story,
       owner: {

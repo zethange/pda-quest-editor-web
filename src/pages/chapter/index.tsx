@@ -3,7 +3,7 @@ import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import NavBar from "@/components/UI/NavBar/NavBar";
 import { useChapterStore } from "@/entities/chapter";
 import { CreateChapterButton, ImportFromJsonButton } from "@/features/chapter";
-import { ShareStoryButton } from "@/features/cooperative";
+import { AlertOnRequest, ShareStoryButton } from "@/features/cooperative";
 import { logger } from "@/shared/lib/logger.ts";
 import { ChapterType } from "@/shared/lib/type/chapter.type";
 import { ChapterCard } from "@/widgets/chapter-card";
@@ -71,6 +71,7 @@ const Story = () => {
           onUpdate={onUpdate}
           deleteChapter={deleteChapter}
         /> */}
+        <AlertOnRequest />
       </main>
     </>
   );

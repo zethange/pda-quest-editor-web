@@ -27,6 +27,7 @@ import {
   Spacer,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { BiEdit } from "react-icons/bi";
 import { BsCloudUpload } from "react-icons/bs";
@@ -80,6 +81,7 @@ const Home = () => {
   } = useDisclosure();
 
   const { ws, setWs, setId, handleMessage } = useCoopStore();
+  const toast = useToast();
 
   useEffect(() => {
     logger.info("Editor loaded");

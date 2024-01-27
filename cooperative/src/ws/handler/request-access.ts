@@ -1,16 +1,17 @@
 import { ServerWebSocket } from "bun";
-import { sharedStoryList, userOnlineList } from "..";
+import { IGrantRequest, requests, stories, users } from "..";
 import { IMessage } from "../type/request";
 import { IResponse } from "../type/response";
+import { v4 } from "uuid";
 
 export const requestAccess = (
   message: IMessage,
   ws: ServerWebSocket<unknown>
 ): IResponse => {
   const { id } = message;
-  const user = userOnlineList.find((user) => user.id === id);
+  const user = users.find((user) => user.id === id);
 
-  const story = sharedStoryList.find(
+  const story = stories.find(
     (story) => story.id == message.requestAccess?.storyId
   );
 
@@ -24,11 +25,19 @@ export const requestAccess = (
     };
   }
 
+  const request = {
+    id: v4(),
+    storyId: story.id,
+    userId: user?.id,
+  } as IGrantRequest;
+
+  requests.push(request);
+
   story.owner.session.send(
     JSON.stringify({
       type: "REQUEST_SHARE_STORY",
       requestShareStory: {
-        storyId: story.id,
+        data: request,
         userLogin: user?.login,
       },
     } as IResponse)

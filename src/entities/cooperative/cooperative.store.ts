@@ -1,6 +1,12 @@
 import { StoryType } from "@/shared/lib/type/story.type";
 import { create } from "zustand";
 
+interface ISharedStory {
+  id: string;
+  story: StoryType;
+  owner: { login: string };
+}
+
 export interface ICoopStore {
   ws: WebSocket | undefined;
   setWs: (ws: WebSocket) => void;
@@ -10,16 +16,8 @@ export interface ICoopStore {
   handlers: ((e: Event) => void)[];
   handleMessage: (callback: (e: Event) => void) => void;
 
-  sharedStories: {
-    story: StoryType;
-    owner: { login: string };
-  }[];
-  setSharedStories: (
-    stories: {
-      story: StoryType;
-      owner: { login: string };
-    }[]
-  ) => void;
+  sharedStories: ISharedStory[];
+  setSharedStories: (stories: ISharedStory[]) => void;
 
   id: string;
   setId: (id: string) => void;
@@ -47,12 +45,7 @@ export const useCoopStore = create<ICoopStore>((set, get) => ({
   },
 
   sharedStories: [],
-  setSharedStories: (
-    stories: {
-      story: StoryType;
-      owner: { login: string };
-    }[]
-  ) => {
+  setSharedStories: (stories) => {
     return set({ sharedStories: stories });
   },
 

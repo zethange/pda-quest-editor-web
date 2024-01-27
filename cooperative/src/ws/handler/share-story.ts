@@ -1,4 +1,4 @@
-import { ISharedStory, sharedStoryList, userOnlineList } from "..";
+import { ISharedStory, stories, users } from "..";
 import { v4 } from "uuid";
 import { IMessage } from "../type/request";
 import { IResponse } from "../type/response";
@@ -19,7 +19,7 @@ export const shareStory = (
     };
   }
 
-  if (sharedStoryList.some((story) => story.owner.id === id)) {
+  if (stories.some((story) => story.owner.id === id)) {
     return {
       type: "SHARE_STORY",
       shareStory: {
@@ -29,7 +29,7 @@ export const shareStory = (
     };
   }
 
-  const owner = userOnlineList.find((owner) => owner.id === id);
+  const owner = users.find((owner) => owner.id === id);
   if (!owner) {
     return {
       type: "SHARE_STORY",
@@ -48,7 +48,7 @@ export const shareStory = (
     editors: [owner],
   };
 
-  sharedStoryList.push(story);
+  stories.push(story);
   console.log(`Story ${story.id} shared`);
 
   return {

@@ -1,3 +1,5 @@
+import { IGrantRequest } from "..";
+import { ChapterType } from "../../type/chapter.type";
 import { StoryType } from "../../type/story.type";
 
 interface IDefaultResponse {
@@ -8,13 +10,15 @@ interface IDefaultResponse {
 export interface IResponse {
   type:
     | "CONNECT"
+    | "NULL"
     | "ERROR"
     | "LOGIN"
     | "SHARE_STORY"
     | "CLOSE_STORY"
     | "REQUEST_ACCESS"
     | "REQUEST_SHARE_STORY"
-    | "SHARED_STORIES";
+    | "SHARED_STORIES"
+    | "ANSWER_REQUEST";
   connect?: {
     id: string;
   };
@@ -30,7 +34,7 @@ export interface IResponse {
   };
   requestAccess?: IDefaultResponse & {};
   requestShareStory?: IDefaultResponse & {
-    storyId: string;
+    data: IGrantRequest;
     userLogin: string;
   };
   sharedStories?: {
@@ -40,4 +44,9 @@ export interface IResponse {
       login: string;
     };
   }[];
+  answerRequest?: IDefaultResponse & {
+    allow?: boolean;
+    story?: StoryType;
+    chapters?: ChapterType[];
+  };
 }

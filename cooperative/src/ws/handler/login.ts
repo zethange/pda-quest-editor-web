@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import { userOnlineList } from "..";
+import { users } from "..";
 import { IMessage } from "../type/request";
 import { IResponse } from "../type/response";
 import { ServerWebSocket } from "bun";
@@ -10,7 +10,7 @@ export const login = (
 ): IResponse => {
   const { id } = message;
 
-  const userCandidate = userOnlineList.find(
+  const userCandidate = users.find(
     (item) => item.login === message.login?.login
   );
   if (userCandidate) {
@@ -23,7 +23,7 @@ export const login = (
     };
   }
 
-  const user = userOnlineList.find((item) => item.id === id);
+  const user = users.find((item) => item.id === id);
   if (user && message.login) {
     user.login = message.login.login;
     console.log(`User ${user.login} logged in`);

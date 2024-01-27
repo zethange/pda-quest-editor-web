@@ -1,5 +1,5 @@
 import { ServerWebSocket } from "bun";
-import { sharedStoryList, userOnlineList } from "..";
+import { stories, users } from "..";
 import { IMessage } from "../type/request";
 import { IResponse } from "../type/response";
 
@@ -9,9 +9,7 @@ export const closeStory = (
 ): IResponse => {
   const { id } = message;
 
-  const story = sharedStoryList.find(
-    (story) => story.id == message.closeStory?.id
-  );
+  const story = stories.find((story) => story.id == message.closeStory?.id);
 
   if (!story) {
     return {
@@ -33,7 +31,7 @@ export const closeStory = (
     };
   }
 
-  sharedStoryList.splice(sharedStoryList.indexOf(story), 1);
+  stories.splice(stories.indexOf(story), 1);
   console.log(`Story ${story.id} closed`);
 
   return {
