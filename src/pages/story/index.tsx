@@ -6,17 +6,20 @@ import store from "store2";
 import CustomHead from "@/components/Global/CustomHead";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import NavBar from "@/components/UI/NavBar/NavBar";
+import { useCoopStore } from "@/entities/cooperative";
 import { useStoryService, useStoryStore } from "@/entities/story";
 import {
-  ImportFromServerButton,
   CreateStoryButton,
   EditStoryDrawer,
   ImportFromFolderButton,
+  ImportFromServerButton,
   ImportFromZipButton,
 } from "@/features/story";
+import { COOPERATIVE_URL } from "@/shared/config";
 import { StoryType } from "@/shared/lib/type/story.type";
 import { storyType } from "@/store/types/story/storyType";
 import ExportToServerDrawer from "@/widgets/export-to-server-drawer/ui/export-to-server-drawer";
+import { SharedStoriesDrawer } from "@/widgets/shared-stories-drawer";
 import {
   Box,
   Button,
@@ -31,9 +34,6 @@ import {
 } from "@chakra-ui/react";
 import { BiEdit } from "react-icons/bi";
 import { BsCloudUpload } from "react-icons/bs";
-import { useCoopStore } from "@/entities/cooperative";
-import { COOPERATIVE_URL } from "@/shared/config";
-import { SharedStoriesDrawer } from "@/widgets/shared-stories-drawer";
 
 interface Author {
   id: string;
@@ -81,7 +81,6 @@ const Home = () => {
   } = useDisclosure();
 
   const { ws, setWs, setId, handleMessage } = useCoopStore();
-  const toast = useToast();
 
   useEffect(() => {
     logger.info("Editor loaded");
