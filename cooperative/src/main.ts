@@ -1,62 +1,12 @@
-import { Elysia } from "elysia";
-import { StoryType } from "./type/story.type";
-import { ChapterType } from "./type/chapter.type";
+import { registerWs } from "./ws";
 
-const app = new Elysia();
-
-interface IUserOnline {
-  login: string;
-  id: string;
-}
-
-const userOnlineList: IUserOnline[] = [];
-const sharedChapterList: {
-  id: number;
-  password: string;
-  story: StoryType;
-  chapters: ChapterType[];
-}[] = [];
-
-interface IMessage {
-  type: "LOGIN" | "SHARE_STORY";
-  login?: {
-    login: string;
-  };
-}
-
-app.get(
-  "/",
-  () =>
-    "Cooperative server for PDA Quest Editor (https://github.com/zethange/pda-quest-editor-web)"
-);
-app.ws("/ws", {
-  open: (ws) => {
-    userOnlineList.push({
-      login: "",
-      id: ws.id,
-    });
-  },
-  message: (ws, message) => {
-    const msg = message as IMessage;
-    switch (msg.type) {
-      case "LOGIN":
-        userOnlineList.find((user) => user.id === ws.id)!.login =
-          msg.login!.login;
-        break;
+Bun.serve({
+  fetch(req, server) {
+    if (server.upgrade(req)) {
+      return; // do not return a Response
     }
-  },
-  close: (ws, code, reason) => {
-    const index = userOnlineList.findIndex((item) => item.id === ws.id);
-    userOnlineList.splice(index, 1);
-  },
+    return new Response("Upgrade failed :(", { status: 500 });
+  }, // upgrade logic
+  websocket: registerWs(),
+  port: 3000,
 });
-
-setInterval(() => {
-  console.log("Users: ", userOnlineList);
-}, 1000);
-
-app.listen(3000);
-
-console.log(
-  `🦊 Cooperative server is running at ${app.server?.hostname}:${app.server?.port}`
-);

@@ -30,6 +30,9 @@ import {
 } from "@chakra-ui/react";
 import { BiEdit } from "react-icons/bi";
 import { BsCloudUpload } from "react-icons/bs";
+import { useCoopStore } from "@/entities/cooperative";
+import { COOPERATIVE_URL } from "@/shared/config";
+import { SharedStoriesDrawer } from "@/widgets/shared-stories-drawer";
 
 interface Author {
   id: string;
@@ -76,6 +79,8 @@ const Home = () => {
     onClose: exportDrawerOnClose,
   } = useDisclosure();
 
+  const { ws, setWs, setId, handleMessage } = useCoopStore();
+
   useEffect(() => {
     logger.info("Editor loaded");
 
@@ -92,6 +97,39 @@ const Home = () => {
     setStories(stories);
   }, []);
 
+  useEffect(() => {
+    if (ws) return;
+
+    const wss = new WebSocket(COOPERATIVE_URL);
+    wss.onopen = () => {
+      logger.info("Connected to server");
+    };
+    wss.onclose = () => {
+      logger.info("Disconnected from server");
+    };
+    wss.onmessage = (e: MessageEvent<string>) => {
+      const data = JSON.parse(e.data);
+
+      if (data.type === "CONNECT") {
+        logger.info("Granted id:", data.connect.id);
+        setId(data.connect.id);
+      }
+      logger.info("Message received:", data);
+    };
+
+    handleMessage((e) => {
+      const data = JSON.parse((e as MessageEvent).data);
+
+      if (data.type === "CONNECT") {
+        logger.info("Granted id:", data.connect.id);
+        setId(data.connect.id);
+      }
+      logger.info("Message received:", data);
+    });
+
+    setWs(wss);
+  }, []);
+
   return (
     <>
       <CustomHead title="Редактор историй" />
@@ -102,6 +140,7 @@ const Home = () => {
           <ImportFromZipButton />
           <Spacer />
           <ChangeThemeButton rounded={true} />
+          <SharedStoriesDrawer />
           <ImportFromServerButton />
           <Button
             fontWeight="normal"

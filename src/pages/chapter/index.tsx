@@ -3,8 +3,9 @@ import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import NavBar from "@/components/UI/NavBar/NavBar";
 import { useChapterStore } from "@/entities/chapter";
 import { CreateChapterButton, ImportFromJsonButton } from "@/features/chapter";
-import { ChapterType } from "@/shared/lib/type/chapter.type";
+import { ShareStoryButton } from "@/features/cooperative";
 import { logger } from "@/shared/lib/logger.ts";
+import { ChapterType } from "@/shared/lib/type/chapter.type";
 import { ChapterCard } from "@/widgets/chapter-card";
 import { Box, Button, SimpleGrid, Spacer, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
@@ -14,6 +15,7 @@ const Story = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { chapters, setChapters, setStoryId, storyId } = useChapterStore();
+
   useEffect(() => {
     setStoryId(Number(id as string));
 
@@ -43,6 +45,7 @@ const Story = () => {
           <CreateChapterButton />
           <ImportFromJsonButton />
           <Spacer />
+          <ShareStoryButton />
           <ChangeThemeButton rounded={true} />
         </NavBar>
         <Box h="calc(100vh - 73px)" px={2} overflowY="auto">

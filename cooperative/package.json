@@ -7,9 +7,10 @@
     "build": "bun build ./src/main.ts  --target=bun --minify --outdir=build"
   },
   "dependencies": {
-    "elysia": "latest"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.8",
     "bun-types": "latest"
   },
   "module": "src/main.ts"
