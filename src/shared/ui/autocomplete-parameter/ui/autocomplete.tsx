@@ -1,4 +1,4 @@
-import { Box, Button, Input, Portal, VStack } from "@chakra-ui/react";
+import { Box, Button, Input, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 
 export interface AutocompleteInputProps {
