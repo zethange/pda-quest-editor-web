@@ -2,7 +2,9 @@
   "name": "cooperative",
   "version": "1.0.50",
   "scripts": {
-    "dev": "bun run --watch src/main.ts"
+    "start": "bun ./build/main.js",
+    "dev": "bun run --watch src/main.ts",
+    "build": "bun build ./src/main.ts  --target=bun --minify --outdir=build"
   },
   "dependencies": {
     "elysia": "latest"
