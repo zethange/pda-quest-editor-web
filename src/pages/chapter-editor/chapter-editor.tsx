@@ -3,7 +3,7 @@ import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import { useChapterEditorStore } from "@/entities/chapter-editor";
 import { ChapterType } from "@/shared/lib/type/chapter.type";
 import { Box, Button, useColorMode } from "@chakra-ui/react";
-import { MouseEvent, useEffect } from "react";
+import { MouseEvent, useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import ReactFlow, {
@@ -19,6 +19,7 @@ import { useStageStore } from "@/entities/stage-editor";
 import { AddStageButton } from "@/features/chapter-editor";
 import { StageEditor } from "@/features/stage-editor";
 import { logger } from "@/shared/lib/logger";
+import { StageNode } from "@/shared/ui";
 
 const ChapterEditor = () => {
   const {
@@ -62,8 +63,11 @@ const ChapterEditor = () => {
 
       const node: Node = {
         id: "stage_" + String(stage.id),
+        type: "stage",
         data: {
           label: title,
+          text: stage.texts?.[0].text || "",
+          stage,
         },
         position: {
           x: stage.editor?.x || 0,
@@ -98,8 +102,10 @@ const ChapterEditor = () => {
       points.forEach((point) => {
         const node: Node = {
           id: "point_" + String(point.id),
+          type: "stage",
           data: {
             label: `Переход с карты ${key}`,
+            point,
             mapId: key,
           },
           position: {
@@ -188,6 +194,8 @@ const ChapterEditor = () => {
     }, 0);
   };
 
+  const nodeTypes = useMemo(() => ({ stage: StageNode }), []);
+
   return (
     <>
       <CustomHead title={`Редактирование главы ${chapterId}`} />
@@ -224,6 +232,7 @@ const ChapterEditor = () => {
           <StageEditor />
 
           <ReactFlow
+            nodeTypes={nodeTypes}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
