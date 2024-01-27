@@ -24,7 +24,11 @@ interface IMessage {
   };
 }
 
-app.get("/", () => "Cooperative server for PDA Quest Editor");
+app.get(
+  "/",
+  () =>
+    "Cooperative server for PDA Quest Editor (https://github.com/zethange/pda-quest-editor-web)"
+);
 app.ws("/ws", {
   open: (ws) => {
     userOnlineList.push({
