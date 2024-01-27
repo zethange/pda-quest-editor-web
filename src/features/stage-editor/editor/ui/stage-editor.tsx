@@ -1,6 +1,6 @@
 import { useChapterEditorStore } from "@/entities/chapter-editor";
 import { useStageStore } from "@/entities/stage-editor";
-import { StageTextType } from "@/shared/lib/type/chapter.type";
+import { ChapterType, StageTextType } from "@/shared/lib/type/chapter.type";
 import { ConditionEditorModal } from "@/widgets/condition-editor";
 import {
   AspectRatio,
@@ -17,15 +17,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FC } from "react";
-import { MdDelete, MdLockOutline } from "react-icons/md";
+import { MdDelete, MdLock, MdLockOutline } from "react-icons/md";
 import { v4 } from "uuid";
 
 const StageEditor: FC = () => {
-  const { chapter, storyId } = useChapterEditorStore();
+  const { chapter, storyId, setChapter } = useChapterEditorStore();
   const { stage, editStage, reset } = useStageStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  if (!stage?.id) return null;
 
   const getUrlImage = (link?: string) => {
     if (!link) return "/no_background.jpg";
@@ -36,6 +34,7 @@ const StageEditor: FC = () => {
     }
   };
 
+  if (!stage) return <Box></Box>;
   return (
     <Box
       position="absolute"
@@ -149,7 +148,13 @@ const StageEditor: FC = () => {
                       size="sm"
                       onClick={onOpen}
                     >
-                      <Icon as={MdLockOutline} />
+                      <Icon
+                        as={
+                          JSON.stringify(text.condition) == "{}"
+                            ? MdLockOutline
+                            : MdLock
+                        }
+                      />
                     </IconButton>
                   </VStack>
                   <ConditionEditorModal
@@ -178,7 +183,22 @@ const StageEditor: FC = () => {
           >
             Закрыть
           </Button>
-          <Button size="sm" colorScheme="teal">
+          <Button
+            size="sm"
+            colorScheme="teal"
+            onClick={() => {
+              const copyChapter = JSON.parse(
+                JSON.stringify(chapter)
+              ) as ChapterType;
+              const index = copyChapter.stages.findIndex(
+                (s) => s.id === stage.id
+              );
+              copyChapter.stages[index] = stage;
+              setChapter(copyChapter);
+
+              reset();
+            }}
+          >
             Сохранить
           </Button>
         </Flex>

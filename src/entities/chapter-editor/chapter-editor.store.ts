@@ -21,6 +21,9 @@ export interface IChapterEditorStore {
   chapter: ChapterType | undefined;
   setChapter: (chapter: ChapterType) => void;
 
+  parameters: string[];
+  setParameters: (parameters: string[]) => void;
+
   //
   nodes: Node[];
   setNodes: (nodes: Node[]) => void;
@@ -40,6 +43,8 @@ export const useChapterEditorStore = create<IChapterEditorStore>(
 
     chapter: undefined,
     setChapter: (chapter: ChapterType) => set({ chapter }),
+    parameters: [],
+    setParameters: (parameters: string[]) => set({ parameters }),
 
     nodes: [],
     setNodes: (nodes: Node[]) => set({ nodes }),

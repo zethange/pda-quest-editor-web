@@ -1,0 +1,14 @@
+{
+  "name": "cooperative",
+  "version": "1.0.50",
+  "scripts": {
+    "dev": "bun run --watch src/main.ts"
+  },
+  "dependencies": {
+    "elysia": "latest"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "module": "src/main.ts"
+}

@@ -33,6 +33,8 @@ const ChapterEditor = () => {
     setEdges,
     onEdgesChange,
     onNodesChange,
+
+    setParameters,
   } = useChapterEditorStore();
 
   const { setStage, setPoint, reset } = useStageStore();
@@ -53,6 +55,7 @@ const ChapterEditor = () => {
   useEffect(() => {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
+    const parameters: string[] = [];
 
     chapter?.stages.forEach((stage) => {
       const title = stage.title || "Переход на карту";
@@ -79,6 +82,15 @@ const ChapterEditor = () => {
           target: `stage_${transfer.stage}`,
         };
         edges.push(edge);
+      });
+
+      Object.entries(stage.actions || {}).forEach(([operator, values]) => {
+        if (operator !== "add") return;
+
+        values.forEach((value) => {
+          if (parameters.includes(value)) return;
+          parameters.push(value);
+        });
       });
     });
 
@@ -110,6 +122,14 @@ const ChapterEditor = () => {
     });
     setNodes(nodes);
     setEdges(edges);
+
+    logger.info("Finded parameters:", parameters);
+    // set parameters
+    setParameters(parameters);
+    localStorage.setItem(
+      `story_${storyId}_chapter_${chapterId}`,
+      JSON.stringify(chapter)
+    );
   }, [chapter]);
 
   const onNodeDragStop = () => {
@@ -145,7 +165,6 @@ const ChapterEditor = () => {
   };
 
   const onNodeClick = (_: MouseEvent, node: Node) => {
-    logger.info("onNodeClick", node.id);
     reset();
 
     setTimeout(() => {
@@ -154,7 +173,8 @@ const ChapterEditor = () => {
         case "stage":
           const targetStage = chapter?.stages.find((stage) => stage.id === +id);
           if (!targetStage) break;
-          setStage(targetStage);
+          logger.info("Select stage:", targetStage);
+          setStage(JSON.parse(JSON.stringify(targetStage)));
 
           break;
         case "point":
@@ -162,7 +182,7 @@ const ChapterEditor = () => {
           const point = chapter?.points![map].find((point) => point.id === id);
           if (!point) break;
 
-          setPoint(point);
+          setPoint(JSON.parse(JSON.stringify(point)));
           break;
       }
     }, 0);

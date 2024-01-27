@@ -1,22 +1,22 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
   Box,
-  Text,
+  Button,
   Flex,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
-  Input,
   Spacer,
+  Text,
 } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 import { MdAdd, MdRemove } from "react-icons/md";
+import { ParameterCondition } from "./parameter-condition";
 
 export interface ConditionEditorModalProps {
   isOpen: boolean;
@@ -25,6 +25,12 @@ export interface ConditionEditorModalProps {
     [key: string]: string[];
   };
   setCondition: (condition: { [key: string]: string[] }) => void;
+}
+
+export interface ConditionProps {
+  value: string[];
+  onDelete: () => void;
+  onChange: (newValue: string[]) => void;
 }
 
 export const keys: {
@@ -38,6 +44,17 @@ export const keys: {
   "<=": "<=",
   ">": ">",
   ">=": ">=",
+};
+
+export const operatorType: {
+  [key: string]: FC<ConditionProps>;
+} = {
+  has: ParameterCondition,
+  "!has": ParameterCondition,
+  // "=": ParameterCondition,
+  // "!=": ParameterCondition,
+  // "<": ParameterCondition,
+  // "<=": ParameterCondition,
 };
 
 const ConditionEditorModal: FC<ConditionEditorModalProps> = ({
@@ -149,34 +166,25 @@ const ConditionEditorModal: FC<ConditionEditorModalProps> = ({
                 />
               </Flex>
               <Box>
-                {values.map((value, index) => (
-                  <Flex
-                    key={index}
-                    justifyContent="space-between"
-                    mt={1}
-                    gap={2}
-                  >
-                    <Input
-                      value={value}
-                      bg="white"
-                      onChange={({ target: { value } }) => {
-                        const copyCond = JSON.parse(JSON.stringify(cond));
-                        copyCond[operator][index] = value;
-                        setCond(copyCond);
-                      }}
-                    />
-                    <IconButton
-                      icon={<MdRemove />}
-                      aria-label="Удалить значение"
-                      colorScheme="teal"
-                      onClick={() => {
+                {values.map((value, index: number) => {
+                  const Editor = operatorType[operator];
+                  return (
+                    <Editor
+                      key={index}
+                      value={[value]}
+                      onDelete={() => {
                         const copyCond = JSON.parse(JSON.stringify(cond));
                         copyCond[operator].splice(index, 1);
                         setCond(copyCond);
                       }}
+                      onChange={(value) => {
+                        const copyCond = JSON.parse(JSON.stringify(cond));
+                        copyCond[operator][index] = value[0];
+                        setCond(copyCond);
+                      }}
                     />
-                  </Flex>
-                ))}
+                  );
+                })}
               </Box>
             </Box>
           ))}
