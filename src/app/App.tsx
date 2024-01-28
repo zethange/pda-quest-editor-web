@@ -8,13 +8,16 @@ import { ChakraProvider, theme } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import store from "@/store/reduxStore";
 import AuthProvider from "@/components/Providers/AuthProvider";
+import WithCoop from "./providers/with-coop/with-coop";
 
 const App: React.FC = () => {
   return (
     <ChakraProvider theme={theme}>
       <Provider store={store}>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <WithCoop>
+            <RouterProvider router={router} />
+          </WithCoop>
         </AuthProvider>
       </Provider>
     </ChakraProvider>

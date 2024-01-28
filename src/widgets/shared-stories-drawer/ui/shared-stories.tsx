@@ -1,6 +1,4 @@
 import { useCoopStore } from "@/entities/cooperative";
-import { useStoryStore } from "@/entities/story";
-import { ChapterType } from "@/shared/lib/type/chapter.type";
 import {
   Button,
   Card,
@@ -13,7 +11,6 @@ import {
   DrawerOverlay,
   Text,
   VStack,
-  useToast,
 } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 
@@ -22,9 +19,7 @@ export interface SharedStoriesDrawerProps {}
 const SharedStoriesDrawer: FC<SharedStoriesDrawerProps> = ({}) => {
   const { ws, id, handleMessage, setSharedStories, sharedStories } =
     useCoopStore();
-  const { stories, setStories } = useStoryStore();
   const [isOpen, setIsOpen] = useState(false);
-  const toast = useToast();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,31 +36,6 @@ const SharedStoriesDrawer: FC<SharedStoriesDrawerProps> = ({}) => {
 
       if (data.type === "SHARED_STORIES") {
         setSharedStories(data.sharedStories);
-      } else if (data.type === "ANSWER_REQUEST") {
-        if (data.answerRequest.allow) {
-          toast({
-            status: "success",
-            title: "Доступ предоставлен",
-            description: `Админ предоставил доступ к истории '${data.answerRequest.story.title}'`,
-          });
-          const { chapters, story } = data.answerRequest;
-          localStorage.setItem(`story_${story.id}_info`, JSON.stringify(story));
-          chapters.forEach((chapter: ChapterType) => {
-            localStorage.setItem(
-              `story_${story.id}_chapter_${chapter.id}`,
-              JSON.stringify(chapter)
-            );
-          });
-
-          setStories([...stories, story]);
-        } else {
-          toast({
-            status: "error",
-            title: "Доступ не предоставлен",
-            description: `Админ отказался предоставить доступ к истории`,
-          });
-        }
-        setIsOpen(false);
       }
     });
   }, []);

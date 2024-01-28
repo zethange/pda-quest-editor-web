@@ -6,7 +6,6 @@ import store from "store2";
 import CustomHead from "@/components/Global/CustomHead";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import NavBar from "@/components/UI/NavBar/NavBar";
-import { useCoopStore } from "@/entities/cooperative";
 import { useStoryService, useStoryStore } from "@/entities/story";
 import {
   CreateStoryButton,
@@ -15,7 +14,6 @@ import {
   ImportFromServerButton,
   ImportFromZipButton,
 } from "@/features/story";
-import { COOPERATIVE_URL } from "@/shared/config";
 import { StoryType } from "@/shared/lib/type/story.type";
 import { storyType } from "@/store/types/story/storyType";
 import ExportToServerDrawer from "@/widgets/export-to-server-drawer/ui/export-to-server-drawer";
@@ -79,8 +77,6 @@ const Home = () => {
     onClose: exportDrawerOnClose,
   } = useDisclosure();
 
-  const { ws, setWs, setId, handleMessage } = useCoopStore();
-
   useEffect(() => {
     logger.info("Editor loaded");
 
@@ -95,39 +91,6 @@ const Home = () => {
     stories.sort((a, b) => a.id - b.id);
     logger.success("Get stories from localStorage:", stories);
     setStories(stories);
-  }, []);
-
-  useEffect(() => {
-    if (ws) return;
-
-    const wss = new WebSocket(COOPERATIVE_URL);
-    wss.onopen = () => {
-      logger.info("Connected to server");
-    };
-    wss.onclose = () => {
-      logger.info("Disconnected from server");
-    };
-    wss.onmessage = (e: MessageEvent<string>) => {
-      const data = JSON.parse(e.data);
-
-      if (data.type === "CONNECT") {
-        logger.info("Granted id:", data.connect.id);
-        setId(data.connect.id);
-      }
-      logger.info("Message received:", data);
-    };
-
-    handleMessage((e) => {
-      const data = JSON.parse((e as MessageEvent).data);
-
-      if (data.type === "CONNECT") {
-        logger.info("Granted id:", data.connect.id);
-        setId(data.connect.id);
-      }
-      logger.info("Message received:", data);
-    });
-
-    setWs(wss);
   }, []);
 
   return (

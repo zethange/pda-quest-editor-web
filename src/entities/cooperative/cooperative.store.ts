@@ -11,9 +11,8 @@ export interface ICoopStore {
   ws: WebSocket | undefined;
   setWs: (ws: WebSocket) => void;
 
-  onMessage: ((e: Event) => any) | null;
-
   handlers: ((e: Event) => void)[];
+  send: (data: object) => void;
   handleMessage: (callback: (e: Event) => void) => void;
 
   sharedStories: ISharedStory[];
@@ -27,7 +26,7 @@ export const useCoopStore = create<ICoopStore>((set, get) => ({
   ws: undefined,
   setWs: (ws: WebSocket) => {
     ws.onmessage = (e: Event) => {
-      get().onMessage?.(e);
+      get().handlers.forEach((h) => h(e));
     };
 
     return set({ ws });
@@ -35,8 +34,11 @@ export const useCoopStore = create<ICoopStore>((set, get) => ({
 
   // LMAO
   handlers: [],
-  onMessage: (e: Event) => {
-    get().handlers.forEach((h) => h(e));
+  send: (data) => {
+    const ws = get().ws;
+    if (ws) {
+      ws.send(JSON.stringify({ ...data, id: get().id }));
+    }
   },
   handleMessage: (callback: (e: Event) => void) => {
     return set((state) => ({
