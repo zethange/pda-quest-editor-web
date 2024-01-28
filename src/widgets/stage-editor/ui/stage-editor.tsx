@@ -1,6 +1,6 @@
 import { useChapterEditorStore } from "@/entities/chapter-editor";
 import { useStageStore } from "@/entities/stage-editor";
-import { ChapterType, StageTextType } from "@/shared/lib/type/chapter.type";
+import { ChapterType, StageTextType } from "@/shared/lib/type/chapter.type.ts";
 import { ConditionEditorModal } from "@/widgets/condition-editor";
 import {
   AspectRatio,

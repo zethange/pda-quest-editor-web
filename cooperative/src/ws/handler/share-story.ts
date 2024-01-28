@@ -46,6 +46,7 @@ export const shareStory = (
     chapters: message.shareStory.chapters,
     owner,
     editors: [owner],
+    editorsOnline: [owner],
   };
 
   stories.push(story);

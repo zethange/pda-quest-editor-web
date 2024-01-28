@@ -17,9 +17,9 @@ import "reactflow/dist/style.css";
 
 import { useStageStore } from "@/entities/stage-editor";
 import { AddStageButton } from "@/features/chapter-editor";
-import { StageEditor } from "@/features/stage-editor";
 import { logger } from "@/shared/lib/logger";
 import { StageNode } from "@/shared/ui";
+import {StageEditor} from "@/widgets/stage-editor";
 
 const ChapterEditor = () => {
   const {

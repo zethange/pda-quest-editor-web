@@ -109,7 +109,7 @@ const MapScreen = ({ path, isReady }: Props) => {
                   Удалить
                 </Button>
               </Flex>
-              {/*<Image src={`/static/maps${map?.editor?.url}`} />*/}
+              {/*<Image src={`/static/maps${map?.stage-editor?.url}`} />*/}
             </Card>
           ))}
         </SimpleGrid>

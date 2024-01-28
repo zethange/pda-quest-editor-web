@@ -1,7 +1,7 @@
 import { IConfigExport, useStoryStore } from "@/entities/story";
 import { API_URL } from "@/shared/config";
-import { chapterType } from "@/store/types/story/chapterType";
-import { mapType } from "@/store/types/story/mapType";
+import { chapterType } from "@/store/types/story/chapterType.ts";
+import { mapType } from "@/store/types/story/mapType.ts";
 import { logger } from "@/shared/lib/logger.ts";
 import {
   Button,
@@ -30,7 +30,7 @@ export interface ExportToServerDrawerProps {
   isOpen: boolean;
 }
 
-const ExportToServerDrawer: FC<ExportToServerDrawerProps> = ({
+const ExportToServer: FC<ExportToServerDrawerProps> = ({
   exportDrawerOnClose,
   isOpen,
 }) => {
@@ -232,4 +232,4 @@ const ExportToServerDrawer: FC<ExportToServerDrawerProps> = ({
   );
 };
 
-export default ExportToServerDrawer;
+export default ExportToServer;

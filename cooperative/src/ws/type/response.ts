@@ -18,7 +18,8 @@ export interface IResponse {
     | "REQUEST_ACCESS"
     | "REQUEST_SHARE_STORY"
     | "SHARED_STORIES"
-    | "ANSWER_REQUEST";
+    | "ANSWER_REQUEST"
+    | "UPDATE_EDITORS_ONLINE";
   connect?: {
     id: string;
   };
@@ -48,5 +49,10 @@ export interface IResponse {
     allow?: boolean;
     story?: StoryType;
     chapters?: ChapterType[];
+  };
+  updateEditorsOnline?: {
+    editorsOnline: {
+      login: string;
+    }[];
   };
 }

@@ -7,8 +7,8 @@ import router from "./providers/router/router";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import store from "@/store/reduxStore";
-import AuthProvider from "@/components/Providers/AuthProvider";
 import WithCoop from "./providers/with-coop/with-coop";
+import { AuthProvider } from "./providers/auth/auth-provider";
 
 const App: React.FC = () => {
   return (

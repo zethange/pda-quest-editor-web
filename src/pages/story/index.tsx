@@ -16,8 +16,8 @@ import {
 } from "@/features/story";
 import { StoryType } from "@/shared/lib/type/story.type";
 import { storyType } from "@/store/types/story/storyType";
-import ExportToServerDrawer from "@/widgets/export-to-server-drawer/ui/export-to-server-drawer";
-import { SharedStoriesDrawer } from "@/widgets/shared-stories-drawer";
+import ExportToServer from "@/features/story/export-to-server/ui/export-to-server.tsx";
+import { SharedStoriesDrawer } from "@/features/cooperative/get-shared-stories";
 import {
   Box,
   Button,
@@ -191,7 +191,7 @@ const Home = () => {
           </SimpleGrid>
         </Box>
       </Box>
-      <ExportToServerDrawer
+      <ExportToServer
         exportDrawerOnClose={exportDrawerOnClose}
         isOpen={exportDrawerIsOpen}
       />

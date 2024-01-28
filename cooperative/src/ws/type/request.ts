@@ -8,7 +8,9 @@ export interface IMessage {
     | "CLOSE_STORY"
     | "REQUEST_ACCESS"
     | "GET_SHARED_STORIES"
-    | "ANSWER_REQUEST";
+    | "ANSWER_REQUEST"
+    | "ENTER_STORY"
+    | "EXIT_STORY";
   id: string;
   login?: {
     login: string;
@@ -26,5 +28,11 @@ export interface IMessage {
   answerRequest?: {
     id: string;
     allow: boolean;
+  };
+  enterStory?: {
+    storyId: string;
+  };
+  exitStory?: {
+    storyId: string;
   };
 }

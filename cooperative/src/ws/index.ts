@@ -22,6 +22,7 @@ export interface ISharedStory {
   chapters: ChapterType[];
   owner: IUserOnline;
   editors: IUserOnline[];
+  editorsOnline: IUserOnline[];
 }
 export interface IGrantRequest {
   id: string;
@@ -67,6 +68,7 @@ export const registerWs = (): WebSocketHandler<unknown> => {
           break;
         case "ANSWER_REQUEST":
           resp = answerRequest(msg, ws);
+          break;
         default:
           resp = {
             type: "ERROR",
