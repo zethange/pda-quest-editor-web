@@ -1,9 +1,27 @@
-import { Button, ButtonGroup, IconButton, Tooltip } from "@chakra-ui/react";
-import { useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  ButtonProps,
+  IconButton,
+  Tooltip,
+} from "@chakra-ui/react";
+import { DragEvent, useState } from "react";
 import { IoMdAdd, IoMdRemove } from "react-icons/io";
+
+export type AddStage = "DEFAULT" | "ACTION" | "FROM_MAP" | "TO_MAP";
+
+const buttonProps = {
+  cursor: "grab",
+  draggable: "true",
+} as ButtonProps;
 
 const AddStageButton = () => {
   const [show, setShow] = useState<boolean>(false);
+
+  const onDragStart = (e: DragEvent<HTMLButtonElement>, type: AddStage) => {
+    e.dataTransfer.setData("application/reactflow", type);
+    e.dataTransfer.effectAllowed = "move";
+  };
 
   return (
     <ButtonGroup isAttached variant="outline">
@@ -17,10 +35,34 @@ const AddStageButton = () => {
       </Tooltip>
       {show && (
         <>
-          <Button size="sm">Обычная стадия</Button>
-          <Button size="sm">Стадия с действиями</Button>
-          <Button size="sm">Переход на карту</Button>
-          <Button size="sm">Переход с карты</Button>
+          <Button
+            size="sm"
+            {...buttonProps}
+            onDragStart={(e) => onDragStart(e, "DEFAULT")}
+          >
+            Обычная стадия
+          </Button>
+          <Button
+            size="sm"
+            {...buttonProps}
+            onDragStart={(e) => onDragStart(e, "ACTION")}
+          >
+            Стадия с действиями
+          </Button>
+          <Button
+            size="sm"
+            {...buttonProps}
+            onDragStart={(e) => onDragStart(e, "TO_MAP")}
+          >
+            Переход на карту
+          </Button>
+          <Button
+            size="sm"
+            {...buttonProps}
+            onDragStart={(e) => onDragStart(e, "FROM_MAP")}
+          >
+            Переход с карты
+          </Button>
         </>
       )}
     </ButtonGroup>

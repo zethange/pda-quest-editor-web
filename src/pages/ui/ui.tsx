@@ -1,4 +1,4 @@
-import { AutocompleteInput } from "@/shared/ui";
+import { AutocompleteInput, Window } from "@/shared/ui";
 import { Box, Heading } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -14,6 +14,9 @@ const UI = () => {
           onChange={(value) => setValue(value)}
           parameters={["pomidor", "stalker", "герман иди чекай свободку"]}
         />
+        <Window>
+          <Box>pomidor</Box>
+        </Window>
       </Box>
     </Box>
   );

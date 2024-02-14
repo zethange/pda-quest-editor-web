@@ -20,30 +20,30 @@ export default defineConfig({
       "@": resolve(root),
     },
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (id.includes("framer-motion")) {
-            return "@framer-motion";
-          }
-
-          if (
-            id.includes("react-router-dom") ||
-            id.includes("@remix-run") ||
-            id.includes("react-router")
-          ) {
-            return "@react-router";
-          }
-
-          if (id.includes("jszip")) {
-            return "@jszip";
-          }
-          if (id.includes("reactflow")) {
-            return "@reactflow";
-          }
-        },
-      },
-    },
-  },
+  // build: {
+  //   rollupOptions: {
+  //     output: {
+  //       manualChunks: (id) => {
+  //         if (id.includes("framer-motion")) {
+  //           return "@framer-motion";
+  //         }
+  //
+  //         if (
+  //           id.includes("react-router-dom") ||
+  //           id.includes("@remix-run") ||
+  //           id.includes("react-router")
+  //         ) {
+  //           return "@react-router";
+  //         }
+  //
+  //         if (id.includes("jszip")) {
+  //           return "@jszip";
+  //         }
+  //         if (id.includes("reactflow")) {
+  //           return "@reactflow";
+  //         }
+  //       },
+  //     },
+  //   },
+  // },
 });

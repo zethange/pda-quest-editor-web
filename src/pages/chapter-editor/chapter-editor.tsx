@@ -1,13 +1,14 @@
 import CustomHead from "@/components/Global/CustomHead";
 import ChangeThemeButton from "@/components/UI/NavBar/ChangeThemeButton";
 import { useChapterEditorStore } from "@/entities/chapter-editor";
-import { ChapterType } from "@/shared/lib/type/chapter.type";
+import { ChapterType, StageType } from "@/shared/lib/type/chapter.type";
 import { Box, Button, useColorMode } from "@chakra-ui/react";
-import { MouseEvent, useEffect, useMemo } from "react";
+import { DragEvent, MouseEvent, useCallback, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import ReactFlow, {
   Background,
+  Connection,
   Controls,
   Edge,
   MiniMap,
@@ -16,10 +17,12 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 
 import { useStageStore } from "@/entities/stage-editor";
-import { AddStageButton } from "@/features/chapter-editor";
+import { AddStage, AddStageButton } from "@/features/chapter-editor";
 import { logger } from "@/shared/lib/logger";
 import { StageNode } from "@/shared/ui";
-import {StageEditor} from "@/widgets/stage-editor";
+import { StageEditor } from "@/widgets/stage-editor";
+
+const nodeTypes = { stage: StageNode };
 
 const ChapterEditor = () => {
   const {
@@ -34,6 +37,9 @@ const ChapterEditor = () => {
     setEdges,
     onEdgesChange,
     onNodesChange,
+
+    reactFlowInstance,
+    setReactFlowInstance,
 
     setParameters,
   } = useChapterEditorStore();
@@ -66,7 +72,7 @@ const ChapterEditor = () => {
         type: "stage",
         data: {
           label: title,
-          text: stage.texts?.[0].text || "",
+          text: stage.texts?.length !== 0 ? stage.texts?.[0].text : "",
           stage,
         },
         position: {
@@ -194,7 +200,113 @@ const ChapterEditor = () => {
     }, 0);
   };
 
-  const nodeTypes = useMemo(() => ({ stage: StageNode }), []);
+  const getNewStageId = useCallback(() => {
+    let id = Math.max(...(chapter?.stages || []).map((c) => c.id)) + 1;
+    if (id === -Infinity) id = 0;
+    return id;
+  }, []);
+
+  const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData("application/reactflow");
+      if (typeof type === "undefined" || !type) {
+        return;
+      }
+
+      logger.info("Drop", type);
+
+      const position = reactFlowInstance?.project({
+        x: e.clientX,
+        y: e.clientY,
+      });
+
+      const copyChapter = JSON.parse(JSON.stringify(chapter)) as ChapterType;
+
+      switch (type as AddStage) {
+        case "DEFAULT":
+          const stage: StageType = {
+            id: getNewStageId(),
+            type_stage: 0,
+            title: "Новая стадия",
+            message: "",
+            type_message: 0,
+            background: "",
+            texts: [
+              {
+                text: "Новый текст в новой стадии",
+                condition: {},
+              },
+            ],
+            transfers: [],
+            actions: {},
+
+            editor: position,
+          };
+          copyChapter.stages.push(stage);
+          break;
+        case "TO_MAP":
+          const stageMap: StageType = {
+            id: getNewStageId(),
+            type_stage: 4,
+            data: {
+              map: "0",
+              pos: "500:500",
+            },
+            editor: position,
+          };
+          copyChapter.stages.push(stageMap);
+          break;
+        case "ACTION":
+          const actionStage: StageType = {
+            id: getNewStageId(),
+            type_stage: 5,
+            actions: {},
+            transfers: [],
+            editor: position,
+          };
+          copyChapter.stages.push(actionStage);
+          break;
+        case "FROM_MAP":
+          break;
+      }
+
+      setChapter(copyChapter);
+    },
+    [chapter, reactFlowInstance]
+  );
+
+  const onConnect = useCallback(
+    (e: Connection) => {
+      const copyChapter = JSON.parse(JSON.stringify(chapter)) as ChapterType;
+      const [sourceType, sourceId] = e.source?.split("_") as string[];
+      const [targetType, targetId] = e.target?.split("_") as string[];
+
+      if (targetType !== "stage") return;
+
+      if (sourceType === "stage") {
+        const stage = copyChapter?.stages.find(
+          (stage) => +stage.id === +sourceId
+        );
+        if (!stage) return;
+
+        if (!stage.transfers) stage.transfers = [];
+        stage.transfers.push({
+          stage: +targetId,
+          text: "Новый переход",
+          condition: {},
+        });
+      }
+
+      setChapter(copyChapter);
+    },
+    [chapter]
+  );
 
   return (
     <>
@@ -240,6 +352,10 @@ const ChapterEditor = () => {
             onNodeClick={onNodeClick}
             onNodeDragStop={() => onNodeDragStop()}
             onSelectionDragStop={() => onNodeDragStop()}
+            onConnect={onConnect}
+            onInit={setReactFlowInstance}
+            onDragOver={onDragOver}
+            onDrop={onDrop}
             minZoom={0.2}
             fitView
           >

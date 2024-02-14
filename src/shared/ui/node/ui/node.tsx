@@ -13,7 +13,6 @@ import { Handle, Position } from "reactflow";
 interface IData {
   label: string;
   text: string;
-  onClick: () => void;
   stage?: StageType;
   point?: PointType;
 }
@@ -50,7 +49,7 @@ const Node: FC<{ data: IData; isConnectable: boolean; selected: boolean }> = ({
         position={Position.Top}
         isConnectable={isConnectable}
       />
-      <button onClick={() => data.onClick()}>
+      <button>
         <Flex alignItems="center" justifyContent="center" gap={1}>
           {!data.stage?.background &&
             !data.point &&

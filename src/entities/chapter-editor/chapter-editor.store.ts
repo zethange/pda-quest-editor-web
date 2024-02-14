@@ -9,6 +9,7 @@ import {
   OnNodesChange,
   applyEdgeChanges,
   applyNodeChanges,
+  ReactFlowInstance,
 } from "reactflow";
 
 export interface IChapterEditorStore {
@@ -27,6 +28,8 @@ export interface IChapterEditorStore {
   //
   nodes: Node[];
   setNodes: (nodes: Node[]) => void;
+  reactFlowInstance: ReactFlowInstance | undefined;
+  setReactFlowInstance: (reactFlowInstance: ReactFlowInstance) => void;
 
   edges: Edge[];
   setEdges: (edges: Edge[]) => void;
@@ -50,6 +53,10 @@ export const useChapterEditorStore = create<IChapterEditorStore>(
     setNodes: (nodes: Node[]) => set({ nodes }),
     edges: [],
     setEdges: (edges: Edge[]) => set({ edges }),
+
+    reactFlowInstance: undefined,
+    setReactFlowInstance: (reactFlowInstance: ReactFlowInstance) =>
+      set({ reactFlowInstance }),
 
     onNodesChange: (changes: NodeChange[]) => {
       set({
