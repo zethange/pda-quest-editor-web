@@ -204,7 +204,7 @@ const ChapterEditor = () => {
     let id = Math.max(...(chapter?.stages || []).map((c) => c.id)) + 1;
     if (id === -Infinity) id = 0;
     return id;
-  }, []);
+  }, [chapter]);
 
   const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -227,6 +227,7 @@ const ChapterEditor = () => {
       });
 
       const copyChapter = JSON.parse(JSON.stringify(chapter)) as ChapterType;
+      console.log(copyChapter.stages);
 
       switch (type as AddStage) {
         case "DEFAULT":

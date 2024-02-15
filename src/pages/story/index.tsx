@@ -15,19 +15,18 @@ import {
   ImportFromZipButton,
 } from "@/features/story";
 import { StoryType } from "@/shared/lib/type/story.type";
-import { storyType } from "@/store/types/story/storyType";
 import ExportToServer from "@/features/story/export-to-server/ui/export-to-server.tsx";
 import { SharedStoriesDrawer } from "@/features/cooperative/get-shared-stories";
 import {
   Box,
   Button,
   Card,
-  Heading,
-  Icon,
-  SimpleGrid,
+  Flex,
+  IconButton,
   Spacer,
   Text,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { BiEdit } from "react-icons/bi";
 import { BsCloudUpload } from "react-icons/bs";
@@ -129,66 +128,58 @@ const Home = () => {
           overflowY="auto"
           backgroundColor="blackAlpha.50"
         >
-          <SimpleGrid columns={5} spacing={2} p={2}>
-            {stories.map((story: storyType) => (
+          <VStack gap={2} p={2}>
+            {stories.map((story) => (
               <Card
-                key={story?.id}
-                border="1px"
-                borderColor="gray.200"
-                _dark={{
-                  borderColor: "gray.600",
-                  color: "white",
-                }}
-                shadow="none"
-                display="grid"
+                variant="outline"
+                key={story.id}
+                w="100%"
                 p={2}
+                color="black"
+                _dark={{ color: "white" }}
               >
-                <Link to={"/edit/story/" + story.id}>
-                  <Heading _dark={{ color: "white" }} as="h4" size="md">
-                    {story.title}
-                  </Heading>
-                  <Text fontSize="small" color="gray">
-                    id: {story.id}
-                  </Text>
+                <Flex gap={1}>
                   <Box>
-                    <Text _dark={{ color: "white" }}>
-                      {story.desc.substring(0, 30)}...
-                    </Text>
-                    <Text _dark={{ color: "white" }}>
-                      Уровень доступа: {story.access}
-                    </Text>
+                    <Link to={`/edit/story/${story.id}`}>
+                      <Text fontSize="large">{story.title}</Text>
+                      <Text fontSize="small">ID: {story.id}</Text>
+                      <Text fontSize="smaller">
+                        {story.desc.substring(0, 30)}...
+                      </Text>
+                    </Link>
                   </Box>
-                </Link>
-                <Box display="flex" gap={1}>
+                  <Spacer />
                   <Button
                     fontWeight="normal"
-                    w="100%"
+                    size="sm"
                     onClick={() => downloadStoryAsZip(story.id)}
                   >
                     Скачать
                   </Button>
-                  <Button
+                  <IconButton
+                    size="sm"
+                    aria-label="Загрузить на сервер"
+                    icon={<BsCloudUpload />}
                     onClick={() => {
                       exportDrawerOnOpen();
                       setUploadConfig({
                         id: story.id,
                       });
                     }}
-                  >
-                    <Icon as={BsCloudUpload} />
-                  </Button>
-                  <Button
+                  />
+                  <IconButton
+                    size="sm"
+                    aria-label="Редактировать"
+                    icon={<BiEdit />}
                     onClick={() => {
                       setEditStory(story);
                       editDrawerOnOpen();
                     }}
-                  >
-                    <Icon as={BiEdit} />
-                  </Button>
-                </Box>
+                  />
+                </Flex>
               </Card>
             ))}
-          </SimpleGrid>
+          </VStack>
         </Box>
       </Box>
       <ExportToServer

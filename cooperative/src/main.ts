@@ -1,12 +1,14 @@
-import { registerWs } from "./ws";
+import { Elysia } from "elysia";
+import { registerStoryRoutes } from "./story";
+import { cors } from "@elysiajs/cors";
+import { registerAuthRoutes } from "./auth";
+import { registerEchoRoutes } from "./echo";
 
-Bun.serve({
-  fetch(req, server) {
-    if (server.upgrade(req)) {
-      return; // do not return a Response
-    }
-    return new Response("Upgrade failed :(", { status: 500 });
-  }, // upgrade logic
-  websocket: registerWs(),
-  port: 3000,
-});
+const PORT = process.env.PORT || 3000;
+const app = new Elysia().use(cors());
+app.use(registerStoryRoutes());
+app.use(registerAuthRoutes());
+app.use(registerEchoRoutes());
+
+app.listen(3000);
+console.log(`🚀 Server ready at http://localhost:${PORT}`);

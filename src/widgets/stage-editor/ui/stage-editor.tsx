@@ -1,6 +1,7 @@
 import { useChapterEditorStore } from "@/entities/chapter-editor";
 import { useStageStore } from "@/entities/stage-editor";
 import { ChapterType, StageTextType } from "@/shared/lib/type/chapter.type.ts";
+import { Window } from "@/shared/ui";
 import { ConditionEditorModal } from "@/widgets/condition-editor";
 import {
   AspectRatio,
@@ -36,22 +37,12 @@ const StageEditor: FC = () => {
 
   if (!stage) return <Box></Box>;
   return (
-    <Box
-      position="absolute"
-      bg="white"
-      borderWidth="1px"
-      _dark={{ bg: "gray.700" }}
-      width="400px"
-      height="calc(100% - 12px)"
-      rounded="md"
-      p={2}
-      zIndex={1}
-      right={0}
-      mt={2}
-      mr={2}
-      display="grid"
-      gap={2}
-      alignContent="space-between"
+    <Window
+      width={400}
+      height={850}
+      top={82}
+      onClose={reset}
+      title={`Стадия ${stage.id}`}
     >
       <Box overflowY="auto">
         <Text fontSize="small">
@@ -203,7 +194,7 @@ const StageEditor: FC = () => {
           </Button>
         </Flex>
       </Flex>
-    </Box>
+    </Window>
   );
 };
 

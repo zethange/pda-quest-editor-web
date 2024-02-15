@@ -1,55 +1,59 @@
 import { useChapterStore } from "@/entities/chapter";
 import { useCoopStore } from "@/entities/cooperative";
-import { Button, useToast } from "@chakra-ui/react";
+import { shareStory } from "@/shared/api";
+import { StoryType } from "@/shared/lib/type/story.type";
+import { IconButton, useToast } from "@chakra-ui/react";
 import { useState } from "react";
+import { FiShare2 } from "react-icons/fi";
 
 const ShareStoryButton = () => {
   const { storyId, chapters } = useChapterStore();
-  const { ws, id, handleMessage } = useCoopStore();
   const [shared, setShared] = useState<boolean>(false);
+  const { id } = useCoopStore();
 
   const toast = useToast();
   return (
-    <Button
+    <IconButton
       fontWeight="normal"
       isDisabled={shared}
       onClick={() => {
-        ws!.send(
-          JSON.stringify({
-            id: id,
-            type: "SHARE_STORY",
-            shareStory: {
-              story: JSON.parse(
-                localStorage.getItem(`story_${storyId}_info`) as string
-              ),
+        (async () => {
+          const story = JSON.parse(
+            localStorage.getItem(`story_${storyId}_info`) as string
+          ) as StoryType;
+          const data = await shareStory(
+            {
+              ...story,
               chapters,
             },
-          })
-        );
-        handleMessage((e) => {
-          const data = JSON.parse((e as MessageEvent).data);
-          console.log(data);
-          if (data.type === "SHARE_STORY") {
-            if (data.shareStory.ok) {
-              toast({
-                title: "История расшарена",
-                status: "success",
-                description: `ID истории: ${data.shareStory.id}`,
-              });
-              setShared(true);
-            } else {
-              toast({
-                title: "Произошла ошибка",
-                status: "error",
-                description: data.shareStory.data,
-              });
-            }
+            id
+          );
+
+          setShared(data.ok);
+
+          if (data.ok) {
+            toast({
+              title: "История расшарена",
+              description: data.msg,
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            });
+          } else {
+            toast({
+              title: "Ошибка",
+              description: data.msg,
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            });
           }
-        });
+        })();
       }}
-    >
-      {!shared ? "Share" : "Shared"}
-    </Button>
+      icon={<FiShare2 />}
+      disabled={shared}
+      aria-label="Share"
+    />
   );
 };
 

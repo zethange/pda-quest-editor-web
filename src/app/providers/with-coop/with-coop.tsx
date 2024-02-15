@@ -1,9 +1,7 @@
 import { useCoopStore } from "@/entities/cooperative";
-import { useStoryStore } from "@/entities/story";
 import { AlertOnRequest } from "@/features/cooperative";
+import { login } from "@/shared/api";
 import { COOPERATIVE_URL } from "@/shared/config";
-import { logger } from "@/shared/lib/logger";
-import { ChapterType } from "@/shared/lib/type/chapter.type";
 import { useToast } from "@chakra-ui/react";
 import { FC, ReactNode, useEffect } from "react";
 
@@ -12,54 +10,39 @@ export interface WithCoopProps {
 }
 
 const WithCoop: FC<WithCoopProps> = ({ children }) => {
-  const { ws, handleMessage, setId, setWs } = useCoopStore();
-  const { stories, setStories } = useStoryStore();
+  const { setWs, setId } = useCoopStore();
+  // const { stories, setStories } = useStoryStore();
   const toast = useToast();
 
   useEffect(() => {
-    if (ws) return;
+    // if (ws) return;
 
-    const wss = new WebSocket(COOPERATIVE_URL);
-    wss.onopen = () => {
-      logger.info("Connected to server");
-    };
-    wss.onclose = () => {
-      logger.info("Disconnected from server");
-    };
-    handleMessage((e) => {
-      const data = JSON.parse((e as MessageEvent).data);
+    (async () => {
+      const data = await login(Math.random().toString());
 
-      if (data.type === "CONNECT") {
-        logger.info("Granted id:", data.connect.id);
-        setId(data.connect.id);
-      } else if (data.type === "ANSWER_REQUEST") {
-        if (data.answerRequest.allow) {
-          toast({
-            status: "success",
-            title: "Доступ предоставлен",
-            description: `Админ предоставил доступ к истории '${data.answerRequest.story.title}'`,
-          });
-          const { chapters, story } = data.answerRequest;
-          localStorage.setItem(`story_${story.id}_info`, JSON.stringify(story));
-          chapters.forEach((chapter: ChapterType) => {
-            localStorage.setItem(
-              `story_${story.id}_chapter_${chapter.id}`,
-              JSON.stringify(chapter)
-            );
-          });
-
-          setStories([...stories, story]);
-        } else {
-          toast({
-            status: "error",
-            title: "Доступ не предоставлен",
-            description: `Админ отказался предоставить доступ к истории`,
-          });
-        }
+      if (data.ok) {
+        setId(data.userId);
+      } else {
+        toast({
+          title: "Ошибка",
+          description: data.msg,
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
       }
-      logger.info("Message received:", data);
-    });
-    setWs(wss);
+
+      const ws = new WebSocket(
+        `ws://${COOPERATIVE_URL}/echo?userId=${data.userId}`
+      );
+
+      ws.onopen = () => {};
+      ws.onmessage = (e) => {
+        console.log(e.data);
+      };
+      ws.onclose = () => {};
+      setWs(ws);
+    })();
   }, []);
   return (
     <>

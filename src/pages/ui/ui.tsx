@@ -14,7 +14,7 @@ const UI = () => {
           onChange={(value) => setValue(value)}
           parameters={["pomidor", "stalker", "герман иди чекай свободку"]}
         />
-        <Window>
+        <Window width={350} height={500}>
           <Box>pomidor</Box>
         </Window>
       </Box>

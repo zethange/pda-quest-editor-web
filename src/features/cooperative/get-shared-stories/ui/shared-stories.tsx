@@ -22,6 +22,9 @@ const SharedStoriesDrawer: FC<SharedStoriesDrawerProps> = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    const getData = async () => {};
+    getData().then();
+
     const interval = setInterval(() => {
       if (!isOpen) return;
       ws?.send(JSON.stringify({ id: id, type: "GET_SHARED_STORIES" }));
