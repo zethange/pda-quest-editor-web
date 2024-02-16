@@ -1,5 +1,5 @@
+import { Box, IconButton } from "@chakra-ui/react";
 import { FC, ReactNode, useEffect, useRef, useState } from "react";
-import { Box, Icon, IconButton } from "@chakra-ui/react";
 import { MdClose } from "react-icons/md";
 
 export interface WindowProps {
@@ -32,8 +32,6 @@ const Window: FC<WindowProps> = ({
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       if (isMouseDown) {
-        const rect = okno.current?.getBoundingClientRect()!;
-
         setPosition((old) => ({
           ...old,
           x: event.clientX - 10,
