@@ -30,14 +30,15 @@ const Window: FC<WindowProps> = ({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isResize, setIsResize] = useState(false);
   const okno = useRef<HTMLDivElement>(null);
+  const [startPos, setStartPos] = useState<[number, number]>([0, 0]);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       if (isMouseDown) {
         setPosition((old) => ({
           ...old,
-          x: event.clientX - 10,
-          y: event.clientY - 10 - top,
+          x: event.clientX - startPos[0],
+          y: event.clientY - startPos[1] - top,
         }));
       } else if (isResize) {
         const rect = okno.current?.getBoundingClientRect()!;
@@ -53,7 +54,10 @@ const Window: FC<WindowProps> = ({
     };
   }, [isMouseDown, isResize]);
 
-  const handleMouseDown = (_: MouseEvent) => {
+  const handleMouseDown = (e: MouseEvent) => {
+    const rect = okno.current?.getBoundingClientRect()!;
+    setStartPos([e.clientX - rect.left, e.clientY - rect.top]);
+
     setIsMouseDown(true);
   };
 
