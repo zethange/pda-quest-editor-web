@@ -21,6 +21,7 @@ import { AddStage, AddStageButton } from "@/features/chapter-editor";
 import { logger } from "@/shared/lib/logger";
 import { StageNode } from "@/shared/ui";
 import { StageEditor } from "@/widgets/stage-editor";
+import { TransferStageEditor } from "@/widgets/transfer-stage";
 
 const nodeTypes = { stage: StageNode };
 
@@ -44,7 +45,7 @@ const ChapterEditor = () => {
     setParameters,
   } = useChapterEditorStore();
 
-  const { setStage, setPoint, reset } = useStageStore();
+  const { setStage, setPoint, reset, setTransfer } = useStageStore();
   const { storyId, chapterId } = useParams();
   const { colorMode } = useColorMode();
 
@@ -73,7 +74,8 @@ const ChapterEditor = () => {
         data: {
           label: title,
           text: stage.texts?.length !== 0 ? stage.texts?.[0].text : "",
-          stage,
+          stage: stage,
+          type: stage.type_stage === 4 ? "OUTPUT" : undefined,
         },
         position: {
           x: stage.editor?.x || 0,
@@ -113,6 +115,7 @@ const ChapterEditor = () => {
             label: `Переход с карты ${key}`,
             point,
             mapId: key,
+            type: "INPUT",
           },
           position: {
             x: point.editor?.x || 0,
@@ -309,6 +312,28 @@ const ChapterEditor = () => {
     [chapter]
   );
 
+  const onEdgeClick = (_: MouseEvent, e: Edge) => {
+    const [sourceType, sourceId] = e.source.split("_");
+    const targetId = +e.target.split("_")[1];
+
+    if (sourceType === "stage") {
+      const stage = chapter?.stages.find((s) => +s.id === +sourceId);
+      if (!stage || !stage.transfers) return;
+      const transfer = stage.transfers.find((t) => +t.stage === +targetId);
+      if (!transfer) return;
+      const stageIndex = chapter?.stages.indexOf(stage);
+      if (stageIndex === undefined || stageIndex === -1) return;
+      logger.info(`Open transfer in stage ${stageIndex}`);
+
+      setTransfer({
+        stageIndex,
+        transferIndex: stage.transfers.indexOf(transfer),
+        transfer: transfer,
+      });
+    } else {
+    }
+  };
+
   return (
     <>
       <CustomHead title={`Редактирование главы ${chapterId}`} />
@@ -343,6 +368,7 @@ const ChapterEditor = () => {
 
         <Box height="calc(100vh - 82px)" width="100vw" position="relative">
           <StageEditor />
+          <TransferStageEditor />
 
           <ReactFlow
             nodeTypes={nodeTypes}
@@ -351,6 +377,7 @@ const ChapterEditor = () => {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeClick={onNodeClick}
+            onEdgeClick={onEdgeClick}
             onNodeDragStop={() => onNodeDragStop()}
             onSelectionDragStop={() => onNodeDragStop()}
             onConnect={onConnect}

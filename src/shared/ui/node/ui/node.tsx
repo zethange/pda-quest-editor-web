@@ -15,6 +15,7 @@ interface IData {
   text: string;
   stage?: StageType;
   point?: PointType;
+  type?: undefined | "INPUT" | "OUTPUT";
 }
 
 const Node: FC<{ data: IData; isConnectable: boolean; selected: boolean }> = ({
@@ -44,11 +45,13 @@ const Node: FC<{ data: IData; isConnectable: boolean; selected: boolean }> = ({
       border={"1px solid"}
       borderColor="gray.800"
     >
-      <Handle
-        type="target"
-        position={Position.Top}
-        isConnectable={isConnectable}
-      />
+      {(!data.type || data.type === "OUTPUT") && (
+        <Handle
+          type="target"
+          position={Position.Top}
+          isConnectable={isConnectable}
+        />
+      )}
       <button>
         <Flex alignItems="center" justifyContent="center" gap={1}>
           {!data.stage?.background &&
@@ -141,11 +144,13 @@ const Node: FC<{ data: IData; isConnectable: boolean; selected: boolean }> = ({
           </Box>
         )}
       </button>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        isConnectable={isConnectable}
-      />
+      {(!data.type || data.type === "INPUT") && (
+        <Handle
+          type="source"
+          position={Position.Bottom}
+          isConnectable={isConnectable}
+        />
+      )}
     </Box>
   );
 };

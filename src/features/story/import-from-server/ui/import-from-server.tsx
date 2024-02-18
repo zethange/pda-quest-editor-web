@@ -37,7 +37,7 @@ const ImportFromServerButton = () => {
   });
 
   useEffect(() => {
-    const getServerStories = async () => {
+    (async () => {
       const url = `https://${config.server}/pdanetwork/api/v1/admin/quest/storage/all?size=100&type=${config.type}&archive=${config.archive}`;
       const res = await fetch(url, {
         headers: {
@@ -45,10 +45,11 @@ const ImportFromServerButton = () => {
         },
       });
       const data = await res.json();
-      setServerStories(data.content);
-    };
+      if (!data.content) return;
 
-    getServerStories();
+      setServerStories(data.content);
+    })();
+
     return () => setServerStories([]);
   }, [config]);
 

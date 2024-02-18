@@ -3,12 +3,13 @@ import { FC, ReactNode, useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
 
 export interface WindowProps {
-  children: ReactNode;
+  children?: ReactNode;
   width?: number;
   height?: number;
   top?: number;
   title?: string;
   onClose?: () => void;
+  showCloseButton?: boolean;
 }
 
 const Window: FC<WindowProps> = ({
@@ -18,6 +19,7 @@ const Window: FC<WindowProps> = ({
   top = 0,
   title = "···",
   onClose = () => {},
+  showCloseButton = true,
 }) => {
   const [position, setPosition] = useState({
     x: window.innerWidth - width - 10,
@@ -69,7 +71,7 @@ const Window: FC<WindowProps> = ({
         resize: "both",
       }}
       width={position.width}
-      height={position.height}
+      minHeight={position.height}
       rounded="md"
       zIndex={100}
       bg="white"
@@ -85,20 +87,25 @@ const Window: FC<WindowProps> = ({
       <Box
         display="flex"
         justifyContent="space-between"
-        p={1}
+        p={1.5}
         alignItems="center"
         userSelect="none"
         onMouseDown={handleMouseDown as any}
         onMouseUp={handleMouseUp}
       >
         <Box fontWeight="bold">{title}</Box>
-        <IconButton
-          icon={<MdClose />}
-          aria-label="Закрыть окно"
-          size="xs"
-          onClick={onClose}
-        />
+        {showCloseButton ? (
+          <IconButton
+            icon={<MdClose />}
+            aria-label="Закрыть окно"
+            size="xs"
+            onClick={onClose}
+          />
+        ) : (
+          <Box></Box>
+        )}
       </Box>
+      <hr />
       <Box p={1}>{children}</Box>
       <Box
         position="absolute"

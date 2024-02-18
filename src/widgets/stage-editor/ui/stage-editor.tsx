@@ -12,12 +12,13 @@ import {
   IconButton,
   Image,
   Input,
+  Portal,
   Text,
   Textarea,
-  VStack,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { MdDelete, MdLock, MdLockOutline } from "react-icons/md";
 import { v4 } from "uuid";
 
@@ -35,21 +36,22 @@ const StageEditor: FC = () => {
     }
   };
 
+  const size = useMemo(() => {
+    return {
+      width: stage?.type_stage === 4 ? 800 : 400,
+      height: 850,
+    };
+  }, [stage]);
+
   if (!stage) return <Box></Box>;
   return (
-    <Window
-      width={400}
-      height={850}
-      top={82}
-      onClose={reset}
-      title={`Стадия ${stage.id}`}
-    >
+    <Window {...size} top={82} onClose={reset} title={`Стадия ${stage.id}`}>
       <Box overflowY="auto">
         <Text fontSize="small">
           {storyId}:{chapter?.id}:{stage.id}
         </Text>
-        <Box display="grid" gap={2}>
-          {stage.type_stage == 0 && (
+        <Box display="grid" gap={1}>
+          {stage.type_stage === 0 && (
             <Box position="relative">
               <Input
                 position="absolute"
@@ -79,92 +81,101 @@ const StageEditor: FC = () => {
               </AspectRatio>
             </Box>
           )}
-          <Box
-            p={2}
-            my={2}
-            backgroundColor="gray.100"
-            _dark={{
-              backgroundColor: "gray.700",
-            }}
-            borderRadius="10px"
-          >
-            <Flex mb={1} alignItems="center">
-              <b>Тексты:</b>
-              <Box m="auto" />
-              <Button
-                size="xs"
-                colorScheme="teal"
-                onClick={() => {
-                  editStage({
-                    texts: [
-                      ...(stage.texts || []),
-                      { text: "", condition: {}, _id: v4() },
-                    ],
-                  });
-                }}
-              >
-                +
-              </Button>
-            </Flex>
-            <Box display="grid" gap={1}>
-              {stage.texts?.map((text: StageTextType, index: number) => (
-                <Box display="flex" gap={1} key={index}>
-                  <Textarea
-                    placeholder="Текст..."
-                    height="120px"
-                    resize="vertical"
-                    defaultValue={text.text}
-                    backgroundColor="white"
-                    _dark={{
-                      backgroundColor: "gray.900",
-                    }}
-                    onChange={({ target: { value } }) => {
-                      stage.texts![index].text = value;
-                    }}
-                  />
-                  <VStack gap={1}>
-                    <IconButton
-                      aria-label="Удалить текст"
-                      size="sm"
-                      onClick={() => {
-                        editStage({
-                          texts: stage.texts?.filter((_, i) => i !== index),
-                        });
+          {stage.type_stage === 0 && (
+            <Box
+              p={2}
+              my={2}
+              backgroundColor="gray.100"
+              _dark={{
+                backgroundColor: "gray.700",
+              }}
+              borderRadius="10px"
+            >
+              <Flex mb={1} alignItems="center">
+                <b>Тексты:</b>
+                <Box m="auto" />
+                <Button
+                  size="xs"
+                  colorScheme="teal"
+                  onClick={() => {
+                    editStage({
+                      texts: [
+                        ...(stage.texts || []),
+                        { text: "", condition: {}, _id: v4() },
+                      ],
+                    });
+                  }}
+                >
+                  +
+                </Button>
+              </Flex>
+              <Box display="grid" gap={1}>
+                {stage.texts?.map((text: StageTextType, index: number) => (
+                  <Box display="flex" gap={1} key={index}>
+                    <Textarea
+                      placeholder="Текст..."
+                      height="120px"
+                      resize="vertical"
+                      defaultValue={text.text}
+                      backgroundColor="white"
+                      _dark={{
+                        backgroundColor: "gray.900",
                       }}
-                    >
-                      <Icon as={MdDelete} />
-                    </IconButton>
-                    <IconButton
-                      aria-label="Редактировать условие"
-                      size="sm"
-                      onClick={onOpen}
-                    >
-                      <Icon
-                        as={
-                          JSON.stringify(text.condition) == "{}"
-                            ? MdLockOutline
-                            : MdLock
-                        }
-                      />
-                    </IconButton>
-                  </VStack>
-                  <ConditionEditorModal
-                    isOpen={isOpen}
-                    onClose={onClose}
-                    condition={text.condition}
-                    setCondition={(condition) => {
-                      console.log(condition);
-                      stage.texts![index].condition = condition;
-                    }}
-                  />
-                </Box>
-              ))}
+                      onChange={({ target: { value } }) => {
+                        stage.texts![index].text = value;
+                      }}
+                    />
+                    <VStack gap={1}>
+                      <IconButton
+                        aria-label="Удалить текст"
+                        size="sm"
+                        onClick={() => {
+                          editStage({
+                            texts: stage.texts?.filter((_, i) => i !== index),
+                          });
+                        }}
+                      >
+                        <Icon as={MdDelete} />
+                      </IconButton>
+                      <IconButton
+                        aria-label="Редактировать условие"
+                        size="sm"
+                        onClick={onOpen}
+                      >
+                        <Icon
+                          as={
+                            JSON.stringify(text.condition) == "{}"
+                              ? MdLockOutline
+                              : MdLock
+                          }
+                        />
+                      </IconButton>
+                    </VStack>
+                    {isOpen && (
+                      <Portal>
+                        <Window
+                          title="Редактирование условий"
+                          showCloseButton={false}
+                        >
+                          <ConditionEditorModal
+                            onClose={onClose}
+                            condition={text.condition}
+                            setCondition={(condition) => {
+                              console.log(condition);
+                              stage.texts![index].condition = condition;
+                            }}
+                          />
+                        </Window>
+                      </Portal>
+                    )}
+                  </Box>
+                ))}
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
       </Box>
-      <Flex justifyContent="space-between">
-        <Box></Box>
+      <Flex justifyContent="end" alignSelf="end">
         <Flex gap={1}>
           <Button
             size="sm"
@@ -184,6 +195,8 @@ const StageEditor: FC = () => {
               const index = copyChapter.stages.findIndex(
                 (s) => s.id === stage.id
               );
+              stage.transfers = copyChapter.stages[index].transfers;
+
               copyChapter.stages[index] = stage;
               setChapter(copyChapter);
 
