@@ -9,7 +9,7 @@ import { stageType } from "@/store/types/story/chapterType";
 import { editActions } from "@/store/reduxStore/slices/stageSlice";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { useRouter } from "next/router";
+import { useParams } from "react-router-dom";
 import ConfirmationModal from "@/components/UI/ConfirmationModal";
 import { logger } from "@/store/utils/logger";
 
@@ -33,7 +33,7 @@ const EditStagePopover = ({
     (state) => state.stage.transitionFromMap
   );
   const settings = useAppSelector((state) => state.user.settings);
-  const { query } = useRouter();
+  const { storyId, chapterId } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   logger.info("stage:", storeStage);
   logger.info("transitionFromMap:", transitionFromMap);
@@ -59,7 +59,7 @@ const EditStagePopover = ({
         <Box h="calc(100vh - 147px)" overflowY="scroll">
           {stageTypes(storeStage?.type_stage) === "default" && (
             <Text color="gray.500">
-              id: {storeStage.id}, {query.chapter![0]}:{query.chapter![1]}:
+              id: {storeStage.id}, {storyId}:{chapterId}:
               {storeStage.id}
             </Text>
           )}

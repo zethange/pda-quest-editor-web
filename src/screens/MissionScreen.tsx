@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import EditMissionSideBar from "@/components/Chapter/EditMission/EditMissionSideBar";
-import { useRouter } from "next/router";
+import { useParams } from "react-router-dom";
 import { Store } from "redux";
 import { RootState } from "@/store/reduxStore";
 import { useStore } from "react-redux";
@@ -12,12 +12,12 @@ import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 interface Props {}
 
 const MissionScreen: React.FC<Props> = () => {
-  const { query } = useRouter();
+  const { storyId, chapterId } = useParams();
   const storeRedux: Store<RootState> = useStore();
   const isOpen = useAppSelector((state) => state.mission.targetMission.isOpen);
 
   const handleUpdate = () => {
-    const key = `story_${query.chapter![0]}_chapter_${query.chapter![1]}`;
+    const key = `story_${storyId}_chapter_${chapterId}`;
     const sourceChapter = store.get(key);
     store.set(key, {
       ...sourceChapter,

@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { pointType } from "@/store/types/story/mapType";
 import { deletePoint, editPoint } from "@/store/reduxStore/slices/mapSlice";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 
@@ -103,10 +103,7 @@ const UpdatePointModal = ({
                 <FormLabel>
                   Стадия:{" "}
                   <Link
-                    href={{
-                      pathname: `/edit/chapter/${storyId}/${updatedPoint?.data?.chapter}`,
-                      query: { stage: updatedPoint?.data?.stage },
-                    }}
+                    to={`/edit/chapter/${storyId}/${updatedPoint?.data?.chapter}?stage=${updatedPoint?.data?.stage || ""}`}
                   >
                     <Button size="xs">Перейти</Button>
                   </Link>

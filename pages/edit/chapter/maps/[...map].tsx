@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useParams } from "react-router-dom";
 import store from "store2";
 import { chapterType } from "@/store/types/story/chapterType";
 import {
@@ -43,20 +43,21 @@ import { logger } from "@/store/utils/logger";
 
 // /edit/chapter/maps/{storyId}/{chapterId}/{mapId}
 const MapChapter = () => {
-  const { query, isReady } = useRouter();
+  const { storyId, chapterId, mapId } = useParams();
+  const mapRoute = [storyId, chapterId, mapId].filter(Boolean) as string[];
   const dispatch = useAppDispatch();
   const storeRedux: Store<RootState> = useStore();
   const map = useAppSelector((state) => state.map.map);
   const [chapter, setChapter] = useState<chapterType>();
 
   useEffect(() => {
-    if (query.map) {
+    if (mapRoute.length === 3) {
       const chapter = store.get(
-        `story_${query.map![0]}_chapter_${query.map![1]}`
+        `story_${mapRoute[0]}_chapter_${mapRoute[1]}`
       ) as chapterType;
       setChapter(chapter);
       const map = store.get(
-        `story_${query.map![0]}_maps_${query.map![2]}`
+        `story_${mapRoute[0]}_maps_${mapRoute[2]}`
       ) as mapType;
       if (!chapter.points) {
         chapter.points = {};
@@ -65,12 +66,12 @@ const MapChapter = () => {
         chapter.spawns = {};
       }
       const points =
-        chapter.points![String(query.map![2]) as `${number}`]! || [];
+        chapter.points![String(mapRoute[2]) as `${number}`]! || [];
       const spawns =
-        chapter.spawns![String(query.map![2]) as `${number}`]! || [];
+        chapter.spawns![String(mapRoute[2]) as `${number}`]! || [];
       dispatch(setMap({ ...map, points, spawns }));
     }
-  }, [isReady, dispatch, query.map]);
+  }, [dispatch, mapRoute]);
 
   // опции
   const [showQuestPoints, setShowQuestPoints] = useState(true);
@@ -99,10 +100,10 @@ const MapChapter = () => {
   const updateMap = () => {
     const map = storeRedux.getState().map.map;
     const copyChapter = JSON.parse(JSON.stringify(chapter));
-    copyChapter.points[`${query.map![2]}`] = map.points;
-    copyChapter.spawns[`${query.map![2]}`] = map.spawns;
+    copyChapter.points[`${mapRoute[2]}`] = map.points;
+    copyChapter.spawns[`${mapRoute[2]}`] = map.spawns;
     logger.info(copyChapter);
-    store.set(`story_${query.map![0]}_chapter_${query.map![1]}`, copyChapter);
+    store.set(`story_${mapRoute[0]}_chapter_${mapRoute[1]}`, copyChapter);
   };
 
   const [diffHeight, setDiffHeight] = useState<number>(0);
@@ -193,7 +194,7 @@ const MapChapter = () => {
     }
   };
 
-  if (query.map) {
+  if (mapRoute.length === 3) {
     return (
       <>
         <CustomHead title={`Редактирование карты ${map?.title}`} />
@@ -357,7 +358,7 @@ const MapChapter = () => {
           <UpdatePointModal
             showEditPointModal={showEditPointModal}
             setShowEditPointModal={setShowEditPointModal}
-            storyId={query.map![0]}
+            storyId={mapRoute[0]}
             updateMap={updateMap}
           />
           <EditSpawnModal

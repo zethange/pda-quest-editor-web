@@ -8,22 +8,10 @@ import {
 import { stageType } from "@/store/types/story/chapterType";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
 import useFetching from "@/hooks/useFetching";
-import dynamic from "next/dynamic";
+import Stage from "../../Global/Konva/Stage";
+import KonvaMap from "../../Global/Konva/KonvaMap";
+import KonvaImage from "@/components/Global/Konva/KonvaImage";
 import { logger } from "@/store/utils/logger";
-
-const Stage = dynamic(() => import("../../Global/Konva/Stage"), {
-  ssr: false,
-});
-const KonvaMap = dynamic(() => import("../../Global/Konva/KonvaMap"), {
-  ssr: false,
-});
-
-const KonvaImage = dynamic(
-  () => import("@/components/Global/Konva/KonvaImage"),
-  {
-    ssr: false,
-  }
-);
 
 interface IProps {
   data:

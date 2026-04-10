@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import store from "store2";
 import { mapApiType, mapType } from "@/store/types/story/mapType";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { createMap } from "@/store/tools/createMap";
 import useFetching from "@/hooks/useFetching";
 import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
@@ -101,9 +101,7 @@ const MapScreen = ({ path, isReady }: Props) => {
             >
               {map?.title}
               <Flex gap={2}>
-                <Link
-                  href={`/edit/chapter/maps/${path[0]}/${path[1]}/${map.id}`}
-                >
+                <Link to={`/edit/chapter/maps/${path[0]}/${path[1]}/${map.id}`}>
                   <Button colorScheme="teal">Редактировать</Button>
                 </Link>
                 <Button colorScheme="red" onClick={() => deleteMap(+map.id)}>

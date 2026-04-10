@@ -18,7 +18,7 @@ import MapScreen from "./MapScreen";
 import MissionScreen from "@/screens/MissionScreen";
 import { FallbackRender } from "@/components/Global/ErrorHandler";
 import { ErrorBoundary } from "react-error-boundary";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "react-router-dom";
 import SettingsDrawer from "@/components/Chapter/SettingsDrawer";
 import { logger } from "@/store/utils/logger";
 
@@ -31,7 +31,7 @@ const StageScreen = ({
   query: querystring.ParsedUrlQuery;
   isReady: boolean;
 }) => {
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<number>(0);
   const { onClose, isOpen, onOpen } = useDisclosure();
 

@@ -1,7 +1,7 @@
 import { FC } from "react";
-import Image from "next/image";
 import {
   Button,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,

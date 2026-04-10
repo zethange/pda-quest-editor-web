@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CustomHead from "@/components/Global/CustomHead";
-import Link from "next/link";
-import Image from "next/image";
+import { Link } from "react-router-dom";
+import { Image } from "@chakra-ui/react";
 
 const Page404 = () => {
   const [date, setDate] = useState("blue");
@@ -31,7 +31,7 @@ const Page404 = () => {
           <h2>404 - страница не найдена.</h2>
           <p>Иди своей дорогой, сталкер.</p>
           <p>{date}</p>
-          <Link href={"/"}>Вернуться на главную</Link>
+          <Link to={"/"}>Вернуться на главную</Link>
         </div>
       </main>
     </React.Fragment>

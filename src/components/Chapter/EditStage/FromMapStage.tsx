@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import { Box, Input, Select } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
@@ -19,23 +17,11 @@ import useFetching from "@/hooks/useFetching";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { imagePoint } from "@/store/utils/map/typePoint";
 import EditActionsRefactor from "./EditActions/EditActionsRefactor";
-import dynamic from "next/dynamic";
-
-const Stage = dynamic(() => import("../../Global/Konva/Stage"), {
-  ssr: false,
-});
-const KonvaMap = dynamic(() => import("../../Global/Konva/KonvaMap"), {
-  ssr: false,
-});
+import Stage from "../../Global/Konva/Stage";
+import KonvaMap from "../../Global/Konva/KonvaMap";
+import KonvaImage from "@/components/Global/Konva/KonvaImage";
 
 import { logger } from "@/store/utils/logger";
-
-const KonvaImage = dynamic(
-  () => import("@/components/Global/Konva/KonvaImage"),
-  {
-    ssr: false,
-  }
-);
 
 export interface IFromMapStage {
   id: number;

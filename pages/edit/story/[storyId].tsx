@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import store from "store2";
-import { useRouter } from "next/router";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import CustomHead from "@/components/Global/CustomHead";
 import NavBar from "@/components/UI/NavBar/NavBar";
@@ -29,8 +29,11 @@ import { createNodeFolder, getNode } from "@/components/Story/node/node";
 import ChapterCard from "@/components/Story/ChapterCard/ChapterCard";
 
 export default function StoryId() {
-  const { query, isReady, push, asPath } = useRouter();
-  const { storyId, path } = query;
+  const navigate = useNavigate();
+  const { storyId } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const path = searchParams.get("path") || "";
 
   const [chapters, setChapters] = useState<chapterType[]>([]);
   const [folders, setFolders] = useState<TreeNode | null>(null);
@@ -54,29 +57,25 @@ export default function StoryId() {
 
   useEffect(() => {
     if (!storyId) return;
-    const { binary, chapters } = initialSetup(storyId as string, "");
+    const { binary, chapters } = initialSetup(storyId, "");
     logger.success("binary tree:", binary);
 
     setFolders(binary);
 
-    const nodes = getNode(
-      query.path ? (query.path as string) : "",
-      binary
-    ).chapters;
+    const nodes = getNode(path, binary).chapters;
 
     setSelectedFolder(nodes);
     setChapters(chapters);
-    setPosition(query.path as string);
-  }, [isReady, storyId]);
+    setPosition(path);
+  }, [storyId, path]);
 
   useEffect(() => {
-    const path = query.path as string;
     if (folders) {
       const node = getNode(path, folders);
       setPosition(path);
       setSelectedFolder(node.chapters || []);
     }
-  }, [query]);
+  }, [folders, path]);
 
   const createFolder = (path: string) => {
     const trees = createNodeFolder(path, folders as TreeNode);
@@ -141,7 +140,7 @@ export default function StoryId() {
       <CustomHead title="Редактирование карт" />
       <main className="main">
         <NavBar>
-          <Button fontWeight="normal" onClick={() => push("/")}>
+          <Button fontWeight="normal" onClick={() => navigate("/")}>
             Назад
           </Button>
           <Button fontWeight="normal" onClick={() => createChapter()}>
@@ -183,7 +182,7 @@ export default function StoryId() {
                 <SimpleGrid columns={5} spacing={2}>
                   {selectedFolder?.map((chapter: chapterType) => (
                     <ChapterCard
-                      storyId={storyId as string}
+                      storyId={storyId || "1"}
                       chapter={chapter}
                       setOpenChapter={setOpenChapter}
                       onOpen={onOpen}
@@ -198,7 +197,7 @@ export default function StoryId() {
         <EditChapterDrawer
           isOpen={isOpen}
           onClose={onClose}
-          storyId={+storyId!}
+          storyId={+(storyId || 0)}
           chapter={openChapter!}
           setChapter={setOpenChapter as any}
           onUpdate={onUpdate}

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useToast } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useLocation } from "react-router-dom";
 
 interface PropsFallback {
   error: Error;
@@ -9,7 +9,7 @@ interface PropsFallback {
 
 const FallbackRender: React.FC<PropsFallback> = ({ error }) => {
   const toast = useToast();
-  const router = useRouter();
+  const location = useLocation();
 
   useEffect(() => {
     fetch("/api/error", {
@@ -18,10 +18,10 @@ const FallbackRender: React.FC<PropsFallback> = ({ error }) => {
         name: error.name,
         message: error.message,
         stack: error.stack,
-        router: { query: router.query, pathname: router.pathname },
+        router: { pathname: location.pathname, search: location.search },
       }),
     });
-  }, [error]);
+  }, [error, location.pathname, location.search]);
 
   toast({
     title: "Произошла ошибка",

@@ -10,7 +10,7 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { BiFolder, BiSolidFolderPlus } from "react-icons/bi";
-import { useRouter } from "next/router";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineArrowDown, AiOutlineArrowRight } from "react-icons/ai";
 import { TreeNode } from "@/store/utils/storyUtils/buildBinaryTree";
 import { VscDebugBreakpointLog } from "react-icons/vsc";
@@ -35,7 +35,8 @@ export const FolderButton: FC<Props> = ({
   createFolder,
 }) => {
   const [isOpenState, setIsOpenState] = useState(isOpen);
-  const { push, asPath } = useRouter();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <Box
@@ -79,7 +80,7 @@ export const FolderButton: FC<Props> = ({
           alignItems="center"
           cursor="pointer"
           onClick={() => {
-            push(asPath.split("?")[0] + "?path=" + node.path);
+            navigate(location.pathname + "?path=" + node.path);
             setIsOpenState(!isOpenState);
           }}
         >

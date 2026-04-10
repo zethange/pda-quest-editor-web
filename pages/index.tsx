@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, ChangeEvent, useRef } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import store from "store2";
 import { downloadZip } from "client-zip";
 
@@ -514,7 +514,7 @@ export default function Home() {
                 p={2}
               >
                 <ErrorBoundary FallbackComponent={FallbackRender}>
-                  <Link href={"/edit/story/" + story?.id}>
+                  <Link to={"/edit/story/" + story?.id}>
                     <Heading _dark={{ color: "white" }} as="h4" size="md">
                       {story?.title}
                     </Heading>

@@ -23,11 +23,6 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     if (response?.status === 401) {
       setShowAuthModal(true);
     } else {
-      fetch("/api/check/auth", {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("token")}`,
-        },
-      }).then((res) => res.text());
       dispatch(setUser(data as IUser));
     }
   }, [isLoading]);

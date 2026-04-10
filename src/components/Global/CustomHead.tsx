@@ -1,12 +1,27 @@
-import Head from "next/head";
+import { useEffect } from "react";
 
 export default function CustomHead({ title }: { title: string }) {
-  return (
-    <Head>
-      <title>{title + " :: PDA Quest Editor"}</title>
-      <meta name="description" content="Редактор главы" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="https://artux.net/favicon-32x32.png" />
-    </Head>
-  );
+  useEffect(() => {
+    document.title = `${title} :: PDA Quest Editor`;
+
+    const description =
+      document.querySelector<HTMLMetaElement>('meta[name="description"]') ??
+      document.createElement("meta");
+    description.name = "description";
+    description.content = "Редактор главы";
+    if (!description.parentNode) {
+      document.head.appendChild(description);
+    }
+
+    const favicon =
+      document.querySelector<HTMLLinkElement>('link[rel="icon"]') ??
+      document.createElement("link");
+    favicon.rel = "icon";
+    favicon.href = "https://artux.net/favicon-32x32.png";
+    if (!favicon.parentNode) {
+      document.head.appendChild(favicon);
+    }
+  }, [title]);
+
+  return null;
 }

@@ -14,9 +14,11 @@
 
 # ide
 /.idea
+/.cursor
 
 # production
 /build
+/dist
 .env
 package-lock.json
 yarn-error.log
