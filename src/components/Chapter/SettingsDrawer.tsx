@@ -15,8 +15,13 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { ISettings, setSettings } from "@/store/reduxStore/slices/userSlice";
+import { useUnit } from "effector-react";
+import {
+  $userSettings,
+  userSettingsChanged,
+  userSettingsLoaded,
+  type UserSettings,
+} from "@/entities/user";
 
 interface Props {
   isOpen: boolean;
@@ -91,19 +96,22 @@ const settingsArray: ISettingSettings[] = [
 ];
 
 const SettingsDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
-  const dispatch = useAppDispatch();
-  const settings = useAppSelector((state) => state.user.settings);
+  const [settings, settingsChanged, settingsLoaded] = useUnit([
+    $userSettings,
+    userSettingsChanged,
+    userSettingsLoaded,
+  ]);
 
   useEffect(() => {
-    let savedSettings = localStorage.getItem("settings");
+    const savedSettings = localStorage.getItem("settings");
     if (savedSettings) {
-      const jsonSavedSettings = JSON.parse(savedSettings) as ISettings;
-      dispatch(setSettings(jsonSavedSettings));
+      const jsonSavedSettings = JSON.parse(savedSettings) as UserSettings;
+      settingsLoaded(jsonSavedSettings);
     }
-  }, []);
+  }, [settingsLoaded]);
 
-  const onChange = (settingsChange: any) => {
-    dispatch(setSettings(settingsChange));
+  const onChange = (settingsChange: Partial<UserSettings>) => {
+    settingsChanged(settingsChange);
     const updatedSettings = {
       ...settings,
       ...settingsChange,
@@ -127,7 +135,7 @@ const SettingsDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
                 {setting.type === "boolean" && (
                   <Switch
                     mt={1}
-                    isChecked={(settings as any)[setting.field]}
+                    isChecked={Boolean(settings[setting.field as keyof UserSettings])}
                     onChange={(e) => {
                       onChange({ [setting.field]: e.target.checked });
                     }}
@@ -138,7 +146,7 @@ const SettingsDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
                   <Input
                     mt={1}
                     w={150}
-                    value={(settings as any)[setting.field]}
+                    value={String(settings[setting.field as keyof UserSettings] ?? "")}
                     onChange={(e) => {
                       onChange({ [setting.field]: e.target.value });
                     }}

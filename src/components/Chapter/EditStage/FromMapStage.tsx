@@ -1,18 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Box, Input, Select } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
 import {
-  mapApiType,
-  mapType,
-  pointType,
+  MapApi as mapApiType,
+  MapEntity as mapType,
+  QuestPoint as pointType,
   typePoints,
-} from "@/store/types/story/mapType";
+} from "@/entities/map";
+import { $userSettings } from "@/entities/user";
 import {
+  $maps,
+  $transitionFromMap,
   editConditionInPoint,
   editMapIdInTransition,
   editPosInTransition,
   editTransition,
-} from "@/store/reduxStore/slices/stageSlice";
+} from "@/features/stage-editor";
 import useFetching from "@/hooks/useFetching";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { imagePoint } from "@/store/utils/map/typePoint";
@@ -20,7 +23,6 @@ import EditActionsRefactor from "./EditActions/EditActionsRefactor";
 import Stage from "../../Global/Konva/Stage";
 import KonvaMap from "../../Global/Konva/KonvaMap";
 import KonvaImage from "@/components/Global/Konva/KonvaImage";
-
 import { logger } from "@/store/utils/logger";
 
 export interface IFromMapStage {
@@ -31,93 +33,86 @@ export interface IFromMapStage {
 }
 
 const FromMapStage = () => {
-  const dispatch = useAppDispatch();
-  const maps: mapType[] = useAppSelector((state) => state.maps.maps);
-  const stage = useAppSelector((state) => state.stage.transitionFromMap);
-  const map: mapType | undefined = maps.find((map: mapType) => {
-    return +map.id === +stage?.mapId;
-  });
-  const settings = useAppSelector((state) => state.user.settings);
-  const [mapBackground, setMapBackground] = useState("");
+  const [
+    maps,
+    stage,
+    settings,
+    editMapIdInTransitionEvent,
+    editPosInTransitionEvent,
+    editTransitionEvent,
+  ] = useUnit([
+    $maps,
+    $transitionFromMap,
+    $userSettings,
+    editMapIdInTransition,
+    editPosInTransition,
+    editTransition,
+  ]);
 
-  const { data } = useFetching<mapApiType[]>(
-    "/pdanetwork/api/v1/admin/quest/maps/all"
-  );
+  const map = maps.find((item: mapType) => +item.id === +(stage?.mapId || 0));
+  const [mapBackground, setMapBackground] = useState("");
+  const { data } = useFetching<mapApiType[]>("/pdanetwork/api/v1/admin/quest/maps/all");
+  const parentMapRef = useRef<HTMLDivElement>(null);
+  const [diffHeight, setDiffHeight] = useState(0);
+  const [diffWidth, setDiffWidth] = useState(0);
+  const [size, setSize] = useState({ height: 0, width: 0 });
 
   useEffect(() => {
     setMapBackground(
-      data?.find((map) => {
-        return +map.id === +stage?.mapId;
-      })?.background as string
+      data?.find((item) => +item.id === +(stage?.mapId || 0))?.background as string
     );
   }, [data, stage?.mapId]);
 
-  const parentMapRef: any = useRef();
-
-  const handleClick = (e: any) => {
+  const handleClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (!parentMapRef.current) return;
     const parentMap = parentMapRef.current.getBoundingClientRect();
+    const target = e.target as HTMLImageElement;
     const position = {
       x: Math.round((e.clientX - parentMap.left) * diffWidth),
-      y: Math.round(
-        e.target.naturalHeight -
-          (e.clientY - parentMap.top) * diffHeight -
-          diffHeight
-      ),
+      y: Math.round(target.naturalHeight - (e.clientY - parentMap.top) * diffHeight - diffHeight),
     };
-    dispatch(editPosInTransition(`${position.x}:${position.y}`));
+    editPosInTransitionEvent(`${position.x}:${position.y}`);
   };
 
-  const [diffHeight, setDiffHeight] = useState<number>(0);
-  const [diffWidth, setDiffWidth] = useState<number>(0);
-
-  const onLoadImage = (target: any) => {
-    if (map) {
-      const getData = async () => {
-        try {
-          const res = await fetch("https://pda-assets.pages.dev/" + map.tmx);
-          const data = await res.text();
-
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(data, "text/xml");
-          const width = +(
-            xmlDoc.getElementsByTagName("layer")[0].attributes as any
-          ).width.nodeValue;
-          const height = +(
-            xmlDoc.getElementsByTagName("layer")[0].attributes as any
-          ).height.nodeValue;
-
-          const diffHeight = (height * 8) / target.target.clientHeight;
-          const diffWidth = (width * 8) / target.target.clientWidth;
-
-          setDiffHeight(diffHeight);
-          setDiffWidth(diffWidth);
-
-          logger.info("Diff width: " + diffWidth);
-          logger.info("Diff height: " + diffHeight);
-        } catch (e) {
-          logger.error(e);
-        }
-      };
-      getData();
-    }
+  const onLoadImage = (target: React.SyntheticEvent<HTMLImageElement>) => {
+    if (!map) return;
+    const getData = async () => {
+      try {
+        const res = await fetch("https://pda-assets.pages.dev/" + map.tmx);
+        const xml = await res.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xml, "text/xml");
+        const layer = xmlDoc.getElementsByTagName("layer")[0];
+        const width = Number(layer.attributes.getNamedItem("width")?.nodeValue ?? 0);
+        const height = Number(layer.attributes.getNamedItem("height")?.nodeValue ?? 0);
+        const diffH = (height * 8) / target.currentTarget.clientHeight;
+        const diffW = (width * 8) / target.currentTarget.clientWidth;
+        setDiffHeight(diffH);
+        setDiffWidth(diffW);
+        logger.info("Diff width: " + diffW);
+        logger.info("Diff height: " + diffH);
+      } catch (error) {
+        logger.error(error);
+      }
+    };
+    void getData();
   };
 
-  //
-  const [size, setSize] = useState({ height: 0, width: 0 });
+  if (!stage) {
+    return null;
+  }
 
   return (
     <Box>
       Переход из локации:
       <Box>
         <Select
-          defaultValue={stage?.mapId}
-          onChange={(event) =>
-            dispatch(editMapIdInTransition(event.target.value))
-          }
+          defaultValue={stage.mapId}
+          onChange={(event) => editMapIdInTransitionEvent(event.target.value as `${number}`)}
         >
-          {maps.map((map: mapType) => (
-            <option value={`${map.id}`} key={map.id}>
-              {map.title}
+          {maps.map((item: mapType) => (
+            <option value={`${item.id}`} key={item.id}>
+              {item.title}
             </option>
           ))}
         </Select>
@@ -126,20 +121,16 @@ const FromMapStage = () => {
         {(settings.alternativeMapViewer && !!mapBackground && (
           <Stage width={430} height={500}>
             <KonvaMap
-              props={{
-                src: "/static/maps/" + mapBackground,
-              }}
-              onClick={(e) => {
-                dispatch(editPosInTransition(`${e.x}:${e.y}`));
-              }}
+              props={{ src: "/static/maps/" + mapBackground }}
+              onClick={(e) => editPosInTransitionEvent(`${e.x}:${e.y}`)}
               set={setSize}
             />
             <KonvaImage
               width={30}
               height={30}
-              x={Number(stage?.point?.pos.split(":")[0]) - 15}
-              y={size.height - Number(stage?.point?.pos.split(":")[1]) - 15}
-              src={`/static/tags/${imagePoint(+stage?.point?.type)}`}
+              x={Number(stage.point?.pos.split(":")[0]) - 15}
+              y={size.height - Number(stage.point?.pos.split(":")[1]) - 15}
+              src={`/static/tags/${imagePoint(+stage.point?.type)}`}
             />
           </Stage>
         )) || (
@@ -147,11 +138,8 @@ const FromMapStage = () => {
             <img
               src={"/static/maps/" + mapBackground}
               draggable={false}
-              onLoad={(target) => onLoadImage(target)}
-              onClick={(e) => {
-                logger.info(e);
-                handleClick(e);
-              }}
+              onLoad={onLoadImage}
+              onClick={handleClick}
               style={{
                 borderRadius: "5px",
                 marginTop: "5px",
@@ -163,34 +151,23 @@ const FromMapStage = () => {
             <img
               style={{
                 position: "absolute",
-                left: `${
-                  Number(stage?.point?.pos.split(":")[0]) / diffWidth - 5
-                }px`,
-                bottom: `${
-                  Number(stage?.point?.pos.split(":")[1]) / diffHeight -
-                  (10 + 5)
-                }px`,
+                left: `${Number(stage.point?.pos.split(":")[0]) / diffWidth - 5}px`,
+                bottom: `${Number(stage.point?.pos.split(":")[1]) / diffHeight - 15}px`,
                 color: "#fff",
                 userSelect: "none",
                 width: "10px",
               }}
               draggable={false}
               alt="Метка"
-              src={`/static/tags/${imagePoint(+stage?.point?.type)}`}
+              src={`/static/tags/${imagePoint(+stage.point?.type)}`}
             />
           </Box>
         )}
       </Box>
       <Select
         mt={2}
-        defaultValue={String(stage?.point?.type)}
-        onChange={(e) => {
-          dispatch(
-            editTransition({
-              type: +e.target.value,
-            })
-          );
-        }}
+        defaultValue={String(stage.point?.type)}
+        onChange={(e) => editTransitionEvent({ type: +e.target.value })}
       >
         {typePoints.map((type) => (
           <option key={type[0]} value={type[0]}>
@@ -202,21 +179,15 @@ const FromMapStage = () => {
         Позиция:{" "}
         <Input
           placeholder="Позиция..."
-          value={stage?.point?.pos}
-          onChange={(e) => dispatch(editPosInTransition(e.target.value))}
+          value={stage.point?.pos}
+          onChange={(e) => editPosInTransitionEvent(e.target.value)}
         />
       </Box>
       <Box>
         Название точки:
         <Input
-          value={stage?.point?.name}
-          onChange={(e) =>
-            dispatch(
-              editTransition({
-                name: e.target.value,
-              })
-            )
-          }
+          value={stage.point?.name}
+          onChange={(e) => editTransitionEvent({ name: e.target.value })}
         />
       </Box>
       <ConditionListRefactor
@@ -224,7 +195,7 @@ const FromMapStage = () => {
         onChangeCondition={editConditionInPoint}
       />
       <EditActionsRefactor
-        actions={stage?.point?.actions!}
+        actions={stage.point?.actions!}
         onChangeActions={editTransition}
         withField
       />

@@ -12,24 +12,31 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { stageText } from "@/store/types/story/chapterType";
-import { useDispatch } from "react-redux";
+import type { StageText as stageText } from "@/entities/chapter";
+import { useUnit } from "effector-react";
 import {
+  $stage,
   deleteTextInStore,
   editStageInStore,
   editTextInStore,
   newTextInStore,
   setTargetText,
-} from "@/store/reduxStore/slices/stageSlice";
+} from "@/features/stage-editor";
 import { MdDelete, MdLockOutline } from "react-icons/md";
 import EditTextCondition from "@/components/Chapter/EditStage/EditTextCondition";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+
 import OverviewBackgroundButton from "@/components/Chapter/EditStage/OverviewBackground/OverviewBackgroundButton";
 
 export default function EditStage() {
   const [openCondition, setOpenCondition] = useState<boolean>(false);
-  const storeStage = useAppSelector((state) => state.stage.stage);
-  const dispatch = useDispatch();
+  const [storeStage, deleteText, editStage, editText, addText, setTargetTextEvent] = useUnit([
+    $stage,
+    deleteTextInStore,
+    editStageInStore,
+    editTextInStore,
+    newTextInStore,
+    setTargetText,
+  ]);
 
   let background: string;
   if (storeStage.background?.includes("http")) {
@@ -74,7 +81,7 @@ export default function EditStage() {
             }}
             defaultValue={storeStage?.title}
             onChange={(event) =>
-              dispatch(editStageInStore({ title: event.target.value }))
+              editStage({ title: event.target.value })
             }
           />
           <InputGroup>
@@ -90,7 +97,7 @@ export default function EditStage() {
                 opacity: "0.75",
               }}
               onChange={(event) => {
-                dispatch(editStageInStore({ background: event.target.value }));
+                editStage({ background: event.target.value });
               }}
             />
             <InputRightElement>
@@ -115,7 +122,7 @@ export default function EditStage() {
             size="xs"
             colorScheme="teal"
             onClick={() => {
-              dispatch(newTextInStore());
+              addText();
             }}
           >
             +
@@ -145,15 +152,13 @@ export default function EditStage() {
                     (event.target as HTMLTextAreaElement).scrollHeight
                   }px`;
 
-                  dispatch(
-                    editTextInStore({
+                  editText({
                       id: index,
                       text: {
                         text: (event.target as HTMLTextAreaElement).value,
                         condition: text.condition,
                       },
-                    })
-                  );
+                    });
                 }}
               />
               <VStack gap={1}>
@@ -161,7 +166,7 @@ export default function EditStage() {
                   aria-label="Удалить текст"
                   size="sm"
                   onClick={() => {
-                    dispatch(deleteTextInStore(index));
+                    deleteText(index);
                   }}
                 >
                   <Icon as={MdDelete} />
@@ -170,12 +175,10 @@ export default function EditStage() {
                   aria-label="Редактировать условие"
                   size="sm"
                   onClick={() => {
-                    dispatch(
-                      setTargetText({
+                    setTargetTextEvent({
                         targetText: text,
                         indexTargetText: index,
-                      })
-                    );
+                      });
                     setOpenCondition(true);
                   }}
                 >
@@ -208,11 +211,9 @@ export default function EditStage() {
             backgroundColor: "gray.900",
           }}
           onChange={(event) => {
-            dispatch(
-              editStageInStore({
-                _comment: event.target.value,
-              })
-            );
+            editStage({
+              _comment: event.target.value,
+            });
           }}
         />
       </Box>
@@ -233,11 +234,9 @@ export default function EditStage() {
             backgroundColor: "gray.900",
           }}
           onChange={(e) => {
-            dispatch(
-              editStageInStore({
-                type_message: +e.target.value,
-              })
-            );
+            editStage({
+              type_message: +e.target.value,
+            });
           }}
         >
           <option value="0">Обычное уведомления</option>
@@ -269,7 +268,7 @@ export default function EditStage() {
             onChange={(event) => {
               event.target.style.height = "inherit";
               event.target.style.height = `${event.target.scrollHeight}px`;
-              dispatch(editStageInStore({ message: event.target.value }));
+              editStage({ message: event.target.value });
             }}
           />
         </Box>

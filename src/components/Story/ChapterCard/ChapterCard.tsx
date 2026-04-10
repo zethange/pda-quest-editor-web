@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Card, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { chapterType } from "@/store/types/story/chapterType";
+import type { Chapter as chapterType } from "@/entities/chapter";
 
 interface Props {
   storyId: string;

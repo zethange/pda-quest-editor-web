@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { Text, Box, Button, Flex, Spacer, IconButton } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
 import CreateMissionModal from "@/components/Chapter/EditMission/Modal/CreateMissionModal";
 import { IoMdTrash } from "react-icons/io";
-import {
-  deleteMission,
-  setTargetMission,
-} from "@/store/reduxStore/slices/missionSlice";
+import { $missions, missionDeleted, missionSelected } from "@/features/mission";
 
 interface Props {
   handleUpdate: () => void;
 }
 
 const EditMissionSideBar: React.FC<Props> = ({ handleUpdate }) => {
-  const missions = useAppSelector((state) => state.mission.missions);
+  const [missions, selectMission, deleteMission] = useUnit([
+    $missions,
+    missionSelected,
+    missionDeleted,
+  ]);
   const [showCreateMissionModal, setShowCreateMissionModal] = useState(false);
-  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -54,12 +54,10 @@ const EditMissionSideBar: React.FC<Props> = ({ handleUpdate }) => {
               me={2}
               w="100%"
               onClick={() => {
-                dispatch(
-                  setTargetMission({
-                    targetMissionIndex: index,
-                    targetMission: mission,
-                  })
-                );
+                selectMission({
+                  targetMissionIndex: index,
+                  targetMission: mission,
+                });
               }}
             >
               {mission.title}
@@ -68,7 +66,7 @@ const EditMissionSideBar: React.FC<Props> = ({ handleUpdate }) => {
               aria-label="Удаление миссии"
               icon={<IoMdTrash />}
               onClick={() => {
-                dispatch(deleteMission(index));
+                deleteMission(index);
                 handleUpdate();
               }}
             />

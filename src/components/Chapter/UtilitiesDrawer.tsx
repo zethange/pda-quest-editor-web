@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { chapterType } from "@/store/types/story/chapterType";
+import type { Chapter as chapterType } from "@/entities/chapter";
 import {
   Button,
   Card,
@@ -32,7 +32,8 @@ import {
   AccordionItem,
   AccordionPanel,
 } from "@chakra-ui/react";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
+import { $parameters } from "@/features/stage-editor";
 import { FindParameter } from "@/store/utils/chapterUtils/FindParameter";
 import { logger } from "@/store/utils/logger";
 import SearchText from "@/components/Chapter/Utilities/SearchText";
@@ -122,7 +123,7 @@ const UtilitiesDrawer: FC<Props> = ({
   const [logs, setLogs] = useState<Log[]>([]);
   const [logsFind, setLogsFind] = useState<Log[]>([]);
   const [nonInfo, setNonInfo] = useState(true);
-  const parameters = useAppSelector((state) => state.stage.parameters);
+  const parameters = useUnit($parameters);
   const [selectedParameter, setSelectedParameter] = useState<string>(
     parameters[0]
   );

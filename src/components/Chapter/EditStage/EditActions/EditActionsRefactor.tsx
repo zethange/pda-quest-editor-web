@@ -15,7 +15,6 @@ import {
   getCommandById,
   typeCommand,
 } from "@/store/utils/commandsAction";
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
 import { logger } from "@/store/utils/logger";
 import Item from "@/components/Chapter/EditStage/EditActions/Item/Item";
 import { itemsContainerType } from "@/store/types/itemsType";
@@ -47,7 +46,6 @@ const EditActionsRefactor: FC<Props> = ({
   withField = false,
 }) => {
   const [showCreateMethod, setShowCreateMethod] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
 
   const [method, setMethod] = useState<string>("add");
 
@@ -79,12 +77,12 @@ const EditActionsRefactor: FC<Props> = ({
       return;
     }
     if (withField) {
-      dispatch(onChangeActions({ actions: actionsList }));
+      onChangeActions({ actions: actionsList });
     }
     if (indexRequired) {
-      dispatch(onChangeActions({ index, actions: actionsList }));
+      onChangeActions({ index, actions: actionsList });
     } else {
-      dispatch(onChangeActions(actionsList));
+      onChangeActions(actionsList);
     }
     if (customOnChange) {
       customOnChange();

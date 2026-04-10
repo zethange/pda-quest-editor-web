@@ -5,10 +5,12 @@ import { stageTypes } from "@/store/utils/stageName";
 import MapStage from "@/components/Chapter/EditStage/MapStage";
 import EditStage from "@/components/Chapter/EditStage/EditStage";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
-import { stageType } from "@/store/types/story/chapterType";
-import { editActions } from "@/store/reduxStore/slices/stageSlice";
+import type { Stage as stageType } from "@/entities/chapter";
+import { editActions } from "@/features/stage-editor";
 import FromMapStage from "@/components/Chapter/EditStage/FromMapStage";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
+import { $stage, $transitionFromMap } from "@/features/stage-editor";
+import { $userSettings } from "@/entities/user";
 import { useParams } from "react-router-dom";
 import ConfirmationModal from "@/components/UI/ConfirmationModal";
 import { logger } from "@/store/utils/logger";
@@ -28,11 +30,11 @@ const EditStagePopover = ({
   setEditableStage,
   updateTransitionFromMap,
 }: IProps) => {
-  const storeStage = useAppSelector((state) => state.stage.stage);
-  const transitionFromMap = useAppSelector(
-    (state) => state.stage.transitionFromMap
-  );
-  const settings = useAppSelector((state) => state.user.settings);
+  const [storeStage, transitionFromMap, settings] = useUnit([
+    $stage,
+    $transitionFromMap,
+    $userSettings,
+  ]);
   const { storyId, chapterId } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   logger.info("stage:", storeStage);

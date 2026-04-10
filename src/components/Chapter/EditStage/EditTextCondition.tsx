@@ -9,9 +9,9 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { editConditionInText } from "@/store/reduxStore/slices/stageSlice";
+import { $stage, $targetText, editConditionInText } from "@/features/stage-editor";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
+import { useUnit } from "effector-react";
 
 interface Props {
   openCondition: boolean;
@@ -22,8 +22,7 @@ const EditTextCondition: React.FC<Props> = ({
   openCondition,
   setOpenCondition,
 }) => {
-  const targetText = useAppSelector((state) => state.stage.targetText);
-  const storeStage = useAppSelector((state) => state.stage.stage);
+  const [targetText, storeStage] = useUnit([$targetText, $stage]);
 
   return (
     <Modal

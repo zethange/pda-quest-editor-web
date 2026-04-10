@@ -40,10 +40,10 @@ import { newStage } from "@/store/tools/createTools";
 import CustomHead from "@/components/Global/CustomHead";
 import NodeStage from "@/components/Global/StageNode";
 import {
-  chapterType,
-  stageTransfer,
-  stageType,
-} from "@/store/types/story/chapterType";
+  type Chapter as chapterType,
+  type StageTransfer as stageTransfer,
+  type Stage as stageType,
+} from "@/entities/chapter";
 import TransferEdge from "@/components/Global/TransferEdge";
 import { stageName } from "@/store/utils/stageName";
 import ToStage from "@/components/Chapter/ToStage";
@@ -51,26 +51,31 @@ import CreateStage from "@/components/Chapter/CreateStage";
 import CreateTransferModal from "@/components/Chapter/EditStage/CreateTransfer/CreateTransferModal";
 import EditTransferModal from "@/components/Chapter/EditStage/EditTransferModal";
 import EditStagePopover from "@/components/Chapter/EditStage/EditStagePopover";
-import { useStore } from "react-redux";
 import {
+  $maps,
+  $stage,
+  $transitionFromMap,
   setParameters,
   setConnection,
   setStageToStore as setStageToRedux,
   setTargetTransfer,
   setTransition,
   setTransitionToStore,
-} from "@/store/reduxStore/slices/stageSlice";
-import { setMaps } from "@/store/reduxStore/slices/chapterMapsSlice";
-import { Store } from "redux";
-import reduxStore, { RootState } from "@/store/reduxStore";
-import { mapType, pointType, typePoints } from "@/store/types/story/mapType";
+  setMaps,
+} from "@/features/stage-editor";
+import {
+  type MapEntity as mapType,
+  type QuestPoint as pointType,
+  typePoints,
+} from "@/entities/map";
 import EditTransitionModal from "@/components/Chapter/EditStage/EditTransitionModal";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { setMissions } from "@/store/reduxStore/slices/missionSlice";
+import { useUnit } from "effector-react";
+import { $userSettings } from "@/entities/user";
 import MovingStagesModal from "@/components/Chapter/MovingStagesModal";
 import UtilitiesDrawer from "@/components/Chapter/UtilitiesDrawer";
 import { nodeCreateType } from "@/store/types/nodeCreateType";
 import { logger } from "@/store/utils/logger";
+import { missionsLoaded } from "@/features/mission";
 
 export default function StageEditScreen({
   path,
@@ -82,11 +87,33 @@ export default function StageEditScreen({
   isReady: boolean;
 }) {
   const [chapter, setChapter] = useState<chapterType>();
-  const maps: mapType[] = useAppSelector((state) => state.maps.maps);
 
   const { colorMode } = useColorMode();
-  const dispatch = useAppDispatch();
-  const storeStage = useAppSelector((state) => state.stage.stage);
+  const [
+    maps,
+    storeStage,
+    transitionFromMapState,
+    settings,
+    setMapsEvent,
+    setParametersEvent,
+    setStageEvent,
+    setTransitionEvent,
+    setTransitionToStoreEvent,
+    setTargetTransferEvent,
+    setConnectionEvent,
+  ] = useUnit([
+    $maps,
+    $stage,
+    $transitionFromMap,
+    $userSettings,
+    setMaps,
+    setParameters,
+    setStageToRedux,
+    setTransition,
+    setTransitionToStore,
+    setTargetTransfer,
+    setConnection,
+  ]);
 
   const [nodes, setNodes] = useState<Node[]>();
   const [edges, setEdges] = useState<Edge[]>();
@@ -105,14 +132,12 @@ export default function StageEditScreen({
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>();
-  const storeRedux: Store<RootState> = useStore();
 
   const {
     onOpen: onOpenLogs,
     isOpen: isOpenLogs,
     onClose: onCloseLogs,
   } = useDisclosure();
-  const settings = useAppSelector((state) => state.user.settings);
 
   // вытаскивание карт
   useEffect(() => {
@@ -121,7 +146,7 @@ export default function StageEditScreen({
         key.includes(`story_${path[0]}_map`) &&
         !maps.find((map) => +map.id === +value.id)
       ) {
-        dispatch(setMaps(value));
+        setMapsEvent(value);
       }
       if (key === "stopLoop") return false;
     });
@@ -275,11 +300,11 @@ export default function StageEditScreen({
             ? stageName(stage.type_stage, stage, maps)
             : stage.title,
           onClick: () => {
-            dispatch(setStageToRedux(null));
-            dispatch(setTransition(null));
+            setStageEvent(null);
+            setTransitionEvent(null);
             setEditableStage(undefined);
             setTimeout(() => {
-              dispatch(setStageToRedux(stage));
+              setStageEvent(stage);
               setEditableStage(stage);
             }, 0);
           },
@@ -350,11 +375,11 @@ export default function StageEditScreen({
                 ": " +
                 point.name,
               onClick: () => {
-                dispatch(setTransition(null));
-                dispatch(setStageToRedux(null));
+                setTransitionEvent(null);
+                setStageEvent(null);
                 setEditableStage(undefined);
                 setTimeout(() => {
-                  dispatch(setTransition(stage));
+                  setTransitionEvent(stage);
                   setEditableStage(stage as unknown as stageType);
                 }, 0);
               },
@@ -399,7 +424,7 @@ export default function StageEditScreen({
         });
       }
     });
-    dispatch(setParameters(parameters));
+    setParametersEvent(parameters);
     if (chapter?.mission) {
       if (!Array.isArray(chapter.mission)) {
         chapter.missions = [];
@@ -411,7 +436,7 @@ export default function StageEditScreen({
     }
 
     if (chapter?.missions) {
-      dispatch(setMissions(chapter.missions));
+      missionsLoaded(chapter.missions);
     }
 
     setNodes(initialNodes);
@@ -495,12 +520,10 @@ export default function StageEditScreen({
             return +stage.id === +edge.target;
           }
         );
-        dispatch(
-          setTransitionToStore({
-            point: targetPoint,
-            targetStage,
-          })
-        );
+        setTransitionToStoreEvent({
+          point: targetPoint,
+          targetStage,
+        });
         setShowModalEditTransition(true);
       } else {
         const stage = chapterFromLocalStorage.stages.find(
@@ -513,13 +536,11 @@ export default function StageEditScreen({
 
         const indexTargetTransfer = stage?.transfers?.indexOf(targetTransfer);
         setShowModalEditTransfer(true);
-        dispatch(
-          setTargetTransfer({
-            targetTransfer,
-            indexTargetTransfer,
-          })
-        );
-        dispatch(setStageToRedux({ ...stage }));
+        setTargetTransferEvent({
+          targetTransfer,
+          indexTargetTransfer,
+        });
+        setStageEvent({ ...stage });
       }
     },
     [chapter]
@@ -531,7 +552,8 @@ export default function StageEditScreen({
     );
     if (!chapterFromLocalStorage) return;
 
-    const transitionFromMap = storeRedux.getState().stage.transitionFromMap;
+    const transitionFromMap = transitionFromMapState;
+    if (!transitionFromMap) return;
 
     // если нужной карты нет в главе создаем
     if (
@@ -585,7 +607,7 @@ export default function StageEditScreen({
     );
 
     const updatedStageWithUpdatedPosition = {
-      ...storeRedux.getState().stage.stage,
+      ...(storeStage ?? {}),
       editor: {
         x:
           chapterFromLocalStorage.stages?.find(
@@ -611,21 +633,21 @@ export default function StageEditScreen({
     const chapterFromLocalStorage =
       path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
     const points = chapterFromLocalStorage.points[
-      storeRedux.getState().stage.transitionFromMap.mapId
+      transitionFromMapState?.mapId as `${number}`
     ] as pointType[];
 
     const pointIndex = points.findIndex((point) => {
       return (
         point.id ===
-        storeRedux.getState().stage.transitionFromMap.originalPoint.point.id
+        transitionFromMapState?.originalPoint.point.id
       );
     });
 
     points.splice(pointIndex, 1);
     updateChapter(chapterFromLocalStorage, true);
-    dispatch(setStageToRedux(null));
+    setStageEvent(null);
     setEditableStage(undefined);
-    dispatch(setTransition(null));
+    setTransitionEvent(null);
   };
 
   const onConnect = useCallback(
@@ -655,12 +677,10 @@ export default function StageEditScreen({
           true
         );
       } else {
-        dispatch(
-          setConnection({
-            source: connection.source,
-            target: connection.target,
-          })
-        );
+        setConnectionEvent({
+          source: connection.source,
+          target: connection.target,
+        });
 
         const stageIndex = chapterFromLocalStorage.stages.indexOf(
           chapterFromLocalStorage.stages.find(
@@ -676,8 +696,8 @@ export default function StageEditScreen({
 
         setIsOpenCreateTransfer(true);
 
-        dispatch(setTargetTransfer(targetTransfer));
-        dispatch(setStageToRedux(chapterFromLocalStorage?.stages[stageIndex]));
+        setTargetTransferEvent(targetTransfer);
+        setStageEvent(chapterFromLocalStorage?.stages[stageIndex]);
       }
     },
     [setEdges, chapter]
@@ -694,7 +714,7 @@ export default function StageEditScreen({
     chapterFromLocalStorage?.stages?.splice(indexStage, 1);
 
     chapterFromLocalStorage && updateChapter(chapterFromLocalStorage, true);
-    dispatch(setStageToRedux(null));
+    setStageEvent(null);
     setEditableStage(undefined);
   }
 
@@ -785,8 +805,8 @@ export default function StageEditScreen({
               true,
               position,
               {
-                title: reduxStore.getState().stage.stage?.title || "",
-                background: reduxStore.getState().stage.stage?.background || "",
+                title: storeStage?.title || "",
+                background: storeStage?.background || "",
               }
             ),
           ],
@@ -799,7 +819,7 @@ export default function StageEditScreen({
 
   useEffect(() => {
     if (query.stage) {
-      dispatch(setStageToRedux(null));
+      setStageEvent(null);
       setEditableStage(undefined);
 
       const chapterFromLocalStorage =
@@ -810,11 +830,11 @@ export default function StageEditScreen({
           return stage.id === +query.stage;
         }
       });
-      dispatch(setTransition(null));
-      dispatch(setStageToRedux(null));
+      setTransitionEvent(null);
+      setStageEvent(null);
       setEditableStage(undefined);
       setTimeout(() => {
-        dispatch(setStageToRedux(stage));
+        setStageEvent(stage);
         setEditableStage(stage);
 
         focusOnTheNode(query.stage as string);
@@ -824,10 +844,10 @@ export default function StageEditScreen({
 
   useKeydown(["Delete"], (event) => {
     if (event.ctrlKey) {
-      if (storeRedux.getState().stage.stage) {
-        deleteStage(storeRedux.getState().stage.stage.id);
+      if (storeStage) {
+        deleteStage(storeStage.id);
       }
-      if (storeRedux.getState().stage.transitionFromMap) {
+      if (transitionFromMapState) {
         deletePoint();
       }
     }

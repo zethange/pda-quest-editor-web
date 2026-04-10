@@ -11,10 +11,12 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import {
+  $connection,
+  $stage,
   newTransferInStore,
   setConnection,
-} from "@/store/reduxStore/slices/stageSlice";
-import { useDispatch, useSelector } from "react-redux";
+} from "@/features/stage-editor";
+import { useUnit } from "effector-react";
 import { logger } from "@/store/utils/logger";
 
 interface IProps {
@@ -28,9 +30,12 @@ const CreateTransferModal = ({
   setIsOpenCreateTransfer,
   updateStage,
 }: IProps) => {
-  const storeStage = useSelector((state: any) => state.stage.stage);
-  const connectionInfo = useSelector((state: any) => state.stage.connection);
-  const dispatch = useDispatch();
+  const [storeStage, connectionInfo, createTransfer, clearConnection] = useUnit([
+    $stage,
+    $connection,
+    newTransferInStore,
+    setConnection,
+  ]);
 
   return (
     <Modal
@@ -62,13 +67,11 @@ const CreateTransferModal = ({
               (event.target as HTMLTextAreaElement).style.height = `${
                 (event.target as HTMLTextAreaElement).scrollHeight
               }px`;
-              dispatch(
-                newTransferInStore({
-                  text: (event.target as HTMLTextAreaElement).value,
-                  stage: connectionInfo?.target,
-                  condition: {},
-                })
-              );
+              createTransfer({
+                text: (event.target as HTMLTextAreaElement).value,
+                stage: connectionInfo?.target,
+                condition: {},
+              });
             }}
           />
           Условия можно добавить после сохранения
@@ -79,7 +82,7 @@ const CreateTransferModal = ({
             onClick={() => {
               logger.info("storeStage, createTransfer", storeStage);
               updateStage(+storeStage.id);
-              dispatch(setConnection(null));
+              clearConnection(null);
               setIsOpenCreateTransfer(false);
             }}
             mx={2}
@@ -88,7 +91,7 @@ const CreateTransferModal = ({
           </Button>
           <Button
             onClick={() => {
-              dispatch(setConnection(null));
+              clearConnection(null);
               setIsOpenCreateTransfer(false);
             }}
           >

@@ -13,10 +13,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { pointType } from "@/store/types/story/mapType";
-import { addPoint } from "@/store/reduxStore/slices/mapSlice";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+import type { QuestPoint as pointType } from "@/entities/map";
+import { useUnit } from "effector-react";
 import { logger } from "@/store/utils/logger";
+import { $newPoint, pointAdded } from "@/features/map-editor";
 
 interface IProps {
   showCreatePointModal: boolean;
@@ -29,8 +29,7 @@ const CreatePointModal = ({
   setShowCreatePointModal,
   updateMap,
 }: IProps) => {
-  const dispatch = useAppDispatch();
-  const initialPoint = useAppSelector((state) => state.map.newPoint);
+  const [initialPoint, addPoint] = useUnit([$newPoint, pointAdded]);
   const [newPoint, setNewPoint] = useState<pointType>();
 
   useEffect(() => {
@@ -38,7 +37,7 @@ const CreatePointModal = ({
   }, [showCreatePointModal]);
 
   const savePoint = () => {
-    dispatch(addPoint(newPoint!));
+    addPoint(newPoint!);
     logger.info("point:", newPoint);
     updateMap();
   };

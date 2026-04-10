@@ -10,8 +10,8 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { editConditionInCheckpoint } from "@/store/reduxStore/slices/missionSlice";
+import { useUnit } from "effector-react";
+import { $targetMission, checkpointConditionEdited } from "@/features/mission";
 
 interface Props {
   showEditCondition: boolean;
@@ -24,15 +24,11 @@ const EditConditionCheckpointModal: React.FC<Props> = ({
   setShowEditCondition,
   customOnChange,
 }) => {
-  const index = useAppSelector(
-    (state) => state.mission.targetMission.targetCheckpoint
-  );
-  const checkpointIndex = useAppSelector(
-    (state) => state.mission.targetMission.targetCheckpoint
-  );
-  const targetCheckpoint = useAppSelector(
-    (state) => state.mission.targetMission.targetMission
-  ).checkpoints[+checkpointIndex];
+  const [{ targetCheckpoint: index, targetMission }, editCondition] = useUnit([
+    $targetMission,
+    checkpointConditionEdited,
+  ]);
+  const targetCheckpoint = targetMission.checkpoints[+index];
 
   return (
     <Modal
@@ -49,7 +45,10 @@ const EditConditionCheckpointModal: React.FC<Props> = ({
             condition={targetCheckpoint?.condition}
             isPoint
             index={index}
-            onChangeCondition={editConditionInCheckpoint}
+            noDispatch
+            onChangeCondition={({ condition }) => {
+              editCondition({ index, condition });
+            }}
             customOnChange={customOnChange}
           />
         </ModalBody>

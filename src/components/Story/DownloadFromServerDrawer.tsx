@@ -1,9 +1,9 @@
 import useFetching from "@/hooks/useFetching";
-import { StoryFromServer } from "../../../pages";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
-import { mapType } from "@/store/types/story/mapType";
-import { storyType } from "@/store/types/story/storyType";
-import { chapterType } from "@/store/types/story/chapterType";
+import { useUnit } from "effector-react";
+import { $currentUser } from "@/entities/user";
+import type { Chapter as chapterType } from "@/entities/chapter";
+import type { MapEntity as mapType } from "@/entities/map";
+import type { Story as storyType, StoryFromServer } from "@/entities/story";
 import {
   Drawer,
   DrawerOverlay,
@@ -29,18 +29,18 @@ import store from "@/store/utils/storage";
 
 interface Props {
   stories: storyType[];
-  setStories: (newStories: storyType[]) => void;
+  onStoryDownloaded: () => void;
   downloadModalIsOpen: boolean;
   downloadModalOnClose: () => void;
 }
 
 const DownloadFromServerDrawer: React.FC<Props> = ({
   stories,
-  setStories,
+  onStoryDownloaded,
   downloadModalIsOpen,
   downloadModalOnClose,
 }) => {
-  const user = useAppSelector((state: any) => state.user.user);
+  const user = useUnit($currentUser);
   const [storiesFromServer, setStoriesFromServer] =
     useState<StoryFromServer[]>();
   const [config, setConfig] = useState({
@@ -103,7 +103,7 @@ const DownloadFromServerDrawer: React.FC<Props> = ({
     data.maps.map((map: mapType) => {
       store.set(`story_${data.id}_maps_${map.id}`, map, true);
     });
-    setStories([...stories, data]);
+    onStoryDownloaded();
   };
 
   return (

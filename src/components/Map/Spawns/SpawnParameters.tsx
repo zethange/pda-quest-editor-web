@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
 import {
   Box,
   Button,
@@ -30,15 +29,16 @@ interface Props {
     [key: string]: string[];
   };
   onChangeParameters: (type: any) => any;
+  noDispatch?: boolean;
 }
 
 const SpawnParameters: React.FC<Props> = ({
   spawnParameters,
   onChangeParameters,
+  noDispatch = false,
 }) => {
   const [showCreateNewParameter, setShowCreateNewParameter] = useState(false);
   const [newParameter, setNewParameter] = useState("immortal");
-  const dispatch = useAppDispatch();
 
   if (!spawnParameters) {
     spawnParameters = {};
@@ -49,7 +49,11 @@ const SpawnParameters: React.FC<Props> = ({
 
   const onChange = () => {
     logger.info(spawnList);
-    dispatch(onChangeParameters(spawnList));
+    if (noDispatch) {
+      onChangeParameters(spawnList);
+      return;
+    }
+    onChangeParameters(spawnList);
   };
 
   return (

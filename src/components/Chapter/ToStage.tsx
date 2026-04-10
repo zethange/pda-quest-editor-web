@@ -12,12 +12,12 @@ import {
   Portal,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { chapterType, stageType } from "@/store/types/story/chapterType";
-import { useDispatch } from "react-redux";
+import type { Chapter as chapterType, Stage as stageType } from "@/entities/chapter";
 import {
   setStageToStore,
   setTransition,
-} from "@/store/reduxStore/slices/stageSlice";
+} from "@/features/stage-editor";
+import { useUnit } from "effector-react";
 
 interface IProps {
   setEditableStage: (stage: stageType | undefined) => void;
@@ -27,7 +27,7 @@ interface IProps {
 
 const ToStage = ({ setEditableStage, chapter, focusOnTheNode }: IProps) => {
   const [selectedStage, setSelectedStage] = useState<number>(0);
-  const dispatch = useDispatch();
+  const [setStageEvent, setTransitionEvent] = useUnit([setStageToStore, setTransition]);
 
   return (
     <Box display="flex" alignItems="center" gap={1}>
@@ -54,14 +54,14 @@ const ToStage = ({ setEditableStage, chapter, focusOnTheNode }: IProps) => {
                   colorScheme="teal"
                   fontWeight="normal"
                   onClick={() => {
-                    dispatch(setStageToStore(null));
-                    dispatch(setTransition(null));
+                    setStageEvent(null);
+                    setTransitionEvent(null);
                     setEditableStage(undefined);
                     const stage = chapter.stages.find(
                       (stage: stageType) => stage.id === selectedStage
                     );
                     setTimeout(() => {
-                      dispatch(setStageToStore(stage));
+                      setStageEvent(stage);
                       setEditableStage(stage || undefined);
                     }, 0);
                     focusOnTheNode(`${stage?.id}`);

@@ -9,7 +9,8 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
+import { $transition } from "@/features/stage-editor";
 
 interface Props {
   showModalEditTransition: boolean;
@@ -20,7 +21,7 @@ const EditTransitionModal: React.FC<Props> = ({
   showModalEditTransition,
   setShowModalEditTransition,
 }) => {
-  const point = useAppSelector((state) => state.stage.transition);
+  const point = useUnit($transition);
   return (
     <Modal
       onClose={() => {

@@ -2,10 +2,11 @@ import React, { useMemo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { Badge, Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { LGBTFlagColors } from "@/store/constants";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
+import { $userSettings } from "@/entities/user";
 import { GrNotification } from "react-icons/gr";
-import { stageType } from "@/store/types/story/chapterType";
-import { pointType } from "@/store/types/story/mapType";
+import type { Stage as stageType } from "@/entities/chapter";
+import type { QuestPoint as pointType } from "@/entities/map";
 import {
   AiOutlineArrowDown,
   AiOutlineArrowUp,
@@ -30,7 +31,7 @@ function NodeStage({
   selected: boolean;
 }) {
   const words = useMemo(() => data?.text, [data]);
-  const settings = useAppSelector((state) => state.user.settings);
+  const settings = useUnit($userSettings);
   const options = settings.danyaMod
     ? {
         background: `linear-gradient(to bottom, ${LGBTFlagColors.join(", ")})`,

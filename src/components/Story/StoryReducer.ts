@@ -1,4 +1,4 @@
-import { storyType } from "@/store/types/story/storyType";
+import type { Story as storyType } from "@/entities/story";
 
 export function storiesReducer(stories: storyType, action: { type: string }) {
   // switch (action.type) {

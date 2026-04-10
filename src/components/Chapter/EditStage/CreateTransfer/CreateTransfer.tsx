@@ -1,14 +1,15 @@
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
+import { $stage } from "@/features/stage-editor";
 
 import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
-import { editConditionInTransfer } from "@/store/reduxStore/slices/stageSlice";
+import { editConditionInTransfer } from "@/features/stage-editor";
 
 export default function CreateTransfer({
   transferIndex,
 }: {
   transferIndex: number;
 }) {
-  const storeStage = useAppSelector((state) => state.stage.stage);
+  const storeStage = useUnit($stage);
 
   return (
     <ConditionListRefactor

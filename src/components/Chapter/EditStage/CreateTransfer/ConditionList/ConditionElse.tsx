@@ -6,9 +6,10 @@ import {
   AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 import { conditionMethods } from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import { logger } from "@/store/utils/logger";
+import { useUnit } from "effector-react";
+import { $parameters } from "@/features/stage-editor";
 
 interface Props {
   condition: [string, string[]];
@@ -34,7 +35,7 @@ const ConditionElse: React.FC<Props> = ({
   conditionIndex,
 }) => {
   const [method, setMethod] = useState<string[]>();
-  const parameters = useAppSelector((state) => state.stage.parameters);
+  const parameters = useUnit($parameters);
 
   useEffect(() => {
     setMethod(splitMethod(condition[0]));

@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Box, Flex, Input } from "@chakra-ui/react";
 import { Logs } from "@/components/Chapter/UtilitiesDrawer";
-import { chapterType } from "@/store/types/story/chapterType";
+import type { Chapter as chapterType } from "@/entities/chapter";
 import { FindStageByText } from "@/store/utils/chapterUtils/FindStageByText";
 
 interface Props {

@@ -13,8 +13,8 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { generateSlug } from "@/store/tools/generateSlug";
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
-import { newMission } from "@/store/reduxStore/slices/missionSlice";
+import { useUnit } from "effector-react";
+import { missionCreated } from "@/features/mission";
 
 interface Props {
   showCreateMissionModal: boolean;
@@ -29,7 +29,7 @@ const CreateMissionModal: React.FC<Props> = ({
 }) => {
   const [title, setTitle] = useState("");
   const [name, setName] = useState("");
-  const dispatch = useAppDispatch();
+  const createMission = useUnit(missionCreated);
 
   return (
     <Modal
@@ -41,13 +41,11 @@ const CreateMissionModal: React.FC<Props> = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(
-            newMission({
-              title,
-              name,
-              checkpoints: [],
-            })
-          );
+          createMission({
+            title,
+            name,
+            checkpoints: [],
+          });
           handleUpdate();
           setShowCreateMissionModal(false);
         }}

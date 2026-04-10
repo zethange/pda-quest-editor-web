@@ -5,7 +5,8 @@ import {
   AutoCompleteItem,
   AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
+import { $parameters } from "@/features/stage-editor";
 
 interface Props {
   value: string;
@@ -13,7 +14,7 @@ interface Props {
 }
 
 const SelectItem: FC<Props> = ({ value: importValue, onChange }) => {
-  const parameters = useAppSelector((state) => state.stage.parameters);
+  const parameters = useUnit($parameters);
   const [value, setValue] = useState(importValue);
 
   return (

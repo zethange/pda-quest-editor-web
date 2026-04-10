@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { TreeNode } from "@/store/utils/storyUtils/buildBinaryTree";
+import { type TreeNode } from "@/entities/chapter";
 import { Box, VStack } from "@chakra-ui/react";
 import { FolderButton } from "@/components/Story/FolderButton";
 

@@ -13,11 +13,11 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { pointType } from "@/store/types/story/mapType";
-import { deletePoint, editPoint } from "@/store/reduxStore/slices/mapSlice";
+import type { QuestPoint as pointType } from "@/entities/map";
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
+import { $openPoint, pointDeleted, pointUpdated } from "@/features/map-editor";
 
 interface IProps {
   showEditPointModal: boolean;
@@ -33,15 +33,18 @@ const UpdatePointModal = ({
   updateMap,
 }: IProps) => {
   const [updatedPoint, setUpdatedPoint] = useState<pointType | any>({});
-  const initialPoint = useAppSelector((state) => state.map.openPoint);
-  const dispatch = useAppDispatch();
+  const [initialPoint, editPoint, deletePoint] = useUnit([
+    $openPoint,
+    pointUpdated,
+    pointDeleted,
+  ]);
 
   useEffect(() => {
     setUpdatedPoint(initialPoint);
   }, [showEditPointModal]);
 
   const updatePoint = () => {
-    dispatch(editPoint(updatedPoint));
+    editPoint(updatedPoint);
     updateMap();
   };
 
@@ -140,7 +143,7 @@ const UpdatePointModal = ({
         <ModalFooter>
           <Button
             onClick={() => {
-              dispatch(deletePoint());
+              deletePoint();
               setShowEditPointModal(false);
               updateMap();
             }}

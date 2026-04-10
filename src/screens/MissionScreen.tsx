@@ -1,42 +1,5 @@
-import React from "react";
-import { Box, Grid, GridItem } from "@chakra-ui/react";
-import EditMissionSideBar from "@/components/Chapter/EditMission/EditMissionSideBar";
-import { useParams } from "react-router-dom";
-import { Store } from "redux";
-import { RootState } from "@/store/reduxStore";
-import { useStore } from "react-redux";
-import store from "@/store/utils/storage";
-import EditMission from "@/components/Chapter/EditMission/EditMission";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { MissionScreenWidget } from "@/widgets/mission-screen";
 
-interface Props {}
-
-const MissionScreen: React.FC<Props> = () => {
-  const { storyId, chapterId } = useParams();
-  const storeRedux: Store<RootState> = useStore();
-  const isOpen = useAppSelector((state) => state.mission.targetMission.isOpen);
-
-  const handleUpdate = () => {
-    const key = `story_${storyId}_chapter_${chapterId}`;
-    const sourceChapter = store.get(key);
-    store.set(key, {
-      ...sourceChapter,
-      missions: storeRedux.getState().mission.missions,
-    });
-  };
-
-  return (
-    <Grid templateColumns="repeat(6, 1fr)" gap={2}>
-      <GridItem rowSpan={1}>
-        <EditMissionSideBar handleUpdate={handleUpdate} />
-      </GridItem>
-      <GridItem rowSpan={1} colSpan={5}>
-        <Box borderRadius={10} h="calc(100vh - 75px)" overflowY="auto">
-          {isOpen && <EditMission handleUpdate={handleUpdate} />}
-        </Box>
-      </GridItem>
-    </Grid>
-  );
-};
+const MissionScreen: React.FC = () => <MissionScreenWidget />;
 
 export default MissionScreen;

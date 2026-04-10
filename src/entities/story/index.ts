@@ -1,1 +1,1 @@
-export type { Story } from "./model/types";
+export type { Story, StoryAuthor, StoryFromServer } from "./model/types";

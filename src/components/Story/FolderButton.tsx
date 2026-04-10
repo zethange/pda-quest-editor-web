@@ -12,10 +12,9 @@ import {
 import { BiFolder, BiSolidFolderPlus } from "react-icons/bi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineArrowDown, AiOutlineArrowRight } from "react-icons/ai";
-import { TreeNode } from "@/store/utils/storyUtils/buildBinaryTree";
+import { type Chapter as chapterType, type TreeNode } from "@/entities/chapter";
 import { VscDebugBreakpointLog } from "react-icons/vsc";
 import { logger } from "@/store/utils/logger";
-import { chapterType } from "@/store/types/story/chapterType";
 
 interface Props {
   node: TreeNode;

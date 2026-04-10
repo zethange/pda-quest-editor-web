@@ -12,7 +12,7 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { chapterType } from "@/store/types/story/chapterType";
+import type { Chapter as chapterType } from "@/entities/chapter";
 import store from "@/store/utils/storage";
 
 interface Props {

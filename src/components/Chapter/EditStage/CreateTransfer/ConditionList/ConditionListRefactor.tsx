@@ -1,21 +1,16 @@
 import React, { useState } from "react";
 import { Box, Button, Select, Spacer } from "@chakra-ui/react";
 
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
-import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import ConditionHas from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionHas";
 import ConditionElse from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionElse";
 import { logger } from "@/store/utils/logger";
 
-export type TypeOnChangeCondition = ActionCreatorWithPayload<
-  {
-    index?: number;
-    condition: {
-      [p: string]: string[];
-    };
-  },
-  string
->;
+export type TypeOnChangeCondition = (payload: {
+  index?: number;
+  condition: {
+    [p: string]: string[];
+  };
+}) => unknown;
 
 export const conditionMethods: [string, string, boolean?][] = [
   ["=", ""],
@@ -35,6 +30,7 @@ interface Props {
   onChangeCondition: TypeOnChangeCondition;
   isPoint?: boolean;
   customOnChange?: () => void;
+  noDispatch?: boolean;
 }
 
 const ConditionListRefactor: React.FC<Props> = ({
@@ -43,8 +39,8 @@ const ConditionListRefactor: React.FC<Props> = ({
   onChangeCondition,
   isPoint,
   customOnChange,
+  noDispatch = false,
 }) => {
-  const dispatch = useAppDispatch();
   const [showCreateMethod, setShowCreateMethod] = useState(false);
   const [typeCondition, setTypeCondition] = useState("=");
 
@@ -60,19 +56,23 @@ const ConditionListRefactor: React.FC<Props> = ({
 
   const onChange = (conditionListCustom?: { [key: string]: string[] }) => {
     logger.info("list:", conditionList);
+    const payload = {
+      index,
+      condition: conditionListCustom ? conditionListCustom : conditionList,
+    };
+    if (noDispatch) {
+      onChangeCondition(payload);
+      if (customOnChange) {
+        customOnChange();
+      }
+      return;
+    }
     if (isPoint) {
-      dispatch(
-        onChangeCondition({
-          index,
-          condition: conditionListCustom ? conditionListCustom : conditionList,
-        })
-      );
+      onChangeCondition(payload);
     } else {
-      dispatch(
-        onChangeCondition({
-          condition: conditionListCustom ? conditionListCustom : conditionList,
-        })
-      );
+      onChangeCondition({
+        condition: conditionListCustom ? conditionListCustom : conditionList,
+      });
     }
     if (customOnChange) {
       customOnChange();

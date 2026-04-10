@@ -12,10 +12,12 @@ import {
 } from "@chakra-ui/react";
 import CreateTransfer from "@/components/Chapter/EditStage/CreateTransfer/CreateTransfer";
 import {
+  $stage,
+  $targetTransfer,
   deleteTransferInStore,
   editTransferInStore,
-} from "@/store/reduxStore/slices/stageSlice";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+} from "@/features/stage-editor";
+import { useUnit } from "effector-react";
 
 interface IProps {
   setShowModalEditTransfer: (value: boolean) => void;
@@ -28,9 +30,12 @@ const EditTransferModal = ({
   showModalEditTransfer,
   updateStage,
 }: IProps) => {
-  const storeStage = useAppSelector((state) => state.stage.stage);
-  const targetTransfer = useAppSelector((state) => state.stage.targetTransfer);
-  const dispatch = useAppDispatch();
+  const [storeStage, targetTransfer, editTransfer, deleteTransfer] = useUnit([
+    $stage,
+    $targetTransfer,
+    editTransferInStore,
+    deleteTransferInStore,
+  ]);
 
   return (
     <Modal
@@ -51,15 +56,13 @@ const EditTransferModal = ({
             placeholder="Введите текст..."
             defaultValue={targetTransfer?.targetTransfer?.text}
             onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
-              dispatch(
-                editTransferInStore({
-                  id: targetTransfer?.indexTargetTransfer,
-                  transfer: {
-                    ...targetTransfer?.targetTransfer,
-                    text: event.target.value,
-                  },
-                })
-              );
+              editTransfer({
+                id: targetTransfer?.indexTargetTransfer,
+                transfer: {
+                  ...targetTransfer?.targetTransfer,
+                  text: event.target.value,
+                },
+              });
             }}
           />
           <CreateTransfer transferIndex={targetTransfer?.indexTargetTransfer} />
@@ -68,9 +71,7 @@ const EditTransferModal = ({
           <Button
             colorScheme="red"
             onClick={() => {
-              dispatch(
-                deleteTransferInStore(targetTransfer.indexTargetTransfer)
-              );
+              deleteTransfer(targetTransfer.indexTargetTransfer);
               updateStage(storeStage.id);
               setShowModalEditTransfer(false);
             }}

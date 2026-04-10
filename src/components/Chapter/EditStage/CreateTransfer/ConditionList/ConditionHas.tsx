@@ -6,7 +6,8 @@ import {
   AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
 import React from "react";
-import { useAppSelector } from "@/store/reduxStore/reduxHooks";
+import { useUnit } from "effector-react";
+import { $parameters } from "@/features/stage-editor";
 
 interface Props {
   condition: [string, string[]];
@@ -23,7 +24,7 @@ const ConditionHas: React.FC<Props> = ({
   onChange,
   conditionIndex,
 }) => {
-  const parameters = useAppSelector((state) => state.stage.parameters);
+  const parameters = useUnit($parameters);
 
   return (
     <Box>

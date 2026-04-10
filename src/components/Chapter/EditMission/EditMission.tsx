@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
+
 import {
   Box,
   Button,
@@ -16,13 +16,13 @@ import {
 import React, { useState } from "react";
 import { generateSlug } from "@/store/tools/generateSlug";
 import {
-  deleteCheckpoint,
-  editCheckpoint,
-  editMission,
-  newCheckpoint,
-  setTargetCheckpointIndex,
-} from "@/store/reduxStore/slices/missionSlice";
-import { checkpointType } from "@/store/types/story/missionType";
+  checkpointAdded as newCheckpoint,
+  checkpointDeleted as deleteCheckpoint,
+  checkpointEdited as editCheckpoint,
+  missionEdited as editMission,
+  targetCheckpointSelected as setTargetCheckpointIndex,
+} from "@/features/mission";
+import type { MissionCheckpoint as checkpointType } from "@/entities/mission";
 import {
   AutoComplete,
   AutoCompleteInput,
@@ -31,17 +31,25 @@ import {
 } from "@choc-ui/chakra-autocomplete";
 import EditConditionCheckpointModal from "@/components/Chapter/EditMission/Modal/EditConditionCheckpointModal";
 import EditActionsCheckpointModal from "@/components/Chapter/EditMission/Modal/EditActionsCheckpointModal";
+import { useUnit } from "effector-react";
+import { $targetMission } from "@/features/mission";
+import { $parameters } from "@/features/stage-editor";
 
 interface Props {
   handleUpdate: () => void;
 }
 
 const EditMission: React.FC<Props> = ({ handleUpdate }) => {
-  const { targetMission } = useAppSelector(
-    (state) => state.mission.targetMission
-  );
-  const dispatch = useAppDispatch();
-  const parameters = useAppSelector((state) => state.stage.parameters);
+  const [{ targetMission }, editMissionEvent, newCheckpointEvent, editCheckpointEvent, setTargetCheckpointEvent, deleteCheckpointEvent] =
+    useUnit([
+      $targetMission,
+      editMission,
+      newCheckpoint,
+      editCheckpoint,
+      setTargetCheckpointIndex,
+      deleteCheckpoint,
+    ]);
+  const parameters = useUnit($parameters);
 
   const [showEditCondition, setShowEditCondition] = useState(false);
   const [showEditActions, setShowEditActions] = useState(false);
@@ -71,12 +79,10 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
             value={targetMission.title}
             required
             onChange={(e) => {
-              dispatch(
-                editMission({
+                editMissionEvent({
                   title: e.target.value,
                   name: generateSlug(e.target.value),
-                })
-              );
+                });
               handleUpdate();
             }}
           />
@@ -89,7 +95,7 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
           size="xs"
           colorScheme="teal"
           onClick={() => {
-            dispatch(newCheckpoint());
+            newCheckpointEvent();
             handleUpdate();
           }}
         >
@@ -112,14 +118,12 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
                 <Input
                   value={checkpoint.title}
                   onChange={(e) => {
-                    dispatch(
-                      editCheckpoint({
-                        index,
-                        checkpoint: {
-                          title: e.target.value,
-                        } as checkpointType,
-                      })
-                    );
+                    editCheckpointEvent({
+                      index,
+                      checkpoint: {
+                        title: e.target.value,
+                      } as checkpointType,
+                    });
                     handleUpdate();
                   }}
                 />
@@ -130,14 +134,12 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
                   openOnFocus
                   value={checkpoint.parameter}
                   onChange={(value) => {
-                    dispatch(
-                      editCheckpoint({
-                        index,
-                        checkpoint: {
-                          parameter: value,
-                        } as checkpointType,
-                      })
-                    );
+                    editCheckpointEvent({
+                      index,
+                      checkpoint: {
+                        parameter: value,
+                      } as checkpointType,
+                    });
                     handleUpdate();
                   }}
                 >
@@ -146,14 +148,12 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
                     variant="outline"
                     value={checkpoint.parameter}
                     onChange={(event) => {
-                      dispatch(
-                        editCheckpoint({
-                          index,
-                          checkpoint: {
-                            parameter: event.target.value,
-                          } as checkpointType,
-                        })
-                      );
+                      editCheckpointEvent({
+                        index,
+                        checkpoint: {
+                          parameter: event.target.value,
+                        } as checkpointType,
+                      });
                       handleUpdate();
                     }}
                   />
@@ -174,7 +174,7 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
                 <Button
                   size="sm"
                   onClick={() => {
-                    dispatch(setTargetCheckpointIndex(index));
+                    setTargetCheckpointEvent(index);
                     setShowEditCondition(true);
                   }}
                 >
@@ -183,7 +183,7 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
                 <Button
                   size="sm"
                   onClick={() => {
-                    dispatch(setTargetCheckpointIndex(index));
+                    setTargetCheckpointEvent(index);
                     setShowEditActions(true);
                   }}
                 >
@@ -194,7 +194,7 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
                   size="sm"
                   colorScheme="red"
                   onClick={() => {
-                    dispatch(deleteCheckpoint(index));
+                    deleteCheckpointEvent(index);
                     handleUpdate();
                   }}
                 >

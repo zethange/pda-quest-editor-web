@@ -1,2 +1,9 @@
-export type { User } from "./model/types";
-export { $currentUser, userReceived, userReset } from "./model";
+export type { User, UserSettings } from "./model/types";
+export {
+  $currentUser,
+  $userSettings,
+  userReceived,
+  userReset,
+  userSettingsChanged,
+  userSettingsLoaded,
+} from "./model";

@@ -12,8 +12,8 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import useFetching from "@/hooks/useFetching";
-import { editStageInStore } from "@/store/reduxStore/slices/stageSlice";
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
+import { editStageInStore } from "@/features/stage-editor";
+import { useUnit } from "effector-react";
 
 interface Props {
   show: boolean;
@@ -22,7 +22,7 @@ interface Props {
 
 const OverviewBackgroundModal: FC<Props> = ({ show, onClose }) => {
   const { data } = useFetching<string[]>("/api/getBackgrounds", {}, false);
-  const dispatch = useAppDispatch();
+  const editStage = useUnit(editStageInStore);
 
   return (
     <Modal onClose={onClose} size="5xl" isOpen={show} isCentered>
@@ -42,9 +42,7 @@ const OverviewBackgroundModal: FC<Props> = ({ show, onClose }) => {
                   onClick={() => {
                     const dataEdit = data.split("/");
                     dataEdit.splice(0, 1);
-                    dispatch(
-                      editStageInStore({ background: dataEdit.join("/") })
-                    );
+                    editStage({ background: dataEdit.join("/") });
                     onClose();
                   }}
                   src={"https://cdn.artux.net/" + data}

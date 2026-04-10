@@ -19,20 +19,20 @@ import {
   Select,
   Textarea,
 } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@/store/reduxStore/reduxHooks";
-import {
-  deleteSpawn,
-  editActionsSpawn,
-  editDataSpawn,
-  editSpawn,
-} from "@/store/reduxStore/slices/mapSlice";
+import { useUnit } from "effector-react";
 import { groups, strength } from "@/store/utils/groupItem";
-import ConditionListRefactor, {
-  TypeOnChangeCondition,
-} from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
+import ConditionListRefactor from "@/components/Chapter/EditStage/CreateTransfer/ConditionList/ConditionListRefactor";
 import EditActionsRefactor from "@/components/Chapter/EditStage/EditActions/EditActionsRefactor";
 import SpawnParameters from "@/components/Map/Spawns/SpawnParameters";
-import { spawnType } from "@/store/types/story/mapType";
+import type { Spawn as spawnType } from "@/entities/map";
+import {
+  $map,
+  $openSpawn,
+  spawnActionsUpdated as editActionsSpawn,
+  spawnDataUpdated as editDataSpawn,
+  spawnDeleted as deleteSpawn,
+  spawnUpdated as editSpawn,
+} from "@/features/map-editor";
 
 interface Props {
   showEditSpawn: boolean;
@@ -45,11 +45,9 @@ const EditSpawnModal: React.FC<Props> = ({
   setShowEditSpawn,
   updateMap,
 }) => {
-  const { openSpawn, openSpawnIndex } = useAppSelector(
-    (state) => state.map.openSpawn
-  );
-  const map = useAppSelector((state) => state.map.map);
-  const dispatch = useAppDispatch();
+  const [openSpawnState, map, updateSpawn, updateSpawnActions, updateSpawnData, removeSpawn] =
+    useUnit([$openSpawn, $map, editSpawn, editActionsSpawn, editDataSpawn, deleteSpawn]);
+  const { openSpawn, openSpawnIndex } = openSpawnState;
 
   return (
     <Modal
@@ -67,11 +65,9 @@ const EditSpawnModal: React.FC<Props> = ({
             <Input
               defaultValue={openSpawn.title!}
               onChange={(event) => {
-                dispatch(
-                  editSpawn({
-                    title: event.target.value,
-                  } as spawnType)
-                );
+                updateSpawn({
+                  title: event.target.value,
+                } as spawnType);
               }}
             />
           </FormControl>
@@ -80,11 +76,9 @@ const EditSpawnModal: React.FC<Props> = ({
             <Textarea
               defaultValue={openSpawn.description!}
               onChange={(event) => {
-                dispatch(
-                  editSpawn({
-                    description: event.target.value,
-                  } as spawnType)
-                );
+                updateSpawn({
+                  description: event.target.value,
+                } as spawnType);
               }}
             />
           </FormControl>
@@ -93,11 +87,9 @@ const EditSpawnModal: React.FC<Props> = ({
             <Select
               defaultValue={openSpawn.group}
               onChange={(event) => {
-                dispatch(
-                  editSpawn({
-                    group: event.target.value,
-                  } as spawnType)
-                );
+                updateSpawn({
+                  group: event.target.value,
+                } as spawnType);
               }}
             >
               {groups.map((group) => (
@@ -112,11 +104,9 @@ const EditSpawnModal: React.FC<Props> = ({
             <Select
               defaultValue={openSpawn.strength}
               onChange={(event) => {
-                dispatch(
-                  editSpawn({
-                    strength: event.target.value,
-                  } as spawnType)
-                );
+                updateSpawn({
+                  strength: event.target.value,
+                } as spawnType);
               }}
             >
               {strength.map((strength) => (
@@ -131,11 +121,9 @@ const EditSpawnModal: React.FC<Props> = ({
             <NumberInput
               defaultValue={openSpawn.n}
               onChange={(value) => {
-                dispatch(
-                  editSpawn({
-                    n: String(value),
-                  } as spawnType)
-                );
+                updateSpawn({
+                  n: String(value),
+                } as spawnType);
               }}
             >
               <NumberInputField />
@@ -150,11 +138,9 @@ const EditSpawnModal: React.FC<Props> = ({
             <NumberInput
               defaultValue={openSpawn.r}
               onChange={(value) => {
-                dispatch(
-                  editSpawn({
-                    r: String(value),
-                  } as spawnType)
-                );
+                updateSpawn({
+                  r: String(value),
+                } as spawnType);
               }}
             >
               <NumberInputField />
@@ -169,11 +155,9 @@ const EditSpawnModal: React.FC<Props> = ({
             <Input
               defaultValue={openSpawn.pos}
               onChange={(event) => {
-                dispatch(
-                  editSpawn({
-                    pos: event.target.value,
-                  } as spawnType)
-                );
+                updateSpawn({
+                  pos: event.target.value,
+                } as spawnType);
               }}
             />
           </FormControl>
@@ -182,27 +166,34 @@ const EditSpawnModal: React.FC<Props> = ({
               <FormControl>
                 <EditActionsRefactor
                   actions={map.spawns![openSpawnIndex]?.actions!}
-                  onChangeActions={editActionsSpawn}
+                  onChangeActions={(actions) => updateSpawnActions(actions)}
+                  noDispatch
                 />
               </FormControl>
               <FormControl>
                 <SpawnParameters
                   spawnParameters={map.spawns![openSpawnIndex]?.data!}
-                  onChangeParameters={editDataSpawn}
+                  onChangeParameters={(data) => updateSpawnData(data)}
+                  noDispatch
                 />
               </FormControl>
             </>
           )}
           <ConditionListRefactor
             condition={map.spawns![openSpawnIndex]?.condition!}
-            onChangeCondition={editSpawn as unknown as TypeOnChangeCondition}
+            noDispatch
+            onChangeCondition={({ condition }) =>
+              updateSpawn({
+                condition,
+              } as spawnType)
+            }
           />
         </ModalBody>
         <ModalFooter>
           <Button
             colorScheme="red"
             onClick={() => {
-              dispatch(deleteSpawn(openSpawnIndex));
+              removeSpawn(openSpawnIndex);
               setShowEditSpawn(false);
               updateMap();
             }}
