@@ -2,9 +2,7 @@ import { FC, useState } from "react";
 import { Button, Portal } from "@chakra-ui/react";
 import OverviewBackgroundModal from "@/components/Chapter/EditStage/OverviewBackground/OverviewBackgroundModal";
 
-interface Props {}
-
-const OverviewBackgroundButton: FC<Props> = ({}) => {
+const OverviewBackgroundButton: FC = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (

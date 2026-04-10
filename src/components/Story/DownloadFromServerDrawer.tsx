@@ -25,7 +25,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import store from "store2";
+import store from "@/store/utils/storage";
 
 interface Props {
   stories: storyType[];

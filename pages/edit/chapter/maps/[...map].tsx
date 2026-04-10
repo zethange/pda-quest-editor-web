@@ -1,6 +1,6 @@
 import React, { createRef, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import store from "store2";
+import store from "@/store/utils/storage";
 import { chapterType } from "@/store/types/story/chapterType";
 import {
   mapApiType,

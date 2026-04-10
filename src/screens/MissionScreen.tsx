@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { Store } from "redux";
 import { RootState } from "@/store/reduxStore";
 import { useStore } from "react-redux";
-import store from "store2";
+import store from "@/store/utils/storage";
 import EditMission from "@/components/Chapter/EditMission/EditMission";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
 

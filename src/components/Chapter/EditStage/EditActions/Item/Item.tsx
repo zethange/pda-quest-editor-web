@@ -12,7 +12,6 @@ interface Props {
 const Item: FC<Props> = ({ value, onChange, data }) => {
   const itemId = value.split(":")[0];
   const quantity = value.split(":")[1];
-  console.log({ itemId, quantity });
 
   const onChangeItemId = (newItemId: string) => {
     onChange(`${newItemId}:${quantity}`);

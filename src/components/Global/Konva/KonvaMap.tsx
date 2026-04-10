@@ -19,8 +19,6 @@ const KonvaMap: FC<Props> = ({ props, onClick, set }) => {
     const imagePos = imageRef?.current?.getAbsolutePosition();
     const imageScale = imageRef?.current?.getAbsoluteScale();
     if (pointerPos && imagePos && imageScale && image) {
-      console.log(image.height, image.width);
-
       const x = Math.round((pointerPos.x - imagePos.x) / imageScale.x);
       const y = Math.round(
         image.height - (pointerPos.y - imagePos.y) / imageScale.y

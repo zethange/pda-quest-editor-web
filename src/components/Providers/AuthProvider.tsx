@@ -1,36 +1,28 @@
 import AuthModal from "@/components/Global/AuthModal";
-import useFetching from "@/hooks/useFetching";
-import { useAppDispatch } from "@/store/reduxStore/reduxHooks";
-import { setUser } from "@/store/reduxStore/slices/userSlice";
-import { IUser } from "@/store/types/userType";
+import { $isAuthModalOpen, authRequested } from "@/features/auth";
 import React, { memo, useEffect, useState } from "react";
+import { useUnit } from "effector-react";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
+  const [isAuthModalOpen, requestAuth] = useUnit([$isAuthModalOpen, authRequested]);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { data, response, isLoading } = useFetching<IUser>(
-    "/pdanetwork/api/v1/user/info"
-  );
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // if (data?.login === "Redoks") {
-    //   alert("Гееерман, опять редактор ломаешь???");
-    // }
-    if (response?.status === 401) {
-      setShowAuthModal(true);
-    } else {
-      dispatch(setUser(data as IUser));
-    }
-  }, [isLoading]);
+    requestAuth();
+  }, [requestAuth]);
+
+  useEffect(() => {
+    setShowAuthModal(isAuthModalOpen);
+  }, [isAuthModalOpen]);
 
   return (
     <>
       {children}
-      <AuthModal isOpen={showAuthModal} onClose={setShowAuthModal} />
+      <AuthModal isOpen={showAuthModal} onClose={(nextState) => setShowAuthModal(nextState)} />
     </>
   );
 };

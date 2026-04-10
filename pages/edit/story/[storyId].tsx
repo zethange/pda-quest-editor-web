@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import store from "store2";
+import store from "@/store/utils/storage";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import CustomHead from "@/components/Global/CustomHead";

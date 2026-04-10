@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import { Link } from "react-router-dom";
-import store from "store2";
+import store from "@/store/utils/storage";
 import { downloadZip } from "client-zip";
 
 import CustomHead from "@/components/Global/CustomHead";
@@ -135,7 +135,7 @@ export default function Home() {
 ██╔══╝░░██║░░██║██║░░░██║░░░██║░░██║██╔══██╗
 ███████╗██████╔╝██║░░░██║░░░╚█████╔╝██║░░██║
 ╚══════╝╚═════╝░╚═╝░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝`;
-    console.log(logo);
+    logger.info(logo);
 
     logger.info("Editor started");
 
@@ -189,12 +189,13 @@ export default function Home() {
           input: JSON.stringify(value, null, 2),
         });
       } else if (key?.includes(`story_${story_id}_map`)) {
+        const mapValue = value as mapType;
         arrChapters.push({
-          name: `maps/${value.id}_${
-            value?.tmx?.split(".")[0] || undefined
+          name: `maps/${mapValue.id}_${
+            mapValue?.tmx?.split(".")[0] || undefined
           }.json`,
           lastModified: new Date(),
-          input: JSON.stringify(value, null, 2),
+          input: JSON.stringify(mapValue, null, 2),
         });
       }
     }
@@ -292,7 +293,8 @@ export default function Home() {
   };
 
   const uploadStoryToServer = async (storyId: number) => {
-    const info = await store.get(`story_${storyId}_info`);
+    const info = await store.get<storyType>(`story_${storyId}_info`);
+    if (!info) return;
     logger.info("Started upload to server, info:", info);
 
     let chapters: chapterType[] = [];

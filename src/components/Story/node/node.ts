@@ -23,7 +23,6 @@ const createNodeFolder = (pathNewFolder: string, folders: TreeNode) => {
   const path = (pathNewFolder || "").split("/");
   const copyFolders: TreeNode = JSON.parse(JSON.stringify(folders));
 
-  console.log(path, pathNewFolder);
   if (path[0] === "") {
     const name =
       "Новая папка " + (Object.keys(copyFolders.children).length + 1);
@@ -41,8 +40,6 @@ const createNodeFolder = (pathNewFolder: string, folders: TreeNode) => {
   for (const part of path) {
     nodeNow = nodeNow.children[part];
   }
-  console.log(nodeNow);
-
   const name = "Новая папка " + (Object.keys(nodeNow.children).length + 1);
   path.push(name);
   nodeNow.children[name] = {

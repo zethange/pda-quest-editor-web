@@ -10,7 +10,7 @@ import {
   MenuList,
   SimpleGrid,
 } from "@chakra-ui/react";
-import store from "store2";
+import store from "@/store/utils/storage";
 import { mapApiType, mapType } from "@/store/types/story/mapType";
 import { Link } from "react-router-dom";
 import { createMap } from "@/store/tools/createMap";

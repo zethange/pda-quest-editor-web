@@ -13,7 +13,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { chapterType } from "@/store/types/story/chapterType";
-import store from "store2";
+import store from "@/store/utils/storage";
 
 interface Props {
   isOpen: boolean;

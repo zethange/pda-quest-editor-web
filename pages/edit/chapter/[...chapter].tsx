@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import "reactflow/dist/style.css";
+import "@xyflow/react/dist/style.css";
 
 import StageScreen from "@/screens/StageScreen";
 

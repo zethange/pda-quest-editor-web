@@ -6,13 +6,14 @@ import React, {
   useRef,
   DragEventHandler,
 } from "react";
-import store from "store2";
+import store from "@/store/utils/storage";
 import querystring from "querystring";
 import dagre from "dagre";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
 import useKeydown from "@buildinams/use-keydown";
 
-import ReactFlow, {
+import {
+  ReactFlow,
   applyNodeChanges,
   Background,
   Controls,
@@ -23,7 +24,7 @@ import ReactFlow, {
   Position,
   ReactFlowInstance,
   ReactFlowProvider,
-} from "reactflow";
+} from "@xyflow/react";
 
 import {
   Box,
@@ -34,7 +35,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import "reactflow/dist/style.css";
+import "@xyflow/react/dist/style.css";
 import { newStage } from "@/store/tools/createTools";
 import CustomHead from "@/components/Global/CustomHead";
 import NodeStage from "@/components/Global/StageNode";
@@ -525,8 +526,10 @@ export default function StageEditScreen({
   );
 
   const updateTransitionFromMap = () => {
-    let chapterFromLocalStorage: chapterType =
-      path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+    const chapterFromLocalStorage = store.get<chapterType>(
+      `story_${path[0]}_chapter_${path[1]}`
+    );
+    if (!chapterFromLocalStorage) return;
 
     const transitionFromMap = storeRedux.getState().stage.transitionFromMap;
 
@@ -873,8 +876,10 @@ export default function StageEditScreen({
       }
       return nodeId;
     });
-    const chapterFromLocalStorage: chapterType =
-      path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+    const chapterFromLocalStorage = store.get<chapterType>(
+      `story_${path[0]}_chapter_${path[1]}`
+    );
+    if (!chapterFromLocalStorage) return;
 
     const stages = chapterFromLocalStorage?.stages.filter((stage) => {
       if (nodesId.includes(stage.id)) {
@@ -910,8 +915,10 @@ export default function StageEditScreen({
   const forceSyncPosition = () => {
     logger.info("Start sync");
 
-    const chapterFromLocalStorage: chapterType =
-      path[0] && store.get(`story_${path[0]}_chapter_${path[1]}`);
+    const chapterFromLocalStorage = store.get<chapterType>(
+      `story_${path[0]}_chapter_${path[1]}`
+    );
+    if (!chapterFromLocalStorage) return;
 
     const pointsEntries = Object.entries(chapterFromLocalStorage?.points ?? {});
 

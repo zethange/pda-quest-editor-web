@@ -1,5 +1,5 @@
 import React, { FC, memo } from "react";
-import { EdgeProps, getBezierPath, EdgeLabelRenderer } from "reactflow";
+import { EdgeProps, getBezierPath, EdgeLabelRenderer } from "@xyflow/react";
 import { Badge, Box } from "@chakra-ui/react";
 
 const TransferEdge: FC<EdgeProps> = ({
@@ -13,6 +13,13 @@ const TransferEdge: FC<EdgeProps> = ({
   label,
   data,
 }) => {
+  const edgeData = (data ?? {}) as {
+    label?: string;
+    transfer?: {
+      condition?: Record<string, string[]>;
+    };
+  };
+
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -25,7 +32,7 @@ const TransferEdge: FC<EdgeProps> = ({
     <>
       <path id={id} className="react-flow__edge-path" d={edgePath} />
       <EdgeLabelRenderer>
-        {!!data.label && (
+        {!!edgeData.label && (
           <Box
             position="absolute"
             transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
@@ -43,13 +50,13 @@ const TransferEdge: FC<EdgeProps> = ({
             className="nopan"
           >
             <Box>
-              {data.label}
-              {data.label.length === 30 && "..."}
+              {edgeData.label}
+              {edgeData.label.length === 30 && "..."}
               <Box display="grid" gap={1}>
-                {data?.transfer?.condition &&
-                  Object.keys(data?.transfer?.condition).length !== 0 && (
+                {edgeData.transfer?.condition &&
+                  Object.keys(edgeData.transfer.condition).length !== 0 && (
                     <>
-                      {Object.entries(data.transfer.condition).map(
+                      {Object.entries(edgeData.transfer.condition).map(
                         (condition: [string, unknown]) => {
                           return (condition[1] as string[]).map(
                             (condition: string) => (

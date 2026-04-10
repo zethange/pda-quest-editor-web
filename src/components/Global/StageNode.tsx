@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Handle, Position } from "reactflow";
+import { Handle, Position } from "@xyflow/react";
 import { Badge, Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { LGBTFlagColors } from "@/store/constants";
 import { useAppSelector } from "@/store/reduxStore/reduxHooks";
