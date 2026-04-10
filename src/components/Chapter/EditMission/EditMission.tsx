@@ -79,10 +79,10 @@ const EditMission: React.FC<Props> = ({ handleUpdate }) => {
             value={targetMission.title}
             required
             onChange={(e) => {
-                editMissionEvent({
-                  title: e.target.value,
-                  name: generateSlug(e.target.value),
-                });
+              editMissionEvent({
+                title: e.target.value,
+                name: generateSlug(e.target.value),
+              });
               handleUpdate();
             }}
           />

@@ -54,18 +54,18 @@ export const $missions = createStore<Mission[]>([])
     missions.map((mission, index) =>
       index === $targetMission.getState().targetMissionIndex
         ? {
-            ...mission,
-            checkpoints: [
-              ...mission.checkpoints,
-              {
-                title: "Новый чекпоинт",
-                parameter: "...",
-                type: ["FIND_ITEM", "KILL", "TRAVEL"],
-                condition: {},
-                actions: {},
-              },
-            ],
-          }
+          ...mission,
+          checkpoints: [
+            ...mission.checkpoints,
+            {
+              title: "Новый чекпоинт",
+              parameter: "...",
+              type: ["FIND_ITEM", "KILL", "TRAVEL"],
+              condition: {},
+              actions: {},
+            },
+          ],
+        }
         : mission
     )
   )
@@ -73,11 +73,11 @@ export const $missions = createStore<Mission[]>([])
     missions.map((mission, missionIndex) =>
       missionIndex === $targetMission.getState().targetMissionIndex
         ? {
-            ...mission,
-            checkpoints: mission.checkpoints.map((item, checkpointIndex) =>
-              checkpointIndex === index ? ({ ...item, ...checkpoint } as MissionCheckpoint) : item
-            ),
-          }
+          ...mission,
+          checkpoints: mission.checkpoints.map((item, checkpointIndex) =>
+            checkpointIndex === index ? ({ ...item, ...checkpoint } as MissionCheckpoint) : item
+          ),
+        }
         : mission
     )
   )
@@ -92,11 +92,11 @@ export const $missions = createStore<Mission[]>([])
     missions.map((mission, missionIndex) =>
       missionIndex === $targetMission.getState().targetMissionIndex
         ? {
-            ...mission,
-            checkpoints: mission.checkpoints.map((item, checkpointIndex) =>
-              checkpointIndex === index ? { ...item, condition } : item
-            ),
-          }
+          ...mission,
+          checkpoints: mission.checkpoints.map((item, checkpointIndex) =>
+            checkpointIndex === index ? { ...item, condition } : item
+          ),
+        }
         : mission
     )
   )
@@ -104,11 +104,11 @@ export const $missions = createStore<Mission[]>([])
     missions.map((mission, missionIndex) =>
       missionIndex === $targetMission.getState().targetMissionIndex
         ? {
-            ...mission,
-            checkpoints: mission.checkpoints.map((item, checkpointIndex) =>
-              checkpointIndex === index ? { ...item, actions } : item
-            ),
-          }
+          ...mission,
+          checkpoints: mission.checkpoints.map((item, checkpointIndex) =>
+            checkpointIndex === index ? { ...item, actions } : item
+          ),
+        }
         : mission
     )
   );

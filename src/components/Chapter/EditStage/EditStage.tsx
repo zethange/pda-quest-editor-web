@@ -141,24 +141,22 @@ export default function EditStage() {
                 onClick={(event) => {
                   (event.target as HTMLTextAreaElement).style.height =
                     "inherit";
-                  (event.target as HTMLTextAreaElement).style.height = `${
-                    (event.target as HTMLTextAreaElement).scrollHeight
-                  }px`;
+                  (event.target as HTMLTextAreaElement).style.height = `${(event.target as HTMLTextAreaElement).scrollHeight
+                    }px`;
                 }}
                 onInput={(event) => {
                   (event.target as HTMLTextAreaElement).style.height =
                     "inherit";
-                  (event.target as HTMLTextAreaElement).style.height = `${
-                    (event.target as HTMLTextAreaElement).scrollHeight
-                  }px`;
+                  (event.target as HTMLTextAreaElement).style.height = `${(event.target as HTMLTextAreaElement).scrollHeight
+                    }px`;
 
                   editText({
-                      id: index,
-                      text: {
-                        text: (event.target as HTMLTextAreaElement).value,
-                        condition: text.condition,
-                      },
-                    });
+                    id: index,
+                    text: {
+                      text: (event.target as HTMLTextAreaElement).value,
+                      condition: text.condition,
+                    },
+                  });
                 }}
               />
               <VStack gap={1}>
@@ -176,9 +174,9 @@ export default function EditStage() {
                   size="sm"
                   onClick={() => {
                     setTargetTextEvent({
-                        targetText: text,
-                        indexTargetText: index,
-                      });
+                      targetText: text,
+                      indexTargetText: index,
+                    });
                     setOpenCondition(true);
                   }}
                 >
